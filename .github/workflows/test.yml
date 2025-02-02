@@ -1,0 +1,19 @@
+name: Testing action
+on:
+  workflow_dispatch:
+  # Run once a month
+  # schedule:
+  #   - cron: "0 0 1 * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - run: curl -fsSL https://ollama.com/install.sh | sh
+    - run: ollama pull llama3.2:1b
+    - run: cat <(wget https://conferences.i-cav.org/2025/ -q -O - | sed '/^ *$/d') <(echo "What is the paper sumbission deadline of the above conference? Answer with 'DD/MM/YYYY' only.") | ollama run llama3.2:1b
+
+    - name: Debugging with tmate
+      uses: mxschmitt/action-tmate@v3.19
