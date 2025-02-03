@@ -21,7 +21,8 @@ for i in "${TODO_YEARS[@]}"; do
     im1=$((i-1))
 
     # Search for the call for papers webpage
-    CFP_URL=$($SCRIPT_DIR/ddg_search.sh "$NAME $i call for papers cfp")
+    QUERY="$NAME $i call for papers cfp"
+    CFP_URL=$($SCRIPT_DIR/ddg_search.sh "$QUERY")
     if [ $? -ne 0 ]; then
         echo "[ERROR] $NAME $i CFP not found"
         continue
@@ -31,7 +32,7 @@ for i in "${TODO_YEARS[@]}"; do
         echo "[ERROR] $CFP_URL download failed"
         continue
     fi
-    echo "CFP URL: $CFP_URL"
+    echo "CFP URL: $CFP_URL (${#CFP_WEBPAGE} chars, searched '$QUERY')"
     echo "$CFP_WEBPAGE" > "$i/cfp.html"
 
     # Check we have the right thing
@@ -117,5 +118,5 @@ for i in "${TODO_YEARS[@]}"; do
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Conference" "" "$CITY_COUNTRY" "$CONFERENCE_START" "$CONFERENCE_END" >> "$i/deadlines.ics"
     $SCRIPT_DIR/ics_calendar.sh end >> "$i/deadlines.ics"
 
-    exit 1
+    exit 0
 done
