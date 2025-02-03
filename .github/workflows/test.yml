@@ -4,6 +4,9 @@ on:
   # Run once a month
   # schedule:
   #   - cron: "0 0 1 * *"
+  push:
+    branches:
+      - main
 
 jobs:
   test:
@@ -11,8 +14,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - run: ./scripts/setup.sh
-    - run: ./scripts/conf.sh CAV
 
     - name: Debugging with tmate
       uses: mxschmitt/action-tmate@v3.19
+
+    - run: ./scripts/setup.sh
+    - run: ./scripts/conf.sh CAV
+
