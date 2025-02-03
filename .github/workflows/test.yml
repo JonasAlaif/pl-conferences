@@ -17,11 +17,10 @@ jobs:
     - name: Set Swap Space
       uses: pierotofy/set-swap-space@master
       with:
-        swap-size-gb: 8
+        swap-size-gb: 10
 
     - run: ./scripts/setup.sh
+    - run: ./scripts/conf.sh CAV
 
     - name: Debugging with tmate
       uses: mxschmitt/action-tmate@v3.19
-
-    - run: ./scripts/conf.sh CAV

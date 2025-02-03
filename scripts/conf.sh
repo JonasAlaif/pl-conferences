@@ -82,14 +82,14 @@ for i in "${TODO_YEARS[@]}"; do
     CONFERENCE_START_Q="The page above is the call for papers of $NAME $i. Find the date when the conference starts (after $NOTIFICATION). $DATE_Q_SUFFIX"
     CONFERENCE_START=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CONFERENCE_START_Q" curt)
     CONFERENCE_START_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_START" +%Y)
-    if [ "$CONFERENCE_START_YEAR" != $i ] && [ "$CONFERENCE_START_YEAR" != $im1 ]; then
+    if [ "$CONFERENCE_START_YEAR" != $i ]; then
         echo "[ERROR] $NAME $i conference start not found"
         continue
     fi
     CONFERENCE_END_Q="The page above is the call for papers of $NAME $i. Find the month, day and year when the conference ends (it starts $CONFERENCE_START). $DATE_Q_SUFFIX"
     CONFERENCE_END=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CONFERENCE_END_Q" curt)
     CONFERENCE_END_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_END" +%Y)
-    if [ "$CONFERENCE_END_YEAR" != $i ] && [ "$CONFERENCE_END_YEAR" != $im1 ]; then
+    if [ "$CONFERENCE_END_YEAR" != $i ]; then
         echo "[ERROR] $NAME $i conference end not found"
         continue
     fi
@@ -117,6 +117,4 @@ for i in "${TODO_YEARS[@]}"; do
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Notification" "" "" "$NOTIFICATION" "$NOTIFICATION" >> "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Conference" "" "$CITY_COUNTRY" "$CONFERENCE_START" "$CONFERENCE_END" >> "$i/deadlines.ics"
     $SCRIPT_DIR/ics_calendar.sh end >> "$i/deadlines.ics"
-
-    exit 0
 done
