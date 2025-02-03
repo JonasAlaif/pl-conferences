@@ -6,7 +6,7 @@ FROM="$1"
 TO=$(($(date +'%Y')+1))
 
 for i in $(seq $FROM $TO); do
-    [ -f "$i/deadlines.icsTODO" ] && continue || true
+    [ -f "$i/deadlines.ics" ] && continue || true
     [ -d "$i" ] && rm -rf "$i" || true
     echo $i
 done

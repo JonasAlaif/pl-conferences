@@ -21,6 +21,4 @@ jobs:
 
     - run: ./scripts/setup.sh
     - run: ./scripts/conf.sh CAV
-
-    - name: Debugging with tmate
-      uses: mxschmitt/action-tmate@v3.19
+    - run: ./scripts/commit.sh CAV

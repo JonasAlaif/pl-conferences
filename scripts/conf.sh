@@ -17,7 +17,7 @@ echo "Downloading data for $NAME for years ${TODO_YEARS[@]}"
 
 for i in "${TODO_YEARS[@]}"; do
     echo -e "======\nDownloading data for $NAME $i\n======"
-    [ -d "$i" ] && exit 1 || mkdir "$i"
+    [ -d "$i" ] && exit 1
     im1=$((i-1))
 
     # Search for the call for papers webpage
@@ -33,7 +33,6 @@ for i in "${TODO_YEARS[@]}"; do
         continue
     fi
     echo "CFP URL: $CFP_URL (${#CFP_WEBPAGE} chars, searched '$QUERY')"
-    echo "$CFP_WEBPAGE" > "$i/cfp.html"
 
     # Check we have the right thing
     CFP_Q="Is the webpage above an error page (e.g. 404) or normal page with information? Answer with 'Yes' if error or 'No' if normal only, no full sentence. One word answer."
@@ -98,8 +97,7 @@ for i in "${TODO_YEARS[@]}"; do
     CITY_COUNTRY_Q="The page above is the call for papers of $NAME $i. What city and world country is the $NAME $i conference? Answer with 'city, world country' or 'No' if not found, no full sentence. Two word answer."
     CITY_COUNTRY=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CITY_COUNTRY_Q" curt)
     if [ "$CITY_COUNTRY" == "No" ]; then
-        echo "[ERROR] $NAME $i city and country not found"
-        continue
+        CITY_COUNTRY=""
     fi
 
     EVENT_DESCRIPTION_Q="The page above is the call for papers of $NAME $i. Write a short paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
@@ -111,6 +109,8 @@ for i in "${TODO_YEARS[@]}"; do
         continue
     fi
 
+    mkdir "$i"
+    echo "$CFP_WEBPAGE" > "$i/cfp.html"
     $SCRIPT_DIR/ics_calendar.sh start > "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION" "$PAPER_SUBMISSION" >> "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Rebuttal Period" "" "" "$REBUTTAL_START" "$REBUTTAL_END" >> "$i/deadlines.ics"
