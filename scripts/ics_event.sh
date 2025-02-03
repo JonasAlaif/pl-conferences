@@ -7,13 +7,15 @@ if [ "$#" -ne 5 ]; then
     exit 1
 fi
 
+SCRIPT_DIR="$(dirname "$0" | xargs realpath)"
+
 NAME="$1"
 DESC="$2"
 LOCATION="$3"
-START_DATE=$(gdate -d "$4" +%Y%m%d)
-END_DATE=$(gdate -d "$5 + 1 day" +%Y%m%d)
+START_DATE=$($SCRIPT_DIR/date.sh -d "$4" +%Y%m%d)
+END_DATE=$($SCRIPT_DIR/date.sh -d "$5 + 1 day" +%Y%m%d)
 UUID=$(uuidgen)
-TIMESTAMP=$(gdate -u +%Y%m%dT%H%M%SZ)
+TIMESTAMP=$($SCRIPT_DIR/date.sh -u +%Y%m%dT%H%M%SZ)
 
 echo "BEGIN:VEVENT
 UID:${UUID}

@@ -45,7 +45,7 @@ for i in "${TODO_YEARS[@]}"; do
     # Find the paper submission deadline
     PAPER_SUBMISSION_Q="The page above is the call for papers of $NAME $i. In this page, find the date of the paper submission deadline (year either $im1 or $i). $DATE_Q_SUFFIX"
     PAPER_SUBMISSION=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$PAPER_SUBMISSION_Q" curt)
-    PAPER_SUBMISSION_YEAR=$(gdate -d "$PAPER_SUBMISSION" +%Y)
+    PAPER_SUBMISSION_YEAR=$($SCRIPT_DIR/date.sh -d "$PAPER_SUBMISSION" +%Y)
     # Either the same year or a year earlier
     if [ "$PAPER_SUBMISSION_YEAR" != $i ] && [ "$PAPER_SUBMISSION_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i paper submission not found"
@@ -55,14 +55,14 @@ for i in "${TODO_YEARS[@]}"; do
     # Find the rebuttal period dates
     REBUTTAL_START_Q="The page above is the call for papers of $NAME $i. Find the date when the author feedback (rebuttal) period starts (a few months after $PAPER_SUBMISSION). $DATE_Q_SUFFIX"
     REBUTTAL_START=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$REBUTTAL_START_Q" curt)
-    REBUTTAL_START_YEAR=$(gdate -d "$REBUTTAL_START" +%Y)
+    REBUTTAL_START_YEAR=$($SCRIPT_DIR/date.sh -d "$REBUTTAL_START" +%Y)
     if [ "$REBUTTAL_START_YEAR" != $i ] && [ "$REBUTTAL_START_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i rebuttal start not found"
         continue
     fi
     REBUTTAL_END_Q="The page above is the call for papers of $NAME $i. Find the date when the author feedback (rebuttal) period ends (it starts $REBUTTAL_START). $DATE_Q_SUFFIX"
     REBUTTAL_END=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$REBUTTAL_END_Q" curt)
-    REBUTTAL_END_YEAR=$(gdate -d "$REBUTTAL_END" +%Y)
+    REBUTTAL_END_YEAR=$($SCRIPT_DIR/date.sh -d "$REBUTTAL_END" +%Y)
     if [ "$REBUTTAL_END_YEAR" != $i ] && [ "$REBUTTAL_END_YEAR" !- $im1 ]; then
         echo "[ERROR] $NAME $i rebuttal end not found"
         continue
@@ -71,7 +71,7 @@ for i in "${TODO_YEARS[@]}"; do
     # Find the notification (accept/reject) date
     NOTIFICATION_Q="The page above is the call for papers of $NAME $i. Find the date when the paper notification (of acceptance/rejection) is (after $REBUTTAL_END). $DATE_Q_SUFFIX"
     NOTIFICATION=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$NOTIFICATION_Q" curt)
-    NOTIFICATION_YEAR=$(gdate -d "$NOTIFICATION" +%Y)
+    NOTIFICATION_YEAR=$($SCRIPT_DIR/date.sh -d "$NOTIFICATION" +%Y)
     if [ "$NOTIFICATION_YEAR" != $i ] && [ "$NOTIFICATION_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i notification not found"
         continue
@@ -80,14 +80,14 @@ for i in "${TODO_YEARS[@]}"; do
     # Find the conference period dates
     CONFERENCE_START_Q="The page above is the call for papers of $NAME $i. Find the date when the conference starts (after $NOTIFICATION). $DATE_Q_SUFFIX"
     CONFERENCE_START=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CONFERENCE_START_Q" curt)
-    CONFERENCE_START_YEAR=$(gdate -d "$CONFERENCE_START" +%Y)
+    CONFERENCE_START_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_START" +%Y)
     if [ "$CONFERENCE_START_YEAR" != $i ] && [ "$CONFERENCE_START_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i conference start not found"
         continue
     fi
     CONFERENCE_END_Q="The page above is the call for papers of $NAME $i. Find the month, day and year when the conference ends (it starts $CONFERENCE_START). $DATE_Q_SUFFIX"
     CONFERENCE_END=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CONFERENCE_END_Q" curt)
-    CONFERENCE_END_YEAR=$(gdate -d "$CONFERENCE_END" +%Y)
+    CONFERENCE_END_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_END" +%Y)
     if [ "$CONFERENCE_END_YEAR" != $i ] && [ "$CONFERENCE_END_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i conference end not found"
         continue

@@ -11,6 +11,5 @@ curl -fsSL https://ollama.com/install.sh | sh
 llm/setup.sh
 
 # brew install ddgr
-apt install ddgr
-
-# npm install -g readability-cli
+sudo apt install ddgr tidy
+sudo npm install -g readability-cli
