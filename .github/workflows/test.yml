@@ -15,9 +15,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Debugging with tmate
-      uses: mxschmitt/action-tmate@v3.19
-
     - run: ./scripts/setup.sh
     - run: ./scripts/conf.sh CAV
 
+    - name: Debugging with tmate
+      uses: mxschmitt/action-tmate@v3.19
