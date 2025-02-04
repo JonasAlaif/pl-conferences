@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:b0b05d3c-05f3-4d4a-8a56-ee24ef080986
+DTSTAMP:20250204T121042Z
+DTSTART;VALUE=DATE:20250131
+DTEND;VALUE=DATE:20250201
+SUMMARY:[CAV 2025] Paper Submission Deadline
+DESCRIPTION:To submit a paper to CAV 2025, authors must follow these guidelines: Paper submissions in three categories (Regular Papers, Tool Papers, and Industrial Experience Reports & Case Studies) are accepted until January 31, 2025 AoE. Regular papers should not exceed 18 pages in LNCS format, excluding references and appendices, and must be anonymized. Tool papers have a 10-page limit and do not require anonymity. Industrial Experience Reports and Case Studies also have a 10-page limit and are exempt from anonymity requirements. Submissions can be made through the main submission site at https://cav2025.hotcrp.com/. Authors should ensure their submissions comply with the conference's formatting guidelines, available on the website. The review process includes a feedback/rebuttal period where authors can respond to reviewer comments.
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:accabbd0-3f0e-42af-9830-26cbc298d68f
+DTSTAMP:20250204T121042Z
+DTSTART;VALUE=DATE:20250311
+DTEND;VALUE=DATE:20250315
+SUMMARY:[CAV 2025] Rebuttal Period
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:649e2661-ad9e-400b-b397-0ee90450df85
+DTSTAMP:20250204T121042Z
+DTSTART;VALUE=DATE:20250402
+DTEND;VALUE=DATE:20250403
+SUMMARY:[CAV 2025] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:e5da1a87-ad11-4dc0-abc6-4c1a1dd0b772
+DTSTAMP:20250204T121042Z
+DTSTART;VALUE=DATE:20250721
+DTEND;VALUE=DATE:20250726
+SUMMARY:[CAV 2025] Conference
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+END:VCALENDAR

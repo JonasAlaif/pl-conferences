@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:60f62adc-6617-4531-a883-ab504a1d6623
+DTSTAMP:20250204T114518Z
+DTSTART;VALUE=DATE:20220121
+DTEND;VALUE=DATE:20220122
+SUMMARY:[CAV 2022] Paper Submission Deadline
+DESCRIPTION:To submit a paper to CAV 2022, authors must follow these guidelines: submissions in three categories (Regular Papers, Tool Papers, and Industrial Experience Reports & Case Studies) are accepted until January 21, 2022 AoE. Regular Papers should be anonymized and not exceed 18 pages in LNCS format, while Tool Papers and Industrial Experience Reports & Case Studies have a maximum of 10 pages each. Submissions can be made through the EasyChair conference system at https://easychair.org/conferences/?conf=cav2022. Authors are encouraged to consult SIGPLAN’s Empirical Evaluation Guidelines when reporting on empirical results, and those submitting Regular Papers may include an appendix exempt from page limit restrictions.
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:0768e989-4461-4a24-a384-7b64dc84283e
+DTSTAMP:20250204T114518Z
+DTSTART;VALUE=DATE:20220323
+DTEND;VALUE=DATE:20220327
+SUMMARY:[CAV 2022] Rebuttal Period
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:094c39f3-f575-4d77-9a87-8d6c2898e99e
+DTSTAMP:20250204T114518Z
+DTSTART;VALUE=DATE:20220430
+DTEND;VALUE=DATE:20220501
+SUMMARY:[CAV 2022] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:04d96127-f69c-4f1e-81b8-b89bd613da5e
+DTSTAMP:20250204T114518Z
+DTSTART;VALUE=DATE:20220807
+DTEND;VALUE=DATE:20220811
+SUMMARY:[CAV 2022] Conference
+DESCRIPTION:
+LOCATION:Haifa, Israel
+END:VEVENT
+END:VCALENDAR

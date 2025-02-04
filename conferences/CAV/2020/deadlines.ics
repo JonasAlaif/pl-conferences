@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:29a8e70e-8349-4c9d-b5b6-adebd97b0288
+DTSTAMP:20250204T112706Z
+DTSTART;VALUE=DATE:20200128
+DTEND;VALUE=DATE:20200129
+SUMMARY:[CAV 2020] Paper Submission Deadline
+DESCRIPTION:To submit a paper to CAV 2020, authors must follow these guidelines: Papers in three categories - Regular Papers, Tool Papers, and Industrial Experience Reports & Case Studies - can be submitted by January 28, 2020 AOE through the EasyChair submission site (https://easychair.org/conferences/?conf=cav2020). Regular Papers should not exceed 20 pages in LNCS format, must be anonymized, and include a clearly marked appendix exempt from page limit restrictions. Tool Papers require an artifact submission for evaluation by the paper submission deadline and should describe system and implementation aspects of a tool with a large user base. Industrial Experience Reports & Case Studies should not exceed 10 pages and are expected to describe the use of formal methods techniques in industrial settings or new application domains. Authors can include references, appendices, and an artifact for evaluation by submitting through the EasyChair site.
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:88469846-54a9-40d6-9e5c-d84b5b051b27
+DTSTAMP:20250204T112706Z
+DTSTART;VALUE=DATE:20200312
+DTEND;VALUE=DATE:20200317
+SUMMARY:[CAV 2020] Rebuttal Period
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:84a4b5fe-9e89-49b2-b3b7-4a85517bb60b
+DTSTAMP:20250204T112706Z
+DTSTART;VALUE=DATE:20200406
+DTEND;VALUE=DATE:20200407
+SUMMARY:[CAV 2020] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:bfde7641-f770-41a4-b568-1048c637358c
+DTSTAMP:20250204T112706Z
+DTSTART;VALUE=DATE:20200719
+DTEND;VALUE=DATE:20200725
+SUMMARY:[CAV 2020] Conference
+DESCRIPTION:
+LOCATION:Los Angeles, USA
+END:VEVENT
+END:VCALENDAR

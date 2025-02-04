@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:3dac3d16-ca3e-4a5c-9e39-81d0ef7bfd2c
+DTSTAMP:20250204T110111Z
+DTSTART;VALUE=DATE:20170124
+DTEND;VALUE=DATE:20170125
+SUMMARY:[CAV 2017] Paper Submission Deadline
+DESCRIPTION:To submit a paper to CAV 2017, authors must follow the guidelines outlined on the official website at http://cav2017.mpi-sws.org/. Submissions are sought in two categories: Regular Papers and Tool Papers. Regular Papers should not exceed 16 pages in LNCS format, while Tool Papers should not exceed 6 pages. Authors can include a clearly marked appendix at the end of their submissions, exempt from page limit restrictions. The submission deadline for papers is January 24, 2017 (Tuesday). Submissions must be made via the online submission system and must adhere to a lightweight double-blind reviewing process. This means that committee members will not have access to authors' names or affiliations as they review a paper. Authors are required to omit their names and institutions from the submitted papers and reference their own related work in the third person. Tool Papers require the submission of an artifact for evaluation by the submission deadline, which will be evaluated concurrently with the review process. The proceedings of the conference will be published in the Springer LNCS series, and a selection of papers will be invited to a special issue of Formal Methods in System Design and the Journal of the ACM.
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:738a16f7-588e-442a-ae5f-d29b1d3dda0a
+DTSTAMP:20250204T110111Z
+DTSTART;VALUE=DATE:20170320
+DTEND;VALUE=DATE:20170323
+SUMMARY:[CAV 2017] Rebuttal Period
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:03810cdb-8c11-4a03-bef6-05a6f7b90d90
+DTSTAMP:20250204T110111Z
+DTSTART;VALUE=DATE:20170412
+DTEND;VALUE=DATE:20170413
+SUMMARY:[CAV 2017] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:1aef5fab-c13c-4922-ad25-aa8a3ee0057c
+DTSTAMP:20250204T110111Z
+DTSTART;VALUE=DATE:20170724
+DTEND;VALUE=DATE:20170729
+SUMMARY:[CAV 2017] Conference
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+END:VCALENDAR

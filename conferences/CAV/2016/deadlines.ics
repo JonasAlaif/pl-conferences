@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:3954edf9-ec09-42f0-a3ad-4fbe5509fc22
+DTSTAMP:20250204T105014Z
+DTSTART;VALUE=DATE:20160129
+DTEND;VALUE=DATE:20160130
+SUMMARY:[CAV 2016] Paper Submission Deadline
+DESCRIPTION:To submit a paper to CAV 2016, authors can follow these steps: Submissions on a wide range of topics are sought, particularly ones that identify new research directions. The submission process will be in two categories: Regular Papers and Tool Papers. Regular Papers should not exceed 15 pages in LNCS format, while Tool Papers should not exceed 6 pages. Authors must adhere to the lightweight double-blind reviewing process by omitting their names and institutions from the paper and referencing their own related work in the third person. Submissions will be accepted via the conference website at http://cav16.cs.toronto.edu/cav16/. The submission deadline for Regular Papers is January 29, 2016, while Tool Papers have no specific deadline mentioned. Authors are encouraged to provide supplementary material that supports their claims, but it must not be anonymized and will only be made available to reviewers after they submit their first-draft reviews.
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:844e752c-0158-4bed-a71d-bd5effc59123
+DTSTAMP:20250204T105014Z
+DTSTART;VALUE=DATE:20160323
+DTEND;VALUE=DATE:20160327
+SUMMARY:[CAV 2016] Rebuttal Period
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:f5a45cdd-b0e7-479c-b86b-af76c789d457
+DTSTAMP:20250204T105014Z
+DTSTART;VALUE=DATE:20160415
+DTEND;VALUE=DATE:20160416
+SUMMARY:[CAV 2016] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:077d478b-bb4b-4e24-ac02-746a64f4aab1
+DTSTAMP:20250204T105014Z
+DTSTART;VALUE=DATE:20160720
+DTEND;VALUE=DATE:20160724
+SUMMARY:[CAV 2016] Conference
+DESCRIPTION:
+LOCATION:Toronto Canada
+END:VEVENT
+END:VCALENDAR
