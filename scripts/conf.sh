@@ -22,7 +22,7 @@ for i in "${TODO_YEARS[@]}"; do
     $SCRIPT_DIR/https/get_cfp.sh "$NAME" "$i"
     #  &
     # pids+=($!)
-    # sleep 3
+    sleep 1
 done
 
 # for pid in "${pids[@]}"; do
