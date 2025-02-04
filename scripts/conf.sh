@@ -17,18 +17,14 @@ echo "Downloading data for $NAME for years ${TODO_YEARS[@]}"
 
 for i in "${TODO_YEARS[@]}"; do
     [ -d "$i" ] && exit 1 || true
+    echo -e "======\nProcessing $NAME $i\n======"
+    im1=$((i-1))
 
     # Download the CFPs
-    $SCRIPT_DIR/https/get_cfp.sh "$NAME" "$i"
+    CFP_WEBPAGE=$($SCRIPT_DIR/https/get_cfp.sh "$NAME" "$i")
+    [ $? -ne 0 ] && continue || true
 
-    # Skip if the CFP was not found
-    [ ! -f "$i/cfp.html" ] && continue || true
-
-    echo -e "======\nExtracting data for $NAME $i\n======"
-    im1=$((i-1))
-    CFP_WEBPAGE=$(cat "$i/cfp.html")
-
-    # Check we have the right thing
+    # Check page is not an error page
     CFP_Q="Is the webpage above an error page (e.g. 404) or normal page with information? Answer with 'Yes' if error or 'No' if normal only, no full sentence. One word answer."
     LLM_OUTPUT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_Q" curt)
     if [ "$LLM_OUTPUT" == "Yes" ]; then
@@ -117,37 +113,11 @@ for i in "${TODO_YEARS[@]}"; do
         CITY_COUNTRY=""
     fi
 
-    echo "{
-    \"paper_submission\": \"$PAPER_SUBMISSION\",
-    \"rebuttal_start\": \"$REBUTTAL_START\",
-    \"rebuttal_end\": \"$REBUTTAL_END\",
-    \"notification\": \"$NOTIFICATION\",
-    \"conference_start\": \"$CONFERENCE_START\",
-    \"conference_end\": \"$CONFERENCE_END\",
-    \"city_country\": \"$CITY_COUNTRY\"
-}" > "$i/deadlines.json"
-done
-
-echo "Collected all dates for $NAME, creating ICS files"
-
-for i in "${TODO_YEARS[@]}"; do
-    if [ ! -f "$i/deadlines.json" ]; then
-        [ -d "$i" ] && rm -rf "$i" || true
-        continue
-    fi
-
-    CFP_WEBPAGE=$(cat "$i/cfp.html")
-    PAPER_SUBMISSION=$(jq -r '.paper_submission' "$i/deadlines.json")
-    REBUTTAL_START=$(jq -r '.rebuttal_start' "$i/deadlines.json")
-    REBUTTAL_END=$(jq -r '.rebuttal_end' "$i/deadlines.json")
-    NOTIFICATION=$(jq -r '.notification' "$i/deadlines.json")
-    CONFERENCE_START=$(jq -r '.conference_start' "$i/deadlines.json")
-    CONFERENCE_END=$(jq -r '.conference_end' "$i/deadlines.json")
-    CITY_COUNTRY=$(jq -r '.city_country' "$i/deadlines.json")
-    rm "$i/deadlines.json"
-
     EVENT_DESCRIPTION_Q="The page above is the call for papers of $NAME $i. Write a short paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
     EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" full)
+
+    mkdir "$i"
+    echo "$CFP_WEBPAGE" > "$i/cfp.html"
 
     $SCRIPT_DIR/ics_calendar.sh start > "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION" "$PAPER_SUBMISSION" >> "$i/deadlines.ics"
