@@ -15,30 +15,43 @@ START_YEAR=$(echo "$INFO" | jq -r '.start')
 TODO_YEARS=( $($SCRIPT_DIR/find_years.sh "$START_YEAR") )
 echo "Downloading data for $NAME for years ${TODO_YEARS[@]}"
 
+# Download the CFPs
+# pids=()
 for i in "${TODO_YEARS[@]}"; do
-    echo -e "======\nDownloading data for $NAME $i\n======"
-    [ -d "$i" ] && exit 1
-    im1=$((i-1))
+    [ -d "$i" ] && exit 1 || true
+    $SCRIPT_DIR/https/get_cfp.sh "$NAME" "$i"
+    #  &
+    # pids+=($!)
+    # sleep 3
+done
 
-    # Search for the call for papers webpage
-    QUERY="$NAME $i call for papers cfp"
-    CFP_URL=$($SCRIPT_DIR/ddg_search.sh "$QUERY")
-    if [ $? -ne 0 ]; then
-        echo "[ERROR] $NAME $i CFP not found"
-        continue
-    fi
-    CFP_WEBPAGE=$($SCRIPT_DIR/fetch.sh "$CFP_URL")
-    if [ $? -ne 0 ]; then
-        echo "[ERROR] $CFP_URL download failed"
-        continue
-    fi
-    echo "CFP URL: $CFP_URL (${#CFP_WEBPAGE} chars, searched '$QUERY')"
+# for pid in "${pids[@]}"; do
+#     wait $pid
+# done
+
+for i in "${TODO_YEARS[@]}"; do
+    # Skip if the CFP was not found
+    [ ! -f "$i/cfp.html" ] && continue || true
+
+    echo -e "======\nExtracting data for $NAME $i\n======"
+    im1=$((i-1))
+    CFP_WEBPAGE=$(cat "$i/cfp.html")
 
     # Check we have the right thing
     CFP_Q="Is the webpage above an error page (e.g. 404) or normal page with information? Answer with 'Yes' if error or 'No' if normal only, no full sentence. One word answer."
     LLM_OUTPUT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_Q" curt)
     if [ "$LLM_OUTPUT" == "Yes" ]; then
+        echo "[ERROR] $NAME $i CFP error page"
+        echo "$CFP_WEBPAGE"
+        continue
+    fi
+
+    # Check we have the right thing
+    CFP_Q="Is the webpage above a page about \"$NAME $i\"? Answer with 'Yes' if both the name and year are mentioned, 'No' otherwise. No full sentence, one word answer."
+    LLM_OUTPUT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_Q" curt)
+    if [ "$LLM_OUTPUT" == "No" ]; then
         echo "[ERROR] $NAME $i CFP bad page"
+        echo "$CFP_WEBPAGE"
         continue
     fi
 
@@ -49,6 +62,7 @@ for i in "${TODO_YEARS[@]}"; do
     # Either the same year or a year earlier
     if [ "$PAPER_SUBMISSION_YEAR" != $i ] && [ "$PAPER_SUBMISSION_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i paper submission not found"
+        echo "$CFP_WEBPAGE"
         continue
     fi
 
@@ -58,6 +72,7 @@ for i in "${TODO_YEARS[@]}"; do
     REBUTTAL_START_YEAR=$($SCRIPT_DIR/date.sh -d "$REBUTTAL_START" +%Y)
     if [ "$REBUTTAL_START_YEAR" != $i ] && [ "$REBUTTAL_START_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i rebuttal start not found"
+        echo "$CFP_WEBPAGE"
         continue
     fi
     REBUTTAL_END_Q="The page above is the call for papers of $NAME $i. Find the date when the author feedback (rebuttal) period ends (it starts $REBUTTAL_START). $DATE_Q_SUFFIX"
@@ -65,6 +80,7 @@ for i in "${TODO_YEARS[@]}"; do
     REBUTTAL_END_YEAR=$($SCRIPT_DIR/date.sh -d "$REBUTTAL_END" +%Y)
     if [ "$REBUTTAL_END_YEAR" != $i ] && [ "$REBUTTAL_END_YEAR" !- $im1 ]; then
         echo "[ERROR] $NAME $i rebuttal end not found"
+        echo "$CFP_WEBPAGE"
         continue
     fi
 
@@ -74,6 +90,7 @@ for i in "${TODO_YEARS[@]}"; do
     NOTIFICATION_YEAR=$($SCRIPT_DIR/date.sh -d "$NOTIFICATION" +%Y)
     if [ "$NOTIFICATION_YEAR" != $i ] && [ "$NOTIFICATION_YEAR" != $im1 ]; then
         echo "[ERROR] $NAME $i notification not found"
+        echo "$CFP_WEBPAGE"
         continue
     fi
 
@@ -83,6 +100,7 @@ for i in "${TODO_YEARS[@]}"; do
     CONFERENCE_START_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_START" +%Y)
     if [ "$CONFERENCE_START_YEAR" != $i ]; then
         echo "[ERROR] $NAME $i conference start not found"
+        echo "$CFP_WEBPAGE"
         continue
     fi
     CONFERENCE_END_Q="The page above is the call for papers of $NAME $i. Find the month, day and year when the conference ends (it starts $CONFERENCE_START). $DATE_Q_SUFFIX"
@@ -90,6 +108,14 @@ for i in "${TODO_YEARS[@]}"; do
     CONFERENCE_END_YEAR=$($SCRIPT_DIR/date.sh -d "$CONFERENCE_END" +%Y)
     if [ "$CONFERENCE_END_YEAR" != $i ]; then
         echo "[ERROR] $NAME $i conference end not found"
+        echo "$CFP_WEBPAGE"
+        continue
+    fi
+
+    # Check that the dates are all in order
+    if [ "$PAPER_SUBMISSION" \> "$REBUTTAL_START" ] || [ "$REBUTTAL_START" \> "$REBUTTAL_END" ] || [ "$REBUTTAL_END" \> "$NOTIFICATION" ] || [ "$NOTIFICATION" \> "$CONFERENCE_START" ] || [ "$CONFERENCE_START" \> "$CONFERENCE_END" ]; then
+        echo "[ERROR] $NAME $i dates are not in order"
+        echo "$CFP_WEBPAGE"
         continue
     fi
 
@@ -100,17 +126,38 @@ for i in "${TODO_YEARS[@]}"; do
         CITY_COUNTRY=""
     fi
 
-    EVENT_DESCRIPTION_Q="The page above is the call for papers of $NAME $i. Write a short paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
-    EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" full)
+    echo "{
+    \"paper_submission\": \"$PAPER_SUBMISSION\",
+    \"rebuttal_start\": \"$REBUTTAL_START\",
+    \"rebuttal_end\": \"$REBUTTAL_END\",
+    \"notification\": \"$NOTIFICATION\",
+    \"conference_start\": \"$CONFERENCE_START\",
+    \"conference_end\": \"$CONFERENCE_END\",
+    \"city_country\": \"$CITY_COUNTRY\"
+}" > "$i/deadlines.json"
+done
 
-    # Check that the dates are all in order
-    if [ "$PAPER_SUBMISSION" \> "$REBUTTAL_START" ] || [ "$REBUTTAL_START" \> "$REBUTTAL_END" ] || [ "$REBUTTAL_END" \> "$NOTIFICATION" ] || [ "$NOTIFICATION" \> "$CONFERENCE_START" ] || [ "$CONFERENCE_START" \> "$CONFERENCE_END" ]; then
-        echo "[ERROR] $NAME $i dates are not in order"
+echo "Collected all dates for $NAME, creating ICS files"
+
+for i in "${TODO_YEARS[@]}"; do
+    if [ ! -f "$i/deadlines.json" ]; then
+        [ -d "$i" ] && rm -rf "$i" || true
         continue
     fi
 
-    mkdir "$i"
-    echo "$CFP_WEBPAGE" > "$i/cfp.html"
+    CFP_WEBPAGE=$(cat "$i/cfp.html")
+    PAPER_SUBMISSION=$(jq -r '.paper_submission' "$i/deadlines.json")
+    REBUTTAL_START=$(jq -r '.rebuttal_start' "$i/deadlines.json")
+    REBUTTAL_END=$(jq -r '.rebuttal_end' "$i/deadlines.json")
+    NOTIFICATION=$(jq -r '.notification' "$i/deadlines.json")
+    CONFERENCE_START=$(jq -r '.conference_start' "$i/deadlines.json")
+    CONFERENCE_END=$(jq -r '.conference_end' "$i/deadlines.json")
+    CITY_COUNTRY=$(jq -r '.city_country' "$i/deadlines.json")
+    rm "$i/deadlines.json"
+
+    EVENT_DESCRIPTION_Q="The page above is the call for papers of $NAME $i. Write a short paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
+    EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" full)
+
     $SCRIPT_DIR/ics_calendar.sh start > "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION" "$PAPER_SUBMISSION" >> "$i/deadlines.ics"
     $SCRIPT_DIR/ics_event.sh "[$NAME $i] Rebuttal Period" "" "" "$REBUTTAL_START" "$REBUTTAL_END" >> "$i/deadlines.ics"
