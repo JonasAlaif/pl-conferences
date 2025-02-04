@@ -25,18 +25,18 @@ for i in "${TODO_YEARS[@]}"; do
     [ $? -ne 0 ] && continue || true
 
     # Check page is not an error page
-    CFP_Q="Is the webpage above an error page (e.g. 404) or normal page with information? Answer with 'Yes' if error or 'No' if normal only, no full sentence. One word answer."
-    LLM_OUTPUT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_Q" curt)
-    if [ "$LLM_OUTPUT" == "Yes" ]; then
+    CFP_ERROR_Q="Is the webpage above an error page (e.g. 404) or normal page with information? Answer with 'Yes' if error or 'No' if normal only, no full sentence. One word answer."
+    CFP_ERROR=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_ERROR_Q" curt)
+    if [ "$CFP_ERROR" == "Yes" ]; then
         echo "[ERROR] $NAME $i CFP error page"
         echo "$CFP_WEBPAGE"
         continue
     fi
 
     # Check we have the right thing
-    CFP_Q="Is the webpage above a page about \"$NAME $i\"? Answer with 'Yes' if both the name and year are mentioned, 'No' otherwise. No full sentence, one word answer."
-    LLM_OUTPUT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_Q" curt)
-    if [ "$LLM_OUTPUT" == "No" ]; then
+    CFP_CORRECT_Q="Is the webpage above a page about \"$NAME $i\"? Answer with 'Yes' if both the name and year are mentioned, 'No' otherwise. No full sentence, one word answer."
+    CFP_CORRECT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_CORRECT_Q" curt)
+    if [ "$CFP_CORRECT" == "No" ]; then
         echo "[ERROR] $NAME $i CFP bad page"
         echo "$CFP_WEBPAGE"
         continue
