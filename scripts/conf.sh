@@ -34,7 +34,7 @@ for i in "${TODO_YEARS[@]}"; do
     fi
 
     # Check we have the right thing
-    CFP_CORRECT_Q="Is the webpage above a page about \"$NAME $i\"? Answer with 'Yes' if both the name and year are mentioned, 'No' otherwise. No full sentence, one word answer."
+    CFP_CORRECT_Q="Is the webpage above a page about '$NAME $i'? Answer with 'Yes' if both the name and year are mentioned, 'No' otherwise. No full sentence, one word answer."
     CFP_CORRECT=$($SCRIPT_DIR/llm/$MODEL.sh "$CFP_WEBPAGE" "$CFP_CORRECT_Q" curt)
     if [ "$CFP_CORRECT" == "No" ]; then
         echo "[ERROR] $NAME $i CFP bad page"
