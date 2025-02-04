@@ -15,21 +15,12 @@ START_YEAR=$(echo "$INFO" | jq -r '.start')
 TODO_YEARS=( $($SCRIPT_DIR/find_years.sh "$START_YEAR") )
 echo "Downloading data for $NAME for years ${TODO_YEARS[@]}"
 
-# Download the CFPs
-# pids=()
 for i in "${TODO_YEARS[@]}"; do
     [ -d "$i" ] && exit 1 || true
+
+    # Download the CFPs
     $SCRIPT_DIR/https/get_cfp.sh "$NAME" "$i"
-    #  &
-    # pids+=($!)
-    sleep 1
-done
 
-# for pid in "${pids[@]}"; do
-#     wait $pid
-# done
-
-for i in "${TODO_YEARS[@]}"; do
     # Skip if the CFP was not found
     [ ! -f "$i/cfp.html" ] && continue || true
 
