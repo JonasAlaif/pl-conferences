@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:fb8ced09-d1ed-49cf-ad3d-9f12662db1d8
+DTSTAMP:20250205T201723Z
+DTSTART;VALUE=DATE:20240730
+DTEND;VALUE=DATE:20240731
+SUMMARY:[OOPSLA 2024] Volunteer Application Deadline
+DESCRIPTION:Apply to volunteer at SPLASH 2024, offering conference fees in exchange for 12-15 hours of work between Oct 20-25 2024; priority given to students and researchers; apply by Jul 30 2024 via https://tinyurl.com/splash24-volunteer-application; contact cgamboa@andrew.cmu.edu, madhurima.chakraborty@email.ucr.edu, lfgomes@andrew.cmu.edu for questions; volunteers receive complimentary registration, free lunches, volunteer shirt, and access to social events; virtual and in-person participants welcome; see https://splashcon.org/2024/volunteers for more details
+LOCATION:
+END:VEVENT
+END:VCALENDAR

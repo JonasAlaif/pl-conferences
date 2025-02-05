@@ -1,0 +1,352 @@
+SPLASH 2023
+
+Sun 22 - Fri 27 October 2023 Cascais, Portugal
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Hotel Cascais Miragem
+    -   Registration
+    -   Sponsoring
+    -   Code of Conduct
+    -   Support for Attending the Conference
+    -   Live Streams
+    -   Instructions for Presenters
+    -   How to SPLASH (Quick Attendee Guide)
+    -   Instructions for Session Chairs
+-   Program
+    -   SPLASH Program
+    -   Your Program
+    -   Sun 22 Oct
+    -   Mon 23 Oct
+    -   Tue 24 Oct
+    -   Wed 25 Oct
+    -   Thu 26 Oct
+    -   Fri 27 Oct
+-   Tracks
+    -   -   SPLASH 2023
+        -   Awards
+        -   OOPSLA
+        -   OOPSLA Artifacts
+        -   Doctoral Symposium
+        -   Onward! Essays
+        -   Onward! Papers
+        -   PLMW
+        -   Posters
+        -   SPLASH-E
+        -   Student Research Competition
+        -   Volunteers
+        -   Workshops
+        -   DEI Activities
+        -   CARES
+        -   Sponsored Talks
+
+    -   -   Co-hosted Conferences
+        -   DLS
+        -   GPCE
+        -   LOPSTR
+        -   MPLR
+        -   PPDP
+        -   SAS
+            -   SAS
+            -   SAS
+            -   SAS Artifacts
+        -   SLE
+        -   Workshops
+        -   CONFLANG 23
+        -   FTSCS
+        -   HATRA
+        -   IWACO
+        -   LIVE
+        -   PAINT
+        -   PLF
+        -   REBLS
+        -   ST30
+        -   VMIL
+-   Organization
+    -   -   SPLASH 2023 Committees
+        -   Organizing Committee
+        -   Steering Committee
+        -   Track Committees
+        -   OOPSLA
+            -   OOPSLA Review Committee
+            -   External Review / Artifact Evaluation Committee
+        -   OOPSLA Artifacts
+        -   Doctoral Symposium
+        -   Onward! Essays
+            -   Program Committee
+            -   Onward! Steering Committee
+        -   Onward! Papers
+            -   Program Committee
+            -   Steering Committee
+        -   PLMW
+            -   Organizing Committee
+            -   Speakers & Panelists
+            -   Mentors
+        -   Posters
+        -   SPLASH-E
+            -   Program Commitee
+            -   Steering Committee
+        -   Student Research Competition
+            -   Organizers
+            -   Judges
+            -   Reviewers
+        -   Volunteers
+        -   Workshops
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   DLS
+            -   Program Committee
+            -   Steering Committee
+        -   GPCE
+            -   Organizing Committee
+            -   Program Committee
+        -   LOPSTR
+            -   N/A - check homepage
+        -   MPLR
+            -   Organizing Committee
+            -   Program Committee
+        -   PPDP
+            -   N/A - check homepage
+        -   SAS
+            -   Invited Speakers
+            -   Organizing Committee
+            -   SAS 2023
+            -   SAS 2023 Artifacts
+        -   SLE
+            -   Organizing Committee
+            -   Program Committee
+        -   Workshops
+        -   CONFLANG
+            -   Organizing Committee
+            -   Program Committee
+        -   FTSCS
+            -   Organizing Committee
+            -   Program Committee
+        -   HATRA
+            -   Organizing Committee
+            -   Program Committee
+        -   IWACO
+            -   Organizing Committee
+            -   Program Committee
+        -   LIVE
+            -   Organizing Committee
+            -   Program Committee
+        -   PAINT
+            -   Organizing Committee
+            -   Program Committee
+        -   PLF
+            -   Organizing Committee
+            -   Program Committee
+        -   REBLS
+            -   Organizing Committee
+            -   Program Committee
+        -   ST30
+            -   Organizing Committee
+            -   Programme Committee
+        -   VMIL
+            -   Organizing Committee
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   SPLASH 2025
+    -   SPLASH 2024
+    -   SPLASH 2023
+    -   SPLASH 2022
+    -   SPLASH 2021
+    -   SPLASH 2020
+    -   SPLASH 2019
+    -   SPLASH 2018
+    -   SPLASH 2017
+    -   SPLASH 2016
+    -   SPLASH 2015
+    -   SPLASH 2014
+    -   SPLASH 2013
+    -   SPLASH 2012
+    -   SPLASH 2011
+    -   SPLASH 2010
+    -   OOPSLA 2009
+    -   OOPSLA 2008
+    -   OOPSLA 2007
+    -   OOPSLA 2006
+    -   OOPSLA 2005
+    -   OOPSLA 2004
+    -   OOPSLA 2003
+    -   OOPSLA 2002
+    -   OOPSLA 2001
+    -   OOPSLA 2000
+
+-   Sign in
+-   Sign up
+
+SPLASH 2023 (series) /
+
+VolunteersSPLASH 2023
+
+Volunteers
+
+Sign up to be a Volunteer and help us make SPLASH 2023 a great
+experience for all attendants!
+
+SPLASH 2023 is pleased to offer a number of opportunities for
+volunteers, who are vital to the efficient operation and continued
+success of the conference each year. The volunteer program is a chance
+for students and Programming Languages researchers aspirants from around
+the world to participate in the conferences whilst assisting us in
+preparing and running the event.
+
+The Volunteer Program helps more people attend the SPLASH conference by
+covering conference fees, including access to the banquet (but not
+travel or lodging expenses) in exchange for a fixed number of work hours
+(usually from 12 to 15) helping with the conference organization.
+
+Eligibility
+
+Everyone is welcome to apply. Priority is given to junior members of our
+community, e.g. full- or part-time students of computer science and
+related fields.
+
+Duration
+
+Applicants must be available for at least five (5) full days between
+October 22nd and October 27th 2023, and will be expected to provide
+12-15 hours of volunteering work in that time. Volunteers may also be
+expected to be available for some amount of pre-conference discussion
+and training if necessary. Volunteers from all timezones are welcome.
+
+About Volunteering
+
+The skills, talents, and dedication of our Volunteers contribute to the
+overall quality of the conference.
+
+The Volunteer role this year will mainly involve working with the
+organizers to prepare for the conference by providing technical
+assistance to attendees, managing online Q&A and poster sessions, and
+supporting active communication in our online environment.
+
+Volunteering allows you to meet other people (faculty and students) in
+the Programming Languages (PL) Community. With several opportunities for
+networking, you can share ideas about your research, find topics you are
+passionate about, investigate career paths, and even find your future
+collaborators!
+
+Compensation
+
+-   A Complimentary Conference Registration, offering access to all open
+    sessions (i.e., parallel paper presentations, demonstrations, and
+    workshops) and conference proceedings.
+-   Free lunches and refreshments during breaks.
+-   Volunteer shirt.
+-   Free admission to all social events.
+
+Please note that volunteers are responsible for their own travel and
+accommodation arrangements.
+
+Virtual and in-person participants are welcome to apply to the
+volunteering program. We are looking forward to having you on our team!
+
+If you need additional travel funding, please consider SIGPLAN PAC
+Funding and PLMW.
+
+Please send an email to hannelitaa@gmail.com and cgamboa@andrew.cmu.edu
+if you have any further questions.
+
+Volunteering Applications
+
+Please apply using this form
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Sat 12 Aug 2023
+  Notification of acceptance
+
+  Mon 3 Jul - Mon 7 Aug 2023
+  Applications open
+  -----------------------------------------------------------------------
+
+Submission Link
+
+https://forms.gle/JJPzqs7Zee9Mdsoo8
+
+Organizers
+
+-   
+    [Catarina Gamboa]
+    Catarina GamboaStudent Volunteer Co-Chair
+
+    Carnegie Mellon University and LASIGE, University of Lisbon
+
+    Portugal
+-   
+    [Hanneli Tavante]
+    Hanneli TavanteStudent Volunteer Co-Chair
+
+    Unaffiliated
+
+xWed 5 Feb 21:00
+
+SPLASH 2023
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+Awards
+OOPSLA
+OOPSLA Artifacts
+Doctoral Symposium
+Onward! Essays
+Onward! Papers
+PLMW
+Posters
+SPLASH-E
+Student Research Competition
+Volunteers
+Workshops
+DEI Activities
+CARES
+Sponsored Talks
+
+Co-hosted Conferences
+
+DLS 2023
+GPCE 2023
+LOPSTR 2023
+MPLR 2023
+PPDP 2023
+SAS 2023
+SLE 2023
+
+Workshops
+
+CONFLANG 2023
+FTSCS 2023
+HATRA 2023
+IWACO 2023
+LIVE 2023
+PAINT 2023
+PLF 2023
+REBLS 2023
+ST30
+VMIL 2023
+
+Attending
+
+Venue: Hotel Cascais Miragem
+Registration
+Sponsoring
+Code of Conduct
+Support for Attending the Conference
+Live Streams
+Instructions for Presenters
+How to SPLASH (Quick Attendee Guide)
+Instructions for Session Chairs
+
+Sign Up

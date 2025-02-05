@@ -1,0 +1,359 @@
+SPLASH 2024
+
+Sun 20 - Fri 25 October 2024 Pasadena, California, United States
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Hilton Pasadena
+    -   Students
+    -   Registration
+    -   Visa Support Letters
+    -   Sponsoring
+    -   Code of conduct
+    -   Instructions for Presenters
+    -   Chair's Welcome
+    -   How to SPLASH (Quick Attendee Guide)
+    -   Mt. Baldy Bicycle Trip
+    -   Attractions Around Pasadena
+    -   Live Stream
+-   Program
+    -   SPLASH Program
+    -   Your Program
+    -   Sun 20 Oct
+    -   Mon 21 Oct
+    -   Tue 22 Oct
+    -   Wed 23 Oct
+    -   Thu 24 Oct
+    -   Fri 25 Oct
+-   Tracks
+    -   -   SPLASH 2024
+        -   DEI Activities
+        -   Doctoral Symposium
+        -   Keynotes
+        -   OOPSLA 2024
+        -   OOPSLA Artifacts
+        -   Onward! Essays
+        -   Onward! Papers
+        -   PLMW
+        -   Posters
+        -   REBASE
+        -   SPLASH-E
+        -   Student Research Competition
+        -   Volunteers
+        -   Workshops
+
+    -   -   Co-hosted Conferences
+        -   GPCE
+        -   SLE
+        -   Workshops
+        -   HATRA
+        -   IWACO
+        -   JENSFEST
+        -   LIVE
+        -   NSAD
+        -   PAINT
+        -   ProLaLa
+        -   UNSOUND
+        -   VIVEKFEST
+        -   VMIL
+            -   VMIL
+            -   - A tour of CPython's runtime
+        -   Co-hosted Symposia
+        -   SAS
+            -   SAS
+            -   SAS Artifacts
+-   Organization
+    -   -   SPLASH 2024 Committees
+        -   Organizing Committee
+        -   Steering Committee
+        -   Track Committees
+        -   Doctoral Symposium
+        -   OOPSLA 2024
+        -   OOPSLA Artifacts
+        -   Onward! Essays
+            -   Program Committee
+            -   Onward! Steering Committee
+        -   Onward! Papers
+            -   Program Committee
+            -   Steering Committee
+        -   PLMW
+            -   Organizing Committee
+            -   Speakers & Panelists
+            -   Mentors
+        -   Posters
+        -   REBASE
+        -   SPLASH-E
+            -   Program Commitee
+            -   Steering Committee
+        -   Student Research Competition
+            -   Organizers
+            -   Reviewers
+        -   Volunteers
+        -   Workshops
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   GPCE
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   SLE
+            -   Organizing Committee
+            -   Program Committee
+            -   Artifact Evaluation Committee
+            -   Steering Committee
+        -   Workshops
+        -   HATRA
+            -   Organizing Committee
+            -   Program Committee
+        -   IWACO
+            -   Organizing Committee
+            -   Program Committee
+        -   JENSFEST
+            -   Organizing Committee
+            -   Program Committee
+        -   LIVE
+            -   Organizing Committee
+            -   Program Committee
+        -   NSAD
+            -   Organizing Committee
+            -   Program Committee
+        -   PAINT
+            -   Organizing Committee
+            -   Program Committee
+        -   ProLaLa
+            -   Organizing Committee
+            -   Program Committee
+        -   UNSOUND
+            -   Organizing Committee
+        -   VIVEKFEST
+            -   Organizing Committee
+            -   Program Committee
+        -   VMIL
+            -   Organizing Committee
+            -   Program Committee
+        -   Co-hosted Symposia
+        -   SAS
+            -   SAS 2024 Organizing Committee
+            -   SAS 2024 Program Committee
+            -   SAS Artifacts
+-   Search
+-   Series
+    -   Series
+    -   SPLASH 2025
+    -   SPLASH 2024
+    -   SPLASH 2023
+    -   SPLASH 2022
+    -   SPLASH 2021
+    -   SPLASH 2020
+    -   SPLASH 2019
+    -   SPLASH 2018
+    -   SPLASH 2017
+    -   SPLASH 2016
+    -   SPLASH 2015
+    -   SPLASH 2014
+    -   SPLASH 2013
+    -   SPLASH 2012
+    -   SPLASH 2011
+    -   SPLASH 2010
+    -   OOPSLA 2009
+    -   OOPSLA 2008
+    -   OOPSLA 2007
+    -   OOPSLA 2006
+    -   OOPSLA 2005
+    -   OOPSLA 2004
+    -   OOPSLA 2003
+    -   OOPSLA 2002
+    -   OOPSLA 2001
+    -   OOPSLA 2000
+
+-   Sign in
+-   Sign up
+
+SPLASH 2024 (series) /
+
+VolunteersSPLASH 2024
+
+Volunteers
+
+Apply to be a Volunteer and help us make SPLASH 2024 a great experience
+for all attendants!
+
+SPLASH 2024 is pleased to offer a number of opportunities for
+volunteers, who are vital to the efficient operation and continued
+success of the conference each year. The volunteer program is a chance
+for students and Programming Languages researchers aspirants from around
+the world to participate in the conferences while assisting us in
+preparing and running the event.
+
+The Volunteer Program helps more people attend the SPLASH conference by
+covering conference fees, including access to the banquet (but not
+travel or lodging expenses), in exchange for a fixed number of work
+hours (usually from 12 to 15) helping with the conference organization.
+
+Eligibility
+
+Everyone is welcome to apply. Priority is given to junior members of our
+community, e.g. full- or part-time students of computer science and
+related fields.
+
+Duration
+
+Applicants must be available for at least five (5) full days between
+October 20th and October 25th 2024, and will be expected to provide
+12-15 hours of volunteering work in that time. Volunteers may also be
+expected to be available for some amount of pre-conference discussion
+and training if necessary. Volunteers from all timezones are welcome.
+
+About Volunteering
+
+The skills, talents, and dedication of our Volunteers contribute to the
+overall quality of the conference.
+
+The Volunteer role this year will mainly involve working with the
+organizers to prepare for the conference by providing technical
+assistance to attendees, managing online Q&A and poster sessions, and
+supporting active communication in our online environment.
+
+Volunteering allows you to meet other people (faculty and students) in
+the Programming Languages (PL) Community. With several opportunities for
+networking, you can share ideas about your research, find topics you are
+passionate about, investigate career paths, and even find your future
+collaborators!
+
+Compensation
+
+-   A Complimentary Conference Registration, offering access to all open
+    sessions (i.e., parallel paper presentations, demonstrations, and
+    workshops) and conference proceedings.
+-   Free lunches and refreshments during breaks.
+-   Volunteer shirt.
+-   Free admission to all social events.
+
+Please note that volunteers are responsible for their own travel and
+accommodation arrangements.
+
+Virtual and in-person participants are welcome to apply to the
+volunteering program. We are looking forward to having you on our team!
+
+If you need additional travel funding, please consider SIGPLAN PAC
+Funding and PLMW.
+
+Please send an email to cgamboa@andrew.cmu.edu,
+madhurima.chakraborty@email.ucr.edu, lfgomes@andrew.cmu.edu if you have
+any further questions.
+
+Volunteering Applications
+
+Please apply using this form!
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Thu 22 Aug 2024
+  Notification of Final decisions
+
+  Wed 14 Aug 2024
+  Notification of acceptance (extended)
+
+  Tue 30 Jul 2024
+  Volunteer applications close
+
+  Sat 15 Jun 2024
+  Volunteer applications open
+  -----------------------------------------------------------------------
+
+Submission Link
+
+https://tinyurl.com/splash24-volunteer-application
+
+Organizers
+
+-   
+    [Madhurima Chakraborty]
+    Madhurima ChakrabortyStudent Volunteer Co-Chair
+
+    University of California, Riverside
+-   
+    [Luis F. Gomes]
+    Luis F. GomesStudent Volunteer Co-Chair
+
+    Carnegie Mellon University
+
+    Portugal
+-   
+    [Catarina Gamboa]
+    Catarina GamboaStudent Volunteer Co-Chair
+
+    Carnegie Mellon University and LASIGE, University of Lisbon
+
+    Portugal
+
+xWed 5 Feb 21:09
+
+SPLASH 2024
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+DEI Activities
+Doctoral Symposium
+Keynotes
+OOPSLA 2024
+OOPSLA Artifacts
+Onward! Essays
+Onward! Papers
+PLMW
+Posters
+REBASE
+SPLASH-E
+Student Research Competition
+Volunteers
+Workshops
+
+Co-hosted Conferences
+
+GPCE 2024
+SLE 2024
+
+Workshops
+
+HATRA
+IWACO 2024
+JENSFEST 2024
+LIVE 2024
+NSAD 2024
+PAINT 2024
+ProLaLa 2024
+UNSOUND 2024
+VIVEKFEST
+VMIL 2024
+
+Co-hosted Symposia
+
+SAS 2024
+
+Attending
+
+Venue: Hilton Pasadena
+Students
+Registration
+Visa Support Letters
+Sponsoring
+Code of conduct
+Instructions for Presenters
+Chair's Welcome
+How to SPLASH (Quick Attendee Guide)
+Mt. Baldy Bicycle Trip
+Attractions Around Pasadena
+Live Stream
+
+Sign Up

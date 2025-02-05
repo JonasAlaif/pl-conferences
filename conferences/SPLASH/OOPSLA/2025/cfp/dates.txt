@@ -1,0 +1,14 @@
+| Event Description                           | Date                    |
+|--------------------------------------------|-------------------------|
+| Submission R1                              | Tue 15 Oct 2024         |
+| Author Response R1                          | Tue 3 Dec - Fri 6 Dec    |
+| Author Notification R1                      | Wed 18 Dec               |
+| Revision submission R1                      | Tue 4 Feb 2025          |
+| Author Notification of Revisions R1         | Tue 18 Feb 2025         |
+| Camera Ready R1                             | Fri 28 Feb 2025         |
+| Submission R2                              | Tue 25 Mar 2025         |
+| Author Response R2                          | Mon 26 May - Thu 29 May  |
+| Author Notification R2                      | Wed 18 June              |
+| Revision submission R2                      | Tue 29 July              |
+| Author Notification of Revisions R2         | Tue 12 Aug 2025          |
+| Camera Ready R2                             | Fri 22 Aug 2025          |

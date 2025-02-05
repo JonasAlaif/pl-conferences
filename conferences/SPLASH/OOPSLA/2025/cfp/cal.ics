@@ -1,0 +1,67 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:3730dcb5-7b4a-478e-9560-953cb62ca472
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20241015
+DTEND;VALUE=DATE:20241016
+SUMMARY:[OOPSLA 2025] R1 Paper Submission Deadline
+DESCRIPTION:SPLASH OOPSLA 2025 Call for Papers - Submit by Oct 15, 2024 (R1) and Mar 25, 2025 (R2); 23-25 page limit; double-blind reviewing; reserve reviewer policy required; data availability statement needed; submit via HotCRP; accept/reject/conditional accept/major revision decisions; artifacts optional but recommended for accepted papers; contact oopsla-2025-rc-chairs@googlegroups.com for questions; more info at https://www.splashcon.org/splash2025/cfp
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:545e5f15-b6eb-4571-8039-cb16c5ca4b69
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20241203
+DTEND;VALUE=DATE:20241207
+SUMMARY:[OOPSLA 2025] R1 Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:6f9adb69-c680-4a26-b3b3-3c940001a073
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20241218
+DTEND;VALUE=DATE:20241219
+SUMMARY:[OOPSLA 2025] R1 Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:43724eae-d467-4d9e-be47-d9f3f5dabff9
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20250325
+DTEND;VALUE=DATE:20250326
+SUMMARY:[OOPSLA 2025] R2 Paper Submission Deadline
+DESCRIPTION:SPLASH OOPSLA 2025 Call for Papers - Submit by Oct 15, 2024 (R1) and Mar 25, 2025 (R2); 23-25 page limit; double-blind reviewing; reserve reviewer policy required; data availability statement needed; submit via HotCRP; accept/reject/conditional accept/major revision decisions; artifacts optional but recommended for accepted papers; contact oopsla-2025-rc-chairs@googlegroups.com for questions; more info at https://www.splashcon.org/splash2025/cfp
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:82718e3d-7848-4628-8057-0d561a40c77c
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20250526
+DTEND;VALUE=DATE:20250530
+SUMMARY:[OOPSLA 2025] R2 Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:2e7f7bdf-924e-452d-bb42-0d90ecc24d0c
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20250618
+DTEND;VALUE=DATE:20250619
+SUMMARY:[OOPSLA 2025] R2 Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:97b2087d-6cf9-489b-a52a-03dc5f4422e5
+DTSTAMP:20250205T195947Z
+DTSTART;VALUE=DATE:20251012
+DTEND;VALUE=DATE:20251019
+SUMMARY:[OOPSLA 2025] Conference
+DESCRIPTION:
+LOCATION:Singapore, Singapore
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:5bb3719b-1c0b-442b-a01e-cbadc1d12b38
+DTSTAMP:20250205T200910Z
+DTSTART;VALUE=DATE:20230807
+DTEND;VALUE=DATE:20230808
+SUMMARY:[OOPSLA 2023] Volunteer Application Deadline
+DESCRIPTION:SPLASH 2023 volunteers needed; apply by Aug 7, 2023 via https://forms.gle/JJPzqs7Zee9Mdsoo8; get free registration, lunches, shirt, and social event access; meet PL community members; email hannelitaa@gmail.com or cgamboa@andrew.cmu.edu for more info; available Oct 22-27, 2023; 12-15 hours work; priority to students and researchers; virtual and in-person participants welcome
+LOCATION:
+END:VEVENT
+END:VCALENDAR
