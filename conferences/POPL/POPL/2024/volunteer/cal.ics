@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:f8b19e34-9b78-4091-adca-6b26a78b7a33
+DTSTAMP:20250205T200520Z
+DTSTART;VALUE=DATE:20231110
+DTEND;VALUE=DATE:20231111
+SUMMARY:[POPL 2024] Volunteer Application Deadline
+DESCRIPTION:Apply to be a Student Volunteer for POPL 2024 at https://forms.gle/ZSs64esc6wK5XtY47; deadline Nov 10th, 2023 AoE (notification: Nov 20); contact sbarke@ucsd.edu and s.ayoun17@imperial.ac.uk for questions; volunteer from Jan 14-20, 2024, for ~15 hours; receive free registration, lunches, garments, social events; responsible for travel and accommodation; eligibility: full-time or part-time students in computer science or related fields; https://popl2024.org/Student-Volunteers
+LOCATION:
+END:VEVENT
+END:VCALENDAR

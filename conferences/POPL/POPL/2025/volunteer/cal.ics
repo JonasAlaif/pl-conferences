@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:9827ef0a-ddce-41e1-9656-cc1e0b907839
+DTSTAMP:20250205T201129Z
+DTSTART;VALUE=DATE:20251110
+DTEND;VALUE=DATE:20251111
+SUMMARY:[POPL 2025] Volunteer Application Deadline
+DESCRIPTION:Call for student volunteers for POPL 2025; apply by Nov 10th, 2025 via https://forms.gle/E9Scs3UnYE57gbKbA; attend at least 4 full days between Jan 19-25, 2025; receive free registration, lunches, garments, and social events; travel and accommodation not covered; contact sm1@cis.upenn.edu or s.ayoun17@imperial.ac.uk for questions; deadline Nov 10th, 2025 AoE (notification: Nov 20)
+LOCATION:
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,1264 @@
+POPL 2023
+
+Sun 15 - Sat 21 January 2023 Boston, Massachusetts, United States
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Boston Park Plaza
+    -   Supporting POPL
+    -   Registration
+    -   Information for Students
+    -   Information for Presenters
+    -   Information for Virtual Attendees
+    -   Nearby Events
+-   Program
+    -   POPL Program
+    -   Your Program
+    -   Filter by Day
+        -   Sun 15 Jan
+        -   Mon 16 Jan
+        -   Tue 17 Jan
+        -   Wed 18 Jan
+        -   Thu 19 Jan
+        -   Fri 20 Jan
+        -   Sat 21 Jan
+-   Tracks
+    -   -   POPL 2023
+        -   POPL
+        -   Session Previews
+        -   Artifact Evaluation
+        -   Diversity, Equity and Inclusion
+        -   Student Research Competition
+        -   Student Volunteers
+        -   TutorialFest
+        -   Workshops and Co-located Events
+
+    -   -   Co-hosted Conferences
+        -   CPP
+        -   VMCAI
+        -   Workshops
+        -   CoqPL
+        -   LAFI
+            -   LAFI
+            -   - Introduction to the tensor-programs framework, a PL
+                approach that helps analyse theoretical properties of
+                deep learning.
+        -   PEPM
+        -   PLMW @ POPL
+        -   PriSC
+        -   ProLaLa
+        -   Co-hosted Symposia
+        -   PADL
+-   Organization
+    -   -   POPL 2023 Committees
+        -   Organizing Committee
+        -   Track Committees
+        -   POPL
+        -   Artifact Evaluation
+        -   Student Research Competition
+        -   TutorialFest
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   CPP
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   VMCAI
+            -   Organizing Committee
+            -   Program Committee
+            -   Artifact Evaluation Committee
+        -   Workshops
+        -   CoqPL
+            -   Program Committee
+        -   LAFI
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   PEPM
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   PLMW @ POPL
+            -   Organizing Committee
+            -   Speakers
+            -   Panelists
+        -   PriSC
+            -   Program Committee
+            -   Steering Committee
+        -   ProLaLa
+            -   Program Committee
+        -   Co-hosted Symposia
+        -   PADL
+            -   Programme Chairs
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   POPL 2026
+    -   POPL 2025
+    -   POPL 2024
+    -   POPL 2023
+    -   POPL 2022
+    -   POPL 2021
+    -   POPL 2020
+    -   POPL 2019
+    -   POPL 2018
+    -   POPL 2017
+    -   POPL 2016
+
+-   Sign in
+-   Sign up
+
+POPL 2023 (series) /
+
+POPL Research Papers
+
+-   About
+-   Program
+-   Accepted Papers
+-   FAQ on Double-Blind Reviewing
+-   POPL 2023 Call for Papers
+
+The annual Symposium on Principles of Programming Languages is a forum
+for the discussion of all aspects of programming languages and
+programming systems. Both theoretical and experimental papers are
+welcome on topics ranging from formal frameworks to experience reports.
+We seek submissions that make principled, enduring contributions to the
+theory, design, understanding, implementation or application of
+programming languages.
+
+The symposium is sponsored by ACM SIGPLAN, in cooperation with ACM
+SIGACT and ACM SIGLOG.
+
+POPL 2023 Call for Papers
+
+PACMPL Issue POPL 2023 seeks contributions on all aspects of programming
+languages and programming systems, both theoretical and practical.
+Authors of papers published in PACMPL Issue POPL 2023 will be invited to
+present their work in the POPL conference in January 2023, which is
+sponsored by ACM SIGPLAN, in cooperation with ACM SIGACT and ACM SIGLOG.
+
+Scope
+
+Principles of Programming Languages (POPL) is a forum for the discussion
+of all aspects of programming languages and programming systems. Both
+theoretical and experimental papers are welcome, on topics ranging from
+formal frameworks to experience reports. We seek submissions that make
+principled, enduring contributions to the theory, design, understanding,
+implementation, or application of programming languages.
+
+Evaluation Criteria
+
+The Review Committee will evaluate the technical contribution of each
+submission as well as its accessibility to both experts and the general
+POPL audience. All papers will be judged on significance, originality,
+relevance, correctness, and clarity. Each paper must explain its
+scientific contribution in both general and technical terms, identifying
+what has been accomplished, explaining why it is significant, and
+comparing it with previous work. Advice on writing technical papers can
+be found on the SIGPLAN author information page.
+
+Deadlines and formatting requirements, detailed below, will be strictly
+enforced.
+
+Evaluation Process
+
+NEW THIS YEAR: POPL 2023 will use a double-blind reviewing process
+(instead of the lightweight double-blind process used in recent years).
+This means that identities of authors will not be visible to reviewers
+until after conditional-acceptance decisions have been made. For
+authors, the main change is that there is no option to upload
+non-anonymized supplementary material; only anonymized supplementary
+material may be submitted.
+
+Also new this year: POPL 2023 will have three Associate Chairs who will
+help the PC Chair monitor reviews, solicit external expert reviews for
+submissions when there is not enough expertise on the committee, and
+facilitate reviewer discussions.
+
+As in previous years, authors will have a multi-day period to respond to
+reviews, as indicated in the Important Dates table. Responses are
+optional. A response must be concise, addressing specific points raised
+in the reviews; in particular, it must not introduce new technical
+results. Reviewers will write a short reaction to these author
+responses.
+
+The Review Committee (RC) will discuss papers electronically and, new
+this year, also during two days of synchronous, face-to-face, virtual
+Review Committee meetings. There will be no physical RC meeting; this
+will avoid the time, cost, and environmental impact of transporting an
+increasingly large committee to one point on the globe. There is no
+formal External Review Committee, though experts outside the committee
+will be consulted. Reviews will be accompanied by a short summary of the
+reasons behind the committee’s decision with the goal of clarifying the
+reasons behind the decision.
+
+To conform with ACM requirements for journal publication, all POPL
+papers will be conditionally accepted; authors will be required to
+submit a short description of the changes made to the final version of
+the paper, including how the changes address any requirements imposed by
+the Review Committee. That the changes are sufficient will be confirmed
+by the original reviewers prior to acceptance to POPL. Authors of
+conditionally accepted papers must submit a satisfactory revision to the
+Review Committee by the requested deadline or risk rejection.
+
+For additional information about the reviewing process, see: Principles
+of POPL, a presentation of the underlying organizational and reviewing
+policies for POPL. For POPL 2023, policies specified in this Call for
+Papers supersede those in the Principles of POPL document.
+
+Double-Blind Reviewing
+
+POPL 2023 will use double-blind reviewing. This means that author names
+and affiliations must be omitted from the submission. Additionally, if
+the submission refers to prior work done by the authors, that reference
+should be made in third person. These are firm submission requirements.
+Any supplementary material must also be anonymized.
+
+The FAQ on Double-Blind Reviewing clarifies the policy for the most
+common scenarios. But there are many gray areas and trade-offs. If you
+have any doubts about how to interpret the double-blind rules, please
+contact the Program Chair. Make sure to contact the Program Chair for
+complex cases that are not fully covered by the FAQ.
+
+Submission Site Information
+
+The submission site is https://popl23.hotcrp.com.
+
+Authors can submit multiple times prior to the deadline. Only the last
+submission will be reviewed. There is no abstract deadline. The
+submission site requires entering author names and affiliations,
+relevant topics, and potential conflicts. Addition or removal of authors
+after the submission deadline will need to be approved by the Program
+Chair (as this kind of change potentially undermines the goal of
+eliminating conflicts during paper assignment).
+
+The submission deadline is 11:59PM July 7, 2022 anywhere on earth:
+https://en.wikipedia.org/wiki/Anywhere_on_Earth
+
+Conflicts of Interest
+
+Conflicts should be declared between an adviser and an advisee (e.g.,
+Ph.D., post-doc; forever), between an author and a co-author (papers and
+proposals; for two years), between people at the same institution
+(branches of large companies or different locations of research
+institutes are considered to be the same institution; for two years
+after leaving an institution), between people with financial conflicts
+of interest, and between friends or relatives.
+
+Please do not declare spurious conflicts: such incorrect conflicts are
+especially harmful if the aim is to exclude potential reviewers, so
+spurious conflicts can be grounds for rejection. If you are unsure about
+a conflict, please consult the Program Chair.
+
+Submission Guidelines
+
+The following two points should not be overlooked:
+
+-   Conflicts: For each submission, the authors must make sure that they
+    properly declare all potential conflicts of interest for all of the
+    authors of that submission. This includes marking PC conflicts as
+    well as “Other Conflicts (external)”. A conflict caught late in the
+    reviewing process leads to a voided review which may be infeasible
+    to replace.
+-   Anonymity: POPL 2023 will employ a double-blind reviewing process.
+    Make sure that your submitted paper is fully anonymized.
+
+Prior to the paper submission deadline, the authors will upload their
+full anonymized paper. Each paper should have no more than 25 pages of
+text, excluding bibliography, using the ACM Proceedings format. This
+format is chosen for compatibility with PACMPL. It is a single-column
+page layout with a 10 pt font, 12 pt line spacing, and wider margins
+than recent POPL page layouts. In this format, the main text block is
+5.478 in (13.91 cm) wide and 7.884 in (20.03 cm) tall. Use of a
+different format (e.g., smaller fonts or a larger text block) is grounds
+for summary rejection. PACMPL templates for Microsoft Word and LaTeX can
+be found at the SIGPLAN author information page. In particular, authors
+using LaTeX should use the sample-acmsmall-conf.tex file (found in the
+samples folder of the acmart package) with the acmsmall option. We also
+strongly encourage the review and screen options. Submissions may use
+numeric citations, but final versions of accepted papers must use
+author-year format for citations. Submissions should be in PDF and
+printable on both US Letter and A4 paper. Papers may be resubmitted to
+the submission site multiple times up until the deadline, but the last
+version submitted before the deadline will be the version reviewed.
+Papers that exceed the length requirement, that deviate from the
+expected format, or that are submitted late will be rejected.
+
+Submitted papers must adhere to the SIGPLAN Republication Policy and the
+ACM Policy on Plagiarism. Concurrent submissions to other conferences,
+workshops, journals, or similar forums of publication are not allowed.
+
+POPL 2023 will employ a double-blind reviewing process. To facilitate
+this, submitted papers must adhere to two rules:
+
+1.  author names and institutions must be omitted, and
+2.  references to authors’ own related work should be in the third
+    person (e.g., not “We build on our previous work …” but rather “We
+    build on the work of …”).
+
+The purpose of this process is to help the Review Committee and external
+reviewers come to a judgment about the paper without bias, not to make
+it impossible for them to discover the authors if they were to try.
+Nothing should be done in the name of anonymity that weakens the
+submission or makes the job of reviewing the paper more difficult. In
+particular, important background references should not be omitted or
+anonymized. In addition, authors may disseminate their ideas and post
+draft versions of their paper on their webpage, but should not take
+steps that would almost certainly reveal their identities to members of
+the Review Committee, e.g., directly contacting RC members or
+publicizing the work on social media or major mailing lists used by the
+community. The FAQ on Double-Blind Reviewing clarifies the policy for
+many common concerns.
+
+The submission itself is the object of review, so it should strive to
+convince the reader of at least the plausibility of reported results.
+Still, we encourage authors to provide any supplementary material that
+is required to support the claims made in the paper, such as detailed
+proofs, proof scripts, or experimental data. These materials must be
+uploaded at submission time, as a single pdf or a tarball, not via a
+URL. All supplementary material should be anonymized. Reviewers are
+under no obligation to look at the supplementary material but may refer
+to it if they have questions about the material in the body of the
+paper.
+
+Artifact Evaluation for Accepted Papers
+
+Authors of conditionally accepted papers will be invited to formally
+submit supporting materials to the Artifact Evaluation process. Artifact
+Evaluation is run by a separate committee whose task is to assess how
+the artifacts support the work described in the papers. Artifact
+submission is strongly encouraged but voluntary and will not influence
+the final decision regarding the papers. Papers that go through the
+Artifact Evaluation process successfully will receive a seal of approval
+printed on the papers themselves. Authors of accepted papers are
+encouraged to make these materials publicly available upon publication
+of the proceedings, by including them as “source materials” in the ACM
+Digital Library.
+
+Copyright, Publication, and Presentation
+
+As a Gold Open Access journal, PACMPL is committed to making
+peer-reviewed scientific research free of restrictions on both access
+and (re-)use. Authors are strongly encouraged to support libre open
+access by licensing their work with the Creative Commons Attribution 4.0
+International (CC BY) license, which grants readers liberal (re-)use
+rights.
+
+Authors of accepted papers will be required to choose one of the
+following publication rights:
+
+-   Author licenses the work with a Creative Commons license, retains
+    copyright, and (implicitly) grants ACM non-exclusive permission to
+    publish (suggested choice).
+-   Author retains copyright of the work and grants ACM a non-exclusive
+    permission to publish license.
+-   Author retains copyright of the work and grants ACM an exclusive
+    permission to publish license.
+-   Author transfers copyright of the work to ACM.
+
+These choices follow from ACM Copyright Policy and ACM Author Rights,
+corresponding to ACM’s “author pays” option. While PACMPL may ask
+authors who have funding for open-access fees to voluntarily cover the
+article processing charge (currently, US$400), payment is not required
+for publication. PACMPL and SIGPLAN continue to explore the best models
+for funding open access, focusing on approaches that are sustainable in
+the long-term while reducing short-term risk.
+
+All papers will be archived by the ACM Digital Library. Authors will
+have the option of including supplementary material with their paper.
+The official publication date is the date the proceedings are made
+available in the ACM Digital Library. This date may be up to two weeks
+prior to the first day of the conference. The official publication date
+affects the deadline for any patent filings related to published work.
+
+Authors of accepted papers are required to give a short talk (roughly 25
+minutes long) at the conference, according to the conference schedule.
+
+Distinguished Paper Awards
+
+At most 10% of the accepted papers of POPL 2023 will be designated as
+Distinguished Papers. This award highlights papers that the Review
+Committee thinks should be read by a broad audience due to their
+relevance, originality, significance, and clarity. The selection of the
+distinguished papers will be made based on the final version of the
+paper and through a second review process.
+
+FAQ on Double-Blind Reviewing
+
+General
+
+Q: Why are you using double-blind reviewing?
+
+A: Studies have shown that a reviewer’s attitude toward a submission may
+be affected, even unconsciously, by the identity of the authors. We want
+reviewers to be able to approach each submission without any such,
+possibly involuntary, pre-judgment. Many computer science conferences
+have embraced double-blind reviewing. POPL has used lightweight
+double-blind reviewing for several years now as stipulated in the
+Principles of POPL.
+
+Q: Do you really think blinding actually works? I suspect reviewers can
+often guess who the authors are anyway.
+
+A: It is rare for authorship to be guessed correctly, even by expert
+reviewers, as detailed in this study.
+
+Q: Couldn’t blind submission create an injustice where a paper is
+inappropriately rejected based upon supposedly-prior work which was
+actually by the same authors and not previously published?
+
+A: Reviewers are held accountable for their positions and are required
+to identify any supposed prior work that they believe undermines the
+novelty of the paper. Any assertion that “this has been done before” by
+reviewers should be supported with concrete information. The author
+response mechanism exists in part to hold reviewers accountable for
+claims that may be incorrect.
+
+For authors
+
+Q: What exactly do I have to do to anonymize my paper?
+
+A: Use common sense. Your job is not to make your identity
+undiscoverable but simply to make it possible for reviewers to evaluate
+your submission without having to know who you are. The specific
+guidelines stated in the call for papers are simple: omit authors’ names
+from your title page, and when you cite your own work, refer to it in
+the third person. For example, if your name is Smith and you have worked
+on amphibious type systems, instead of saying “We extend our earlier
+work on statically typed toads [Smith 2004],” you might say “We extend
+Smith’s [2004] earlier work on statically typed toads.” Also, be sure
+not to include any acknowledgements that would give away your identity.
+In general, you should aim to reduce the risk of accidental unblinding.
+For example, if your paper is the first to describe a system with a
+well-known name or codename, or you use a personally-identifiable naming
+convention for your work, then use a different name for your submission
+(which you may indicate has been changed for the purposes of
+double-blind reviewing). You should also avoid revealing the
+institutional affiliation of authors or at which the work was performed.
+
+Q: I would like to provide supplementary material for consideration,
+e.g., the code of my implementation or proofs of theorems. How do I do
+this?
+
+A (and also see the next question): On the submission site there will be
+an option to submit supplementary material along with your main paper.
+This supplementary material should also be anonymized; it may be viewed
+by reviewers during the review period, so it should adhere to the same
+double-blind guidelines. e discourage authors from providing
+supplementary materials via links to external web sites. It is possible
+to change the linked items after the submission deadline has passed,
+and, to be fair to all authors, we would like to be sure reviewers
+evaluate materials that have been completed prior to the submission
+deadline. Having said that, it is appropriate to link to items, such as
+an online demo, that can’t easily be submitted. Needless to say,
+attempting to discover the reviewers for your paper by tracking visitors
+to such a demo site would be a breach of academic integrity.
+Supplementary items such as PDFs should always be uploaded to HotCRP.
+
+Q: My submission is based on code available in a public repository or I
+would like to provide a link to an online demo. How do I deal with this?
+
+A: Making your code publicly available is not incompatible with
+double-blind reviewing. You should do the following. First, cite the
+code in your paper, but remove the actual URL and, instead say “link to
+repository removed for double-blind review” or similar. Second, if, when
+writing your author response, you believe reviewer access to your code
+would help, say so in your author response (without providing the URL),
+and send the URL to the Program Chair. The same policy applies if you
+wish to provide a link to an online demo that can’t easily be submitted
+as supplementary material.
+
+Q: I am building on my own past work on the WizWoz system. Do I need to
+rename this system in my paper for purposes of anonymity, so as to
+remove the implied connection between my authorship of past work on this
+system and my present submission?
+
+A: No. The relationship between systems and authors changes over time,
+so there will be at least some doubt about authorship. Increasing this
+doubt by changing the system name would help with anonymity, but it
+would compromise the research process. In particular, changing the name
+requires explaining a lot about the system again because you can’t just
+refer to the existing papers, which use the proper name. Not citing
+these papers runs the risk of the reviewers who know about the existing
+system thinking you are replicating earlier work. It is also confusing
+for the reviewers to read about the paper under Name X and then have the
+name be changed to Name Y. Will all the reviewers go and re-read the
+final version with the correct name? If not, they have the wrong name in
+their heads, which could be harmful in the long run.
+
+Q: I am submitting a paper that extends my own work that previously
+appeared at a workshop. Should I anonymize any reference to that prior
+work?
+
+A: No. But we recommend you do not use the same title for your POPL
+submission, so that it is clearly distinguished from the prior paper. In
+general, there is rarely a good reason to anonymize a citation. One
+possibility is for work that is tightly related to the present
+submission and is also under review. When in doubt, contact the Program
+Chair.
+
+Q: Am I allowed to post my (non-blinded) paper on my web page? Can I
+advertise the unblinded version of my paper on mailing lists or send it
+to colleagues? Can I give a talk about my work while it is under review?
+How do I handle social media? What about arXiv?
+
+A: We have developed guidelines, described here, to help everyone
+navigate in the same way the tension between the normal communication of
+scientific results, which double-blind reviewing should not impede, and
+actions that essentially force potential reviewers to learn the identity
+of the authors for a submission. Roughly speaking, you may (of course!)
+discuss work under submission, but you should not broadly advertise your
+work through media that is likely to reach your reviewers. We
+acknowledge there are gray areas and trade-offs; we cannot describe
+every possible scenario.
+
+Things you may do:
+
+-   Put your submission on your home page.
+-   Discuss your work with anyone who is not on the review committees,
+    or with people on the committees with whom you already have a
+    conflict.
+-   Present your work at professional meetings, job interviews, etc.
+-   Submit work previously discussed at an informal workshop, previously
+    posted on arXiv or a similar site, previously submitted to a
+    conference not using double-blind reviewing, etc.
+
+Things you should not do:
+
+-   Contact members of the review committees about your work, or
+    deliberately present your work where you expect them to be.
+-   Publicize your work on major mailing lists used by the community
+    (because potential reviewers likely read these lists).
+-   Publicize your work on social media if wide public [re-]propagation
+    is common (e.g., Twitter) and therefore likely to reach potential
+    reviewers. For example, on Facebook, a post with a broad privacy
+    setting (public or all friends) saying, “Whew, POPL paper in, time
+    to sleep” is okay, but one describing the work or giving its title
+    is not appropriate. Alternately, a post to a group including only
+    the colleagues at your institution is fine. Reviewers will not be
+    asked to recuse themselves from reviewing your paper unless they
+    feel you have gone out of your way to advertise your authorship
+    information to them. If you are unsure about what constitutes “going
+    out of your way”, please contact the Program Chair.
+
+Q: Will the fact that POPL is double-blind have an impact on handling
+conflicts-of-interest?
+
+A: Double-blind reviewing does not change the principle that reviewers
+should not review papers with which they have a conflict of interest,
+even if they do not immediately know who the authors are. Authors
+declare conflicts of interest when submitting their papers using the
+guidelines in the call for papers. Papers will not be assigned to
+reviewers who have a conflict.
+
+For reviewers
+
+Q: What should I do if I learn the authors’ identity? What should I do
+if a prospective POPL author contacts me and asks to visit my
+institution?
+
+A: If you feel that the authors’ actions are largely aimed at ensuring
+that potential reviewers know their identity, contact the Program Chair.
+Otherwise, you should not treat double-blind reviewing differently from
+other reviewing. In particular, refrain from seeking out information on
+the authors’ identity, but if you discover it accidentally this will not
+automatically disqualify you as a reviewer. Use your best judgment.
+
+Q: The authors have provided a URL to supplemental material. I would
+like to see the material but I worry they will snoop my IP address and
+learn my identity. What should I do?
+
+A: Contact the Program Chair, who will download the material on your
+behalf and make it available to you.
+
+Q: If I am assigned a paper for which I feel I am not an expert, how do
+I seek an outside review?
+
+A: PC members should do their own reviews, not delegate them to someone
+else. If doing so is problematic for some papers, e.g., you don’t feel
+completely qualified, then consider the following options. First, submit
+a review for your paper that is as careful as possible, outlining areas
+where you think your knowledge is lacking. Assuming we have sufficient
+expert reviews, that could be the end of it: non-expert reviews are
+valuable too, since conference attendees are by-and-large not experts
+for any given paper. Second, work with the PC Chair and/or Associate
+Chairs, who will check for conflicts and then solicit an external review
+if additional expertise is needed. Please do not contact outside
+reviewers yourself. As a last resort, if you feel like your review would
+be extremely uninformed and you’d rather not even submit a first cut,
+contact the Program Chair.
+
+Q: How do we handle potential conflicts of interest since I cannot see
+the author names?
+
+A: The conference review system will ask that you identify conflicts of
+interest when you get an account on the submission system. It is
+critical that you enter these at least a week before the POPL submission
+deadline. Feel free to also identify additional authors whose papers you
+feel you could not review fairly for reasons other than those given
+(e.g., strong personal friendship).
+
+Q: How should I avoid learning the authors’ identity if I am using
+web-search in the process of performing my review?
+
+A: You should make a good-faith effort not to find the authors’ identity
+during the review period, but if you inadvertently do so, this does not
+disqualify you from reviewing the paper. As part of the good-faith
+effort, do not use search engines with terms like the paper’s title or
+the name of a new system being discussed.
+
+------------------------------------------------------------------------
+
+These guidelines are largely based on guidelines for PLDI 2020, with
+slight modifications by Amal Ahmed based on the guidelines for POPL
+2019. Both of those are an evolution of guidelines originally created by
+Michael Hicks for POPL 2012.
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Thu 10 Nov 2022
+  Camera-Ready Deadline
+
+  Mon 7 Nov 2022
+  Notification of Final Acceptance
+
+  Wed 26 Oct 2022
+  Submission of Revisions
+
+  Tue 27 Sep 2022
+  Notification of Conditional Acceptance
+
+  Tue 6 - Fri 9 Sep 2022
+  Author Response Period
+
+  Thu 7 Jul 2022
+  Submission Deadline
+  -----------------------------------------------------------------------
+
+Submission Link
+
+https://popl23.hotcrp.com
+
+Program Committee
+
+-   
+    [Amal Ahmed]
+    Amal AhmedProgram Chair
+
+    Northeastern University, USA
+
+    United States
+-   
+    [Robert Bruce Findler]
+    Robert Bruce FindlerAssociate Chair
+
+    Northwestern University
+
+    United States
+-   
+    [Deepak Garg]
+    Deepak GargAssociate Chair
+
+    MPI-SWS
+
+    Germany
+-   
+    [François Pottier]
+    François PottierAssociate Chair
+
+    Inria
+
+    France
+-   
+    [Andreas Abel]
+    Andreas Abel
+
+    Gothenburg University
+
+    Sweden
+-   
+    [Nada Amin]
+    Nada Amin
+
+    Harvard University
+
+    United States
+-   
+    [Stephanie Balzer]
+    Stephanie Balzer
+
+    Carnegie Mellon University
+
+    United States
+-   
+    [Josh Berdine]
+    Josh Berdine
+
+    Meta
+
+    United Kingdom
+-   
+    [micro-avatar]
+    Karthikeyan Bhargavan
+
+    Inria, France
+-   
+    [Giuseppe Castagna]
+    Giuseppe Castagna
+
+    CNRS; Université de Paris
+
+    France
+-   
+    [Tej Chajed]
+    Tej Chajed
+
+    VMware Research
+
+    United States
+-   
+    [Arthur Charguéraud]
+    Arthur Charguéraud
+
+    Inria; Université de Strasbourg; CNRS; ICube
+
+    France
+-   
+    [Koen Claessen]
+    Koen Claessen
+
+    Chalmers University of Technology
+
+    Sweden
+-   
+    [Loris D'Antoni]
+    Loris D'Antoni
+
+    University of Wisconsin-Madison
+
+    United States
+-   
+    [Ugo Dal Lago]
+    Ugo Dal Lago
+
+    University of Bologna; Inria
+
+    Italy
+-   
+    [Mila Dalla Preda]
+    Mila Dalla Preda
+
+    University of Verona
+
+    Italy
+-   
+    [Ornela Dardha]
+    Ornela Dardha
+
+    University of Glasgow
+
+    United Kingdom
+-   
+    [Benjamin Delaware]
+    Benjamin Delaware
+
+    Purdue University
+
+    United States
+-   
+    [Alastair F. Donaldson]
+    Alastair F. Donaldson
+
+    Imperial College London; Google
+
+    United Kingdom
+-   
+    [Richard A. Eisenberg]
+    Richard A. Eisenberg
+
+    Jane Street
+
+    United States
+-   
+    [Constantin Enea]
+    Constantin Enea
+
+    Ecole Polytechnique / LIX / CNRS
+
+    France
+-   
+    [Michael Greenberg]
+    Michael Greenberg
+
+    Stevens Institute of Technology
+
+    United States
+-   
+    [Ichiro Hasuo]
+    Ichiro Hasuo
+
+    National Institute of Informatics, Japan
+
+    Japan
+-   
+    [micro-avatar]
+    Hugo Herbelin
+
+    Inria
+-   
+    [Zhenjiang Hu]
+    Zhenjiang Hu
+
+    Peking University
+
+    China
+-   
+    [Suresh Jagannathan]
+    Suresh Jagannathan
+
+    Purdue University
+
+    United States
+-   
+    [Alan Jeffrey]
+    Alan Jeffrey
+
+    Roblox
+
+    United States
+-   
+    [micro-avatar]
+    Patricia Johann
+
+    Appalachian State University
+-   
+    [Jacques-Henri Jourdan]
+    Jacques-Henri Jourdan
+
+    CNR, LMF
+
+    France
+-   
+    [Ralf Jung]
+    Ralf Jung
+
+    ETH Zürich
+
+    Switzerland
+-   
+    [Ohad Kammar]
+    Ohad Kammar
+
+    University of Edinburgh
+
+    United Kingdom
+-   
+    [Joost-Pieter Katoen]
+    Joost-Pieter Katoen
+
+    RWTH Aachen University
+
+    Germany
+-   
+    [Ekaterina Komendantskaya]
+    Ekaterina Komendantskaya
+
+    Heriot-Watt University, UK
+-   
+    [Laura Kovacs]
+    Laura Kovacs
+
+    Vienna University of Technology (TU Wien)
+
+    Austria
+-   
+    [Robbert Krebbers]
+    Robbert Krebbers
+
+    Radboud University Nijmegen
+
+    Netherlands
+-   
+    [Lindsey Kuper]
+    Lindsey Kuper
+
+    University of California at Santa Cruz
+-   
+    [Akash Lal]
+    Akash Lal
+
+    Microsoft Research
+-   
+    [Xavier Leroy]
+    Xavier Leroy
+
+    Collège de France
+
+    France
+-   
+    [Mohsen Lesani]
+    Mohsen Lesani
+
+    University of California at Riverside
+-   
+    [Daniel R. Licata]
+    Daniel R. Licata
+
+    Wesleyan University
+
+    United States
+-   
+    [Matteo Maffei]
+    Matteo Maffei
+
+    TU Wien
+-   
+    [Isabella Mastroeni]
+    Isabella Mastroeni
+
+    University of Verona, Italy
+
+    Italy
+-   
+    [Christoph Matheja]
+    Christoph Matheja
+
+    DTU
+
+    Denmark
+-   
+    [Umang Mathur]
+    Umang Mathur
+
+    National University of Singapore
+
+    Singapore
+-   
+    [Todd Millstein]
+    Todd Millstein
+
+    University of California at Los Angeles
+
+    United States
+-   
+    [Andrzej Murawski]
+    Andrzej Murawski
+
+    University of Oxford
+
+    United Kingdom
+-   
+    [Santosh Nagarakatte]
+    Santosh Nagarakatte
+
+    Rutgers University
+
+    United States
+-   
+    [Aleksandar Nanevski]
+    Aleksandar Nanevski
+
+    IMDEA Software Institute
+
+    Spain
+-   
+    [David Naumann]
+    David Naumann
+
+    Stevens Institute of Technology
+
+    United States
+-   
+    [Dominic Orchard]
+    Dominic Orchard
+
+    University of Kent, UK
+
+    United Kingdom
+-   
+    [Klaus Ostermann]
+    Klaus Ostermann
+
+    University of Tübingen
+-   
+    [Oded Padon]
+    Oded Padon
+
+    VMware Research
+
+    United States
+-   
+    [Michele Pagani]
+    Michele Pagani
+
+    IRIF - Université de Paris Cité
+
+    France
+-   
+    [Marco Patrignani]
+    Marco Patrignani
+
+    University of Trento
+
+    Italy
+-   
+    [David Pichardie]
+    David Pichardie
+
+    Meta
+
+    France
+-   
+    [Brigitte Pientka]
+    Brigitte Pientka
+
+    McGill University
+
+    Canada
+-   
+    [Benjamin C. Pierce]
+    Benjamin C. Pierce
+
+    University of Pennsylvania
+
+    United States
+-   
+    [Clément Pit-Claudel]
+    Clément Pit-Claudel
+
+    EPFL
+
+    Switzerland
+-   
+    [Andreas Podelski]
+    Andreas Podelski
+
+    University of Freiburg
+
+    Germany
+-   
+    [Nadia Polikarpova]
+    Nadia Polikarpova
+
+    University of California at San Diego
+
+    United States
+-   
+    [Damien Pous]
+    Damien Pous
+
+    CNRS
+-   
+    [micro-avatar]
+    Christopher Pulte
+
+    University of Cambridge
+
+    United Kingdom
+-   
+    [Corina S. Păsăreanu]
+    Corina S. Păsăreanu
+
+    Carnegie Mellon University
+
+    United States
+-   
+    [Azalea Raad]
+    Azalea Raad
+
+    Imperial College London
+
+    United Kingdom
+-   
+    [Robert Rand]
+    Robert Rand
+
+    University of Chicago
+
+    United States
+-   
+    [Noam Rinetzky]
+    Noam Rinetzky
+
+    Tel Aviv University
+
+    Israel
+-   
+    [Amr Sabry]
+    Amr Sabry
+
+    Indiana University
+
+    United States
+-   
+    [Malavika Samak]
+    Malavika Samak
+
+    CSAIL, MIT
+
+    United States
+-   
+    [Taro Sekiyama]
+    Taro Sekiyama
+
+    National Institute of Informatics
+
+    Japan
+-   
+    [Jonathan Sterling]
+    Jonathan Sterling
+
+    Aarhus University
+
+    Denmark
+-   
+    [Aaron Stump]
+    Aaron Stump
+
+    University of Iowa
+
+    United States
+-   
+    [Eijiro Sumii]
+    Eijiro Sumii
+
+    Tohoku University
+
+    Japan
+-   
+    [Nicolas Tabareau]
+    Nicolas Tabareau
+
+    Inria
+
+    France
+-   
+    [Éric Tanter]
+    Éric Tanter
+
+    University of Chile
+-   
+    [Joseph Tassarotti]
+    Joseph Tassarotti
+
+    NYU
+
+    United States
+-   
+    [Sam Tobin-Hochstadt]
+    Sam Tobin-Hochstadt
+
+    Indiana University
+-   
+    [Andrew Tolmach]
+    Andrew Tolmach
+
+    Portland State University
+
+    United States
+-   
+    [Marco Vassena]
+    Marco Vassena
+
+    Utrecht University
+
+    Netherlands
+-   
+    [David Walker]
+    David Walker
+
+    Princeton University
+
+    United States
+-   
+    [Conrad Watt]
+    Conrad Watt
+
+    University of Cambridge
+
+    United Kingdom
+-   
+    [Théo Winterhalter]
+    Théo Winterhalter
+
+    INRIA Saclay
+
+    France
+-   
+    [Ningning Xie]
+    Ningning Xie
+
+    University of Toronto
+
+    Canada
+-   
+    [Francesco Zappa Nardelli]
+    Francesco Zappa Nardelli
+
+    Meta
+
+    France
+-   
+    [Elena Zucca]
+    Elena Zucca
+
+    University of Genoa
+
+    Italy
+
+xWed 5 Feb 17:56
+
+POPL 2023
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+POPL
+Session Previews
+Artifact Evaluation
+Diversity, Equity and Inclusion
+Student Research Competition
+Student Volunteers
+TutorialFest
+Workshops and Co-located Events
+
+Co-hosted Conferences
+
+CPP 2023
+VMCAI 2023
+
+Workshops
+
+CoqPL 2023
+LAFI 2023
+PEPM 2023
+PLMW @ POPL 2023
+PriSC 2023
+ProLaLa 2023
+
+Co-hosted Symposia
+
+PADL 2023
+
+Attending
+
+Venue: Boston Park Plaza
+Supporting POPL
+Registration
+Information for Students
+Information for Presenters
+Information for Virtual Attendees
+Nearby Events
+
+Sign Up

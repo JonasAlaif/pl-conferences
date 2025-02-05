@@ -1,0 +1,246 @@
+POPL 2025
+
+Sun 19 - Sat 25 January 2025 Denver, Colorado, United States
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Curtis Hotel Denver
+    -   Supporting POPL
+    -   Registration
+    -   Information for Virtual Attendees
+    -   Information for Presenters
+    -   Requesting a Visa
+    -   POPL Live Streams
+    -   Code of Conduct
+-   Program
+    -   POPL Program
+    -   Your Program
+    -   Filter by Day
+        -   Sun 19 Jan
+        -   Mon 20 Jan
+        -   Tue 21 Jan
+        -   Wed 22 Jan
+        -   Thu 23 Jan
+        -   Fri 24 Jan
+        -   Sat 25 Jan
+-   Tracks
+    -   -   POPL 2025
+        -   Artifact Evaluation
+        -   POPL
+        -   Student Research Competition
+        -   Student Volunteers
+        -   Tutorials
+        -   Workshops and Co-located Events
+
+    -   -   Co-hosted Conferences
+        -   CPP
+        -   VMCAI
+        -   Workshops
+        -   CoqPL
+        -   Dafny
+        -   LAFI
+        -   PEPM
+        -   PLMW @ POPL
+        -   PLanQC
+        -   PriSC
+        -   TPSA
+        -   WAW
+        -   WITS
+        -   Co-hosted Symposia
+        -   PADL
+-   Organization
+    -   -   POPL 2025 Committees
+        -   Organizing Committee
+        -   AV Committee
+        -   Student Volunteers
+        -   Track Committees
+        -   Artifact Evaluation
+        -   POPL
+        -   Student Research Competition
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   CPP
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   VMCAI
+            -   Organizing Committee
+            -   Program Committee
+            -   Artifact Evaluation Committee
+        -   Workshops
+        -   CoqPL
+            -   Program Committee
+        -   Dafny
+            -   Program Committee Chairs
+            -   Program Committee
+            -   Steering Committee Chairs
+        -   LAFI
+            -   Program Committee
+            -   Steering Committee
+        -   PEPM
+            -   Chairs
+            -   Program Committee Members
+        -   PLMW @ POPL
+            -   Organizing Committee
+            -   Speakers
+            -   Panelists
+        -   PLanQC
+            -   Organizing Committee
+            -   Program Committee
+        -   PriSC
+            -   Program Committee
+            -   Steering Committee
+        -   TPSA
+            -   Organizing Committee
+            -   Program Committee
+        -   WAW
+            -   Organizers
+            -   Program Committee
+        -   WITS
+            -   Program Committee
+        -   Co-hosted Symposia
+        -   PADL
+            -   Programme Chairs
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   POPL 2026
+    -   POPL 2025
+    -   POPL 2024
+    -   POPL 2023
+    -   POPL 2022
+    -   POPL 2021
+    -   POPL 2020
+    -   POPL 2019
+    -   POPL 2018
+    -   POPL 2017
+    -   POPL 2016
+
+-   Sign in
+-   Sign up
+
+POPL 2025 (series) /
+
+Student VolunteersPOPL 2025
+
+-   About
+
+Call for student volunteers
+
+Sign up to be a Student Volunteer and help us make POPL 2025 a unique
+experience for all attendants!
+
+POPL 2025 is pleased to offer a number of opportunities for student
+volunteers, who are vital to the efficient operation and continued
+success of the conference each year. The student volunteer program is a
+chance for students from around the world to participate in the
+conferences whilst assisting us in preparing and running the event.
+
+The Student Volunteer Program helps more students attend the POPL
+conference by covering registration to the conferences, tutorials,
+workshops, and all associated events (but not travel or lodging
+expenses). In exchange for a fixed number of work hours (around 15)
+helping with the conference organization, you will be able to closely
+interact with researchers, mentors, and other students at POPL 2025. We
+are looking forward to seeing you in the SV team!
+
+Eligibility
+
+Applicants can be undergraduate, Master’s, Ph.D. full- or part-time
+students, of computer science or related fields, with or without
+previous experience as volunteers. Everyone is encouraged to apply!
+
+Duration
+
+Applicants must be available for at least four (4) full days between the
+19th and 25th of January 2025, and will be expected to provide at least
+15 hours of volunteering work in that time. Volunteers will also be
+expected to be available for some amount of pre-conference discussion
+and training if necessary.
+
+Compensation
+
+Every student volunteer will receive:
+
+-   A complimentary conference registration, offering access to all open
+    sessions (i.e., parallel paper presentations, demonstrations, and
+    workshops) and conference proceedings.
+-   Free lunches and refreshments during breaks.
+-   Student volunteer garments.
+-   Free admission to all social events.
+
+Please note that Student Volunteers are responsible for their own travel
+and accommodation arrangements. However, Student Volunteers can apply
+for extra funding from SIGPLAN PAC funding or PLMW when eligible.
+
+You can send questions about student volunteering to sm1@cis.upenn.edu
+and s.ayoun17@imperial.ac.uk.
+
+Applications
+
+Apply using: https://forms.gle/E9Scs3UnYE57gbKbA. The form is very short
+and won’t take more than 5 minutes to complete. We will NOT evaluate the
+applications in a first come first serve order: you will not be
+penalised if you want to wait for the POPL conditional acceptance
+notification before filling the form.
+
+-   Deadline for submission: Nov 10th, 2025 AoE (notification: Nov 20)
+
+xWed 5 Feb 21:05
+
+POPL 2025
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+Artifact Evaluation
+POPL
+Student Research Competition
+Student Volunteers
+Tutorials
+Workshops and Co-located Events
+
+Co-hosted Conferences
+
+CPP 2025
+VMCAI 2025
+
+Workshops
+
+CoqPL 2025
+Dafny 2025
+LAFI 2025
+PEPM 2025
+PLMW @ POPL 2025
+PLanQC 2025
+PriSC 2025
+TPSA 2025
+WAW 2025
+WITS 2025
+
+Co-hosted Symposia
+
+PADL 2025
+
+Attending
+
+Venue: Curtis Hotel Denver
+Supporting POPL
+Registration
+Information for Virtual Attendees
+Information for Presenters
+Requesting a Visa
+POPL Live Streams
+Code of Conduct
+
+Sign Up

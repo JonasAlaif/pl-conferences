@@ -1,0 +1,6 @@
+| Event Description                           | Date                |
+|--------------------------------------------|---------------------|
+| Paper submission deadline                  | Thu 10 Jul 2025 UTC-12h |
+| Beginning of author response period        | Mon 8 Sep 2025       |
+| End of author response period              | Thu 11 Sep 2025      |
+| Conditional Accept Decisions Announced    | Thu 2 Oct 2025       |

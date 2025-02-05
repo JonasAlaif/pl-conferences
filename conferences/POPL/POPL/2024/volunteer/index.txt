@@ -1,0 +1,286 @@
+POPL 2024
+
+Sun 14 - Sat 20 January 2024 London, United Kingdom
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Institution of Engineering and Technology
+    -   Supporting POPL
+    -   Registration
+    -   Conference Hotel: Strand Palace Hotel
+    -   Information for Virtual Attendees
+    -   Information for Presenters
+    -   Requesting a Visa
+    -   POPL Live Streams
+-   Program
+    -   POPL Program
+    -   Your Program
+    -   Filter by Day
+        -   Sun 14 Jan
+        -   Mon 15 Jan
+        -   Tue 16 Jan
+        -   Wed 17 Jan
+        -   Thu 18 Jan
+        -   Fri 19 Jan
+        -   Sat 20 Jan
+-   Tracks
+    -   -   POPL 2024
+        -   Artifact Evaluation
+        -   Diversity, Equity and Inclusion
+        -   POPL
+        -   Session Previews
+        -   Student Research Competition
+        -   Student Volunteers
+        -   TutorialFest
+        -   Workshops and Co-located Events
+
+    -   -   Co-hosted Conferences
+        -   CPP
+        -   VMCAI
+        -   Workshops
+        -   CoqPL
+        -   Dafny
+        -   GALOP
+        -   Incorrectness
+        -   LAFI
+        -   N40AI
+        -   O'Hearn Fest
+        -   PEPM
+        -   PLMW @ POPL
+        -   PLanQC
+        -   POCL
+        -   PROPL
+        -   PriSC
+        -   The Future of Weak Memory
+        -   WAW
+        -   WITS
+        -   Co-hosted Symposia
+        -   PADL
+-   Organization
+    -   -   POPL 2024 Committees
+        -   Organizing Committee
+        -   AV Committee
+        -   Student Volunteers
+        -   Track Committees
+        -   Artifact Evaluation
+        -   Diversity, Equity and Inclusion
+        -   POPL
+        -   Student Research Competition
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   CPP
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   VMCAI
+            -   Program Committee
+            -   Artifact Evaluation Committee
+        -   Workshops
+        -   CoqPL
+            -   Program Committee
+        -   Dafny
+            -   Program Chairs
+            -   Program Committee
+            -   Steering Committee
+        -   GALOP
+            -   Invited Speakers
+            -   Organising Committee
+            -   Program Committee
+        -   Incorrectness
+            -   Organizing Committee
+            -   Program Committee
+        -   LAFI
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   N40AI
+            -   Organizing Committee
+        -   O'Hearn Fest
+            -   Program Committee
+        -   PEPM
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   PLMW @ POPL
+            -   Organizing Committee
+            -   Speakers
+            -   Panelists
+        -   PLanQC
+            -   Organizing Committee
+            -   Program Committee
+        -   POCL
+            -   Organizing Committee
+            -   Program Committee
+        -   PROPL
+            -   Chairs
+            -   Programme Committee
+        -   PriSC
+            -   Program Committee
+            -   Steering Committee
+        -   The Future of Weak Memory
+            -   Organizing Committee
+            -   Program Committee
+        -   WAW
+            -   Organizing Committee
+        -   WITS
+            -   Program Committee
+        -   Co-hosted Symposia
+        -   PADL
+            -   Programme Chairs
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   POPL 2026
+    -   POPL 2025
+    -   POPL 2024
+    -   POPL 2023
+    -   POPL 2022
+    -   POPL 2021
+    -   POPL 2020
+    -   POPL 2019
+    -   POPL 2018
+    -   POPL 2017
+    -   POPL 2016
+
+-   Sign in
+-   Sign up
+
+POPL 2024 (series) /
+
+Student VolunteersPOPL 2024
+
+-   About
+-   Applications
+
+Sign up to be a Student Volunteer and help us make POPL 2024 a unique
+experience for all attendants!
+
+POPL 2024 is pleased to offer a number of opportunities for student
+volunteers, who are vital to the efficient operation and continued
+success of the conference each year. The student volunteer program is a
+chance for students from around the world to participate in the
+conferences whilst assisting us in preparing and running the event.
+
+The Student Volunteer Program helps more students attend the POPL
+conference by covering registration to the conferences, tutorials,
+workshops, and all associated events (but not travel or lodging
+expenses). In exchange for a fixed number of work hours (usually ~15)
+helping with the conference organization, you will be able to closely
+interact with researchers, mentors, and other students at POPL 2024. We
+are looking forward to seeing you in the SV team!
+
+Eligibility
+
+Applicants can be undergraduate, Master’s, Ph.D. full- or part-time
+students, of computer science or related fields, with or without
+previous experience as volunteers. Everyone is encouraged to apply!
+
+Duration
+
+Applicants must be available for at least four (4) full days between the
+14th and 20th of January 2024, and will be expected to provide at least
+15 hours of volunteering work in that time. Volunteers will also be
+expected to be available for some amount of pre-conference discussion
+and training if necessary.
+
+Compensation
+
+Every student volunteer will receive:
+
+-   A complimentary conference registration, offering access to all open
+    sessions (i.e., parallel paper presentations, demonstrations, and
+    workshops) and conference proceedings.
+-   Free lunches and refreshments during breaks.
+-   Student volunteer garments.
+-   Free admission to all social events.
+
+Please note that Student Volunteers are responsible for their own travel
+and accommodation arrangements. However, Student Volunteers can apply
+for extra funding from SIGPLAN PAC funding or PLMW when eligible.
+
+You can send questions about student volunteering to sbarke@ucsd.edu and
+s.ayoun17@imperial.ac.uk.
+
+Applications
+
+Apply using: https://forms.gle/ZSs64esc6wK5XtY47. The form is very short
+and won’t take more than 5 minutes to complete.
+
+-   Deadline for submission: Nov 10th, 2023 AoE (notification: Nov 20)
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Mon 20 Nov 2023
+  Notification for SV applications
+
+  Fri 10 Nov 2023
+  Deadline for SV applications
+  -----------------------------------------------------------------------
+
+xWed 5 Feb 20:58
+
+POPL 2024
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+Artifact Evaluation
+Diversity, Equity and Inclusion
+POPL
+Session Previews
+Student Research Competition
+Student Volunteers
+TutorialFest
+Workshops and Co-located Events
+
+Co-hosted Conferences
+
+CPP 2024
+VMCAI 2024
+
+Workshops
+
+CoqPL 2024
+Dafny 2024
+GALOP 2024
+Incorrectness 2024
+LAFI 2024
+N40AI 2024
+O'Hearn Fest
+PEPM 2024
+PLMW @ POPL 2024
+PLanQC 2024
+POCL 2024
+PROPL 2024
+PriSC 2024
+The Future of Weak Memory 2024
+WAW 2024
+WITS 2024
+
+Co-hosted Symposia
+
+PADL 2024
+
+Attending
+
+Venue: Institution of Engineering and Technology
+Supporting POPL
+Registration
+Conference Hotel: Strand Palace Hotel
+Information for Virtual Attendees
+Information for Presenters
+Requesting a Visa
+POPL Live Streams
+
+Sign Up

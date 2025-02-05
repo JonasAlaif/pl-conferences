@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:287cd97d-b56f-496f-a9f1-d22c5aa694eb
+DTSTAMP:20250205T190712Z
+DTSTART;VALUE=DATE:20230711
+DTEND;VALUE=DATE:20230712
+SUMMARY:[POPL 2024] Paper Submission Deadline
+DESCRIPTION:POPL 2024 Call for Papers: Submit full anonymized papers (max 25 pages, PACMPL format) by July 11, 2023 AoE; use third person citations, no author names or affiliations; submit via https://popl24.hotcrp.com; double-blind reviewing, no external links for supplementary material; contact Program Chair for guidance on conflicts and anonymization; further details at https://popl24.hotcrp.com/faq; important dates: submission deadline July 11, 2023 AoE, conditional acceptance notification Oct 2, 2023, revised submission deadline Oct 9, 2023, artifact deadline Oct 2, 2023, camera-ready deadline Nov 14, 2023, final acceptance notification Nov 7, 2023; Derek Dreyer is Program Chair; https://popl24.hotcrp.com/
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:e7c78881-3648-4b6d-8811-2b23365c1595
+DTSTAMP:20250205T190712Z
+DTSTART;VALUE=DATE:20230911
+DTEND;VALUE=DATE:20230915
+SUMMARY:[POPL 2024] Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:ef28a665-4c44-4c99-a9e4-69b6a7d8b863
+DTSTAMP:20250205T190712Z
+DTSTART;VALUE=DATE:20231002
+DTEND;VALUE=DATE:20231003
+SUMMARY:[POPL 2024] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:555cd12b-ca6e-4c21-87bb-0eb69cfd47a1
+DTSTAMP:20250205T190712Z
+DTSTART;VALUE=DATE:20240114
+DTEND;VALUE=DATE:20240121
+SUMMARY:[POPL 2024] Conference
+DESCRIPTION:
+LOCATION:London, United Kingdom
+END:VEVENT
+END:VCALENDAR

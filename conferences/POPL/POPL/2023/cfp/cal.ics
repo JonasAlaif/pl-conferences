@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:60a6d4ea-288f-4939-8bb5-f2e9fe691a6d
+DTSTAMP:20250205T175619Z
+DTSTART;VALUE=DATE:20220707
+DTEND;VALUE=DATE:20220708
+SUMMARY:[POPL 2023] Paper Submission Deadline
+DESCRIPTION:POPL 2023 Call for Papers submission deadline Thu 7 Jul 2022 AoE; submit to https://popl23.hotcrp.com; 25 page limit ACM format; double-blind reviewing required omit names affiliations third person references; resubmissions multiple times allowed until deadline; conflicts of interest must be declared; author response period Tue 6-9 Sep 2022; conditional acceptance notifications Tue 27 Sep 2022; revisions due Wed 26 Oct 2022; final acceptance notifications Mon 7 Nov 2022; camera-ready deadline Thu 10 Nov 2022; supplementary material must be anonymized and uploaded at submission time; details on double-blind reviewing FAQs available at SIGPLAN author information page
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:e7726863-dad3-47a9-a1aa-8204c865911f
+DTSTAMP:20250205T175619Z
+DTSTART;VALUE=DATE:20220906
+DTEND;VALUE=DATE:20220910
+SUMMARY:[POPL 2023] Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:ddc88ccf-07b2-42f4-9faa-12a0e46f7d53
+DTSTAMP:20250205T175619Z
+DTSTART;VALUE=DATE:20220927
+DTEND;VALUE=DATE:20220928
+SUMMARY:[POPL 2023] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:974d60be-7c5a-4f03-afd7-99ed94cdd651
+DTSTAMP:20250205T175619Z
+DTSTART;VALUE=DATE:20230115
+DTEND;VALUE=DATE:20230122
+SUMMARY:[POPL 2023] Conference
+DESCRIPTION:
+LOCATION:Boston, United States
+END:VEVENT
+END:VCALENDAR

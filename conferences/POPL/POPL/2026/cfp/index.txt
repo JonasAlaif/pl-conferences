@@ -1,0 +1,416 @@
+POPL 2026
+
+Sun 11 - Sat 17 January 2026 Rennes, France
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Le Couvent des Jacobins
+-   Track/Call
+-   Organization
+    -   -   POPL 2026 Committees
+        -   Organizing Committee
+        -   AV Committee
+        -   Student Volunteers
+        -   Track Committees
+        -   Program Committee
+        -   Contributors
+        -   People Index
+-   Search
+-   Series
+    -   Series
+    -   POPL 2026
+    -   POPL 2025
+    -   POPL 2024
+    -   POPL 2023
+    -   POPL 2022
+    -   POPL 2021
+    -   POPL 2020
+    -   POPL 2019
+    -   POPL 2018
+    -   POPL 2017
+    -   POPL 2016
+
+-   Sign in
+-   Sign up
+
+POPL 2026 (series) /
+
+POPL Research Papers
+
+-   POPL 2026 Call for Papers
+-   FAQ on Double-Blind Reviewing
+
+POPL 2026 Call for Papers
+
+Coming Soon
+
+FAQ on Double-Blind Reviewing
+
+General
+
+Q: Why are you using double-blind reviewing?
+
+A: Studies have shown that a reviewer’s attitude toward a submission may
+be affected, even unconsciously, by the identity of the authors. We want
+reviewers to be able to approach each submission without any such,
+possibly involuntary, pre-judgment. Many computer science conferences
+have embraced double-blind reviewing. POPL has used double-blind
+reviewing for several years now as stipulated in the Principles of POPL.
+
+Q: Why are you using full double-blind reviewing instead of lightweight
+double-blind reviewing?
+
+A: For about a decade, POPL used lightweight double-blind review
+(double-blind until PC members submit reviews). For POPL 2023, the
+conference switched to full double-blind review (double-blind until
+conditional acceptance). There are benefits and drawbacks to both
+approaches, but based on our experience so far, the benefits of
+full-double blind seem to outweight the drawbacks.
+
+Q: Do you really think blinding actually works? I suspect reviewers can
+often guess who the authors are anyway.
+
+A: It is relatively rare for authorship to be guessed correctly, even by
+expert reviewers, as detailed in this study.
+
+Q: Couldn’t blind submission create an injustice where a paper is
+inappropriately rejected based upon supposedly-prior work which was
+actually by the same authors and not previously published?
+
+A: Yes, but we have mechanisms in place to prevent such an injustice
+from occurring. Reviewers are held accountable for their positions and
+are required to identify any supposed prior work that they believe
+undermines the novelty of the paper. Any assertion that “this has been
+done before” by reviewers should be supported with concrete information.
+The author response mechanism exists in part to hold reviewers
+accountable for claims that may be incorrect. Moreover, if authors
+believe that their paper is being misjudged due to the constraints of
+double-blind review, they should feel free to get in touch with the
+Program Chair.
+
+For authors
+
+Q: What exactly do I have to do to anonymize my paper?
+
+A: Use common sense. Your job is not to make your identity
+undiscoverable but simply to make it possible for reviewers to evaluate
+your submission without having to know who you are. The specific
+guidelines stated in the call for papers are simple: omit authors’ names
+from your title page, and when you cite your own work, refer to it in
+the third person. For example, if your name is Smith and you have worked
+on amphibious type systems, instead of saying “We extend our earlier
+work on statically typed toads [Smith 2004],” you might say “We extend
+Smith’s [2004] earlier work on statically typed toads.” Also, be sure
+not to include any acknowledgements that would give away your identity,
+and avoid revealing the institutional affiliation of authors or at which
+the work was performed.
+
+If you believe for some reason that it is impossible to anonymize your
+paper without significantly weakening it, please feel free to get in
+touch with the Program Chair to discuss the situation.
+
+Q: I would like to provide supplementary material for consideration,
+e.g., the code of my implementation or proofs of theorems. How do I do
+this?
+
+A (and also see the next question): On the submission site there will be
+an option to submit supplementary material along with your main paper.
+This supplementary material should also be anonymized; it may be viewed
+by reviewers during the review period, so it should adhere to the same
+double-blind guidelines.
+
+Q: My submission is based on code available in a public repository or I
+would like to provide a link to an online demo. How do I deal with this?
+
+A: We discourage the use of external links, but sometimes the most
+convenient way to share suplementary material such as code or datasets
+is to include a link to a github repository or a google drive, but it is
+very important that they are fully anonymized. In particular, a link to
+your working code repository that exposes the identities of the
+contributors will be in violation of the double blind policy.
+
+The same holds for online demos; reviewers should be able to visit the
+online demo and potentially browse its source code without being exposed
+to the identity of the authors (watch out for copyright statements, for
+example).
+
+You should keep in mind that reviewers are under no obligation to review
+any supplementary material, including externally linked data or code,
+and reviewers may chose not to visit any externally linked material.
+
+Needless to say, attempting to discover the reviewers for your paper by
+tracking visitors to a public repository or an online demo would
+constitute a breach of academic integrity.
+
+Q: I am building on my own past work on the WizWoz system. Do I need to
+rename this system in my paper for purposes of anonymity, so as to
+remove the implied connection between my authorship of past work on this
+system and my present submission?
+
+A: No. The relationship between systems and authors changes over time,
+so there will be at least some doubt about authorship. Increasing this
+doubt by changing the system name would help with anonymity, but it
+would compromise the research process. In particular, changing the name
+requires explaining a lot about the system again because you can’t just
+refer to the existing papers, which use the proper name. Not citing
+these papers runs the risk of the reviewers who know about the existing
+system thinking you are replicating earlier work. It is also confusing
+for the reviewers to read about the paper under Name X and then have the
+name be changed to Name Y. Will all the reviewers go and re-read the
+final version with the correct name? If not, they have the wrong name in
+their heads, which could be harmful in the long run.
+
+Q: I am submitting a paper that extends my own work that previously
+appeared at a workshop. Should I anonymize any reference to that prior
+work?
+
+A: If the previous workshop publication resulted in a published paper,
+then your POPL submission will be judged on the significance of its
+delta with respect to that earlier paper. In that case, you should
+definitely cite the earlier paper as you would any other paper (i.e., in
+the third person, not revealing that you were the author of the earlier
+paper) and explain the delta. If, on the other hand, the work presented
+at an earlier workshop was not accompanied by a proper publication
+(e.g., if it was just a talk), then your POPL submission may very well
+have significant overlap with it and citing the workshop work would
+effectively unblind your paper. In such a case, it is not necessary to
+cite the earlier presentation. Instead, please mention it in the
+“Confidential Comments for the Program Chair” field of the HotCRP form
+so that the Program Chair is aware of the situation. When in doubt, ask
+the Program Chair for guidance.
+
+Q: I want to cite some related work that itself cites an earlier version
+of my paper/system that appeared previously online. But that would
+effectively unblind my submission. What do I do?
+
+A: It is difficult to give a general answer to this question. Ask the
+Program Chair for guidance.
+
+Q: My submission presents a technique that I employed in the development
+of previous papers but which was never properly described in those
+papers. If I mention that my technique was used in those previous
+papers, I am effectively unblinding my submission, but if I don’t
+mention it, reviewers may think I am ripping off my own prior work. What
+do I do?
+
+A: It is difficult to give a general answer to this question. Ask the
+Program Chair for guidance.
+
+Q: Am I allowed to post my (non-blinded) paper on my web page? Can I
+advertise the unblinded version of my paper on mailing lists or send it
+to colleagues? Can I give a talk about my work while it is under review?
+How do I handle social media? What about arXiv?
+
+A: We have developed guidelines, described here, to help everyone
+navigate in the same way the tension between (1) the normal
+communication of scientific results, which double-blind reviewing should
+not impede, and (2) actions that essentially force potential reviewers
+to learn the identity of the authors for a submission. Roughly speaking,
+you may (of course!) discuss work under submission, but you should not
+broadly advertise your work through media that is likely to reach your
+reviewers. We acknowledge there are grey areas and trade-offs; we cannot
+describe every possible scenario.
+
+Things you may do:
+
+-   Submit your paper to POPL, even if a previous version of it – under
+    the same title or a different title – has been presented at an
+    informal workshop, published on arXiv, or submitted to a previous
+    conference or workshop.
+-   Post your submission on your home page, your institutional
+    repository, or arXiv, before or after the deadline (under whatever
+    title you want).
+-   Discuss your work with anyone who is not on the PC, or with PC
+    members with whom you already have a conflict.
+-   Present your work at professional meetings, informal workshops, or
+    job interviews during the POPL review period.
+
+The above is not an exhaustive list: when in doubt, ask the Program
+Chair.
+
+Things you should not do:
+
+-   Contact PC members (with whom you are not conflicted) about your
+    work.
+-   Publicize your work on major mailing lists used by the community
+    (because potential reviewers likely read these lists).
+-   Publicize your work on social media if wide public [re-]propagation
+    is common (e.g., Twitter) and therefore likely to reach potential
+    reviewers. For example, on Facebook, a post with a broad privacy
+    setting (public or all friends) saying, “Whew, POPL paper in, time
+    to sleep” is okay, but one describing the work or giving its title
+    is not appropriate. Alternately, a post to a group including only
+    the colleagues at your institution is fine.
+
+Reviewers will not be asked to recuse themselves from reviewing your
+paper unless they feel you have gone out of your way to advertise your
+authorship information to them. If you are unsure about what constitutes
+“going out of your way”, please contact the Program Chair.
+
+Q: Will the fact that POPL is double-blind have an impact on handling
+conflicts-of-interest?
+
+A: Double-blind reviewing does not change the principle that reviewers
+should not review papers with which they have a conflict of interest,
+even if they do not immediately know who the authors are. Authors
+declare conflicts of interest when submitting their papers using the
+guidelines in the call for papers. Papers will not be assigned to
+reviewers who have a conflict.
+
+For reviewers
+
+Q: What should I do if I learn the authors’ identity? What should I do
+if a prospective POPL author contacts me and asks to visit my
+institution?
+
+A: You should not treat double-blind reviewing differently from other
+reviewing. In particular, as explained above, it is fine for authors to
+give talks about their work (at workshops, job interviews, etc.), they
+cannot control who will attend their talks, and you as a PC member
+should not feel that you are prevented from attending their talks.
+Knowing (for whatever reason) that a paper was written by a certain
+author does not prevent you from reviewing the paper.
+
+That said, if you feel that the authors’ actions are in flagrant
+violation of double-blind review, that is a point of concern. For
+example, if an author e-mails you their brand new POPL submission and
+asks to visit your institution to discuss it, that would clearly not be
+appropriate. There is a grey zone here, so use your best judgment, and
+when in doubt, ask the Program Chair how to proceed.
+
+Q: The authors have provided a URL to supplemental material. I would
+like to see the material but I worry they will snoop my IP address and
+learn my identity. What should I do?
+
+A: You are under no obligation to follow any URLs to external
+supplementary material. If the submission is not self contained and does
+not convince you by itself about its merits, then the paper should not
+be accepted. If you ever have reason to suspect that your anonymity was
+compromised through your following of a link, please share that
+information with the PC chair immediately, as this would constitute a
+breach of academic integrity on the part of the authors.
+
+Q: If I am assigned a paper for which I feel I am not an expert, how do
+I seek an outside review?
+
+A: PC members should do their own reviews, not delegate them to someone
+else. If doing so is problematic for some papers, e.g., you don’t feel
+completely qualified to review them, or if you know someone who would be
+the perfect reviewer for the paper, then bring this to the attention of
+the Associate Chair handling your paper, and discuss with them potential
+external reviewers (or other PC members) who might be able to provide an
+expert review. Then, submit a review for the paper that is as careful as
+possible, pointing out the areas where you think your knowledge is
+lacking. The Associate Chairs will manage the process of ensuring that
+papers receive sufficient expert reviews; please do not contact outside
+reviewers yourself.
+
+Q: How do we handle potential conflicts of interest since I cannot see
+the author names?
+
+A: The conference review system will ask that you identify conflicts of
+interest when you get an account on the submission system. It is
+critical that you enter these at least a week before the POPL submission
+deadline. Feel free to also identify additional authors whose papers you
+feel you could not review fairly for reasons other than those given
+(e.g., strong personal friendship).
+
+Q: How should I avoid learning the authors’ identity if I am using
+web-search in the process of performing my review?
+
+A: You should make a good-faith effort not to find the authors’ identity
+during the review period, but if you inadvertently do so, this does not
+disqualify you from reviewing the paper. As part of the good-faith
+effort, avoid using search engines with terms like the paper’s title or
+the name of a new system being discussed.
+
+------------------------------------------------------------------------
+
+These guidelines are largely based on guidelines for POPL 2023, with a
+few modifications by Derek Dreyer based on discussions with the POPL
+Steering Committee. The earlier guidelines evolved from guidelines used
+at POPL and PLDI for a number of years, which originated in guidelines
+created by Mike Hicks for POPL 2012.
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Thu 10 Jul 2025new
+  Paper submission deadline
+
+  Mon 8 Sep 2025new
+  Beginning of author response period
+
+  Thu 11 Sep 2025new
+  End of author response period
+
+  Thu 2 Oct 2025new
+  Conditional Accept Decisions Announced
+  -----------------------------------------------------------------------
+
+Program Committee
+
+-   
+    [Suresh Jagannathan]
+    Suresh JagannathanProgram Chair
+
+    Purdue University
+
+    United States
+-   
+    [Colin Gordon]
+    Colin GordonAssociate Chair
+
+    Drexel University
+
+    United States
+-   
+    [Laura Kovacs]
+    Laura KovacsAssociate Chair
+
+    Vienna University of Technology (TU Wien)
+
+    Austria
+-   
+    [Robbert Krebbers]
+    Robbert KrebbersAssociate Chair
+
+    Radboud University Nijmegen
+
+    Netherlands
+-   
+    [micro-avatar]
+    Sam StatonAssociate Chair
+
+    University of Oxford
+
+    United Kingdom
+-   
+    [Stephanie Weirich]
+    Stephanie WeirichAssociate Chair
+
+    University of Pennsylvania
+
+    United States
+
+xWed 5 Feb 20:24
+
+POPL 2026
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+POPL
+
+Attending
+
+Venue: Le Couvent des Jacobins
+
+Sign Up

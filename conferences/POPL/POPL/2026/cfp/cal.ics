@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:182794e9-9a69-4271-87c2-e9e025900ca3
+DTSTAMP:20250205T195211Z
+DTSTART;VALUE=DATE:20250710
+DTEND;VALUE=DATE:20250711
+SUMMARY:[POPL 2026] Paper Submission Deadline
+DESCRIPTION:POPL 2026 Call for Papers submission deadline Thu 10 Jul 2025, author response period Mon 8 Sep 2025 - Thu 11 Sep 2025, conditional accept decisions Thu 2 Oct 2025, double-blind reviewing required omit authors' names from title page cite own work in third person anonymize supplementary material avoid external links and revealing copyright statements discuss work with non-PC members present at professional meetings during review period post submission on home page institutional repository or arXiv contact Program Chair for guidance on conflicts of interest and specific questions submit via POPL 2026 submission site https://www.researchr.org/conference/popl/2026/call-for-papers
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:4f920d5e-f8a7-46e5-9f8b-d2fdad2d8109
+DTSTAMP:20250205T195211Z
+DTSTART;VALUE=DATE:20250908
+DTEND;VALUE=DATE:20250912
+SUMMARY:[POPL 2026] Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:29dac87d-8ed3-4807-be20-c671cd2631b3
+DTSTAMP:20250205T195211Z
+DTSTART;VALUE=DATE:20251002
+DTEND;VALUE=DATE:20251003
+SUMMARY:[POPL 2026] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:3f045daf-3204-41ef-9d05-7724465e293e
+DTSTAMP:20250205T195211Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260118
+SUMMARY:[POPL 2026] Conference
+DESCRIPTION:
+LOCATION:Rennes, France
+END:VEVENT
+END:VCALENDAR

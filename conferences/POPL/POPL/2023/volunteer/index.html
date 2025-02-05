@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="https://popl23.sigplan.org/favicon.ico?28d37e6d7e5e12d24c39bdba0f4f3cfd" rel="shortcut icon" type="image/x-icon" />
+<link href="https://popl23.sigplan.org/stylesheets/common_.css?d7bcca3579a066193caf560ede9d6399" rel="stylesheet" type="text/css" />
+<title>POPL 2023 - Student Volunteers - POPL 2023</title>
+<script type="text/javascript">var show_webdsl_debug=false;</script>
+<script type="text/javascript">var contextpath="https://popl23.sigplan.org";</script>
+<link rel="stylesheet" href="https://popl23.sigplan.org/stylesheets/bootstrap/css/bootstrap.min.css?7f89537eaf606bff49f5cc1a7c24dbca" type="text/css" /><link rel="stylesheet" href="https://popl23.sigplan.org/stylesheets/conf.css?d8ff81ab1f2387936557f525e4e8eb20" type="text/css" /><link rel="stylesheet" href="https://popl23.sigplan.org/getFile/0c489b51-94ee-436b-a00d-6d790236748d/logobar.css?1672687442217" type="text/css" /><link rel="stylesheet" href="https://popl23.sigplan.org/stylesheets/theme.bootstrap_3.min.css?6867e70881e6ed2c03b6c9cf9c3152e0" type="text/css" /><script type="text/javascript" src="//code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/jquery.tablesorter.combined.min.js?285b21976326641f8f1b910492e6d5d0"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/jquery.tablesorter.pager.min.js?4551cdfea66f45a11ae5548f3d50a06f"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/tablesorter-init.js?ee6babedf1a6be960e4543a1bb57b421"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/bootstrap/js/bootstrap.min.js?2f34b630ffe30ba2ff2b91e3f3c322a1"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/notify.min.js?e86d399917a84b69a4683f504c7a7813"></script>
+<script type="text/javascript" src="https://popl23.sigplan.org/javascript/ajax.js?2dbd1cc4f8f2d52ae9c879d7346f4f8a"></script>
+<script type="text/javascript">$(document).ready( function(){
+          $('#program-menu a[data-fltr-type]').on('click', function(event){
+            event.preventDefault();
+            window.location = $(this).attr('href') + "?" + encodeURIComponent( $(this).data('fltr-type') ) + '=' + encodeURIComponent( $(this).data('fltr-val') );
+          })
+        })
+      </script>
+<script type="text/javascript">var ignoreHashChange = false;
+    function hashChangeFunc(){
+      // show active tab on hash in url
+      if (window.location.hash !== ''){
+        var hashTargetAll = $('a[href="' + window.location.hash + '"]');
+        if(hashTargetAll.length){
+          var hashTarget = hashTargetAll.filter('[data-toggle="tab"]')
+          if( hashTarget.length ){
+            hashTarget = hashTarget.first();
+            hashTarget.tab('show');
+          } else {
+            hashTarget = hashTargetAll.first();
+          }
+          // and open parent tabs in case the target element is nested in a tab
+          var parentPane = hashTarget.closest( '.tab-pane' );
+          if(parentPane.length){
+            $('.nav a[href="#'+ parentPane.attr('id') +'"]').tab('show');
+          }
+          var parentCollapse = hashTarget.closest( '.panel-collapse:not(.in)' ).collapse('show');
+        }
+      }
+      return false;
+    }
+
+    $(document).ready(function(){
+      var tabFromRequestUrl = window.location.hash !== '' ? $('a[href="' + window.location.hash + '"][data-toggle="tab"]') : [];
+      var initUrlHash = window.location.hash;
+      hashChangeFunc()
+      if( tabFromRequestUrl.length ){
+        //Prevent the browser to auto-scroll to the anchor of the tab
+        window.location.hash = "";
+      }
+      //make in-page #links open the tabs
+      if ($._data( $(window)[0], 'events' ).hashchange == undefined){
+        $(window).on('hashchange', hashChangeFunc);
+      }
+      if(tabFromRequestUrl.length){
+        setTimeout( function(){
+          ignoreHashChange = true;
+          history.replaceState(null, null, initUrlHash);
+          ignoreHashChange = false;
+        }, 10 );
+      }
+    });
+    var autoTabFunction = function(node){
+      var isActivatingFirstTab = false;
+      // remember the hash in the URL without jumping
+      $('a[data-toggle="tab"]:not(.no-hash):not(.bound)').addClass('bound').on('shown.bs.tab', function(e){
+        if(!isActivatingFirstTab){
+          var newhash = '#' + $(e.target).attr('href').substr(1);
+          if(history.replaceState){
+            history.replaceState(null, null, newhash);
+          } else{
+            location.hash = newhash;
+          }
+        }
+      });
+
+      //When no tab is active, set the first one to active
+      $(node).find('.nav-tabs:not(.bound), .nav-pills:not(.bound)').addClass('bound').each(function(){
+        if( $(this).children().length > 0 && 1 > $(this).find('.active').length){
+          const firstItem = $(this).find('a[data-toggle="tab"]').first();
+          isActivatingFirstTab = true;
+          firstItem.tab('show');
+          isActivatingFirstTab = false;
+        }
+      });
+    }
+  </script>
+<script type="text/javascript">(function($){
+        $(document).ready(function(){
+          $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+            event.preventDefault(); 
+            event.stopPropagation(); 
+            $(this).parent().siblings().removeClass('open');
+            $(this).parent().toggleClass('open');
+          });
+        });
+      })(jQuery);
+      </script>
+<meta  prefix='og: http://ogp.me/ns#' property='og:image' content='https://popl23.sigplan.org/getImage/carousel/Boston_skyline_from_Longfellow_Bridge_September_2017_panorama_2.jpg?1652955486000'>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G0QWEKVQS"></script>
+<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-4G0QWEKVQS', {'cookie_domain': 'auto', 'anonymizeIp': true });gtag('config', 'UA-9607501-2', {'cookie_domain': 'auto', 'anonymizeIp': true });</script>
+<script>
+
+  //set correct referrer policy for springer publication link
+
+  $(function(){ $('a[href*="link.springer"]').attr('referrerpolicy','no-referrer-when-downgrade') } );
+
+</script>
+<meta prefix='og: http://ogp.me/ns#' property='og:title' content='POPL 2023 - Student Volunteers - POPL 2023'>
+<meta name='description' content='Sign up to be a Student Volunteer and help us make POPL 2023 a unique experience for all attendants! 
+POPL 2023 is pleased to offer a number of opportunities for student volunteers, who are vital to the efficient operation and continued success of the conference each year. The student volunteer program is a chance for students from around the world to participate in the conferences whilst assisting us in preparing and running the event. 
+The Student Volunteer Program helps more students attend the POPL conference by covering registration to the conferences, tutorials, workshops, and all as ...'>
+<meta  prefix='og: http://ogp.me/ns#' property='og:description' content='Sign up to be a Student Volunteer and help us make POPL 2023 a unique experience for all attendants! 
+POPL 2023 is pleased to offer a number of opportunities for student volunteers, who are vital to the efficient operation and continued success of the conference each year. The student volunteer program is a chance for students from around the world to participate in the conferences whilst assisting us in preparing and running the event. 
+The Student Volunteer Program helps more students attend the POPL conference by covering registration to the conferences, tutorials, workshops, and all as ...'>
+<script type="text/javascript">function addEventModalLoadOnClick( containerNode ){
+        $(containerNode).find( "a[data-event-modal]" ).on("click", function(e){
+          var eventId = $(this).data("event-modal"); 
+          var modalElem = $("#modal-" + eventId);
+          if(modalElem.length){
+            modalElem.modal({ backdrop: 'static', keyboard: true}, 'show');
+          } else {
+            var loaderElem = $("#event-modal-loader");
+            loaderElem.find("input.event-id-input").val( eventId );
+            loaderElem.find("#load-modal-action").click();
+          }
+          e.preventDefault();
+        } );
+      }
+    </script><script type="text/javascript">function addStarredEventOnClick( containerNode ){
+        $(containerNode).find( "[data-event-star]" ).on("click", function(e){
+          var eventId = $(this).data("event-star"); 
+          var starEventFormElem = $("#event-star-form");
+          starEventFormElem.find("input.event-id-input").val( eventId );
+          starEventFormElem.find("#star-event-action").click();
+          e.preventDefault();
+          e.stopPropagation();
+        } );
+      }
+    </script><script type="text/javascript">function pauseOnCloseModal( modalid ){
+        //pauses video (only youtube at the moment) when closing modal
+        $('#' + modalid).on('hidden.bs.modal', function () {
+          $(this).find('.embed-container iframe[src*=enablejsapi]').each( function(){ this.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*') } );
+        } )
+      }
+    </script>
+</head>
+<body id="track"><div class="frame"><div class="logobar"><div class="container"><a href="https://popl23.sigplan.org" class="navbar-brand navigate"><span class="brand-text">POPL 2023</span></a><div class="place">Sun 15 - Sat 21 January 2023 <a href="https://popl23.sigplan.org/venue/POPL-2023-venue" class="navigate">Boston, Massachusetts, United States</a></div></div></div><div class="navbar navbar-default"><div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#navigationbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button></div><div id="navigationbar" class="navigationbar collapse navbar-collapse"><ul class="block nav navbar-nav"><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Attending <span class="caret"></span></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/venue/POPL-2023-venue" class="navigate">Venue: Boston Park Plaza</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/supporting-POPL" class="navigate">Supporting POPL</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/registration" class="navigate">Registration</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/information-for-students" class="navigate">Information for Students</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/info-presenters" class="navigate">Information for Presenters</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/info-attendees" class="navigate">Information for Virtual Attendees</a></li><li class="block"><a href="https://popl23.sigplan.org/attending/nearby-events" class="navigate">Nearby Events</a></li></ul></li><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Program <span class="caret"></span></a><ul id="program-menu" class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" class="navigate">POPL Program</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="prog" data-fltr-val="Your Program" class="navigate"><span class="glyphicon glyphicon-star"></span> Your Program</a></li><li class="block divider"></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>Filter by Day</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Sun 15 Jan 2023" class="navigate">Sun 15 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Mon 16 Jan 2023" class="navigate">Mon 16 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Tue 17 Jan 2023" class="navigate">Tue 17 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Wed 18 Jan 2023" class="navigate">Wed 18 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Thu 19 Jan 2023" class="navigate">Thu 19 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Fri 20 Jan 2023" class="navigate">Fri 20 Jan</a></li><li class="block"><a href="https://popl23.sigplan.org/program/program-POPL-2023/" data-fltr-type="date" data-fltr-val="Sat 21 Jan 2023" class="navigate">Sat 21 Jan</a></li></ul></li></ul></li><li id="tracks-in-navbar" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Tracks <span class="caret"></span></a><ul class="block dropdown-menu multi-column columns-3"><div class="row"><div class="col-sm-5"><ul class="block multi-column-dropdown"><li class="block dropdown-header">POPL 2023</li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-popl-research-papers" class="navigate">POPL</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-session-previews" class="navigate">Session Previews</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-artifact-evaluation" class="navigate">Artifact Evaluation</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-diversity-equity-inclusion" class="navigate">Diversity, Equity and Inclusion</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-student-research-competition" class="navigate">Student Research Competition</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="navigate">Student Volunteers</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-tutorialfest" class="navigate">TutorialFest</a></li><li class="block"><a href="https://popl23.sigplan.org/track/POPL-2023-workshops-and-co-located-events" class="navigate">Workshops and Co-located Events</a></li></ul></div><div class="col-sm-7"><ul class="block multi-column-dropdown"><li class="block dropdown-header">Co-hosted Conferences</li><li class="block"><a href="https://popl23.sigplan.org/home/CPP-2023" class="navigate"><strong>CPP</strong> </a></li><li class="block"><a href="https://popl23.sigplan.org/home/VMCAI-2023" class="navigate"><strong>VMCAI</strong> </a></li><li class="block dropdown-header">Workshops</li><li class="block"><a href="https://popl23.sigplan.org/home/CoqPL-2023" class="navigate"><strong>CoqPL</strong> </a></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>LAFI</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/home/lafi-2023" class="navigate"><strong>LAFI</strong> </a></li><li class="block"><a href="https://popl23.sigplan.org/details/lafi-2023-papers/23/Introduction-to-the-tensor-programs-framework-a-PL-approach-that-helps-analyse-theor" class="small menu-advertised-event navigate">- Introduction to the tensor-programs framework, a PL approach that helps analyse theoretical properties of deep learning.</a></li></ul></li><li class="block"><a href="https://popl23.sigplan.org/home/PEPM-2023" class="navigate"><strong>PEPM</strong> </a></li><li class="block"><a href="https://popl23.sigplan.org/home/PLMW-POPL-2023" class="navigate"><strong>PLMW @ POPL</strong> </a></li><li class="block"><a href="https://popl23.sigplan.org/home/prisc-2023" class="navigate"><strong>PriSC</strong> </a></li><li class="block"><a href="https://popl23.sigplan.org/home/prolala-2023" class="navigate"><strong>ProLaLa</strong> </a></li><li class="block dropdown-header">Co-hosted Symposia</li><li class="block"><a href="https://popl23.sigplan.org/home/PADL-2023" class="navigate"><strong>PADL</strong> </a></li></ul></div></div></ul></li><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Organization <span class="caret"></span></a><ul class="block dropdown-menu multi-column columns-2"><div class="row"><div class="col-sm-6"><ul class="block multi-column-dropdown"><li class="block dropdown-header">POPL 2023 Committees</li><li class="block"><a href="https://popl23.sigplan.org/committee/POPL-2023-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block dropdown-header">Track Committees  </li><li class="block"><a href="https://popl23.sigplan.org/committee/POPL-2023-popl-research-papers-program-committee" class="navigate"><strong>POPL</strong></a></li><li class="block"><a href="https://popl23.sigplan.org/committee/POPL-2023-artifact-evaluation-artifact-evaluation-committee" class="navigate"><strong>Artifact Evaluation</strong></a></li><li class="block"><a href="https://popl23.sigplan.org/committee/POPL-2023-student-research-competition-selection-committee" class="navigate"><strong>Student Research Competition</strong></a></li><li class="block"><a href="https://popl23.sigplan.org/committee/POPL-2023-tutorialfest-tutorial-evaluation-committee" class="navigate"><strong>TutorialFest</strong></a></li><li class="block dropdown-header">Contributors</li><li class="block"><a href="https://popl23.sigplan.org/people-index" class="navigate"><span class="glyphicon glyphicon-search"></span><sup><span class="glyphicon glyphicon-user"></span></sup> People Index</a></li></ul></div><div class="col-sm-6"><ul class="block multi-column-dropdown"><li class="block dropdown-header">Co-hosted Conferences</li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>CPP</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/CPP-2023-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/CPP-2023-papers-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/CPP-2023-papers-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>VMCAI</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/VMCAI-2023-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/VMCAI-2023-papers-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/VMCAI-2023-papers-artifact-evaluation-committee" class="navigate">Artifact Evaluation Committee</a></li></ul></li><li class="block dropdown-header">Workshops</li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>CoqPL</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/CoqPL-2023-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>LAFI</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/lafi-2023-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/lafi-2023-papers-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/lafi-2023-papers-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>PEPM</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/PEPM-2023-PEPM-2022-1-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/PEPM-2023-PEPM-2022-1-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/PEPM-2023-PEPM-2022-1-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>PLMW @ POPL</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/PLMW-POPL-2023-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/PLMW-POPL-2023-papers-invited-speakers" class="navigate">Speakers</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/PLMW-POPL-2023-papers-panelists" class="navigate">Panelists</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>PriSC</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/prisc-2023-papers-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/prisc-2023-papers-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>ProLaLa</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/prolala-2023-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="block dropdown-header">Co-hosted Symposia</li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>PADL</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/committee/PADL-2023-papers-programme-chairs" class="navigate">Programme Chairs</a></li><li class="block"><a href="https://popl23.sigplan.org/committee/PADL-2023-papers-program-committee" class="navigate">Program Committee</a></li></ul></li></ul></div></div></ul></li><li class="block"><a href="https://popl23.sigplan.org/search//all" class="navigate"><span class="glyphicon glyphicon-search"></span><span class="hidden-sm"> Search</span></a></li><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="hidden-sm">Series <span class="caret"></span></span><span title="Series" class="visible-sm"><span class="glyphicon glyphicon-repeat"></span> <span class="caret"></span></span></a><ul class="block dropdown-menu"><li class="block"><a href="https://popl23.sigplan.org/series/POPL" class="navigate"><span class="glyphicon glyphicon-home"></span> Series</a></li><li class="block divider"></li><li class="block"><a href="https://conf.researchr.org/home/POPL-2026" class="navigate">POPL 2026</a></li><li class="block"><a href="https://popl25.sigplan.org" class="navigate">POPL 2025</a></li><li class="block"><a href="https://popl24.sigplan.org" class="navigate">POPL 2024</a></li><li class="block"><span class="text-muted" style="margin-left: 2px;"><span class="glyphicon glyphicon-hand-right"></span> POPL 2023</span></li><li class="block"><a href="https://popl22.sigplan.org" class="navigate">POPL 2022</a></li><li class="block"><a href="https://popl21.sigplan.org" class="navigate">POPL 2021</a></li><li class="block"><a href="https://popl20.sigplan.org" class="navigate">POPL 2020</a></li><li class="block"><a href="https://popl19.sigplan.org" class="navigate">POPL 2019</a></li><li class="block"><a href="https://popl18.sigplan.org" class="navigate">POPL 2018</a></li><li class="block"><a href="https://popl17.sigplan.org" class="navigate">POPL 2017</a></li><li class="block"><a href="https://popl16.sigplan.org" class="navigate">POPL 2016</a></li></ul></li></ul><div class="navbar-right"><ul class="block nav navbar-nav"><li class="block"><a href="https://conf.researchr.org/signin/POPL-2023/https%3A%5Es%5Espopl23.sigplan.org%5Estrack%5EsPOPL-2023-student-volunteers" rel="nofollow" class="navigate">Sign in</a></li><li class="block"><a href="https://popl23.sigplan.org/signup" class="navigate">Sign up</a></li></ul></div></div></div></div><div id="content" class="container"><div class="page-header"><span class="text-muted small"><span class="glyphicon glyphicon-home"></span> <a href="https://popl23.sigplan.org" class="navigate">POPL 2023</a> (<a href="https://popl23.sigplan.org/series/POPL" class="navigate">series</a>) / </span><h1>Student Volunteers<span class="pull-right small h1">POPL 2023</span></h1></div><div class="row"><div class="col-sm-8"><ul id="tab" class="nav nav-pills"><li><a href="#About" data-toggle="tab">About</a></li><li><a href="#Applications" data-toggle="tab">Applications</a></li></ul><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; autoTabFunction(node); };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><div class="tab-content"><div id="About" class="tab-pane "><p>Sign up to be a Student Volunteer and help us make POPL 2023 a unique experience for all attendants!</p>
+<p>POPL 2023 is pleased to offer a number of opportunities for student volunteers, who are vital to the efficient operation and continued success of the conference each year. The student volunteer program is a chance for students from around the world to participate in the conferences whilst assisting us in preparing and running the event.</p>
+<p>The Student Volunteer Program helps more students attend the POPL conference by covering registration to the conferences, tutorials, workshops, and all associated events (but not travel or lodging expenses). In exchange for a fixed number of work hours (usually ~15) helping with the conference organization, you will be able to closely interact with researchers, mentors, and other students at POPL 2023. We are looking forward to seeing you in the SV team!</p>
+<h3><a href="#eligibility" id="eligibility" class="anchor-link">Eligibility</a></h3>
+<p>Applicants can be undergraduate, Master’s, Ph.D. full- or part-time students, of computer science or related fields, with or without previous experience as volunteers. Everyone is encouraged to apply!</p>
+<h3><a href="#duration" id="duration" class="anchor-link">Duration</a></h3>
+<p>Applicants must be available for at least four (4) full days between the 15th and 21st of January 2023, and will be expected to provide about 15 hours of volunteering work in that time. Volunteers will also be expected to be available for some amount of pre-conference discussion and training if necessary.</p>
+<h3><a href="#compensation" id="compensation" class="anchor-link">Compensation</a></h3>
+<p>Every student volunteer will receive: </p><ul><p></p>
+<li> A complimentary conference registration, offering access to all open sessions (i.e., parallel paper presentations, demonstrations, and workshops) and conference proceedings. </li>
+<li> Free lunches and refreshments during breaks. </li>
+<li> Student volunteer garments. </li>
+<li> Free admission to all social events. </li>
+</ul>
+<p>Please note that Student Volunteers are responsible for their own travel and accommodation arrangements. However, Student Volunteers can apply for extra funding from SIGPLAN PAC funding or PLMW when eligible.</p>
+<p>You can send questions about student volunteering to <a href="mailto:sbarke@eng.ucsd.edu">sbarke@eng.ucsd.edu</a> and <a href="mailto:kallas@seas.upenn.edu">kallas@seas.upenn.edu</a>.</p>
+</div><div id="Applications" class="tab-pane "><div class="page-header"><h3>Applications</h3></div><p>Apply using: <a href="https://forms.gle/vAmyYpZcHnobgcE67">https://forms.gle/vAmyYpZcHnobgcE67</a>. The form is very short and won’t take more than 5 minutes to complete.</p>
+<p>There are two rounds of calls:</p>
+<ul>
+<li>Deadline for first round: Nov 5th, 2022 AoE (notification: Nov 15)</li>
+<li>Deadline for second round: Dec 1st, 2022 AoE (notification: Dec 5th)</li>
+</ul>
+<p>Positive notifications given in the first round are firm, and the second round is only for spots not filled by the first round.</p>
+</div></div></div><div class="col-sm-4 sidebar"><div class="panel panel-primary"><div class="panel-heading clearfix"><div class="panel-title">Important Dates<span class="pull-right"><small><span class="glyphicon glyphicon-globe"></span><span class="glyphicon glyphicon-time"></span> AoE (UTC-12h)</small></span></div></div><table class="table table-hover important-dates-in-sidebar"><tr href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="clickable-row past"><td>Mon 5 Dec 2022<br/>Notification for second round SV applications</td></tr><tr href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="clickable-row past"><td>Thu 1 Dec 2022<br/>Deadline for second round of SV applications</td></tr><tr href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="clickable-row past"><td>Tue 15 Nov 2022<br/>Notification for first round SV applications</td></tr><tr href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="clickable-row past"><td>Sat 5 Nov 2022<br/>Deadline for first round of SV applications</td></tr></table></div></div></div><div id="messages-placeholder" class="alert alert-warning" style="display:none;"><a data-dismiss="alert" class="close">x</a><em>Wed 5 Feb 20:52</em></div></div><div id="notifications-ph" class="webdsl-placeholder"></div><div id="event-modal-loader" class="webdsl-placeholder"><form name="form_131600131703c411e65b13378d08eb1f6672b5a0259" id="form_131600131703c411e65b13378d08eb1f6672b5a0259" action="https://popl23.sigplan.org/eventDetailsModalByAjaxConferenceEdition" accept-charset="UTF-8" method="POST" class="hidden"><input type="hidden" name="form_131600131703c411e65b13378d08eb1f6672b5a0259" value="1" /><input type="hidden" name="context" value="POPL-2023" /><input name="ae03f7f6f951d515a297b161e922205d" type="text" value="" class="inputString form-control event-id-input"/><button style="position: absolute; left: -9999px; width: 1px; height: 1px;" onclick='javascript:serverInvoke("https://popl23.sigplan.org/eventDetailsModalByAjaxConferenceEdition","eventDetailsModalByAjaxConferenceEdition_ia0_3c411e65b13378d08eb1f6672b5a0259", [{"name":"context", "value":"POPL-2023"},],"form_131600131703c411e65b13378d08eb1f6672b5a0259", this.nextSibling, false,"event-modal-loader"); return false;'></button><a submitid="eventDetailsModalByAjaxConferenceEdition_ia0_3c411e65b13378d08eb1f6672b5a0259" href="javascript:void(0)" onclick="javascript:loadImageElem=this;$(this.previousSibling).click()" id="load-modal-action"></a></form></div><div id="event-star-form" class="webdsl-placeholder"><form name="form_509860938088b48fd14544d4239b498a2cf339e02b" id="form_509860938088b48fd14544d4239b498a2cf339e02b" action="https://popl23.sigplan.org/eventStarByAjaxConferenceEdition" accept-charset="UTF-8" method="POST" class="hidden"><input type="hidden" name="form_509860938088b48fd14544d4239b498a2cf339e02b" value="1" /><input type="hidden" name="context" value="POPL-2023" /><input name="a0b55aa29cf9431a9461b359872014e3" type="text" value="" class="inputString form-control event-id-input"/><button style="position: absolute; left: -9999px; width: 1px; height: 1px;" onclick='javascript:serverInvoke("https://popl23.sigplan.org/eventStarByAjaxConferenceEdition","eventStarByAjaxConferenceEdition_ia0_88b48fd14544d4239b498a2cf339e02b", [{"name":"context", "value":"POPL-2023"},],"form_509860938088b48fd14544d4239b498a2cf339e02b", this.nextSibling, false,"event-star-form"); return false;'></button><a submitid="eventStarByAjaxConferenceEdition_ia0_88b48fd14544d4239b498a2cf339e02b" href="javascript:void(0)" onclick="javascript:loadImageElem=this;$(this.previousSibling).click()" id="star-event-action"></a></form></div><div id="event-modals" class="webdsl-placeholder"></div><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; addEventModalLoadOnClick(node); addStarredEventOnClick(node); };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><footer class="footer"><div class="container"><div class="footer-box"><div class="row"><div class="col-sm-3"><h3><a href="https://popl23.sigplan.org" class="navigate"><span class="glyphicon glyphicon-home"></span> POPL 2023</a></h3><div><a href="https://popl23.sigplan.org/contact" class="navigate"><span class="glyphicon glyphicon-envelope"></span> contact form</a></div><hr/>using <a href="https://conf.researchr.org" class="navigate">conf.researchr.org</a> (<a href="http://yellowgrass.org/roadmap/conf.researchr.org" class="navigate">v1.69.0</a>)<br/><small><a href="https://popl23.sigplan.org/support" target="_blank" class="navigate"><span class="glyphicon glyphicon-question-sign"></span> Support page</a></small><br/><small></small></div><div class="col-sm-5"><div class="row"><div class="col-sm-6"><h4>Tracks</h4><a href="https://popl23.sigplan.org/track/POPL-2023-popl-research-papers" class="navigate">POPL</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-session-previews" class="navigate">Session Previews</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-artifact-evaluation" class="navigate">Artifact Evaluation</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-diversity-equity-inclusion" class="navigate">Diversity, Equity and Inclusion</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-student-research-competition" class="navigate">Student Research Competition</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-student-volunteers" class="navigate">Student Volunteers</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-tutorialfest" class="navigate">TutorialFest</a><br/><a href="https://popl23.sigplan.org/track/POPL-2023-workshops-and-co-located-events" class="navigate">Workshops and Co-located Events</a></div><div class="col-sm-6"><h4>Co-hosted Conferences</h4><a href="https://popl23.sigplan.org/home/CPP-2023" class="navigate">CPP 2023</a><br/><a href="https://popl23.sigplan.org/home/VMCAI-2023" class="navigate">VMCAI 2023</a><br/><h4>Workshops</h4><a href="https://popl23.sigplan.org/home/CoqPL-2023" class="navigate">CoqPL 2023</a><br/><a href="https://popl23.sigplan.org/home/lafi-2023" class="navigate">LAFI 2023</a><br/><a href="https://popl23.sigplan.org/home/PEPM-2023" class="navigate">PEPM 2023</a><br/><a href="https://popl23.sigplan.org/home/PLMW-POPL-2023" class="navigate">PLMW @ POPL 2023</a><br/><a href="https://popl23.sigplan.org/home/prisc-2023" class="navigate">PriSC 2023</a><br/><a href="https://popl23.sigplan.org/home/prolala-2023" class="navigate">ProLaLa 2023</a><br/><h4>Co-hosted Symposia</h4><a href="https://popl23.sigplan.org/home/PADL-2023" class="navigate">PADL 2023</a></div></div></div><div class="col-sm-2"><h4>Attending</h4><a href="https://popl23.sigplan.org/venue/POPL-2023-venue" class="navigate">Venue: Boston Park Plaza</a><br><a href="https://popl23.sigplan.org/attending/supporting-POPL" class="navigate">Supporting POPL</a><br><a href="https://popl23.sigplan.org/attending/registration" class="navigate">Registration</a><br><a href="https://popl23.sigplan.org/attending/information-for-students" class="navigate">Information for Students</a><br><a href="https://popl23.sigplan.org/attending/info-presenters" class="navigate">Information for Presenters</a><br><a href="https://popl23.sigplan.org/attending/info-attendees" class="navigate">Information for Virtual Attendees</a><br><a href="https://popl23.sigplan.org/attending/nearby-events" class="navigate">Nearby Events</a></div><div class="col-sm-2"><a href="https://popl23.sigplan.org/signup" class="navigate">Sign Up</a></div></div></div></div></footer></div><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; let defaultplacement = $(document).scrollLeft() > 100 ? 'auto left' : 'auto top'; $(node).find('[title]').each( function(i,el){ var $e=$(el);$e.tooltip({placement: function(tt, elem){ var attval = elem.getAttribute('data-placement'); return attval ? attval : defaultplacement; }, sanitize: false, container: 'body' }) } ).on('show.bs.tooltip', function () {  let el = this; while (el && window.getComputedStyle(el).position !== 'fixed') { el = el.parentElement; } if(el) $(this).data('bs.tooltip').options.container = el;});$('.tooltip.fade.in, .ui-tooltip-content').remove();  };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><script type="text/javascript">jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+          var href = $(this).attr("href");
+          if( window.location.href.indexOf( href ) < 0 ){
+            if ($(this).hasClass('new-window') ){
+              window.open( href );
+            } else {
+              window.document.location = href;
+            }
+          }
+        });
+    });
+    </script></body></html>

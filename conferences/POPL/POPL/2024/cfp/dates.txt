@@ -1,0 +1,10 @@
+| Event Description                           | Date                |
+|--------------------------------------------|---------------------|
+| Submission Deadline                        | Tue 11 Jul 2023 AoE  |
+| Start of Author Response Period            | Mon 11 Sep 2023     |
+| End of Author Response Period              | Thu 14 Sep 2023     |
+| Conditional Acceptance Notification        | Mon 2 Oct 2023      |
+| Revised Submission Deadline                | Mon 9 Oct 2023      |
+| Artifact Deadline                          | Mon 2 Oct 2023      |
+| Final Acceptance Notification              | Tue 7 Nov 2023      |
+| Camera-ready Deadline                      | Tue 14 Nov 2023     |
