@@ -123,7 +123,7 @@ if [ "$CITY_COUNTRY" == "No" ]; then
     CITY_COUNTRY=""
 fi
 
-EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
+EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a detailed single-line description suitable for the DESCRIPTION field of an .ics (iCalendar) file. The text must contain all key information about submitting a paper, including options, restrictions, and links. The output must be a single unfolded line that fits within iCalendar constraints. Use '\\\\n' instead of newlines. Ensure the output does not include the 'DESCRIPTION:' prefix."
 EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" 2.5 full)
 
 $SCRIPT_DIR/util/ics_calendar.sh start > "cal.ics"

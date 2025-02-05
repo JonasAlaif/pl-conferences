@@ -35,7 +35,7 @@ if [ "$DEADLINE_YEAR" != $i ] && [ "$DEADLINE_YEAR" != $im1 ]; then
     exit 1
 fi
 
-REGISTER_DESCRIPTION_Q="$PREFIX_Q Write a paragraph in markdown formatting with all information about applying to volunteer. It should include all important facts and links or emails (if present). Do not leave any blanks to fill."
+REGISTER_DESCRIPTION_Q="$PREFIX_Q Write a detailed single-line description suitable for the DESCRIPTION field of an .ics (iCalendar) file. The text must contain all key information about applying to volunteer, including links or emails (if present) relevant to applying. The output must be a single unfolded line that fits within iCalendar constraints. Use '\\\\n' instead of newlines. Ensure the output does not include the 'DESCRIPTION:' prefix."
 REGISTER_DESCRIPTION=$($SCRIPT_DIR/llm/qwen/run.sh "$VOLUNTEER_WEBPAGE" "$REGISTER_DESCRIPTION_Q" 2.5 full)
 
 $SCRIPT_DIR/util/ics_calendar.sh start > "cal.ics"

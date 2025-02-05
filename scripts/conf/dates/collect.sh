@@ -22,7 +22,7 @@ CFP_CORRECT=$($SCRIPT_DIR/llm/query_yes_no.sh "$CFP_WEBPAGE" "$CFP_CORRECT_Q" "i
 [ -z "$CFP_CORRECT" ] && echo "[ERROR] AI error, empty response" && exit 1
 if [ "$CFP_CORRECT" == "No" ]; then
     echo "[ERROR] $CEY CFP bad page"
-    continue
+    exit 1
 fi
 
 # Find all important dates as a table

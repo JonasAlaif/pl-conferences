@@ -76,13 +76,13 @@ if [ ! "$PAPER_SUBMISSION" \< "$REBUTTAL_START" ] || [ ! "$REBUTTAL_START" \< "$
 fi
 
 # Find the conference city and country
-CITY_COUNTRY_Q="$PREFIX_Q what city and world country is the $CEY conference? Answer with 'city, world country' or 'No' if not found, no full sentence. Two word answer."
+CITY_COUNTRY_Q="$PREFIX_Q what city and world country is the $CEY conference? Answer with 'City, World Country' or 'No' if not found. Do not use full sentences."
 CITY_COUNTRY=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$CITY_COUNTRY_Q" 2.5 sentence)
 if [ "$CITY_COUNTRY" == "No" ]; then
     CITY_COUNTRY=""
 fi
 
-EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a paragraph with all information about submitting a paper to $CEY. It should include all important facts and links. Do not leave any blanks to fill."
+EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a detailed single-line description suitable for the DESCRIPTION field of an .ics (iCalendar) file. The text must contain all key information about submitting a paper, including options, restrictions, and links. The output must be a single unfolded line that fits within iCalendar constraints. Use '\\\\n' instead of newlines. Ensure the output does not include the 'DESCRIPTION:' prefix."
 EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" 2.5 full)
 
 $SCRIPT_DIR/util/ics_calendar.sh start > "cal.ics"
