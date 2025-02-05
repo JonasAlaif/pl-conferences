@@ -9,6 +9,7 @@ SCRIPT_DIR=$(realpath "$(dirname "$0")/..")
 # Load the event info
 EVENT=$(echo "$INFO" | jq -r '.name')
 START_YEAR=$(echo "$INFO" | jq -r '.start')
+VOLUNTEER=$(echo "$INFO" | jq -r '.volunteer')
 if [ -z "$EVENT" ]; then
     EVENT=$CONFERENCE
     CONFERENCE=""
@@ -18,51 +19,68 @@ else
 fi
 [ -d "$EVENT" ] || mkdir "$EVENT"
 cd "$EVENT" || exit 1
+ROOT=$(pwd)
 
-TODO_YEARS=( $($SCRIPT_DIR/util/find_years.sh "$START_YEAR") )
-echo "Downloading data for $CE for years ${TODO_YEARS[@]}"
+TODO_YEARS=( $($SCRIPT_DIR/util/find_years.sh "$START_YEAR" "cfp") )
+echo -e "======\n======\nFinding CFP data for $CE for years ${TODO_YEARS[@]}\n======\n======"
 
 for i in "${TODO_YEARS[@]}"; do
-    [ -d "$i" ] && exit 1 || mkdir "$i"
-    echo -e "======\nProcessing $CE $i\n======"
+    cd "$ROOT"
+    [ -d "$i/cfp" ] && exit 1 || mkdir -p "$i/cfp"
+    cd "$i/cfp" || exit 1
+
     CEY="$CE $i"
+    echo "______ Processing $CEY ______"
 
     # Download the CFPs
-    $SCRIPT_DIR/https/dl_cfp.sh "$i/cfp" "$CONFERENCE" "$EVENT" "$i"
+    $SCRIPT_DIR/https/dl_clean.sh "index" "$CEY call for papers cfp"
     if [ $? -ne 0 ]; then
-        rm -rf "$i"
-        continue
-    fi
-    CFP_WEBPAGE=$(cat "$i/cfp.txt")
-
-    # Check page is not an error page
-    CFP_ERROR_Q="Does the above webpage look like an error page (e.g. 404) or a normal page with information?"
-    CFP_ERROR=$($SCRIPT_DIR/llm/query_yes_no.sh "$CFP_WEBPAGE" "$CFP_ERROR_Q" "if error" "otherwise" 2.5)
-    [ -z "$CFP_ERROR" ] && echo "[ERROR] AI error, empty response" && exit 1
-    if [ "$CFP_ERROR" == "Yes" ]; then
-        echo "[ERROR] $CEY CFP error page"
-        echo "[WEBPAGE]"
-        echo "$CFP_WEBPAGE"
-        rm -rf "$i"
+        cd "$ROOT"
+        rm -rf "$i/cfp"
         continue
     fi
 
-    # Check we have the right thing
-    CFP_CORRECT_Q="Does the above webpage look like a page about '$CEY'?"
-    CFP_CORRECT=$($SCRIPT_DIR/llm/query_yes_no.sh "$CFP_WEBPAGE" "$CFP_CORRECT_Q" "if both the name and year are mentioned" "otherwise" 2.5)
-    if [ "$CFP_CORRECT" == "No" ]; then
-        echo "[ERROR] $CEY CFP bad page"
-        echo "[WEBPAGE]"
-        echo "$CFP_WEBPAGE"
-        rm -rf "$i"
-        continue
-    fi
-
-    $SCRIPT_DIR/conf/event_one.sh "$CONFERENCE" "$EVENT" "$i" "$CFP_WEBPAGE"
+    # Collect events from CFP page
+    $SCRIPT_DIR/conf/dates/collect.sh "$CONFERENCE" "$EVENT" "$i"
     if [ $? -ne 0 ]; then
         echo "[WEBPAGE]"
-        echo "$CFP_WEBPAGE"
-        rm -rf "$i"
+        echo "$(cat index.txt)"
+        cd "$ROOT"
+        rm -rf "$i/cfp"
+        continue
+    fi
+done
+
+# Exit if volunteering not possible
+[ "$VOLUNTEER" != "true" ] && exit 0 || true
+
+cd "$ROOT"
+TODO_YEARS=( $($SCRIPT_DIR/util/find_years.sh "$START_YEAR" "volunteer") )
+echo -e "======\n======\nFinding volunteer data for $CE for years ${TODO_YEARS[@]}\n======\n======"
+
+for i in "${TODO_YEARS[@]}"; do
+    cd "$ROOT"
+    [ -d "$i/volunteer" ] && exit 1 || mkdir -p "$i/volunteer"
+    cd "$i/volunteer" || exit 1
+
+    CEY="$CE $i"
+    echo "______ Processing $CEY ______"
+
+    # Download the student volunteers page
+    $SCRIPT_DIR/https/dl_clean.sh "index" "$CEY student volunteer apply"
+    if [ $? -ne 0 ]; then
+        cd "$ROOT"
+        rm -rf "$i/volunteer"
+        continue
+    fi
+
+    # Collect events from student volunteer page
+    $SCRIPT_DIR/conf/dates/volunteer.sh "$CONFERENCE" "$EVENT" "$i"
+    if [ $? -ne 0 ]; then
+        echo "[WEBPAGE]"
+        echo "$(cat index.txt)"
+        cd "$ROOT"
+        rm -rf "$i/volunteer"
         continue
     fi
 done

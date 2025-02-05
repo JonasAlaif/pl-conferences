@@ -1,9 +1,0 @@
-| Event Description                                       | Date       |
-|---------------------------------------------------------|------------|
-| Paper submission                                        | February 3, 2023 AoE |
-| Rebuttal period                                          | March 29 – April 2, 2023 |
-| Author notification                                     | April 21, 2023 |
-| Artifact submission (Tool Papers)                       | April 28, 2023 (mandatory for tool papers) |
-| Artifact notification                                   | May 26, 2023 |
-| Final version due                                       | May 29, 2023 |
-| Conference                                              | July 17-22, 2023 |

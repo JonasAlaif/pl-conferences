@@ -9,7 +9,7 @@ CFP_WEBPAGE=$4
 CFP_TABLE=$5
 
 im1=$((i-1))
-SCRIPT_DIR=$(realpath "$(dirname "$0")/..")
+SCRIPT_DIR=$(realpath "$(dirname "$0")/../..")
 
 if [ -z "$CONFERENCE" ]; then
     CEY="$EVENT $i"
@@ -87,7 +87,7 @@ if [ "$NOTIFICATION_R2_YEAR" != $i ] && [ "$NOTIFICATION_R2_YEAR" != $im1 ]; the
 fi
 
 # Find the conference period dates
-CONFERENCE_START_Q="$PREFIX_Q the start and end dates of the conference. Provide the full dates for both, this should be some time after $NOTIFICATION."
+CONFERENCE_START_Q="$PREFIX_Q the start and end dates of the conference. Provide the full dates for both, this should be some time after $NOTIFICATION_R2."
 CONFERENCE_START=$($SCRIPT_DIR/llm/query_date.sh "$CFP_WEBPAGE" "$CONFERENCE_START_Q" "conference start date" 2.5)
 CONFERENCE_START_YEAR=$($SCRIPT_DIR/util/date.sh -d "$CONFERENCE_START" +%Y)
 if [ "$CONFERENCE_START_YEAR" != $i ]; then
@@ -123,21 +123,21 @@ if [ "$CITY_COUNTRY" == "No" ]; then
     CITY_COUNTRY=""
 fi
 
-EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a short paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
+EVENT_DESCRIPTION_Q="The page above is the call for papers of $CEY. Write a paragraph with all information about submitting a paper to this conference. It should include all important facts and links. Do not leave any blanks to fill."
 EVENT_DESCRIPTION=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$EVENT_DESCRIPTION_Q" 2.5 full)
 
-$SCRIPT_DIR/util/ics_calendar.sh start > "$i/deadlines.ics"
-$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION_R1" "$PAPER_SUBMISSION_R1" >> "$i/deadlines.ics"
-$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Rebuttal" "" "" "$REBUTTAL_START_R1" "$REBUTTAL_END_R1" >> "$i/deadlines.ics"
+$SCRIPT_DIR/util/ics_calendar.sh start > "cal.ics"
+$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION_R1" "$PAPER_SUBMISSION_R1" >> "cal.ics"
+$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Rebuttal" "" "" "$REBUTTAL_START_R1" "$REBUTTAL_END_R1" >> "cal.ics"
 if [ "$NOTIFICATION_R1" != "$NOTIFICATION_R2" ]; then
-    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Notification" "" "" "$NOTIFICATION_R1" "$NOTIFICATION_R1" >> "$i/deadlines.ics"
+    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R1 Notification" "" "" "$NOTIFICATION_R1" "$NOTIFICATION_R1" >> "cal.ics"
 fi
-$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION_R2" "$PAPER_SUBMISSION_R2" >> "$i/deadlines.ics"
-$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Rebuttal" "" "" "$REBUTTAL_START_R2" "$REBUTTAL_END_R2" >> "$i/deadlines.ics"
+$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Paper Submission Deadline" "$EVENT_DESCRIPTION" "" "$PAPER_SUBMISSION_R2" "$PAPER_SUBMISSION_R2" >> "cal.ics"
+$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Rebuttal" "" "" "$REBUTTAL_START_R2" "$REBUTTAL_END_R2" >> "cal.ics"
 if [ "$NOTIFICATION_R1" != "$NOTIFICATION_R2" ]; then
-    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Notification" "" "" "$NOTIFICATION_R2" "$NOTIFICATION_R2" >> "$i/deadlines.ics"
+    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] R2 Notification" "" "" "$NOTIFICATION_R2" "$NOTIFICATION_R2" >> "cal.ics"
 else
-    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] Notification" "" "" "$NOTIFICATION_R2" "$NOTIFICATION_R2" >> "$i/deadlines.ics"
+    $SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] Notification" "" "" "$NOTIFICATION_R2" "$NOTIFICATION_R2" >> "cal.ics"
 fi
-$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] Conference" "" "$CITY_COUNTRY" "$CONFERENCE_START" "$CONFERENCE_END" >> "$i/deadlines.ics"
-$SCRIPT_DIR/util/ics_calendar.sh end >> "$i/deadlines.ics"
+$SCRIPT_DIR/util/ics_event.sh "[$EVENT $i] Conference" "" "$CITY_COUNTRY" "$CONFERENCE_START" "$CONFERENCE_END" >> "cal.ics"
+$SCRIPT_DIR/util/ics_calendar.sh end >> "cal.ics"
