@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link href="https://pldi25.sigplan.org/favicon.ico?28d37e6d7e5e12d24c39bdba0f4f3cfd" rel="shortcut icon" type="image/x-icon" />
+<link href="https://pldi25.sigplan.org/stylesheets/common_.css?d7bcca3579a066193caf560ede9d6399" rel="stylesheet" type="text/css" />
+<title>PLDI 2025 - Student Research Competition - PLDI 2025</title>
+<script type="text/javascript">var show_webdsl_debug=false;</script>
+<script type="text/javascript">var contextpath="https://pldi25.sigplan.org";</script>
+<link rel="stylesheet" href="https://pldi25.sigplan.org/stylesheets/bootstrap/css/bootstrap.min.css?7f89537eaf606bff49f5cc1a7c24dbca" type="text/css" /><link rel="stylesheet" href="https://pldi25.sigplan.org/stylesheets/conf.css?d8ff81ab1f2387936557f525e4e8eb20" type="text/css" /><link rel="stylesheet" href="https://pldi25.sigplan.org/getFile/05310f51-6fe6-4a9d-9170-fb7f9b79093b/logobar.css?1722367288602" type="text/css" /><link rel="stylesheet" href="https://pldi25.sigplan.org/stylesheets/theme.bootstrap_3.min.css?6867e70881e6ed2c03b6c9cf9c3152e0" type="text/css" /><script type="text/javascript" src="//code.jquery.com/jquery-3.5.1.min.js"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/jquery.tablesorter.combined.min.js?285b21976326641f8f1b910492e6d5d0"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/jquery.tablesorter.pager.min.js?4551cdfea66f45a11ae5548f3d50a06f"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/tablesorter-init.js?ee6babedf1a6be960e4543a1bb57b421"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/bootstrap/js/bootstrap.min.js?2f34b630ffe30ba2ff2b91e3f3c322a1"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/notify.min.js?e86d399917a84b69a4683f504c7a7813"></script>
+<script type="text/javascript" src="https://pldi25.sigplan.org/javascript/ajax.js?2dbd1cc4f8f2d52ae9c879d7346f4f8a"></script>
+<script type="text/javascript">var ignoreHashChange = false;
+    function hashChangeFunc(){
+      // show active tab on hash in url
+      if (window.location.hash !== ''){
+        var hashTargetAll = $('a[href="' + window.location.hash + '"]');
+        if(hashTargetAll.length){
+          var hashTarget = hashTargetAll.filter('[data-toggle="tab"]')
+          if( hashTarget.length ){
+            hashTarget = hashTarget.first();
+            hashTarget.tab('show');
+          } else {
+            hashTarget = hashTargetAll.first();
+          }
+          // and open parent tabs in case the target element is nested in a tab
+          var parentPane = hashTarget.closest( '.tab-pane' );
+          if(parentPane.length){
+            $('.nav a[href="#'+ parentPane.attr('id') +'"]').tab('show');
+          }
+          var parentCollapse = hashTarget.closest( '.panel-collapse:not(.in)' ).collapse('show');
+        }
+      }
+      return false;
+    }
+
+    $(document).ready(function(){
+      var tabFromRequestUrl = window.location.hash !== '' ? $('a[href="' + window.location.hash + '"][data-toggle="tab"]') : [];
+      var initUrlHash = window.location.hash;
+      hashChangeFunc()
+      if( tabFromRequestUrl.length ){
+        //Prevent the browser to auto-scroll to the anchor of the tab
+        window.location.hash = "";
+      }
+      //make in-page #links open the tabs
+      if ($._data( $(window)[0], 'events' ).hashchange == undefined){
+        $(window).on('hashchange', hashChangeFunc);
+      }
+      if(tabFromRequestUrl.length){
+        setTimeout( function(){
+          ignoreHashChange = true;
+          history.replaceState(null, null, initUrlHash);
+          ignoreHashChange = false;
+        }, 10 );
+      }
+    });
+    var autoTabFunction = function(node){
+      var isActivatingFirstTab = false;
+      // remember the hash in the URL without jumping
+      $('a[data-toggle="tab"]:not(.no-hash):not(.bound)').addClass('bound').on('shown.bs.tab', function(e){
+        if(!isActivatingFirstTab){
+          var newhash = '#' + $(e.target).attr('href').substr(1);
+          if(history.replaceState){
+            history.replaceState(null, null, newhash);
+          } else{
+            location.hash = newhash;
+          }
+        }
+      });
+
+      //When no tab is active, set the first one to active
+      $(node).find('.nav-tabs:not(.bound), .nav-pills:not(.bound)').addClass('bound').each(function(){
+        if( $(this).children().length > 0 && 1 > $(this).find('.active').length){
+          const firstItem = $(this).find('a[data-toggle="tab"]').first();
+          isActivatingFirstTab = true;
+          firstItem.tab('show');
+          isActivatingFirstTab = false;
+        }
+      });
+    }
+  </script>
+<script type="text/javascript">(function($){
+        $(document).ready(function(){
+          $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+            event.preventDefault(); 
+            event.stopPropagation(); 
+            $(this).parent().siblings().removeClass('open');
+            $(this).parent().toggleClass('open');
+          });
+        });
+      })(jQuery);
+      </script>
+<meta name='description' content='Welcome to the home page of the 46th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI 2025)! 
+PLDI is the premier forum in the field of programming languages and programming systems research, covering the areas of design, implementation, theory, applications, and performance. 
+PLDI 2025 will be held in-person at the Westin Josun Seoul in Seoul, South Korea. 
+The main PLDI conference will be held Wednesday, 18 June through Friday, 20 June. Workshops and tutorials were held on Monday, 16 June and Tuesday, 17 June. 
+Social Media 
+If you want to tweet about the co ...'>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4G0QWEKVQS"></script>
+<script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', 'G-4G0QWEKVQS', {'cookie_domain': 'auto', 'anonymizeIp': true });gtag('config', 'UA-9607501-2', {'cookie_domain': 'auto', 'anonymizeIp': true });</script>
+<meta  prefix='og: http://ogp.me/ns#' property='og:description' content='Welcome to the home page of the 46th ACM SIGPLAN Conference on Programming Language Design and Implementation (PLDI 2025)! 
+PLDI is the premier forum in the field of programming languages and programming systems research, covering the areas of design, implementation, theory, applications, and performance. 
+PLDI 2025 will be held in-person at the Westin Josun Seoul in Seoul, South Korea. 
+The main PLDI conference will be held Wednesday, 18 June through Friday, 20 June. Workshops and tutorials were held on Monday, 16 June and Tuesday, 17 June. 
+Social Media 
+If you want to tweet about the co ...'>
+<script type="text/javascript">function addEventModalLoadOnClick( containerNode ){
+        $(containerNode).find( "a[data-event-modal]" ).on("click", function(e){
+          var eventId = $(this).data("event-modal"); 
+          var modalElem = $("#modal-" + eventId);
+          if(modalElem.length){
+            modalElem.modal({ backdrop: 'static', keyboard: true}, 'show');
+          } else {
+            var loaderElem = $("#event-modal-loader");
+            loaderElem.find("input.event-id-input").val( eventId );
+            loaderElem.find("#load-modal-action").click();
+          }
+          e.preventDefault();
+        } );
+      }
+    </script><script type="text/javascript">function addStarredEventOnClick( containerNode ){
+        $(containerNode).find( "[data-event-star]" ).on("click", function(e){
+          var eventId = $(this).data("event-star"); 
+          var starEventFormElem = $("#event-star-form");
+          starEventFormElem.find("input.event-id-input").val( eventId );
+          starEventFormElem.find("#star-event-action").click();
+          e.preventDefault();
+          e.stopPropagation();
+        } );
+      }
+    </script><script type="text/javascript">function pauseOnCloseModal( modalid ){
+        //pauses video (only youtube at the moment) when closing modal
+        $('#' + modalid).on('hidden.bs.modal', function () {
+          $(this).find('.embed-container iframe[src*=enablejsapi]').each( function(){ this.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*') } );
+        } )
+      }
+    </script>
+<meta prefix='og: http://ogp.me/ns#' property='og:title' content='PLDI 2025 - Student Research Competition - PLDI 2025'>
+</head>
+<body id="track"><div class="frame"><div class="logobar"><div class="container"><a href="https://pldi25.sigplan.org" class="navbar-brand navigate"><span class="brand-text">PLDI 2025</span></a><div class="place">Mon 16 - Fri 20 June 2025 <a href="https://pldi25.sigplan.org/venue/pldi-2025-venue" class="navigate">Seoul, South Korea</a></div></div></div><div class="navbar navbar-default"><div class="container"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#navigationbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button></div><div id="navigationbar" class="navigationbar collapse navbar-collapse"><ul class="block nav navbar-nav"><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Attending <span class="caret"></span></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/venue/pldi-2025-venue" class="navigate">Venue: The Westin Josun Seoul</a></li><li class="block"><a href="https://pldi25.sigplan.org/attending/Sponsorship" class="navigate">Sponsorship</a></li><li class="block"><a href="https://pldi25.sigplan.org/attending/Diversity%2C+Equity%2C+and+Inclusion" class="navigate">Diversity, Equity, and Inclusion</a></li></ul></li><li id="tracks-in-navbar" class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Tracks <span class="caret"></span></a><ul class="block dropdown-menu multi-column columns-3"><div class="row"><div class="col-sm-5"><ul class="block multi-column-dropdown"><li class="block dropdown-header">PLDI 2025</li><li class="block"><a href="https://pldi25.sigplan.org/track/pldi-2025-pldi-research-artifacts" class="navigate">Research Artifacts</a></li><li class="block"><a href="https://pldi25.sigplan.org/track/pldi-2025-papers" class="navigate">PLDI Research Papers</a></li><li class="block"><a href="https://pldi25.sigplan.org/track/pldi-2025-PLDI-Workshops" class="navigate">Workshops and Tutorials</a></li><li class="block"><a href="https://pldi25.sigplan.org/track/pldi-2025-src" class="navigate">Student Research Competition</a></li><li class="block"><a href="https://pldi25.sigplan.org/track/pldi-2025-tutorials" class="navigate">Tutorials</a></li><li class="block"><a href="https://pldi25.sigplan.org/details/pldi-2025-tutorials/3/BINSEC-Adapting-Symbolic-Execution-for-Binary-level-Security" class="small menu-advertised-event navigate">- BINSEC: Adapting Symbolic Execution for Binary-level Security</a></li><li class="block"><a href="https://pldi25.sigplan.org/details/pldi-2025-tutorials/2/Building-DSLs-made-easy-with-the-BuildIt-Framework" class="small menu-advertised-event navigate">- Building DSLs made easy with the BuildIt Framework</a></li><li class="block"><a href="https://pldi25.sigplan.org/details/pldi-2025-tutorials/1/Formal-Analysis-and-Verification-in-Quantum-Programming" class="small menu-advertised-event navigate">- Formal Analysis and Verification in Quantum Programming</a></li><li class="block"><a href="https://pldi25.sigplan.org/details/pldi-2025-tutorials/5/Perfect-Decompilation-of-Python-Bytecode-with-PyLingual" class="small menu-advertised-event navigate">- Perfect Decompilation of Python Bytecode with PyLingual</a></li><li class="block"><a href="https://pldi25.sigplan.org/details/pldi-2025-tutorials/4/Unlocking-Optimizations-with-egglog-Equality-Saturation-Meets-Datalog" class="small menu-advertised-event navigate">- Unlocking Optimizations with egglog: Equality Saturation Meets Datalog</a></li></ul></div><div class="col-sm-7"><ul class="block multi-column-dropdown"><li class="block dropdown-header">Co-hosted Conferences</li><li class="block"><a href="https://conf.researchr.org/home/ismm-2025" class="navigate"><strong>ISMM</strong> </a></li><li class="block"><a href="https://pldi25.sigplan.org/home/LCTES-2025" class="navigate"><strong>LCTES</strong> </a></li><li class="block dropdown-header">Workshops</li><li class="block"><a href="https://pldi25.sigplan.org/home/ARRAY-2025" class="navigate"><strong>ARRAY</strong> </a></li><li class="block"><a href="https://pldi25.sigplan.org/home/egraphs-2025" class="navigate"><strong>EGRAPHS</strong> </a></li><li class="block"><a href="https://pldi25.sigplan.org/home/rpls-2025" class="navigate"><strong>RPLS</strong> : Real-World Programming Language Specification</a></li><li class="block"><a href="https://pldi25.sigplan.org/home/SOAP-2025" class="navigate"><strong>SOAP</strong> </a></li><li class="block"><a href="https://pldi25.sigplan.org/home/wqs-2025" class="navigate"><strong>WQS</strong> </a></li></ul></div></div></ul></li><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle">Organization <span class="caret"></span></a><ul class="block dropdown-menu multi-column columns-2"><div class="row"><div class="col-sm-6"><ul class="block multi-column-dropdown"><li class="block dropdown-header">PLDI 2025 Committees</li><li class="block"><a href="https://pldi25.sigplan.org/committee/pldi-2025-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block dropdown-header">Track Committees  </li><li class="block"><a href="https://pldi25.sigplan.org/committee/pldi-2025-pldi-research-artifacts-artifact-evaluation-committee" class="navigate"><strong>Research Artifacts</strong></a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/pldi-2025-papers-pldi-review-committee" class="navigate"><strong>PLDI Research Papers</strong></a></li><li class="block dropdown-header">Contributors</li><li class="block"><a href="https://pldi25.sigplan.org/people-index" class="navigate"><span class="glyphicon glyphicon-search"></span><sup><span class="glyphicon glyphicon-user"></span></sup> People Index</a></li></ul></div><div class="col-sm-6"><ul class="block multi-column-dropdown"><li class="block dropdown-header">Co-hosted Conferences</li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>ISMM</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://conf.researchr.org/committee/ismm-2025/ismm-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://conf.researchr.org/committee/ismm-2025/ismm-2025-papers-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://conf.researchr.org/committee/ismm-2025/ismm-2025-papers-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>LCTES</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/LCTES-2025-main-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/LCTES-2025-main-program-committee" class="navigate">Program Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/LCTES-2025-main-steering-committee" class="navigate">Steering Committee</a></li></ul></li><li class="block dropdown-header">Workshops</li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>ARRAY</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/ARRAY-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/ARRAY-2025-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>EGRAPHS</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/egraphs-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/egraphs-2025-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>RPLS</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/rpls-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/rpls-2025-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>SOAP</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/SOAP-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/SOAP-2025-papers-invited-speakers" class="navigate">Invited Speakers</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/SOAP-2025-papers-program-committee" class="navigate">Program Committee</a></li></ul></li><li class="dropdown dropdown-submenu "><a href="#" data-toggle="dropdown" class="dropdown-toggle"><strong>WQS</strong></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/committee/wqs-2025-papers-organizing-committee" class="navigate">Organizing Committee</a></li><li class="block"><a href="https://pldi25.sigplan.org/committee/wqs-2025-papers-program-committee" class="navigate">Program Committee</a></li></ul></li></ul></div></div></ul></li><li class="block"><a href="https://pldi25.sigplan.org/search//all" class="navigate"><span class="glyphicon glyphicon-search"></span><span class="hidden-sm"> Search</span></a></li><li class="dropdown"><a href="#" data-toggle="dropdown" class="dropdown-toggle"><span class="hidden-sm">Series <span class="caret"></span></span><span title="Series" class="visible-sm"><span class="glyphicon glyphicon-repeat"></span> <span class="caret"></span></span></a><ul class="block dropdown-menu"><li class="block"><a href="https://pldi25.sigplan.org/series/pldi" class="navigate"><span class="glyphicon glyphicon-home"></span> Series</a></li><li class="block divider"></li><li class="block"><span class="text-muted" style="margin-left: 2px;"><span class="glyphicon glyphicon-hand-right"></span> PLDI 2025</span></li><li class="block"><a href="https://pldi24.sigplan.org" class="navigate">PLDI 2024</a></li><li class="block"><a href="https://pldi23.sigplan.org" class="navigate">PLDI 2023</a></li><li class="block"><a href="https://pldi22.sigplan.org" class="navigate">PLDI 2022</a></li><li class="block"><a href="https://pldi21.sigplan.org" class="navigate">PLDI 2021</a></li><li class="block"><a href="https://pldi20.sigplan.org" class="navigate">PLDI 2020</a></li><li class="block"><a href="https://pldi19.sigplan.org" class="navigate">PLDI 2019</a></li><li class="block"><a href="https://pldi18.sigplan.org" class="navigate">PLDI 2018</a></li><li class="block"><a href="https://pldi17.sigplan.org" class="navigate">PLDI 2017</a></li><li class="block"><a href="https://pldi16.sigplan.org" class="navigate">PLDI 2016</a></li><li class="block"><a href="https://pldi15.sigplan.org" class="navigate">PLDI 2015</a></li></ul></li></ul><div class="navbar-right"><ul class="block nav navbar-nav"><li class="block"><a href="https://conf.researchr.org/signin/pldi-2025/https%3A%5Es%5Espldi25.sigplan.org%5Estrack%5Espldi-2025-src" rel="nofollow" class="navigate">Sign in</a></li><li class="block"><a href="https://pldi25.sigplan.org/signup" class="navigate">Sign up</a></li></ul></div></div></div></div><div id="content" class="container"><div class="page-header"><span class="text-muted small"><span class="glyphicon glyphicon-home"></span> <a href="https://pldi25.sigplan.org" class="navigate">PLDI 2025</a> (<a href="https://pldi25.sigplan.org/series/pldi" class="navigate">series</a>) / </span><h1>Student Research Competition<span class="pull-right small h1">PLDI 2025</span></h1></div><div class="row"><div class="col-sm-8"><ul id="tab" class="nav nav-pills"><li><a href="#About" data-toggle="tab">About</a></li><li><a href="#Poster-Video-and-Presentation-Requirements" data-toggle="tab">Poster, Video, and Presentation Requirements</a></li></ul><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; autoTabFunction(node); };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><div class="tab-content"><div id="About" class="tab-pane "><h2>About</h2><p><p>The Student Research Competition (SRC) at PLDI is a forum for students to present their research and receive <strong>high-quality feedback from experts</strong> in the programming languages research community. The SRC is a chance to hone writing and presentation skills, network with peers and senior researchers, and showcase exciting work—including work-in-progress. PLDI invites students (both at the graduate and undergraduate level) to submit their research. If you are an undergraduate student interested in applying to graduate programs, we highly encourage you to participate and get a glimpse of what academic life looks like!</p>
+<h3><a href="#eligibility-criteria" id="eligibility-criteria" class="anchor-link">Eligibility Criteria</a></h3>
+<p>Participants must have current student status, either graduate or undergraduate, at the time of the submission deadline. Participants in the SRC must also apply and obtain an ACM student membership. There are two separate categories:</p>
+<ul>
+<li><strong>Undergraduate</strong>: Currently enrolled for a bachelor’s degree (or equivalent)</li>
+<li><strong>Graduate</strong>: Currently enrolled for either a master’s or PhD degree (or equivalent)</li>
+</ul>
+<p>Furthermore, the abstract:</p>
+<ul>
+<li>Must contain original research that is not already published at PLDI or another conference or journal. Authors are allowed to submit full versions of the paper at a later conference but the abstract must not overlap with a concurrent PLDI submission.</li>
+<li>Must be authored solely by the student. If the work is collaborative with others and/or part of a larger group project, the abstract should make clear what the student’s role was and should focus on that portion of the work.</li>
+</ul>
+<p><strong>If you have any questions</strong> on if your work is a good fit for the SRC track, please reach out to the SRC Co-Chairs!</p>
+<h3><a href="#call-for-papers" id="call-for-papers" class="anchor-link">Call for Papers</a></h3>
+<p>The main body of the submission is a title and extended abstract (<strong>up to 3 pages</strong>) consisting of the following:</p>
+<ul>
+<li><strong>Problem and Motivation:</strong> Clearly state the problem being addressed and explain the reasons for seeking a solution to this problem.</li>
+<li><strong>Background and Related Work:</strong> Describe the specialized (but pertinent) background necessary to appreciate the work in the context of PLDI areas of interest. Include references to the literature where appropriate, and briefly explain where your work departs from that done by others.</li>
+<li><strong>Approach and Uniqueness:</strong> Describe your approach in addressing the problem and clearly state how your approach is novel.</li>
+<li><strong>Results and Contributions:</strong> Clearly show how the results of your work contribute to programming language design and implementation in particular and to computer science in general; explain the significance of those results.</li>
+</ul>
+<p>The SRC welcomes work-in-progress research and aims to provide high-quality feedback to students about their work. Starting this year, we are going to make the SRC publications <em>a part of the PLDI proceedings.</em> After acceptance, papers will go through an additional round of shepherding where reviewers will provide feedback on technical content and writing of the paper.</p>
+<h3><a href="#participation" id="participation" class="anchor-link">Participation</a></h3>
+<p>The SRC has three stages aimed at providing feedback on different aspects of research presentation:</p>
+<ul>
+<li><strong>1: Submission phase</strong>: Student papers are submitted and reviewed by a committee of expert reviewers
+<ul>
+<li><strong>Initial Reviews:</strong> The program committee provides initial reviews and an accept or reject decision for the abstracts.</li>
+<li><strong>Shepherding phase:</strong> We will assign each accepted submission a “shepherd” from the reviewers, whose role is to help distill feedback to improve the submission. Students will then submit “camera ready”, finalized extended abstracts to be included as part of the PLDI proceedings.</li>
+</ul>
+</li>
+<li><strong>2: Poster round</strong>: During the conference, students present a poster to in-person judges and conference attendees.</li>
+<li><strong>3: Presentation round</strong>: Judges select finalists from the poster round who then give a final talk (typically around 7 minutes).</li>
+</ul>
+<p>Three students from each category (graduate and undergraduate) will be selected as winners. Winners will receive a cash prize: $500, $300, and $200 for the first, second, and third place respectively as well as an award medal. The first place abstracts in each category will be invited to participate in the <a href="https://src.acm.org/">ACM grand finale</a>.</p>
+<h3><a href="#submissions" id="submissions" class="anchor-link">Submissions</a></h3>
+<p>The submission form will require the following:</p>
+<ul>
+<li>The submissions are double blind (the uploaded PDFs <strong>must not contain your name</strong> or any other identifying information).</li>
+<li>In the <strong>supplementary form</strong>, please specify:</li>
+<li>Student author’s name, email address, institutional affiliation, and category (undergraduate or graduate)</li>
+<li>Student’s ACM member number. If you don’t already have one, please apply for the [<em>discounted student member rate</em>] (<a href="https://www.acm.org/membership/membership-options">https://www.acm.org/membership/membership-options</a>).</li>
+<li>Research advisor’s name(s)</li>
+<li>Mode of presentation (in-person or virtual). Please be conservative in your response: if you think there is a possibility that you might not be able to attend in-person, select the “virtual” option. We are able to accommodate transition to in-person more easily than to virtual.</li>
+</ul>
+<p>For the paper submission, ensure:</p>
+<ul>
+<li>Use the <code>acmart</code> template file (<a href="https://www.overleaf.com/read/yggzbgjwjntv">overleaf template</a>, <a href="https://asplos-conference.org/wp-content/uploads/2024/asplos24-templates.zip">latex template</a>).</li>
+<li>Set the options to the class file using <code>\documentclass[sigconf,nonacm,screen,review]{acmart}</code></li>
+<li>No more than 3 pages. Reference lists do not count towards these limits.</li>
+</ul>
+<p>When you’re ready, submit your extended abstract at the submission site: <a href="https://pldi24src.hotcrp.com/">https://pldi24src.hotcrp.com/</a></p>
+<p><strong>Writing Resources</strong>.</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=ZmFXMREURBI">How to Write Papers and Give Talks that People Can Follow</a> by Derek Dreyer</li>
+<li><a href="http://www.pl-enthusiast.net/2019/01/02/how-to-write-a-conference-talk/">How to Write a Conference Talk</a> by Mike Hicks</li>
+</ul>
+<h3><a href="#attendance" id="attendance" class="anchor-link">Attendance</a></h3>
+<p>PLDI waives registration costs for all students with accepted papers. We additionally encourage students to apply to <a href="https://pldi24.sigplan.org/track/PLMW-PLDI-2024">PLMW</a>, which might cover travel expenses. Furthermore, we encourage students to apply for conference volunteering positions.</p>
+<p>Good luck, and we hope to see you in June!</p>
+</p></div><div id="Poster-Video-and-Presentation-Requirements" class="tab-pane "><div class="page-header"><h3>Poster, Video, and Presentation Requirements</h3></div><p>For the students who got accepted to the SRC, here are the requirements for the poster and final presentation.</p>
+<h3><a href="#poster-requirements" id="poster-requirements" class="anchor-link">Poster Requirements</a></h3>
+<ul>
+<li>Create a poster that can fit up to 3’ x 4’ dimensions.</li>
+<li>The content on your poster should be organized neatly and clearly.</li>
+<li>Choose colors of your choice but make sure it all aligns nicely.</li>
+<li>Submit the PDF of your posters to us by <em>June 12th</em>, 2024.</li>
+<li>Please print your own posters and bring them to the venue if you are presenting in person.</li>
+<li>We will provide easels to put the posters up.</li>
+</ul>
+<h3><a href="#final-presentation-requirements" id="final-presentation-requirements" class="anchor-link">Final Presentation Requirements</a></h3>
+<ul>
+<li>The students who qualify for the final presentation round will be given 7 minutes to present their work, followed by a 4-minute Q&amp;A session at the end of each talk.</li>
+<li>Prepare a slide deck for this round.</li>
+</ul>
+<h3><a href="#virtual-presentations" id="virtual-presentations" class="anchor-link">Virtual Presentations</a></h3>
+<p>Details will be released closer to the conference.</p>
+</div></div><span class="pull-right"><small>Questions? Use the <a href="https://pldi25.sigplan.org/contact2/pldi-2025-src" class="navigate">PLDI Student Research Competition contact form</a>.</small></span><br></div><div class="col-sm-4 sidebar"><div class="panel panel-primary"><div class="panel-heading clearfix"><div class="panel-title">Important Dates<span class="pull-right"><small><span class="glyphicon glyphicon-globe"></span><span class="glyphicon glyphicon-time"></span> AoE (UTC-12h)</small></span></div></div><table class="table table-hover important-dates-in-sidebar"><tr href="https://pldi25.sigplan.org/track/pldi-2025-src" class="clickable-row text-success"><td><strong>Fri 14 Mar 2025</strong><br/><strong>Abstract submission deadline</strong></td></tr><tr href="https://pldi25.sigplan.org/track/pldi-2025-src" class="clickable-row text-success"><td>Thu 24 Apr 2025<br/>Author Notification</td></tr><tr href="https://pldi25.sigplan.org/track/pldi-2025-src" class="clickable-row text-success"><td>Fri 16 May 2025<br/>Camera-ready deadline</td></tr></table></div></div></div><div id="messages-placeholder" class="alert alert-warning" style="display:none;"><a data-dismiss="alert" class="close">x</a><em>Wed 5 Feb 19:29</em></div></div><div id="notifications-ph" class="webdsl-placeholder"></div><div id="event-modal-loader" class="webdsl-placeholder"><form name="form_131600131703c411e65b13378d08eb1f6672b5a0259" id="form_131600131703c411e65b13378d08eb1f6672b5a0259" action="https://pldi25.sigplan.org/eventDetailsModalByAjaxConferenceEdition" accept-charset="UTF-8" method="POST" class="hidden"><input type="hidden" name="form_131600131703c411e65b13378d08eb1f6672b5a0259" value="1" /><input type="hidden" name="context" value="pldi-2025" /><input name="ae03f7f6f951d515a297b161e922205d" type="text" value="" class="inputString form-control event-id-input"/><button style="position: absolute; left: -9999px; width: 1px; height: 1px;" onclick='javascript:serverInvoke("https://pldi25.sigplan.org/eventDetailsModalByAjaxConferenceEdition","eventDetailsModalByAjaxConferenceEdition_ia0_3c411e65b13378d08eb1f6672b5a0259", [{"name":"context", "value":"pldi-2025"},],"form_131600131703c411e65b13378d08eb1f6672b5a0259", this.nextSibling, false,"event-modal-loader"); return false;'></button><a submitid="eventDetailsModalByAjaxConferenceEdition_ia0_3c411e65b13378d08eb1f6672b5a0259" href="javascript:void(0)" onclick="javascript:loadImageElem=this;$(this.previousSibling).click()" id="load-modal-action"></a></form></div><div id="event-star-form" class="webdsl-placeholder"><form name="form_509860938088b48fd14544d4239b498a2cf339e02b" id="form_509860938088b48fd14544d4239b498a2cf339e02b" action="https://pldi25.sigplan.org/eventStarByAjaxConferenceEdition" accept-charset="UTF-8" method="POST" class="hidden"><input type="hidden" name="form_509860938088b48fd14544d4239b498a2cf339e02b" value="1" /><input type="hidden" name="context" value="pldi-2025" /><input name="a0b55aa29cf9431a9461b359872014e3" type="text" value="" class="inputString form-control event-id-input"/><button style="position: absolute; left: -9999px; width: 1px; height: 1px;" onclick='javascript:serverInvoke("https://pldi25.sigplan.org/eventStarByAjaxConferenceEdition","eventStarByAjaxConferenceEdition_ia0_88b48fd14544d4239b498a2cf339e02b", [{"name":"context", "value":"pldi-2025"},],"form_509860938088b48fd14544d4239b498a2cf339e02b", this.nextSibling, false,"event-star-form"); return false;'></button><a submitid="eventStarByAjaxConferenceEdition_ia0_88b48fd14544d4239b498a2cf339e02b" href="javascript:void(0)" onclick="javascript:loadImageElem=this;$(this.previousSibling).click()" id="star-event-action"></a></form></div><div id="event-modals" class="webdsl-placeholder"></div><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; addEventModalLoadOnClick(node); addStarredEventOnClick(node); };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><footer class="footer"><div class="container"><div class="footer-box"><div class="row"><div class="col-sm-3"><h3><a href="https://pldi25.sigplan.org" class="navigate"><span class="glyphicon glyphicon-home"></span> PLDI 2025</a></h3><div><a href="https://pldi25.sigplan.org/contact" class="navigate"><span class="glyphicon glyphicon-envelope"></span> contact form</a></div><hr/>using <a href="https://conf.researchr.org" class="navigate">conf.researchr.org</a> (<a href="http://yellowgrass.org/roadmap/conf.researchr.org" class="navigate">v1.69.0</a>)<br/><small><a href="https://pldi25.sigplan.org/support" target="_blank" class="navigate"><span class="glyphicon glyphicon-question-sign"></span> Support page</a></small><br/><small></small></div><div class="col-sm-5"><div class="row"><div class="col-sm-6"><h4>Tracks</h4><a href="https://pldi25.sigplan.org/track/pldi-2025-pldi-research-artifacts" class="navigate">Research Artifacts</a><br/><a href="https://pldi25.sigplan.org/track/pldi-2025-papers" class="navigate">PLDI Research Papers</a><br/><a href="https://pldi25.sigplan.org/track/pldi-2025-PLDI-Workshops" class="navigate">Workshops and Tutorials</a><br/><a href="https://pldi25.sigplan.org/track/pldi-2025-src" class="navigate">Student Research Competition</a><br/><a href="https://pldi25.sigplan.org/track/pldi-2025-tutorials" class="navigate">Tutorials</a></div><div class="col-sm-6"><h4>Co-hosted Conferences</h4><a href="https://conf.researchr.org/home/ismm-2025" class="navigate">ISMM 2025</a><br/><a href="https://pldi25.sigplan.org/home/LCTES-2025" class="navigate">LCTES 2025</a><br/><h4>Workshops</h4><a href="https://pldi25.sigplan.org/home/ARRAY-2025" class="navigate">ARRAY 2025</a><br/><a href="https://pldi25.sigplan.org/home/egraphs-2025" class="navigate">EGRAPHS 2025</a><br/><a href="https://pldi25.sigplan.org/home/rpls-2025" class="navigate">RPLS 2025</a><br/><a href="https://pldi25.sigplan.org/home/SOAP-2025" class="navigate">SOAP 2025</a><br/><a href="https://pldi25.sigplan.org/home/wqs-2025" class="navigate">WQS 2025</a></div></div></div><div class="col-sm-2"><h4>Attending</h4><a href="https://pldi25.sigplan.org/venue/pldi-2025-venue" class="navigate">Venue: The Westin Josun Seoul</a><br><a href="https://pldi25.sigplan.org/attending/Sponsorship" class="navigate">Sponsorship</a><br><a href="https://pldi25.sigplan.org/attending/Diversity%2C+Equity%2C+and+Inclusion" class="navigate">Diversity, Equity, and Inclusion</a></div><div class="col-sm-2"><a href="https://pldi25.sigplan.org/signup" class="navigate">Sign Up</a></div></div></div></div></footer></div><script type="text/javascript">(function(){
+    var post_process_function = function(n){ var node=(n&&n.nodeType === 1)?n:document; let defaultplacement = $(document).scrollLeft() > 100 ? 'auto left' : 'auto top'; $(node).find('[title]').each( function(i,el){ var $e=$(el);$e.tooltip({placement: function(tt, elem){ var attval = elem.getAttribute('data-placement'); return attval ? attval : defaultplacement; }, sanitize: false, container: 'body' }) } ).on('show.bs.tooltip', function () {  let el = this; while (el && window.getComputedStyle(el).position !== 'fixed') { el = el.parentElement; } if(el) $(this).data('bs.tooltip').options.container = el;});$('.tooltip.fade.in, .ui-tooltip-content').remove();  };
+    var original_post_process_func = ajax_post_process;
+    ajax_post_process = function(){
+      original_post_process_func.apply(this,arguments);
+      post_process_function.apply(this,arguments);
+    };
+    $(document).ready( post_process_function );
+  })();   
+  </script><script type="text/javascript">jQuery(document).ready(function($) {
+        $(".clickable-row").click(function() {
+          var href = $(this).attr("href");
+          if( window.location.href.indexOf( href ) < 0 ){
+            if ($(this).hasClass('new-window') ){
+              window.open( href );
+            } else {
+              window.document.location = href;
+            }
+          }
+        });
+    });
+    </script></body></html>

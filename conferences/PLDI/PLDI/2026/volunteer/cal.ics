@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:976e394c-4800-48d1-bef9-b12a25a76d27
+DTSTAMP:20250205T184548Z
+DTSTART;VALUE=DATE:20250205
+DTEND;VALUE=DATE:20250206
+SUMMARY:[PLDI 2026] Volunteer Application Deadline
+DESCRIPTION:Apply for PLDI 2026 volunteering opportunities by visiting the official website or contacting organizers via email at volunteer@pldi2026.org; application details and deadlines are available online. Volunteers can expect community service, networking, and professional development. Visit the PLDI 2026 website for more information: https://www.pldi2026.org/volunteer
+LOCATION:
+END:VEVENT
+END:VCALENDAR

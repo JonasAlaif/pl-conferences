@@ -1,0 +1,308 @@
+PLDI 2025
+
+Mon 16 - Fri 20 June 2025 Seoul, South Korea
+
+Toggle navigation
+
+-   Attending
+    -   Venue: The Westin Josun Seoul
+    -   Sponsorship
+    -   Diversity, Equity, and Inclusion
+-   Tracks
+    -   -   PLDI 2025
+        -   Research Artifacts
+        -   PLDI Research Papers
+        -   Workshops and Tutorials
+        -   Student Research Competition
+        -   Tutorials
+        -   - BINSEC: Adapting Symbolic Execution for Binary-level
+            Security
+        -   - Building DSLs made easy with the BuildIt Framework
+        -   - Formal Analysis and Verification in Quantum Programming
+        -   - Perfect Decompilation of Python Bytecode with PyLingual
+        -   - Unlocking Optimizations with egglog: Equality Saturation
+            Meets Datalog
+
+    -   -   Co-hosted Conferences
+        -   ISMM
+        -   LCTES
+        -   Workshops
+        -   ARRAY
+        -   EGRAPHS
+        -   RPLS : Real-World Programming Language Specification
+        -   SOAP
+        -   WQS
+-   Organization
+    -   -   PLDI 2025 Committees
+        -   Organizing Committee
+        -   Track Committees
+        -   Research Artifacts
+        -   PLDI Research Papers
+        -   Contributors
+        -   People Index
+
+    -   -   Co-hosted Conferences
+        -   ISMM
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   LCTES
+            -   Organizing Committee
+            -   Program Committee
+            -   Steering Committee
+        -   Workshops
+        -   ARRAY
+            -   Organizing Committee
+            -   Program Committee
+        -   EGRAPHS
+            -   Organizing Committee
+            -   Program Committee
+        -   RPLS
+            -   Organizing Committee
+            -   Program Committee
+        -   SOAP
+            -   Organizing Committee
+            -   Invited Speakers
+            -   Program Committee
+        -   WQS
+            -   Organizing Committee
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   PLDI 2025
+    -   PLDI 2024
+    -   PLDI 2023
+    -   PLDI 2022
+    -   PLDI 2021
+    -   PLDI 2020
+    -   PLDI 2019
+    -   PLDI 2018
+    -   PLDI 2017
+    -   PLDI 2016
+    -   PLDI 2015
+
+-   Sign in
+-   Sign up
+
+PLDI 2025 (series) /
+
+Student Research CompetitionPLDI 2025
+
+-   About
+-   Poster, Video, and Presentation Requirements
+
+About
+
+The Student Research Competition (SRC) at PLDI is a forum for students
+to present their research and receive high-quality feedback from experts
+in the programming languages research community. The SRC is a chance to
+hone writing and presentation skills, network with peers and senior
+researchers, and showcase exciting work—including work-in-progress. PLDI
+invites students (both at the graduate and undergraduate level) to
+submit their research. If you are an undergraduate student interested in
+applying to graduate programs, we highly encourage you to participate
+and get a glimpse of what academic life looks like!
+
+Eligibility Criteria
+
+Participants must have current student status, either graduate or
+undergraduate, at the time of the submission deadline. Participants in
+the SRC must also apply and obtain an ACM student membership. There are
+two separate categories:
+
+-   Undergraduate: Currently enrolled for a bachelor’s degree (or
+    equivalent)
+-   Graduate: Currently enrolled for either a master’s or PhD degree (or
+    equivalent)
+
+Furthermore, the abstract:
+
+-   Must contain original research that is not already published at PLDI
+    or another conference or journal. Authors are allowed to submit full
+    versions of the paper at a later conference but the abstract must
+    not overlap with a concurrent PLDI submission.
+-   Must be authored solely by the student. If the work is collaborative
+    with others and/or part of a larger group project, the abstract
+    should make clear what the student’s role was and should focus on
+    that portion of the work.
+
+If you have any questions on if your work is a good fit for the SRC
+track, please reach out to the SRC Co-Chairs!
+
+Call for Papers
+
+The main body of the submission is a title and extended abstract (up to
+3 pages) consisting of the following:
+
+-   Problem and Motivation: Clearly state the problem being addressed
+    and explain the reasons for seeking a solution to this problem.
+-   Background and Related Work: Describe the specialized (but
+    pertinent) background necessary to appreciate the work in the
+    context of PLDI areas of interest. Include references to the
+    literature where appropriate, and briefly explain where your work
+    departs from that done by others.
+-   Approach and Uniqueness: Describe your approach in addressing the
+    problem and clearly state how your approach is novel.
+-   Results and Contributions: Clearly show how the results of your work
+    contribute to programming language design and implementation in
+    particular and to computer science in general; explain the
+    significance of those results.
+
+The SRC welcomes work-in-progress research and aims to provide
+high-quality feedback to students about their work. Starting this year,
+we are going to make the SRC publications a part of the PLDI
+proceedings. After acceptance, papers will go through an additional
+round of shepherding where reviewers will provide feedback on technical
+content and writing of the paper.
+
+Participation
+
+The SRC has three stages aimed at providing feedback on different
+aspects of research presentation:
+
+-   1: Submission phase: Student papers are submitted and reviewed by a
+    committee of expert reviewers
+    -   Initial Reviews: The program committee provides initial reviews
+        and an accept or reject decision for the abstracts.
+    -   Shepherding phase: We will assign each accepted submission a
+        “shepherd” from the reviewers, whose role is to help distill
+        feedback to improve the submission. Students will then submit
+        “camera ready”, finalized extended abstracts to be included as
+        part of the PLDI proceedings.
+-   2: Poster round: During the conference, students present a poster to
+    in-person judges and conference attendees.
+-   3: Presentation round: Judges select finalists from the poster round
+    who then give a final talk (typically around 7 minutes).
+
+Three students from each category (graduate and undergraduate) will be
+selected as winners. Winners will receive a cash prize: $500, $300, and
+$200 for the first, second, and third place respectively as well as an
+award medal. The first place abstracts in each category will be invited
+to participate in the ACM grand finale.
+
+Submissions
+
+The submission form will require the following:
+
+-   The submissions are double blind (the uploaded PDFs must not contain
+    your name or any other identifying information).
+-   In the supplementary form, please specify:
+-   Student author’s name, email address, institutional affiliation, and
+    category (undergraduate or graduate)
+-   Student’s ACM member number. If you don’t already have one, please
+    apply for the [discounted student member rate]
+    (https://www.acm.org/membership/membership-options).
+-   Research advisor’s name(s)
+-   Mode of presentation (in-person or virtual). Please be conservative
+    in your response: if you think there is a possibility that you might
+    not be able to attend in-person, select the “virtual” option. We are
+    able to accommodate transition to in-person more easily than to
+    virtual.
+
+For the paper submission, ensure:
+
+-   Use the acmart template file (overleaf template, latex template).
+-   Set the options to the class file using
+    \documentclass[sigconf,nonacm,screen,review]{acmart}
+-   No more than 3 pages. Reference lists do not count towards these
+    limits.
+
+When you’re ready, submit your extended abstract at the submission site:
+https://pldi24src.hotcrp.com/
+
+Writing Resources.
+
+-   How to Write Papers and Give Talks that People Can Follow by Derek
+    Dreyer
+-   How to Write a Conference Talk by Mike Hicks
+
+Attendance
+
+PLDI waives registration costs for all students with accepted papers. We
+additionally encourage students to apply to PLMW, which might cover
+travel expenses. Furthermore, we encourage students to apply for
+conference volunteering positions.
+
+Good luck, and we hope to see you in June!
+
+Poster, Video, and Presentation Requirements
+
+For the students who got accepted to the SRC, here are the requirements
+for the poster and final presentation.
+
+Poster Requirements
+
+-   Create a poster that can fit up to 3’ x 4’ dimensions.
+-   The content on your poster should be organized neatly and clearly.
+-   Choose colors of your choice but make sure it all aligns nicely.
+-   Submit the PDF of your posters to us by June 12th, 2024.
+-   Please print your own posters and bring them to the venue if you are
+    presenting in person.
+-   We will provide easels to put the posters up.
+
+Final Presentation Requirements
+
+-   The students who qualify for the final presentation round will be
+    given 7 minutes to present their work, followed by a 4-minute Q&A
+    session at the end of each talk.
+-   Prepare a slide deck for this round.
+
+Virtual Presentations
+
+Details will be released closer to the conference.
+
+Questions? Use the PLDI Student Research Competition contact form.
+
+Important Dates AoE (UTC-12h)
+
+  -----------------------------------------------------------------------
+  Fri 14 Mar 2025
+  Abstract submission deadline
+
+  Thu 24 Apr 2025
+  Author Notification
+
+  Fri 16 May 2025
+  Camera-ready deadline
+  -----------------------------------------------------------------------
+
+xWed 5 Feb 19:29
+
+PLDI 2025
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+Research Artifacts
+PLDI Research Papers
+Workshops and Tutorials
+Student Research Competition
+Tutorials
+
+Co-hosted Conferences
+
+ISMM 2025
+LCTES 2025
+
+Workshops
+
+ARRAY 2025
+EGRAPHS 2025
+RPLS 2025
+SOAP 2025
+WQS 2025
+
+Attending
+
+Venue: The Westin Josun Seoul
+Sponsorship
+Diversity, Equity, and Inclusion
+
+Sign Up
