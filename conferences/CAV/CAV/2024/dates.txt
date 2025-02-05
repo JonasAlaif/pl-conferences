@@ -1,0 +1,11 @@
+| Event Description                                       | Date                    |
+|---------------------------------------------------------|-------------------------|
+| Paper submission                                        | January 19, 2024 - January 26, 2024 |
+| Rebuttal period                                          | March 5 – March 8, 2024   |
+| Author notification                                     | March 26, 2024           |
+| Artifact submission (Tool Papers)                       | April 8, 2024            |
+| Artifact notification                                   | May 10, 2024             |
+| Final version due                                       | May 19, 2024             |
+| Workshops                                               | July 22-23, 2024         |
+| Main Conference                                         | July 24-27, 2024         |
+| CAV Award Nomination deadline                           | March 1st, 2024          |
