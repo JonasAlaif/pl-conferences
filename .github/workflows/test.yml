@@ -15,6 +15,7 @@ permissions:
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         conference: ["CAV", "ETAPS", "PACMPL", "PLDI", "POPL", "SPLASH"]
     runs-on: ubuntu-latest

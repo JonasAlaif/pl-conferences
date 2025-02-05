@@ -21,3 +21,5 @@ ollama create -f Modelfile_full qwen2.5:full
 while [ $? -ne 0 ]; do
     ollama create -f Modelfile_full qwen2.5:full
 done
+
+ollama run --nowordwrap "qwen2.5:sentence" "Quick test. Say 'LLM here, I was setup successfully.'. Say only that sentence."
