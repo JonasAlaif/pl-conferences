@@ -1,0 +1,13 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:7519f627-2965-4eb1-abd7-e9116d0b39a4
+DTSTAMP:20250205T190302Z
+DTSTART;VALUE=DATE:20230630
+DTEND;VALUE=DATE:20230701
+SUMMARY:[ICFP 2023] Volunteer Application Deadline
+DESCRIPTION:The soft deadline for ICFP 2023 volunteer application has passed but applications are still accepted; apply by June 30th using this form <https://www.icfpconference.org/2023/volunteer-application>; priority given to junior members of the community, e.g., full- or part-time students in computer science and related fields; must be available for at least four full days between September 4th and September 9th, 2023, and provide a total of 12-15 hours of volunteering work; volunteers receive complimentary conference registration, free lunches and refreshments during breaks, volunteer garments, and free admission to all social events; travel and accommodation expenses are not covered; contact co-chairs Audrey Seo <audreyseo@uw.edu> or Yisu Remy Wang <remywang@uw.edu> for more information; important dates: Volunteering app. soft deadline - Fri 30 Jun 2023, Volunteering app. decision - Sun 23 Jul 2023 (UTC-12h)
+LOCATION:
+END:VEVENT
+END:VCALENDAR

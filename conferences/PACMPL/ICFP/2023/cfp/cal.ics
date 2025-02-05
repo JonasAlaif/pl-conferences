@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:265398c8-4ef9-41ba-ad86-4af25e739dbf
+DTSTAMP:20250205T174524Z
+DTSTART;VALUE=DATE:20230301
+DTEND;VALUE=DATE:20230302
+SUMMARY:[ICFP 2023] Paper Submission Deadline
+DESCRIPTION:PACMPL ICFP 2023 Call for Papers: Submit original functional programming papers (25 pages max) or Experience Reports (12 pages max) by Mar 1, 2023 AoE; use ACM Small template, omit author names, submit at https://icfp23.hotcrp.com/, double-blind review, mandatory revisions, two-stage process, notify May 18, 2023, resubmit June 15, 2023, ORCID required, accept Creative Commons CC-BY publication, Gold Open Access, ACM Author-Izer for free downloads, official pub date up to two weeks before conference, attend and present if accepted, artifact evaluation encouraged, functional pearls and experience reports guidelines, important dates AoE (Tue 5 - Thu 7 Sep 2023), submission link https://icfp23.hotcrp.com
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:5c6bb539-d79c-4079-b8b5-0b4478520737
+DTSTAMP:20250205T174524Z
+DTSTART;VALUE=DATE:20230501
+DTEND;VALUE=DATE:20230505
+SUMMARY:[ICFP 2023] Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:5dd1be73-bba0-4c6a-bb40-dd1e67c80977
+DTSTAMP:20250205T174524Z
+DTSTART;VALUE=DATE:20230518
+DTEND;VALUE=DATE:20230519
+SUMMARY:[ICFP 2023] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:a2892e16-cabb-4424-b049-7a812146dcbe
+DTSTAMP:20250205T174524Z
+DTSTART;VALUE=DATE:20230904
+DTEND;VALUE=DATE:20230910
+SUMMARY:[ICFP 2023] Conference
+DESCRIPTION:
+LOCATION:Seattle, United States
+END:VEVENT
+END:VCALENDAR

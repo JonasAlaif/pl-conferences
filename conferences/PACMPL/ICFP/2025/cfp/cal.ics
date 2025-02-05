@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//hacksw/handcal//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:df4a993b-71ad-4ac1-8468-78fe2a115302
+DTSTAMP:20250205T184909Z
+DTSTART;VALUE=DATE:20250227
+DTEND;VALUE=DATE:20250228
+SUMMARY:[ICFP 2025] Paper Submission Deadline
+DESCRIPTION:PACMPL ICFP 2025 Call for Papers submission deadline Thu 27 Feb 2025 AoE, 25 pages max, full double-blind review process, Functional Pearls and Experience Reports accepted, mandatory revisions, author response period Mon 28 Apr - Thu 1 May 2025, notification of conditional acceptance Fri 23 May 2025, revised submission deadline Thu 12 Jun 2025, final decision notification Fri 27 Jun 2025, camera-ready deadline Fri 11 Jul 2025, submission link https://icfp25.hotcrp.com, ORCID required, PACMPL website https://pacmpl.acm.org/, submission guidelines https://www.acm.org/publications/authors/submissions, contact program chair for questions, supplementary material must be anonymized, authorship policies ACM, republication policy SIGPLAN, artifact evaluation encouraged but not required, special categories Functional Pearls and Experience Reports, submit as full papers or experience reports, detailed guidelines at submission page, important dates AoE https://icfp25.sigplan.org/cfps/icfp2025#dates
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:2fb52b49-dcd5-46de-9a90-666958dcb7f6
+DTSTAMP:20250205T184909Z
+DTSTART;VALUE=DATE:20250428
+DTEND;VALUE=DATE:20250502
+SUMMARY:[ICFP 2025] Rebuttal
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:9c4c9001-50dd-4740-8549-106941b0be0a
+DTSTAMP:20250205T184909Z
+DTSTART;VALUE=DATE:20250523
+DTEND;VALUE=DATE:20250524
+SUMMARY:[ICFP 2025] Notification
+DESCRIPTION:
+LOCATION:
+END:VEVENT
+BEGIN:VEVENT
+UID:97803499-05a2-4bd0-a698-eb21e6ff96f1
+DTSTAMP:20250205T184909Z
+DTSTART;VALUE=DATE:20251012
+DTEND;VALUE=DATE:20251019
+SUMMARY:[ICFP 2025] Conference
+DESCRIPTION:
+LOCATION:Singapore, Singapore
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,230 @@
+ICFP 2024
+
+Mon 2 - Sat 7 September 2024 Milan, Italy
+
+Toggle navigation
+
+-   Attending
+    -   Venue: Allianz MiCo (Milano Convention Centre)
+    -   Call For Sponsorship
+    -   Travel Information
+    -   Local Information
+    -   Accommodation
+    -   Registration
+    -   Code of Conduct
+    -   Virtual participation
+    -   Instructions for Presenters
+    -   Visas
+-   Program
+    -   ICFP Program
+    -   Your Program
+    -   Mon 2 Sep
+    -   Tue 3 Sep
+    -   Wed 4 Sep
+    -   Thu 5 Sep
+    -   Fri 6 Sep
+    -   Sat 7 Sep
+-   Tracks
+    -   -   ICFP 2024
+        -   Artifact Evaluation
+        -   Diversity, Equity, and Inclusion
+        -   ICFP Papers and Events
+        -   ICFP Programming Contest
+        -   ICFP Tutorials
+        -   ICFP Workshops
+        -   JFP First Papers
+        -   Student Research Competition
+        -   Volunteers
+
+    -   -   Workshops
+        -   Erlang
+            -   Erlang
+            -   - (Keynote) Environmentally sustainable software and
+                data architectures
+        -   FARM
+        -   FProPer
+        -   FUNARCH
+        -   HIW
+        -   HOPE
+        -   ML
+        -   OCaml Users and Developers Workshop
+        -   PLMW @ ICFP
+        -   Scheme
+        -   TyDe
+        -   miniKanren
+        -   Co-hosted Symposia
+        -   Haskell
+-   Organization
+    -   -   ICFP 2024 Committees
+        -   Organizing Committee
+        -   Track Committees
+        -   Artifact Evaluation
+        -   ICFP Papers and Events
+        -   ICFP Tutorials
+        -   ICFP Workshops
+        -   Student Research Competition
+        -   Contributors
+        -   People Index
+
+    -   -   Workshops
+        -   Erlang
+            -   Organizing Committee
+            -   Program Committee
+        -   FARM
+            -   Organizing Committee
+            -   Program Committee
+        -   FProPer
+            -   Program Committee
+        -   FUNARCH
+            -   Program Committee
+        -   HIW
+            -   Program Committee
+        -   HOPE
+            -   Keynote Speaker
+            -   Program Committee
+        -   ML
+            -   Program Committee
+        -   OCaml
+            -   Program Committee
+        -   PLMW @ ICFP
+            -   Organizing Committee
+        -   Scheme
+            -   Organizing Committee
+            -   Program Committee
+        -   TyDe
+            -   Organising Committee
+            -   Program Committee
+        -   miniKanren
+            -   Program Committee
+        -   Co-hosted Symposia
+        -   Haskell
+            -   Program Committee
+-   Search
+-   Series
+    -   Series
+    -   ICFP 2025
+    -   ICFP 2024
+    -   ICFP 2023
+    -   ICFP 2022
+    -   ICFP 2021
+    -   ICFP 2020
+    -   ICFP 2019
+    -   ICFP 2018
+    -   ICFP 2017
+    -   ICFP 2016
+
+-   Sign in
+-   Sign up
+
+ICFP 2024 (series) /
+
+VolunteersICFP 2024
+
+Sign up to be a Volunteer and help us make ICFP 2024 a unique experience
+for all attendants!
+
+ICFP 2024 is pleased to offer a number of opportunities for volunteers,
+who are vital to the efficient operation and continued success of the
+conference each year. The volunteer program is a chance for people from
+around the world to participate in the conferences whilst assisting us
+in preparing and running the event.
+
+The Volunteer Program helps more people attend the ICFP conference by
+covering conference fees, including access to the banquet (but not
+travel or lodging expenses) in exchange for a fixed number of work hours
+(usually from 12 to 15) helping with the conference organization.
+
+How to apply
+
+Please apply using this form. The deadline is July 15th.
+
+Eligibility
+
+Everyone is welcome to apply. Priority is given to junior members of our
+community, e.g. full- or part-time students of computer science and
+related fields.
+
+Expectation
+
+Applicants must be available for at least four (4) full days between
+September 2th and September 7th, 2024, and will be expected to provide a
+total of 12-15 hours of volunteering work in that time.
+
+The skills, talents, and dedication of our Volunteers contribute to the
+overall quality of the conference. The Volunteer role this year will
+mainly involve working with the organizers to prepare for the conference
+by providing technical assistance to attendees, managing online Q&A and
+poster sessions, and supporting active communication in our online
+environment.
+
+Compensation
+
+-   A Complimentary Conference Registration, offering access to all open
+    sessions (i.e., parallel paper presentations, demonstrations, and
+    workshops) and conference proceedings.
+-   Free lunches and refreshments during breaks.
+-   Volunteer garments.
+-   Free admission to all social events.
+
+Please note that volunteers are responsible for their own travel and
+accommodation arrangements.
+
+If you need additional travel funding, please consider SIGPLAN PAC
+Funding and PLMW.
+
+xWed 5 Feb 20:03
+
+ICFP 2024
+
+contact form
+
+------------------------------------------------------------------------
+
+using conf.researchr.org (v1.69.0)
+Support page
+
+Tracks
+
+Artifact Evaluation
+Diversity, Equity, and Inclusion
+ICFP Papers and Events
+ICFP Programming Contest
+ICFP Tutorials
+ICFP Workshops
+JFP First Papers
+Student Research Competition
+Volunteers
+
+Workshops
+
+Erlang 2024
+FARM 2024
+FProPer 2024
+FUNARCH 2024
+HIW 2024
+HOPE 2024
+ML 2024
+OCaml 2024
+PLMW @ ICFP 2024
+Scheme 2024
+TyDe 2024
+miniKanren 2024
+
+Co-hosted Symposia
+
+Haskell 2024
+
+Attending
+
+Venue: Allianz MiCo (Milano Convention Centre)
+Call For Sponsorship
+Travel Information
+Local Information
+Accommodation
+Registration
+Code of Conduct
+Virtual participation
+Instructions for Presenters
+Visas
+
+Sign Up

@@ -1,0 +1,9 @@
+| Event Description                           | Date                   |
+|--------------------------------------------|------------------------|
+| Conference                                  | Tue 5 - Thu 7 Sep 2023  |
+| Early-bird registration deadline            | Sat 5 Aug 2023         |
+| Camera-ready deadline                       | Tue 18 Jul 2023        |
+| Round 2 notification                        | Tue 27 Jun 2023        |
+| Round 1 notification                        | Thu 18 May 2023        |
+| Author response period                      | Mon 1 May - Thu 4 May 2023 |
+| Submission deadline                         | Wed 1 Mar 2023 23:59   |
