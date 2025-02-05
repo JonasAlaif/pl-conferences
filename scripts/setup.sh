@@ -11,6 +11,6 @@ curl -fsSL https://ollama.com/install.sh | sh
 llm/setup.sh
 
 # brew install ddgr
-sudo apt install ddgr tidy
+sudo apt install -y ddgr tidy pandoc
 sudo npm install -g readability-cli
 cargo install htmlq
