@@ -1,0 +1,6 @@
+# llama3.1 (8b) maxes out at 18000 num_ctx (up to 25000 with 10gb swap)
+# llama3.2 (3b) maxes out at 25000 num_ctx
+FROM llama3.2
+PARAMETER temperature 0.2
+PARAMETER num_predict 25000
+PARAMETER num_ctx 25000

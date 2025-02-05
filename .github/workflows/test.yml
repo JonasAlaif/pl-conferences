@@ -14,6 +14,9 @@ permissions:
 
 jobs:
   test:
+    strategy:
+      matrix:
+        conference: ["CAV", "ETAPS", "PACMPL", "PLDI", "POPL", "SPLASH"]
     runs-on: ubuntu-latest
 
     steps:
@@ -24,5 +27,5 @@ jobs:
         swap-size-gb: 10
 
     - run: ./scripts/setup.sh
-    - run: ./scripts/conf.sh CAV
-    - run: ./scripts/commit.sh CAV
+    - run: ./scripts/conf/conf_all.sh ${{ matrix.conference }}
+    - run: ./scripts/util/commit.sh ${{ matrix.conference }}
