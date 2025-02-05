@@ -1,0 +1,12 @@
+| Event Description                                       | Date                    |
+|---------------------------------------------------------|-------------------------|
+| Submission deadline for ESOP, round 1                   | May 30, 2024, 23:59 AoE  |
+| Rebuttal for ESOP, round 1                              | July 23–25, 2024         |
+| Notification for ESOP, round 1                          | August 8, 2024           |
+| Submission deadline for ESOP round 2                    | October 10, 2024, 23:59 AoE |
+| Rebuttal (ESOP, FoSSaCS, partially TACAS)               | December 3–5, 2024       |
+| Paper notification and TACAS mandatory artifact         | December 20, 2024        |
+| Artifact submission deadline for ESOP, FASE, FoSSaCS    | January 9, 2025          |
+| Paper final version                                     | January 30, 2025         |
+| Artifact notification (ESOP, FASE, FoSSaCS)             | February 13, 2025        |
+| Main Conference                                          | May 5–8, 2025            |

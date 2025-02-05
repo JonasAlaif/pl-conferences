@@ -1,0 +1,11 @@
+| Event Description                                       | Date/Date Range                     |
+|---------------------------------------------------------|------------------------------------|
+| Paper submission                                        | 12 October 2023, 23:59 AoE          |
+| TACAS artifact submission deadline                      | 26 October 2023, 23:59 AoE          |
+| Rebuttal (ESOP, FoSSaCS, partially TACAS)               | 5 December – 7 December 2023        |
+| Paper notification                                       | 21 December 2023                    |
+| ESOP, FASE, FoSSaCS artifact submission deadline       | 4 January 2024                      |
+| Artifact notification TACAS                              | 18 January 2024                     |
+| Paper final version                                     | 23 January 2024                     |
+| Artifact notification ESOP, FASE, FoSSaCS               | 8 February 2024                     |
+| Main Conference                                         | 8 – 11 April 2024                   |
