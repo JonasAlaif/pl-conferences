@@ -25,6 +25,23 @@ use serde::de::DeserializeOwned;
 use serde_json::{Value, json};
 use std::time::Duration;
 
+fn truncate(s: &str, n: usize) -> String {
+    if s.chars().count() <= n {
+        s.to_string()
+    } else {
+        format!("{}… [{} chars total]", s.chars().take(n).collect::<String>(), s.chars().count())
+    }
+}
+
+/// The prompt as shown in logs: everything before the page in full, the
+/// page itself reduced to a short preview and its size.
+fn prompt_preview(user: &str) -> String {
+    match user.split_once("PAGE:\n") {
+        Some((head, page)) => format!("{head}PAGE: [{} chars] {}", page.chars().count(), truncate(page, 300).replace('\n', " ")),
+        None => truncate(user, 2500),
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Llm {
     pub base: String,
@@ -66,8 +83,12 @@ impl Llm {
     pub fn extract<T: DeserializeOwned + JsonSchema>(&self, system: &str, user: &str) -> Result<(T, String, Usage), LlmError> {
         let schema = serde_json::to_value(schemars::schema_for!(T)).map_err(|e| LlmError::Transport(e.into()))?;
         let schema_text = serde_json::to_string_pretty(&schema).map_err(|e| LlmError::Transport(e.into()))?;
+        let schema_name = std::any::type_name::<T>().rsplit("::").next().unwrap_or("?").to_string();
+        log::info!("llm >>> system: {system}\nllm >>> user: {}\nllm >>> format: JSON schema for {schema_name}", prompt_preview(user));
         let user = format!("{user}\n\nRespond with JSON matching this schema:\n{schema_text}");
         let (raw, usage) = self.chat(system, &user, Some(schema)).map_err(LlmError::Transport)?;
+        let compact = serde_json::from_str::<Value>(&raw).map(|v| v.to_string()).unwrap_or_else(|_| raw.clone());
+        log::info!("llm <<< {}", truncate(&compact, 3000));
         let value: T = serde_json::from_str(&raw).map_err(|e| LlmError::BadOutput(format!("{e}: {}", raw.chars().take(300).collect::<String>())))?;
         Ok((value, raw, usage))
     }
