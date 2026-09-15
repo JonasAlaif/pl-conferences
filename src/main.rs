@@ -121,37 +121,57 @@ fn run(args: &Args) -> Result<()> {
     let offset = (run_no as usize) % n;
     let selected: Vec<&config::ConferenceCfg> = cfgs.iter().cycle().skip(offset).take(n).filter(|c| args.conferences.is_empty() || args.conferences.iter().any(|x| x.eq_ignore_ascii_case(&c.conference))).collect();
 
-    let budget = Duration::from_secs(60 * std::env::var("PLC_TIME_BUDGET_MIN").ok().and_then(|s| s.parse().ok()).unwrap_or(240));
+    let budget = Duration::from_secs(60 * std::env::var("PLC_TIME_BUDGET_MIN").ok().and_then(|s| s.parse().ok()).unwrap_or(75));
+    let max_items: usize = std::env::var("PLC_MAX_ITEMS").ok().and_then(|s| s.parse().ok()).unwrap_or(5);
     let started = Instant::now();
-    let mut consecutive_errors = 0u32;
-    let mut fatal: Option<anyhow::Error> = None;
-    'outer: for cfg in selected {
+
+    // Work list: every conference-year that still needs something, current
+    // and past years before next year, conferences rotated between runs.
+    // Only the first `max_items` are attempted; the rest wait for the next
+    // (weekly) run, which keeps every run short.
+    let mut items: Vec<(&config::ConferenceCfg, i32)> = vec![];
+    for cfg in &selected {
         let years: Vec<i32> = match args.year {
             Some(y) => vec![y],
             None => (cfg.since..=current_year + 1).collect(),
         };
-        let prior = prior_urls(root, cfg);
-        let ctx = Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.0 };
-        let vol_ctx = Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.1 };
         for year in years {
-            if started.elapsed() > budget {
-                log::warn!("time budget of {budget:?} used up; remaining conference-years wait for the next run");
-                break 'outer;
+            if needs_work(args, root, &state, cfg, year, current_year) {
+                items.push((cfg, year));
             }
-            match process_year(args, &ctx, &vol_ctx, cfg, year, &mut state, now, current_year) {
-                Ok(()) => consecutive_errors = 0,
-                Err(e) => {
-                    consecutive_errors += 1;
-                    log::error!("{}: error: {e:#}", cfg.key(year));
-                    state.record(&format!("{}/cfp", cfg.key(year)), Outcome::Error, None, vec![], format!("{e:#}"), now, year <= current_year);
-                    if consecutive_errors >= 3 {
-                        fatal = Some(e.context("three conference-years in a row failed with errors; giving up on this run"));
-                        break 'outer;
-                    }
+        }
+    }
+    items.sort_by_key(|(_, y)| *y > current_year);
+    let pending = items.len();
+    items.truncate(max_items);
+    log::info!("{pending} conference-years pending, attempting {} this run (budget {budget:?})", items.len());
+
+    let mut consecutive_errors = 0u32;
+    let mut fatal: Option<anyhow::Error> = None;
+    let mut ctxs: std::collections::HashMap<String, (Ctx, Ctx)> = std::collections::HashMap::new();
+    for (cfg, year) in items {
+        if started.elapsed() > budget {
+            log::warn!("time budget of {budget:?} used up; remaining conference-years wait for the next run");
+            break;
+        }
+        let (ctx, vol_ctx) = ctxs.entry(cfg.key(0)).or_insert_with(|| {
+            let prior = prior_urls(root, cfg);
+            (Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.0 }, Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.1 })
+        });
+        match process_year(args, ctx, vol_ctx, cfg, year, &mut state, now, current_year) {
+            Ok(()) => consecutive_errors = 0,
+            Err(e) => {
+                consecutive_errors += 1;
+                log::error!("{}: error: {e:#}", cfg.key(year));
+                state.record(&format!("{}/cfp", cfg.key(year)), Outcome::Error, None, vec![], format!("{e:#}"), now, year <= current_year);
+                if consecutive_errors >= 3 {
+                    fatal = Some(e.context("three conference-years in a row failed with errors; giving up on this run"));
+                    break;
                 }
             }
         }
     }
+    log::info!("run took {:.0?}", started.elapsed());
 
     state.last_run = Some(now);
     state.run_count += 1;
@@ -170,6 +190,15 @@ fn run(args: &Args) -> Result<()> {
         Some(e) => Err(e),
         None => Ok(()),
     }
+}
+
+/// Whether a conference-year still has something to attempt this run.
+fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, year: i32, current_year: i32) -> bool {
+    let key = cfg.key(year);
+    let dir = root.join("conferences").join(&key);
+    let cfp_done = dir.join("cfp.json").exists() || skip_reason(state, &format!("{key}/cfp"), year, current_year).is_some();
+    let vol_done = args.no_volunteer || dir.join("volunteer.json").exists() || skip_reason(state, &format!("{key}/volunteer"), year, current_year).is_some();
+    !(cfp_done && vol_done)
 }
 
 /// One conference-year: call for papers, then student volunteers.

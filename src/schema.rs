@@ -224,10 +224,11 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         let Ok(submission) = parse_date(&r.submission_deadline).map_err(|e| errs.push(format!("{what} submission_deadline: {e}"))) else {
             continue;
         };
+        // Grounding: the quote must be on the page. (Requiring the date
+        // itself inside the quote was tried and rejected: in tables the date
+        // sits in another cell, so the model rightly quotes the label.)
         if !page.is_empty() && !page_contains(page, &r.submission_deadline_quote) {
             errs.push(format!("{what} submission_deadline_quote {:?} does not appear on the page; quote the page verbatim", r.submission_deadline_quote));
-        } else if !r.submission_deadline_quote.chars().any(|c| c.is_ascii_digit()) {
-            errs.push(format!("{what} submission_deadline_quote {:?} must include the date as written on the page", r.submission_deadline_quote));
         }
         if submission.year() < year - 1 || submission.year() > year {
             errs.push(format!("{what} submission deadline {submission} is not in {} or {year}", year - 1));
@@ -237,7 +238,6 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         let notification = parse_opt(&r.notification, &format!("{what} notification"), &mut errs);
         if notification.is_some() && !page.is_empty() {
             match clean_opt(&r.notification_quote) {
-                Some(q) if !q.chars().any(|c| c.is_ascii_digit()) => errs.push(format!("{what} notification_quote {q:?} must include the date as written on the page")),
                 Some(q) if page_contains(page, &q) => {}
                 Some(q) => errs.push(format!("{what} notification_quote {q:?} does not appear on the page; quote the page verbatim")),
                 None => errs.push(format!("{what} notification is given but notification_quote is null; quote the page or set notification to null")),
@@ -294,7 +294,6 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str) -> Res
         errs.push(format!("application deadline {deadline} is not in {} or {year}", year - 1));
     }
     match clean_opt(&x.application_deadline_quote) {
-        Some(q) if !q.chars().any(|c| c.is_ascii_digit()) => errs.push(format!("application_deadline_quote {q:?} must include the date as written on the page")),
         Some(q) if page.is_empty() || page_contains(page, &q) => {}
         Some(q) => errs.push(format!("application_deadline_quote {q:?} does not appear on the page; quote the page verbatim")),
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),

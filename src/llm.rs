@@ -55,7 +55,7 @@ impl Llm {
             base: base.trim_end_matches('/').to_string(),
             model: std::env::var("PLC_MODEL").unwrap_or_else(|_| "qwen3.5:4b".into()),
             think: matches!(std::env::var("PLC_THINK").as_deref(), Ok("1") | Ok("true")),
-            num_ctx: std::env::var("PLC_NUM_CTX").ok().and_then(|s| s.parse().ok()).unwrap_or(32768),
+            num_ctx: std::env::var("PLC_NUM_CTX").ok().and_then(|s| s.parse().ok()).unwrap_or(16384),
             temperature: 0.0,
             num_gpu: std::env::var("PLC_NUM_GPU").ok().and_then(|s| s.parse().ok()),
         }
@@ -86,7 +86,7 @@ impl Llm {
             "options": {
                 "temperature": self.temperature,
                 "num_ctx": self.num_ctx,
-                "num_predict": 4096,
+                "num_predict": 2048,
             }
         });
         if let Some(f) = format {

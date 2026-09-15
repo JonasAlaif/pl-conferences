@@ -2,8 +2,9 @@ name: Collect conference dates
 
 on:
   schedule:
-    # Monthly. Never on push: the run itself pushes.
-    - cron: "0 3 2 * *"
+    # Weekly, in small batches (PLC_MAX_ITEMS), so every run stays short and
+    # the caches stay warm. Never on push: the run itself pushes.
+    - cron: "0 3 * * 1"
   workflow_dispatch:
     inputs:
       conference:
@@ -40,7 +41,7 @@ env:
 jobs:
   scrape:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 150
     steps:
       - uses: actions/checkout@v4
 
@@ -132,7 +133,8 @@ jobs:
       - name: Collect
         env:
           PLC_MODEL: ${{ env.MODEL }}
-          PLC_TIME_BUDGET_MIN: "240"
+          PLC_TIME_BUDGET_MIN: "75"
+          PLC_MAX_ITEMS: "5"
           RUST_LOG: info
           ONLY_CONFERENCE: ${{ inputs.conference }}
           DRY_RUN: ${{ inputs.dry_run }}
@@ -158,7 +160,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "nothing changed"
           else
-            git commit -m "Update conference dates $(date -u +%Y-%m)"
+            git commit -m "Update conference dates $(date -u +%Y-%m-%d)"
             git pull --rebase -X ours origin "${GITHUB_REF_NAME}" || true
             git push
           fi
@@ -176,7 +178,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          title="Monthly scrape failed"
+          title="Scheduled scrape failed"
           url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           gh label create automation-failure --color d73a4a --description "The scheduled scrape failed" 2>/dev/null || true
           existing=$(gh issue list --label automation-failure --state open --search "$title" --json number --jq '.[0].number')

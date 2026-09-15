@@ -23,8 +23,9 @@ const STRIP_SELECTORS: &str = "[role=navigation], [role=banner], [role=contentin
     .footer, .footer-box, .site-footer, .modal, .cookie, .cookie-banner, .cookie-consent, .skip-link, \
     .sr-only, .visually-hidden, [hidden], [aria-hidden=true]";
 
-/// Upper bound on the text handed to the model (roughly 15K tokens).
-pub const MAX_CHARS: usize = 60_000;
+/// Upper bound on the text handed to the model (roughly 11K tokens). Prompt
+/// processing dominates CPU time, so this is the main speed knob.
+pub const MAX_CHARS: usize = 45_000;
 /// Sections scoring at least this are treated as relevant when a page must be cut.
 const RELEVANT_SCORE: f64 = 2.0;
 

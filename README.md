@@ -1,7 +1,7 @@
 # pl-conferences
 
 Important dates for programming-languages conferences, collected automatically
-once a month by a small local language model running on a GitHub Actions runner,
+every week by a small local language model running on a GitHub Actions runner,
 and published as calendar files.
 
 **Subscribe to everything:** add this URL to your calendar app as a subscription:
@@ -27,8 +27,8 @@ model produced.
 
 1. `conferences.json` lists each conference, its research-paper track and the
    first year to collect. It is the only hand-edited file.
-2. For every conference and every year up to next year that has no result yet,
-   the pipeline searches the web (DuckDuckGo, Brave and Bing HTML result pages,
+2. For every conference and every year up to next year that has no result yet
+   (a bounded batch per run), the pipeline searches the web (DuckDuckGo, Brave and Bing HTML result pages,
    no API keys), lets the model pick the official page, fetches it, converts it
    to Markdown and asks the model for the dates as schema-constrained JSON.
    If the chosen page has no deadline, the model picks a link to follow.
@@ -39,7 +39,8 @@ model produced.
    code in [MAINTENANCE.md](MAINTENANCE.md) (regenerated every run) and in the
    affected calendar entry, so the repository can be fixed before the fallback
    also breaks. Failures are retried monthly until the year is over, then
-   abandoned; nothing needs manual clean-up. A model answer that cannot be
+   abandoned; nothing needs manual clean-up. Runs are weekly and bounded, so
+   a failed attempt is retried within days. A model answer that cannot be
    parsed, or an error on one conference, only skips that conference-year;
    three errors in a row abort the run, and whatever was written is still
    committed.
@@ -73,9 +74,12 @@ schema `format`. Override with `PLC_MODEL` (e.g. `qwen3.5:9b`), `PLC_NUM_CTX` fo
 size, `PLC_SEARCH_GAP` for the seconds between search-engine requests,
 `PLC_NO_SEARCH=1` to exercise the no-search-engine fallbacks (URLs derived
 from earlier editions, then model guesses, then link-following) and
-`PLC_NUM_GPU=0` to force CPU inference locally, `PLC_TIME_BUDGET_MIN` (default
-240) to stop starting new conference-years after that many minutes so a slow
-month still commits what it found.
+`PLC_NUM_GPU=0` to force CPU inference locally. Each run attempts at most
+`PLC_MAX_ITEMS` (default 5) conference-years, current year first, and stops
+starting new ones after `PLC_TIME_BUDGET_MIN` (default 75) minutes; the rest
+wait for the next weekly run. This keeps every run far from the job timeout
+and lets a backlog (a new conference in `conferences.json`, a new year) drain
+over a few weeks.
 
 Resources: the 4B model at a 32K context takes about 6 GB of RAM on CPU
 (`ollama ps` reports 4.7 GB for the model plus cache), so it fits the 16 GB of
