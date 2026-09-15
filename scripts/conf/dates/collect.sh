@@ -26,8 +26,11 @@ if [ "$CFP_CORRECT" == "No" ]; then
 fi
 
 # Find all important dates as a table
-CFP_TABLE_Q="The page above is the call for papers of $CEY. In this page, find all dates and date ranges and list them in a table. The table has two columns: one for the event description and one for the date. If there are two rounds include dates for both. Answer with table only, no extra text."
-CFP_TABLE=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$CFP_TABLE_Q" 2.5 paragraph)
+CFP_DATES_Q="The page above is the call for papers of $CEY. In this page, identify all dates and date ranges. Write a paragraph describing all the dates and date ranges in the page. If there are multiple rounds, include dates for all of them. Include all important dates, such as submission deadlines, any periods where authors can respond, receive feedback, or make revisions, and notification dates."
+CFP_DATES=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE" "$CFP_DATES_Q" 2.5 paragraph)
+
+CFP_TABLE_Q="The page above is the call for papers of $CEY. Below it is a summary of all important dates. Identify all dates and date ranges and list them in a table. The table has two columns. The first column has the event description. The second column has the date. Answer with table only, no extra text."
+CFP_TABLE=$($SCRIPT_DIR/llm/qwen/run.sh "$CFP_WEBPAGE$SEP$CFP_DATES" "$CFP_TABLE_Q" 2.5 paragraph)
 echo "$CFP_TABLE" > "dates.txt"
 
 # Check if there are two rounds

@@ -1,0 +1,6 @@
+FROM milkey/reader-lm-v2
+PARAMETER temperature 0
+PARAMETER top_p 0.1
+PARAMETER top_k 5
+PARAMETER num_predict 250000
+PARAMETER num_ctx 250000
