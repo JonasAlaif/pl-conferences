@@ -7,6 +7,9 @@ use state::{Outcome, State};
 use std::path::{Path, PathBuf};
 use std::time::{Duration, Instant};
 
+/// Days before a negative volunteer result (not found / no programme) is retried.
+const VOLUNTEER_RETRY_DAYS: i64 = 21;
+
 const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [--year YYYY] [--dry-run] [--no-volunteer]
        pl-conferences clean <file.html>
        pl-conferences fetch <url>
@@ -22,19 +25,30 @@ struct Args {
     no_volunteer: bool,
 }
 
-/// Stored as `cfp.json` / `volunteer.json`.
-#[derive(Debug, Serialize, Deserialize)]
+/// Stored as `cfp.json` / `volunteer.json`, next to the fetched page
+/// (`cfp.html`) and the Markdown the model saw (`cfp.md`).
+#[derive(Debug, Clone, Serialize, Deserialize)]
 struct Record<T> {
     conference: String,
     track: String,
     year: i32,
     label: String,
+    /// When the current data was extracted.
     fetched_at: chrono::DateTime<Utc>,
+    /// Last time a run re-checked the page and found the same data.
+    #[serde(default)]
+    last_verified: Option<chrono::DateTime<Utc>>,
+    /// Informational; recomputed on every write.
+    #[serde(default)]
+    stage: Option<schema::Stage>,
     #[serde(default)]
     model: String,
     #[serde(default)]
     provenance: discover::Provenance,
     data: T,
+    /// Dates that changed between runs, oldest first.
+    #[serde(default)]
+    history: Vec<schema::Change>,
     #[serde(default)]
     raw: serde_json::Value,
 }
@@ -141,7 +155,12 @@ fn run(args: &Args) -> Result<()> {
             }
         }
     }
-    items.sort_by_key(|(_, y)| *y > current_year);
+    // Never-attempted first, then least recently attempted; next year's
+    // editions after this year's.
+    items.sort_by_key(|(cfg, y)| {
+        let a = state.get(&format!("{}/cfp", cfg.key(*y)));
+        (*y > current_year, a.is_some(), a.map(|a| a.last_attempt))
+    });
     let pending = items.len();
     items.truncate(max_items);
     log::info!("{pending} conference-years pending, attempting {} this run (budget {budget:?})", items.len());
@@ -192,19 +211,41 @@ fn run(args: &Args) -> Result<()> {
     }
 }
 
-/// Whether a conference-year still has something to attempt this run.
+/// Whether a conference-year still has something to attempt this run:
+/// active stages are re-collected every run, archived ones never.
 fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, year: i32, current_year: i32) -> bool {
+    let today = Utc::now().date_naive();
     let key = cfg.key(year);
     let dir = root.join("conferences").join(&key);
-    let cfp_done = dir.join("cfp.json").exists() || skip_reason(state, &format!("{key}/cfp"), year, current_year).is_some();
-    let vol_done = args.no_volunteer || dir.join("volunteer.json").exists() || skip_reason(state, &format!("{key}/volunteer"), year, current_year).is_some();
-    !(cfp_done && vol_done)
+    let cfp = read_record::<schema::Cfp>(&dir.join("cfp.json")).ok();
+    let stage = schema::stage(cfp.as_ref().map(|r| &r.data), today);
+    let cfp_work = stage.active() && (cfp.is_some() || skip_reason(state, &format!("{key}/cfp"), year, current_year).is_none());
+    let vol_recent_negative = state.get(&format!("{key}/volunteer")).is_some_and(|a| matches!(a.outcome, Outcome::NotFound | Outcome::NoVolunteerProgram) && Utc::now() - a.last_attempt < chrono::Duration::days(VOLUNTEER_RETRY_DAYS));
+    let vol_has_data = dir.join("volunteer.json").exists();
+    let vol_work = !args.no_volunteer && volunteer_active(root, cfg, year, stage, today) && (vol_has_data || (!vol_recent_negative && (cfp.is_some() || skip_reason(state, &format!("{key}/volunteer"), year, current_year).is_none())));
+    cfp_work || vol_work
 }
 
-/// One conference-year: call for papers, then student volunteers.
+/// Volunteer applications open late (after rebuttals), so the volunteer
+/// pass stays active until the conference has happened or its own
+/// deadline has passed.
+fn volunteer_active(root: &Path, cfg: &config::ConferenceCfg, year: i32, stage: schema::Stage, today: chrono::NaiveDate) -> bool {
+    if stage == schema::Stage::Happened {
+        return false;
+    }
+    match read_record::<schema::Volunteer>(&root.join("conferences").join(cfg.key(year)).join("volunteer.json")) {
+        Ok(r) => today <= r.data.deadline,
+        Err(_) => true,
+    }
+}
+
+/// One conference-year: call for papers, then student volunteers. Stored
+/// data is re-validated from its source page; differences are kept as
+/// history and noted in the calendar.
 #[allow(clippy::too_many_arguments)]
 fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceCfg, year: i32, state: &mut State, now: chrono::DateTime<Utc>, current_year: i32) -> Result<()> {
     let root = &args.root;
+    let today = now.date_naive();
     let key = cfg.key(year);
     let dir = root.join("conferences").join(&key);
     let cfp_key = format!("{key}/cfp");
@@ -213,44 +254,50 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     let model = &ctx.llm.model;
 
     // --- Call for papers ---
-    let mut cfp_url: Option<String> = None;
-    if dir.join("cfp.json").exists() {
-        if let Ok(r) = read_record::<schema::Cfp>(&dir.join("cfp.json")) {
-            cfp_url = Some(r.provenance.source_url);
-        }
-    } else if let Some(reason) = skip_reason(state, &cfp_key, year, current_year) {
-        log::info!("{cfp_key}: {reason}");
-        if reason == "abandoned" && state.get(&cfp_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
+    let existing = read_record::<schema::Cfp>(&dir.join("cfp.json")).ok();
+    let mut stage = schema::stage(existing.as_ref().map(|r| &r.data), today);
+    let mut cfp_url: Option<String> = existing.as_ref().map(|r| r.provenance.source_url.clone());
+    if !stage.active() {
+        log::info!("{cfp_key}: archived ({})", stage.label());
+    } else if existing.is_none() && skip_reason(state, &cfp_key, year, current_year).is_some() {
+        log::info!("{cfp_key}: abandoned");
+        if state.get(&cfp_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
             state.record(&cfp_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
         }
     } else {
-        log::info!("=== {cfp_key}: searching");
+        log::info!("=== {cfp_key}: {} ({})", if existing.is_some() { "re-validating" } else { "searching" }, stage.label());
         let t = Instant::now();
-        let att = discover::find_cfp(ctx, cfg, year)?;
+        let att = discover::find_cfp(ctx, cfg, year, cfp_url.as_deref())?;
         let secs = t.elapsed().as_secs();
         let outcome = match &att.result {
             Ok(found) => {
-                cfp_url = Some(found.prov.source_url.clone());
                 log::info!("{cfp_key}: {}", serde_json::to_string(&found.value)?);
+                let rec = merge_record(existing.clone(), cfg, year, found, model, now, |old, new| schema::diff_cfp(old, new, now));
+                cfp_url = Some(rec.provenance.source_url.clone());
+                stage = schema::stage(Some(&rec.data), today);
                 if !args.dry_run {
-                    write_cfp(&dir, cfg, year, found, model, now)?;
+                    write_cfp(&dir, cfg, year, &rec, found, existing.is_none() || !rec.history.is_empty() && rec.fetched_at == now)?;
                 }
                 Outcome::Ok
             }
             Err(Miss::Invalid) => Outcome::Invalid,
             Err(_) => Outcome::NotFound,
         };
+        if existing.is_some() && outcome != Outcome::Ok {
+            log::warn!("{cfp_key}: re-validation failed ({outcome:?}); keeping the stored data");
+        }
         log_attempt(&cfp_key, &att, outcome, secs);
         state.record(&cfp_key, outcome, att.trail.backend.clone(), att.trail.codes.clone(), att.trail.note_text(), now, overdue);
     }
 
     // --- Student volunteers ---
-    if args.no_volunteer || dir.join("volunteer.json").exists() {
+    if args.no_volunteer || !volunteer_active(root, cfg, year, stage, today) {
         return Ok(());
     }
-    if let Some(reason) = skip_reason(state, &vol_key, year, current_year) {
-        log::info!("{vol_key}: {reason}");
-        if reason == "abandoned" && state.get(&vol_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
+    let existing_vol = read_record::<schema::Volunteer>(&dir.join("volunteer.json")).ok();
+    if existing_vol.is_none() && skip_reason(state, &vol_key, year, current_year).is_some() {
+        log::info!("{vol_key}: abandoned");
+        if state.get(&vol_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
             state.record(&vol_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
         }
         return Ok(());
@@ -259,15 +306,33 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
         log::info!("{vol_key}: skipped (no call for papers found yet)");
         return Ok(());
     };
-    log::info!("=== {vol_key}: searching");
+    // Volunteer pages appear late; a negative result is not retried for a while.
+    if existing_vol.is_none() {
+        if let Some(a) = state.get(&vol_key) {
+            if matches!(a.outcome, Outcome::NotFound | Outcome::NoVolunteerProgram) && now - a.last_attempt < chrono::Duration::days(VOLUNTEER_RETRY_DAYS) {
+                log::info!("{vol_key}: {:?} {} days ago; not retried yet", a.outcome, (now - a.last_attempt).num_days());
+                return Ok(());
+            }
+        }
+    }
+    log::info!("=== {vol_key}: {}", if existing_vol.is_some() { "re-validating" } else { "searching" });
     let t = Instant::now();
-    let att = discover::find_volunteer(vol_ctx, cfg, year, Some(&cfp_url))?;
+    let known = existing_vol.as_ref().map(|r| r.provenance.source_url.clone());
+    let conference_end = read_record::<schema::Cfp>(&dir.join("cfp.json")).ok().and_then(|r| r.data.conference.map(|c| c.end));
+    let att = discover::find_volunteer(vol_ctx, cfg, year, known.as_deref(), Some(&cfp_url), conference_end)?;
     let secs = t.elapsed().as_secs();
     let outcome = match &att.result {
         Ok(found) => {
             log::info!("{vol_key}: {}", serde_json::to_string(&found.value)?);
+            let rec = merge_record(existing_vol.clone(), cfg, year, found, model, now, |old, new| {
+                if old.deadline != new.deadline {
+                    vec![schema::Change { at: now, field: "volunteer deadline".into(), old: old.deadline.to_string(), new: new.deadline.to_string() }]
+                } else {
+                    vec![]
+                }
+            });
             if !args.dry_run {
-                write_volunteer(&dir, cfg, year, found, model, now)?;
+                write_volunteer(&dir, cfg, year, &rec, found, existing_vol.is_none() || rec.fetched_at == now)?;
             }
             Outcome::Ok
         }
@@ -275,9 +340,38 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
         Err(Miss::NoProgram) => Outcome::NoVolunteerProgram,
         Err(Miss::NotFound) => Outcome::NotFound,
     };
+    if existing_vol.is_some() && outcome != Outcome::Ok {
+        log::warn!("{vol_key}: re-validation failed ({outcome:?}); keeping the stored data");
+    }
     log_attempt(&vol_key, &att, outcome, secs);
     state.record(&vol_key, outcome, att.trail.backend.clone(), att.trail.codes.clone(), att.trail.note_text(), now, overdue);
     Ok(())
+}
+
+/// Combine a fresh extraction with the stored record: unchanged data only
+/// bumps `last_verified`; changed data replaces it and extends the history.
+fn merge_record<T: Clone + Serialize>(existing: Option<Record<T>>, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<T>, model: &str, now: chrono::DateTime<Utc>, diff: impl Fn(&T, &T) -> Vec<schema::Change>) -> Record<T> {
+    match existing {
+        Some(mut old) => {
+            let changes = diff(&old.data, &found.value);
+            old.last_verified = Some(now);
+            if changes.is_empty() {
+                log::info!("{}: unchanged", cfg.key(year));
+            } else {
+                for c in &changes {
+                    log::warn!("{}: {} changed: {} -> {}", cfg.key(year), c.field, c.old, c.new);
+                }
+                old.history.extend(changes);
+                old.data = found.value.clone();
+                old.raw = found.raw.clone();
+                old.provenance = found.prov.clone();
+                old.fetched_at = now;
+                old.model = model.into();
+            }
+            old
+        }
+        None => Record { conference: cfg.conference.clone(), track: cfg.track.clone(), year, label: cfg.label(year), fetched_at: now, last_verified: Some(now), stage: None, model: model.into(), provenance: found.prov.clone(), data: found.value.clone(), history: vec![], raw: found.raw.clone() },
+    }
 }
 
 /// Source URLs of earlier editions on disk: (cfp, volunteer) lists of (year, url).
@@ -298,6 +392,8 @@ fn prior_urls(root: &Path, cfg: &config::ConferenceCfg) -> (Vec<(i32, String)>, 
     (cfp, vol)
 }
 
+/// Why a conference-year without data is not attempted: abandoned once its
+/// year is in the past.
 fn skip_reason(state: &State, key: &str, year: i32, current_year: i32) -> Option<&'static str> {
     match state.get(key) {
         Some(a) if a.outcome == Outcome::Abandoned => Some("abandoned"),
@@ -324,23 +420,34 @@ fn write_json<T: Serialize>(path: &Path, v: &T) -> Result<()> {
     Ok(())
 }
 
-fn provenance_of(p: &discover::Provenance) -> ics::Provenance {
-    ics::Provenance { source_url: p.source_url.clone(), codes: p.codes.iter().map(|c| format!("{c:?}")).collect() }
+fn provenance_of(p: &discover::Provenance, history: &[schema::Change]) -> ics::Provenance {
+    ics::Provenance { source_url: p.source_url.clone(), codes: p.codes.iter().map(|c| format!("{c:?}")).collect(), history: history.to_vec() }
 }
 
-fn write_cfp(dir: &Path, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<schema::Cfp>, model: &str, now: chrono::DateTime<Utc>) -> Result<()> {
-    let rec = Record { conference: cfg.conference.clone(), track: cfg.track.clone(), year, label: cfg.label(year), fetched_at: now, model: model.into(), provenance: found.prov.clone(), data: found.value.clone(), raw: found.raw.clone() };
+/// Write the record, its calendar and (when the data is new) the page it
+/// came from. Pages are not rewritten for unchanged data, so weekly
+/// re-validation does not churn the repository.
+fn write_cfp(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Record<schema::Cfp>, found: &discover::Found<schema::Cfp>, write_pages: bool) -> Result<()> {
+    let mut rec = rec.clone();
+    rec.stage = Some(schema::stage(Some(&rec.data), Utc::now().date_naive()));
     write_json(&dir.join("cfp.json"), &rec)?;
-    let events = ics::cfp_events(&rec.label, &cfg.key(year), &rec.data, &provenance_of(&rec.provenance), now);
+    if write_pages || !dir.join("cfp.html").exists() {
+        std::fs::write(dir.join("cfp.html"), &found.html)?;
+        std::fs::write(dir.join("cfp.md"), &found.md)?;
+    }
+    let events = ics::cfp_events(&rec.label, &cfg.key(year), &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
     std::fs::write(dir.join("cfp.ics"), ics::calendar(&rec.label, &events))?;
-    log::info!("wrote {}", dir.join("cfp.ics").display());
+    log::info!("wrote {} ({} events, stage {})", dir.join("cfp.ics").display(), events.len(), rec.stage.map(|s| s.label()).unwrap_or("?"));
     Ok(())
 }
 
-fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<schema::Volunteer>, model: &str, now: chrono::DateTime<Utc>) -> Result<()> {
-    let rec = Record { conference: cfg.conference.clone(), track: cfg.track.clone(), year, label: cfg.label(year), fetched_at: now, model: model.into(), provenance: found.prov.clone(), data: found.value.clone(), raw: found.raw.clone() };
-    write_json(&dir.join("volunteer.json"), &rec)?;
-    let events = ics::volunteer_events(&rec.label, &cfg.key(year), &rec.data, &provenance_of(&rec.provenance), now);
+fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Record<schema::Volunteer>, found: &discover::Found<schema::Volunteer>, write_pages: bool) -> Result<()> {
+    write_json(&dir.join("volunteer.json"), rec)?;
+    if write_pages || !dir.join("volunteer.html").exists() {
+        std::fs::write(dir.join("volunteer.html"), &found.html)?;
+        std::fs::write(dir.join("volunteer.md"), &found.md)?;
+    }
+    let events = ics::volunteer_events(&rec.label, &cfg.key(year), &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
     std::fs::write(dir.join("volunteer.ics"), ics::calendar(&format!("{} volunteers", rec.label), &events))?;
     log::info!("wrote {}", dir.join("volunteer.ics").display());
     Ok(())
@@ -350,6 +457,8 @@ fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, found: &d
 fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     let mut events = vec![];
     let mut rows: Vec<(chrono::NaiveDate, String, String)> = vec![];
+    let mut status: Vec<(String, String, String, String, String)> = vec![];
+    let today = Utc::now().date_naive();
     let conf_dir = root.join("conferences");
     if conf_dir.exists() {
         for entry in walk(&conf_dir)? {
@@ -363,11 +472,16 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                     }
                 };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::cfp_events(&r.label, &key, &r.data, &provenance_of(&r.provenance), r.fetched_at);
+                let ev = ics::cfp_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 for e in &ev {
                     rows.push((e.start, r.label.clone(), e.summary.trim_start_matches(&format!("[{}] ", r.label)).to_string()));
                 }
                 events.extend(ev);
+                let stage = schema::stage(Some(&r.data), today);
+                let deadlines = r.data.rounds.iter().map(|x| x.submission.to_string()).collect::<Vec<_>>().join(", ");
+                let conf = r.data.conference.as_ref().map(|c| format!("{}..{}", c.start, c.end)).unwrap_or_default();
+                let verified = r.last_verified.unwrap_or(r.fetched_at).format("%Y-%m-%d").to_string();
+                status.push((r.label.clone(), stage.label().to_string(), deadlines, conf, verified));
             } else if name == "volunteer.json" {
                 let r = match read_record::<schema::Volunteer>(&entry) {
                     Ok(r) => r,
@@ -377,7 +491,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                     }
                 };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::volunteer_events(&r.label, &key, &r.data, &provenance_of(&r.provenance), r.fetched_at);
+                let ev = ics::volunteer_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 for e in &ev {
                     rows.push((e.start, r.label.clone(), "Volunteer Application Deadline".into()));
                 }
@@ -388,8 +502,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     std::fs::write(root.join("all.ics"), ics::calendar("PL conference deadlines", &events))?;
     std::fs::write(root.join("MAINTENANCE.md"), state.render_maintenance())?;
 
-    // README: upcoming dates table + maintenance line.
-    let today = Utc::now().date_naive();
+    // README: upcoming dates table, status table, maintenance line.
     rows.sort();
     let mut table = String::from("| Date | Conference | Event |\n|---|---|---|\n");
     let mut count = 0;
@@ -403,6 +516,15 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     let readme_path = root.join("README.md");
     let readme = std::fs::read_to_string(&readme_path).unwrap_or_default();
     let readme = state::replace_marked(&readme, "dates", &table);
+    let mut st = String::from("| Conference | Stage | Submission deadline(s) | Conference dates | Last verified |\n|---|---|---|---|---|\n");
+    status.sort();
+    for (l, s, d, c, v) in &status {
+        st.push_str(&format!("| {l} | {s} | {d} | {c} | {v} |\n"));
+    }
+    if status.is_empty() {
+        st.push_str("| *(nothing collected yet)* | | | | |\n");
+    }
+    let readme = state::replace_marked(&readme, "status", &st);
     let readme = state::replace_marked(&readme, "maintenance", &state.summary_line());
     std::fs::write(&readme_path, readme)?;
     log::info!("wrote all.ics ({} events), README.md, MAINTENANCE.md", events.len());
@@ -421,4 +543,49 @@ fn walk(dir: &Path) -> Result<Vec<PathBuf>> {
         }
     }
     Ok(out)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::NaiveDate;
+
+    fn cfp(sub: &str) -> schema::Cfp {
+        schema::Cfp {
+            conference: None,
+            rounds: vec![schema::ValidRound { label: String::new(), submission: NaiveDate::parse_from_str(sub, "%Y-%m-%d").unwrap(), response_start: None, response_end: None, notification: None }],
+            submission_details: "prose".into(),
+        }
+    }
+
+    fn found(sub: &str) -> discover::Found<schema::Cfp> {
+        discover::Found { value: cfp(sub), raw: serde_json::Value::Null, prov: discover::Provenance { source_url: "https://x.org/new".into(), ..Default::default() }, html: String::new(), md: String::new() }
+    }
+
+    #[test]
+    fn merge_keeps_unchanged_data_and_records_changes() {
+        let cfg = config::ConferenceCfg { conference: "X".into(), track: "X".into(), since: 2027 };
+        let t0 = Utc::now() - chrono::Duration::days(7);
+        let t1 = Utc::now();
+        let first = merge_record(None, &cfg, 2027, &found("2026-07-01"), "m", t0, |a, b| schema::diff_cfp(a, b, t0));
+        assert!(first.history.is_empty() && first.last_verified == Some(t0));
+
+        // Same dates, different prose: only last_verified moves.
+        let mut same = found("2026-07-01");
+        same.value.submission_details = "other prose".into();
+        same.prov.source_url = "https://x.org/other".into();
+        let second = merge_record(Some(first.clone()), &cfg, 2027, &same, "m", t1, |a, b| schema::diff_cfp(a, b, t1));
+        assert!(second.history.is_empty());
+        assert_eq!(second.last_verified, Some(t1));
+        assert_eq!(second.fetched_at, t0, "unchanged data keeps its original fetch time");
+        assert_eq!(second.provenance.source_url, "https://x.org/new");
+        assert_eq!(second.data.submission_details, "prose");
+
+        // A moved deadline replaces the data and is remembered.
+        let third = merge_record(Some(second), &cfg, 2027, &found("2026-07-08"), "m", t1, |a, b| schema::diff_cfp(a, b, t1));
+        assert_eq!(third.history.len(), 1);
+        assert_eq!((third.history[0].field.as_str(), third.history[0].old.as_str(), third.history[0].new.as_str()), ("round 1 submission", "2026-07-01", "2026-07-08"));
+        assert_eq!(third.data.rounds[0].submission.to_string(), "2026-07-08");
+        assert_eq!(third.fetched_at, t1);
+    }
 }

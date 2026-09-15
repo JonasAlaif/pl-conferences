@@ -160,6 +160,95 @@ fn parse_opt(s: &Option<String>, what: &str, errs: &mut Vec<String>) -> Option<N
     }
 }
 
+/// Lifecycle of a conference-year, derived from stored data and today.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Stage {
+    /// Nothing known yet.
+    Future,
+    /// Conference dates/location known, no paper deadlines yet.
+    ConferenceAvailable,
+    /// Deadlines known and still ahead (or rebuttal still running).
+    DeadlinesAvailable,
+    /// The last round's rebuttal (or notification, or submission) has passed: deadlines are final.
+    PostRebuttal,
+    /// The conference is over.
+    Happened,
+}
+
+impl Stage {
+    /// Active stages are re-collected on every run; the others are archived.
+    pub fn active(self) -> bool {
+        matches!(self, Stage::Future | Stage::ConferenceAvailable | Stage::DeadlinesAvailable)
+    }
+    pub fn label(self) -> &'static str {
+        match self {
+            Stage::Future => "future",
+            Stage::ConferenceAvailable => "conference available",
+            Stage::DeadlinesAvailable => "deadlines available",
+            Stage::PostRebuttal => "post-rebuttal",
+            Stage::Happened => "happened",
+        }
+    }
+}
+
+/// Date after which the stored deadlines can no longer change.
+pub fn deadlines_final_after(cfp: &Cfp) -> Option<NaiveDate> {
+    let last = cfp.rounds.last()?;
+    Some(last.response_end.or(last.response_start).or(last.notification).unwrap_or(last.submission))
+}
+
+pub fn stage(cfp: Option<&Cfp>, today: NaiveDate) -> Stage {
+    let Some(c) = cfp else { return Stage::Future };
+    if c.conference.as_ref().is_some_and(|k| today > k.end) {
+        return Stage::Happened;
+    }
+    match deadlines_final_after(c) {
+        Some(cutoff) if today > cutoff => Stage::PostRebuttal,
+        Some(_) => Stage::DeadlinesAvailable,
+        None => Stage::ConferenceAvailable,
+    }
+}
+
+/// A recorded change of a stored value between two runs.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Change {
+    pub at: chrono::DateTime<chrono::Utc>,
+    /// e.g. "round 1 submission", "conference start", "volunteer deadline".
+    pub field: String,
+    pub old: String,
+    pub new: String,
+}
+
+fn fmt_opt(d: Option<NaiveDate>) -> String {
+    d.map(|d| d.to_string()).unwrap_or_else(|| "none".into())
+}
+
+/// Differences in dates and location (prose is ignored) between two records.
+pub fn diff_cfp(old: &Cfp, new: &Cfp, at: chrono::DateTime<chrono::Utc>) -> Vec<Change> {
+    let mut out = vec![];
+    let mut push = |field: String, o: String, n: String| {
+        if o != n {
+            out.push(Change { at, field, old: o, new: n });
+        }
+    };
+    if old.rounds.len() != new.rounds.len() {
+        push("rounds".into(), format!("{} round(s)", old.rounds.len()), format!("{} round(s)", new.rounds.len()));
+    }
+    for (i, (o, n)) in old.rounds.iter().zip(&new.rounds).enumerate() {
+        let r = i + 1;
+        push(format!("round {r} submission"), o.submission.to_string(), n.submission.to_string());
+        push(format!("round {r} response"), format!("{}..{}", fmt_opt(o.response_start), fmt_opt(o.response_end)), format!("{}..{}", fmt_opt(n.response_start), fmt_opt(n.response_end)));
+        push(format!("round {r} notification"), fmt_opt(o.notification), fmt_opt(n.notification));
+    }
+    let loc = |c: &Option<Conference>| match c {
+        Some(c) => format!("{}..{} {}", c.start, c.end, [c.city.clone(), c.country.clone()].into_iter().flatten().collect::<Vec<_>>().join(", ")),
+        None => "none".into(),
+    };
+    push("conference".into(), loc(&old.conference), loc(&new.conference));
+    out
+}
+
 /// Validated, typed version of [`CfpExtraction`].
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Cfp {
@@ -204,8 +293,11 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
     }
-    if !x.has_submission_deadline || x.rounds.is_empty() {
-        errs.push("no submission deadline found".into());
+    // Either deadlines or the conference dates must be there; a page with
+    // only dates and location gives a "conference available" record.
+    let has_rounds = x.has_submission_deadline && !x.rounds.is_empty();
+    if !has_rounds && x.conference.is_none() {
+        errs.push("neither a submission deadline nor conference dates found".into());
     }
     let conference = x.conference.as_ref().and_then(|c| {
         let start = parse_date(&c.start_date).map_err(|e| errs.push(format!("conference start_date: {e}"))).ok()?;
@@ -219,7 +311,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         Some(Conference { start, end, city: clean_opt(&c.city), country: clean_opt(&c.country) })
     });
     let mut rounds = vec![];
-    for (i, r) in x.rounds.iter().enumerate() {
+    for (i, r) in x.rounds.iter().enumerate().take(if has_rounds { usize::MAX } else { 0 }) {
         let what = format!("round {}", i + 1);
         let Ok(submission) = parse_date(&r.submission_deadline).map_err(|e| errs.push(format!("{what} submission_deadline: {e}"))) else {
             continue;
@@ -279,7 +371,9 @@ pub struct Volunteer {
     pub how_to_apply: String,
 }
 
-pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str) -> Result<Option<Volunteer>, Vec<String>> {
+/// `conference_end`, when known, bounds the application deadline: volunteers
+/// are recruited before the conference, never after.
+pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, conference_end: Option<NaiveDate>) -> Result<Option<Volunteer>, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -292,6 +386,11 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str) -> Res
     };
     if deadline.year() < year - 1 || deadline.year() > year {
         errs.push(format!("application deadline {deadline} is not in {} or {year}", year - 1));
+    }
+    if let Some(end) = conference_end {
+        if deadline > end {
+            errs.push(format!("application deadline {deadline} is after the conference ends ({end}); volunteers are recruited before the conference"));
+        }
     }
     match clean_opt(&x.application_deadline_quote) {
         Some(q) if page.is_empty() || page_contains(page, &q) => {}
@@ -361,6 +460,45 @@ mod tests {
         assert!(page_contains("Deadline:   Thu 10\n Jul 2025", "thu 10 jul 2025"));
         assert!(page_contains("Submissions due October 10, 2025 (AoE)", "October 10 2025"));
         assert!(!page_contains("nothing here", "Thu 10 Jul 2025"));
+    }
+
+    #[test]
+    fn stages_follow_the_calendar() {
+        let d = |s: &str| NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        assert_eq!(stage(None, d("2025-01-01")), Stage::Future);
+        assert_eq!(stage(Some(&c), d("2025-08-01")), Stage::DeadlinesAvailable);
+        assert_eq!(stage(Some(&c), d("2025-09-11")), Stage::DeadlinesAvailable);
+        assert_eq!(stage(Some(&c), d("2025-09-12")), Stage::PostRebuttal);
+        assert_eq!(stage(Some(&c), d("2026-01-18")), Stage::Happened);
+        let only = Cfp { conference: c.conference.clone(), rounds: vec![], submission_details: String::new() };
+        assert_eq!(stage(Some(&only), d("2025-08-01")), Stage::ConferenceAvailable);
+        assert!(Stage::ConferenceAvailable.active() && !Stage::PostRebuttal.active());
+    }
+
+    #[test]
+    fn conference_only_page_is_valid() {
+        let mut x = ok_extraction();
+        x.has_submission_deadline = false;
+        x.rounds.clear();
+        let c = validate_cfp(&x, 2026, "").unwrap();
+        assert!(c.rounds.is_empty() && c.conference.is_some());
+        x.conference = None;
+        assert!(validate_cfp(&x, 2026, "").is_err());
+    }
+
+    #[test]
+    fn diff_reports_changed_dates_only() {
+        let page = "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025";
+        let a = validate_cfp(&ok_extraction(), 2026, page).unwrap();
+        let mut x = ok_extraction();
+        x.rounds[0].submission_deadline = "2025-07-17".into();
+        x.submission_details = "different prose".into();
+        let b = validate_cfp(&x, 2026, page).unwrap();
+        let d = diff_cfp(&a, &b, chrono::Utc::now());
+        assert_eq!(d.len(), 1);
+        assert_eq!((d[0].field.as_str(), d[0].old.as_str(), d[0].new.as_str()), ("round 1 submission", "2025-07-10", "2025-07-17"));
+        assert!(diff_cfp(&a, &a, chrono::Utc::now()).is_empty());
     }
 
     #[test]

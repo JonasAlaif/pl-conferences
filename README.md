@@ -23,6 +23,11 @@ model produced.
 <!-- dates:start -->
 <!-- dates:end -->
 
+## Status
+
+<!-- status:start -->
+<!-- status:end -->
+
 ## How it works
 
 1. `conferences.json` lists each conference, its research-paper track and the
@@ -34,8 +39,18 @@ model produced.
    If the chosen page has no deadline, the model picks a link to follow.
 3. Dates are checked for consistency (ordering, year, calendar validity); on
    failure the model gets one corrective retry. Valid results are written as
-   JSON and iCalendar files and committed.
-4. Anything that worked only through a fallback is flagged with a maintenance
+   JSON and iCalendar files, together with the fetched page (`cfp.html`) and
+   the Markdown the model saw (`cfp.md`), and committed.
+4. Every conference-year has a stage derived from its data and the date:
+   *future* (nothing known), *conference available* (dates and location, no
+   deadlines yet), *deadlines available*, *post-rebuttal* (the last round's
+   rebuttal has ended, so nothing can change) and *happened*. The first three
+   are re-collected on every run, starting from the stored source page: if
+   a date changed, the JSON keeps a history entry and the calendar event says
+   "Changed <date>: was <old>". The last two are archived and never touched
+   again. Volunteer pages open late, so that pass stays active until the
+   conference has happened or the application deadline has passed.
+5. Anything that worked only through a fallback is flagged with a maintenance
    code in [MAINTENANCE.md](MAINTENANCE.md) (regenerated every run) and in the
    affected calendar entry, so the repository can be fixed before the fallback
    also breaks. Failures are retried monthly until the year is over, then

@@ -1,6 +1,6 @@
 //! iCalendar output. Hand-written: the format needed here is tiny.
 
-use crate::schema::{Cfp, Volunteer};
+use crate::schema::{Cfp, Change, Volunteer};
 use chrono::{DateTime, Datelike, NaiveDate, Utc};
 use sha1::{Digest, Sha1};
 
@@ -24,11 +24,17 @@ pub struct Event {
 pub struct Provenance {
     pub source_url: String,
     pub codes: Vec<String>,
+    /// Recorded changes; entries whose `field` matches an event are listed in it.
+    pub history: Vec<Change>,
 }
 
 impl Provenance {
-    fn note(&self) -> String {
-        let mut s = format!("Source: {}", self.source_url);
+    fn note(&self, field: &str) -> String {
+        let mut s = String::new();
+        for c in self.history.iter().filter(|c| c.field == field || c.field == "rounds") {
+            s.push_str(&format!("Changed {}: was {} (now {}).\n", c.at.format("%Y-%m-%d"), c.old, c.new));
+        }
+        s.push_str(&format!("Source: {}", self.source_url));
         if !self.codes.is_empty() {
             s.push_str(&format!("\nMaintenance: {} - see {MAINTENANCE_URL}", self.codes.join(", ")));
         }
@@ -59,17 +65,18 @@ pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: D
     };
     for (i, r) in cfp.rounds.iter().enumerate() {
         let prefix = if two { format!("R{} ", i + 1) } else { String::new() };
+        let n = i + 1;
         let desc = if cfp.submission_details.is_empty() {
-            prov.note()
+            prov.note(&format!("round {n} submission"))
         } else {
-            format!("{}\n\n{}", cfp.submission_details, prov.note())
+            format!("{}\n\n{}", cfp.submission_details, prov.note(&format!("round {n} submission")))
         };
         events.push(mk(&format!("{prefix}Paper Submission Deadline"), desc, "", r.submission, r.submission));
         if let (Some(s), Some(e)) = (r.response_start, r.response_end.or(r.response_start)) {
-            events.push(mk(&format!("{prefix}Rebuttal"), prov.note(), "", s, e));
+            events.push(mk(&format!("{prefix}Rebuttal"), prov.note(&format!("round {n} response")), "", s, e));
         }
-        if let Some(n) = r.notification {
-            events.push(mk(&format!("{prefix}Notification"), prov.note(), "", n, n));
+        if let Some(nd) = r.notification {
+            events.push(mk(&format!("{prefix}Notification"), prov.note(&format!("round {n} notification")), "", nd, nd));
         }
     }
     if let Some(c) = &cfp.conference {
@@ -78,13 +85,14 @@ pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: D
             (Some(x), None) | (None, Some(x)) => x.clone(),
             (None, None) => String::new(),
         };
-        events.push(mk("Conference", prov.note(), &loc, c.start, c.end));
+        events.push(mk("Conference", prov.note("conference"), &loc, c.start, c.end));
     }
     events
 }
 
 pub fn volunteer_events(label: &str, key: &str, v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
-    let desc = if v.how_to_apply.is_empty() { prov.note() } else { format!("{}\n\n{}", v.how_to_apply, prov.note()) };
+    let note = prov.note("volunteer deadline");
+    let desc = if v.how_to_apply.is_empty() { note } else { format!("{}\n\n{}", v.how_to_apply, note) };
     vec![Event {
         uid: uid(key, "Volunteer Application Deadline"),
         summary: format!("[{label}] Volunteer Application Deadline"),
@@ -177,16 +185,23 @@ mod tests {
             }],
             submission_details: "Submit via HotCRP; 25 pages, double-blind.".into(),
         };
-        let prov = Provenance { source_url: "https://popl26.sigplan.org/dates".into(), codes: vec!["E003".into()] };
+        let prov = Provenance {
+            source_url: "https://popl26.sigplan.org/dates".into(),
+            codes: vec!["E003".into()],
+            history: vec![Change { at: DateTime::parse_from_rfc3339("2026-09-20T00:00:00Z").unwrap().with_timezone(&Utc), field: "round 1 submission".into(), old: "2025-07-03".into(), new: "2025-07-10".into() }],
+        };
         let stamp = DateTime::parse_from_rfc3339("2026-09-15T00:00:00Z").unwrap().with_timezone(&Utc);
         let ev = cfp_events("POPL 2026", "POPL/POPL/2026", &cfp, &prov, stamp);
         let ics = calendar("POPL 2026", &ev);
+        let unfolded = ics.replace("\r\n ", "");
         assert!(ics.contains("SUMMARY:[POPL 2026] Paper Submission Deadline"));
         assert!(ics.contains("DTSTART;VALUE=DATE:20250710\r\nDTEND;VALUE=DATE:20250711"));
         assert!(ics.contains("SUMMARY:[POPL 2026] Rebuttal"));
         assert!(ics.contains("DTEND;VALUE=DATE:20250912"));
         assert!(ics.contains("LOCATION:Rennes\\, France"));
-        assert!(ics.contains("Maintenance: E003"));
+        assert!(unfolded.contains("Maintenance: E003"));
+        assert!(unfolded.contains("Changed 2026-09-20: was 2025-07-03"));
+        assert_eq!(unfolded.matches("Changed 2026-09-20").count(), 1, "only the submission event carries the change");
         assert_eq!(ev.len(), 4);
         // Stable UIDs.
         let ev2 = cfp_events("POPL 2026", "POPL/POPL/2026", &cfp, &prov, Utc::now());
