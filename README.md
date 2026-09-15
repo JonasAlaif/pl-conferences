@@ -18,11 +18,16 @@ page linked), each next to the JSON the model produced and the page it came
 from.
 
 <!-- maintenance:start -->
+Last run: 2026-09-15. **Maintenance codes active: E003** - see [MAINTENANCE.md](MAINTENANCE.md).
 <!-- maintenance:end -->
 
 ## Upcoming dates
 
 <!-- dates:start -->
+| Date | Conference | Event |
+|---|---|---|
+| 2026-10-04 | SPLASH 2026 (OOPSLA) | Conference |
+
 <!-- dates:end -->
 
 ## Status

@@ -1,0 +1,57 @@
+{
+  "conference": "CAV",
+  "track": "CAV",
+  "year": 2026,
+  "label": "CAV 2026",
+  "fetched_at": "2026-09-15T22:53:22.297148035Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "http://conferences.i-cav.org/2026/cfp/",
+    "query": "CAV 2026 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "conference": {
+      "start": "2026-07-26",
+      "end": "2026-07-29",
+      "city": null,
+      "country": null
+    },
+    "rounds": [
+      {
+        "label": "Round 1",
+        "submission": "2026-01-28",
+        "response_start": "2026-03-30",
+        "response_end": "2026-04-02",
+        "notification": "2026-04-17"
+      }
+    ],
+    "submission_details": "Papers can include a clearly marked appendix, however, the reviewers are not obliged to read the contents of these appendices. All page limits do not include references and appendices. Papers in all four categories must be submitted by January 28, 2026 AoE, and should be in LNCS format. Note Springer's guidelines regarding AI Authorship. Simultaneous submission to other conferences with proceedings or submission of material that has already been published elsewhere is not allowed."
+  },
+  "raw": {
+    "conference": {
+      "city": "null",
+      "country": "null",
+      "end_date": "2026-07-29",
+      "start_date": "2026-07-26"
+    },
+    "has_submission_deadline": true,
+    "page_is_about_conference": true,
+    "rounds": [
+      {
+        "author_response_end": "2026-04-02",
+        "author_response_start": "2026-03-30",
+        "label": "Round 1",
+        "notification": "2026-04-17",
+        "notification_quote": "Author Notification: April 17, 2026",
+        "submission_deadline": "2026-01-28",
+        "submission_deadline_quote": "Full papers due: January 28, 2026"
+      }
+    ],
+    "submission_details": "Papers can include a clearly marked appendix, however, the reviewers are not obliged to read the contents of these appendices. All page limits do not include references and appendices. Papers in all four categories must be submitted by January 28, 2026 AoE, and should be in LNCS format. Note Springer's guidelines regarding AI Authorship. Simultaneous submission to other conferences with proceedings or submission of material that has already been published elsewhere is not allowed."
+  }
+}

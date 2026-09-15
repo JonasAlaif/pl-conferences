@@ -1,0 +1,91 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:SPLASH 2026 (OOPSLA)
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:61192732771c46bc1b2a40e0421f1379e34c56a7@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251010
+DTEND;VALUE=DATE:20251011
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
+ .com/. Initial submissions must be at most 23 pages\; revisions can go up
+  to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds 
+ of review. At least one senior author must register as a reserve reviewer
+  unless exempt. Papers accepted in either round will be published in the 
+ 2026 volume of PACMPL and invited to present in-person at the SPLASH conf
+ erence in 2026\; remote presentations are not possible.\n\nSource: https:
+ //2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://g
+ ithub.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:367a8753d7cc3e5e84a482932b3c2948ca831967@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251202
+DTEND;VALUE=DATE:20251206
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Rebuttal
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:32ea03af1aa124423498fe701b74cd08a31c94a3@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251217
+DTEND;VALUE=DATE:20251218
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Notification
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:0dc03a575f76744e7d402752662739567d9f3e7c@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260317
+DTEND;VALUE=DATE:20260318
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
+ .com/. Initial submissions must be at most 23 pages\; revisions can go up
+  to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds 
+ of review. At least one senior author must register as a reserve reviewer
+  unless exempt. Papers accepted in either round will be published in the 
+ 2026 volume of PACMPL and invited to present in-person at the SPLASH conf
+ erence in 2026\; remote presentations are not possible.\n\nSource: https:
+ //2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://g
+ ithub.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:616a14649af3b70000b72b9d1d9b10594badbbfd@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260519
+DTEND;VALUE=DATE:20260523
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Rebuttal
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260610
+DTEND;VALUE=DATE:20260611
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Notification
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:6e484dbff11c7141852b8b558827e134c89b0461@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261010
+SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+LOCATION:Oakland\, United States
+END:VEVENT
+END:VCALENDAR

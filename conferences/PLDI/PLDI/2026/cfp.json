@@ -1,0 +1,57 @@
+{
+  "conference": "PLDI",
+  "track": "PLDI",
+  "year": 2026,
+  "label": "PLDI 2026",
+  "fetched_at": "2026-09-15T22:53:22.297148035Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://pldi26.sigplan.org/track/pldi-2026-papers",
+    "query": "PLDI 2026 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "conference": {
+      "start": "2026-06-15",
+      "end": "2026-06-19",
+      "city": "Boulder",
+      "country": "United States"
+    },
+    "rounds": [
+      {
+        "label": "",
+        "submission": "2025-11-13",
+        "response_start": "2026-02-17",
+        "response_end": "2026-02-22",
+        "notification": "2026-03-05"
+      }
+    ],
+    "submission_details": "PACMPL Issue PLDI 2026 seeks contributions on all aspects of programming languages research. The selection of papers will be made in two rounds of reviewing with an author response period. Author names and affiliations must be omitted from submissions (double-blind reviewing). Authors can submit multiple times prior to the deadline, but only the last submission will be reviewed. There is no deadline for submitting abstracts. The submission site is https://pldi2026.hotcrp.com."
+  },
+  "raw": {
+    "conference": {
+      "city": "Boulder",
+      "country": "United States",
+      "end_date": "2026-06-19",
+      "start_date": "2026-06-15"
+    },
+    "has_submission_deadline": true,
+    "page_is_about_conference": true,
+    "rounds": [
+      {
+        "author_response_end": "2026-02-22",
+        "author_response_start": "2026-02-17",
+        "label": "",
+        "notification": "2026-03-05",
+        "notification_quote": "Thu 5 Mar 2026\nNotification to Authors",
+        "submission_deadline": "2025-11-13",
+        "submission_deadline_quote": "The submission deadline is 11:59PM on Thursday November 13, 2025 anywhere on earth"
+      }
+    ],
+    "submission_details": "PACMPL Issue PLDI 2026 seeks contributions on all aspects of programming languages research. The selection of papers will be made in two rounds of reviewing with an author response period. Author names and affiliations must be omitted from submissions (double-blind reviewing). Authors can submit multiple times prior to the deadline, but only the last submission will be reviewed. There is no deadline for submitting abstracts. The submission site is https://pldi2026.hotcrp.com."
+  }
+}

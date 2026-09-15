@@ -1,0 +1,61 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ICFP 2026
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:5bff4e3ebc2b466f5238784a2134a9d4c381d86d@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260219
+DTEND;VALUE=DATE:20260220
+SUMMARY:[ICFP 2026] Paper Submission Deadline
+DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
+ te on US Letter sized paper and interpretable by common PDF tools. All su
+ bmissions must adhere to the "ACM Small" template. There is a limit of 25
+  pages for a full paper or Functional Pearl and 12 pages for an Experienc
+ e Report\; the bibliography and an optional clearly marked appendix will 
+ not be counted against these limits. Submissions that exceed the page lim
+ its or do not meet formatting requirements will be desk rejected. The con
+ ference uses a full double-blind reviewing process where author identitie
+ s are omitted from submissions. Authors may submit improved versions befo
+ re the deadline. Authors of conditionally accepted papers must provide re
+ vised submissions by 3 June 2026 accompanied by a cover letter mapping ea
+ ch mandatory revision request to specific parts of the paper.\n\nSource: 
+ https://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nMaintenance: E003
+  - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE
+ .md
+END:VEVENT
+BEGIN:VEVENT
+UID:e3bab0d4fdd4cfab74edfd7de78cd63bc56e75cf@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260420
+DTEND;VALUE=DATE:20260424
+SUMMARY:[ICFP 2026] Rebuttal
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ffacaacbd94884e5deee4e58f907dfe067dbb6f0@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260514
+DTEND;VALUE=DATE:20260515
+SUMMARY:[ICFP 2026] Notification
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260824
+DTEND;VALUE=DATE:20260830
+SUMMARY:[ICFP 2026] Conference
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+LOCATION:Indianapolis\, United States
+END:VEVENT
+END:VCALENDAR

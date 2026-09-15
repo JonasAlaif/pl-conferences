@@ -1,0 +1,103 @@
+{
+  "last_run": "2026-09-15T22:53:22.297148035Z",
+  "run_count": 1,
+  "last_run_codes": [],
+  "runs": {
+    "CAV/CAV/2026/cfp": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "brave",
+      "codes": [],
+      "note": ""
+    },
+    "CAV/CAV/2026/volunteer": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "not_found",
+      "consecutive_failures": 1,
+      "backend": "brave",
+      "codes": [],
+      "note": "trying volunteer link https://submissions.floc26.org/cav/ from the conference page; fetch https://submissions.floc26.org/cav/ failed: GET https://submissions.floc26.org/cav/: HTTP 403 Forbidden; https://taoscav.org/volunteer is not about CAV 2026; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
+    },
+    "ICFP/ICFP/2026/cfp": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "brave",
+      "codes": [
+        "E003"
+      ],
+      "note": "following link https://icfp26.sigplan.org/; following link https://icfp26.sigplan.org/track/icfp-2026-icfp-papers"
+    },
+    "ICFP/ICFP/2026/volunteer": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": null,
+      "codes": [],
+      "note": "trying volunteer link https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers from the conference page"
+    },
+    "PLDI/PLDI/2026/cfp": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "brave",
+      "codes": [],
+      "note": "following link https://pldi26.sigplan.org/attending/Information-for-Presenters"
+    },
+    "PLDI/PLDI/2026/volunteer": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": null,
+      "codes": [],
+      "note": "trying volunteer link https://pldi26.sigplan.org/track/pldi-2026-student-volunteering from the conference page"
+    },
+    "POPL/POPL/2026/cfp": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "brave",
+      "codes": [
+        "E003"
+      ],
+      "note": "following link https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-research-papers"
+    },
+    "POPL/POPL/2026/volunteer": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": null,
+      "codes": [],
+      "note": "trying volunteer link https://popl26.sigplan.org/track/POPL-2026-student-volunteers from the conference page"
+    },
+    "SPLASH/OOPSLA/2026/cfp": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "brave",
+      "codes": [
+        "E003"
+      ],
+      "note": "following link https://2026.splashcon.org/track/oopsla-2026"
+    },
+    "SPLASH/OOPSLA/2026/volunteer": {
+      "last_attempt": "2026-09-15T22:53:22.297148035Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": null,
+      "codes": [],
+      "note": "trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page"
+    }
+  }
+}

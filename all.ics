@@ -1,0 +1,330 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:PL conference deadlines
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20250710
+DTEND;VALUE=DATE:20250711
+SUMMARY:[POPL 2026] Paper Submission Deadline
+DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
+ nguages and programming systems\, both theoretical and practical. Authors
+  must omit their names and institutions from their paper submissions due 
+ to full double-blind reviewing. References to authors' own prior work sho
+ uld be in the third person. The submission site is https://popl26.hotcrp.
+ com. Each paper should have no more than 25 pages of text\, excluding bib
+ liography\, using the PACMPL format (specifically\, the acmart LaTeX clas
+ s with acmsmall option). Concurrent paper submissions to other conference
+ s\, workshops\, journals\, or similar forums of publication are not allow
+ ed.\n\nSource: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-
+ research-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl
+ -conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20250908
+DTEND;VALUE=DATE:20250912
+SUMMARY:[POPL 2026] Rebuttal
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:61192732771c46bc1b2a40e0421f1379e34c56a7@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251010
+DTEND;VALUE=DATE:20251011
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
+ .com/. Initial submissions must be at most 23 pages\; revisions can go up
+  to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds 
+ of review. At least one senior author must register as a reserve reviewer
+  unless exempt. Papers accepted in either round will be published in the 
+ 2026 volume of PACMPL and invited to present in-person at the SPLASH conf
+ erence in 2026\; remote presentations are not possible.\n\nSource: https:
+ //2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://g
+ ithub.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251106
+DTEND;VALUE=DATE:20251107
+SUMMARY:[POPL 2026] Notification
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ec304eaa792b4399bad21d55cb0973e91f7deab3@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251110
+DTEND;VALUE=DATE:20251111
+SUMMARY:[POPL 2026] Volunteer Application Deadline
+DESCRIPTION:Applicants can be undergraduate\, Master's\, Ph.D. full- or pa
+ rt-time students from computer science or related fields. They receive a 
+ complimentary conference registration\, free lunches/refreshments\, and v
+ olunteer garments in exchange for approximately 18 hours of work covering
+  four days at the conference. To apply\, fill out the provided form befor
+ e November 10th\, 2025.\n\nSource: https://popl26.sigplan.org/track/POPL-
+ 2026-student-volunteers
+END:VEVENT
+BEGIN:VEVENT
+UID:9c6402aeba43992e443b00b6e2a7c7b91815cafc@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251113
+DTEND;VALUE=DATE:20251114
+SUMMARY:[PLDI 2026] Paper Submission Deadline
+DESCRIPTION:PACMPL Issue PLDI 2026 seeks contributions on all aspects of p
+ rogramming languages research. The selection of papers will be made in tw
+ o rounds of reviewing with an author response period. Author names and af
+ filiations must be omitted from submissions (double-blind reviewing). Aut
+ hors can submit multiple times prior to the deadline\, but only the last 
+ submission will be reviewed. There is no deadline for submitting abstract
+ s. The submission site is https://pldi2026.hotcrp.com.\n\nSource: https:/
+ /pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:367a8753d7cc3e5e84a482932b3c2948ca831967@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251202
+DTEND;VALUE=DATE:20251206
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Rebuttal
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:32ea03af1aa124423498fe701b74cd08a31c94a3@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251217
+DTEND;VALUE=DATE:20251218
+SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Notification
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4174a3837d1ccdfc7b24ad0ae078c9e652361f3f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260118
+SUMMARY:[POPL 2026] Conference
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+LOCATION:Rennes\, France
+END:VEVENT
+BEGIN:VEVENT
+UID:bea709e9b429af695848aaa42297f609576509eb@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260128
+DTEND;VALUE=DATE:20260129
+SUMMARY:[CAV 2026] Paper Submission Deadline
+DESCRIPTION:Papers can include a clearly marked appendix\, however\, the r
+ eviewers are not obliged to read the contents of these appendices. All pa
+ ge limits do not include references and appendices. Papers in all four ca
+ tegories must be submitted by January 28\, 2026 AoE\, and should be in LN
+ CS format. Note Springer's guidelines regarding AI Authorship. Simultaneo
+ us submission to other conferences with proceedings or submission of mate
+ rial that has already been published elsewhere is not allowed.\n\nSource:
+  http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260217
+DTEND;VALUE=DATE:20260223
+SUMMARY:[PLDI 2026] Rebuttal
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:5bff4e3ebc2b466f5238784a2134a9d4c381d86d@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260219
+DTEND;VALUE=DATE:20260220
+SUMMARY:[ICFP 2026] Paper Submission Deadline
+DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
+ te on US Letter sized paper and interpretable by common PDF tools. All su
+ bmissions must adhere to the "ACM Small" template. There is a limit of 25
+  pages for a full paper or Functional Pearl and 12 pages for an Experienc
+ e Report\; the bibliography and an optional clearly marked appendix will 
+ not be counted against these limits. Submissions that exceed the page lim
+ its or do not meet formatting requirements will be desk rejected. The con
+ ference uses a full double-blind reviewing process where author identitie
+ s are omitted from submissions. Authors may submit improved versions befo
+ re the deadline. Authors of conditionally accepted papers must provide re
+ vised submissions by 3 June 2026 accompanied by a cover letter mapping ea
+ ch mandatory revision request to specific parts of the paper.\n\nSource: 
+ https://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nMaintenance: E003
+  - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE
+ .md
+END:VEVENT
+BEGIN:VEVENT
+UID:b9a54c1f48a05c1e412879ecca278771aee02f3e@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260305
+DTEND;VALUE=DATE:20260306
+SUMMARY:[PLDI 2026] Notification
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:0dc03a575f76744e7d402752662739567d9f3e7c@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260317
+DTEND;VALUE=DATE:20260318
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
+ .com/. Initial submissions must be at most 23 pages\; revisions can go up
+  to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds 
+ of review. At least one senior author must register as a reserve reviewer
+  unless exempt. Papers accepted in either round will be published in the 
+ 2026 volume of PACMPL and invited to present in-person at the SPLASH conf
+ erence in 2026\; remote presentations are not possible.\n\nSource: https:
+ //2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://g
+ ithub.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:94ca848027d55ef7f3c1e1ef61acb89ba7b425c5@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260330
+DTEND;VALUE=DATE:20260403
+SUMMARY:[CAV 2026] Rebuttal
+DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:3129cc8e718c2631abbbc448e9df62c8ccc0cac1@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260413
+DTEND;VALUE=DATE:20260414
+SUMMARY:[PLDI 2026] Volunteer Application Deadline
+DESCRIPTION:Undergraduate\, Master's\, Ph.D.\, full- or part-time students
+  (current or prospective) of computer science and related fields can appl
+ y. Volunteers receive complimentary registration to PLDI but do not get t
+ ravel expenses covered. Spots are limited\, and selection involves coordi
+ nation with Video Chairs for video volunteers and a lottery-based system 
+ for general volunteers. Applications should be submitted via the provided
+  form.\n\nSource: https://pldi26.sigplan.org/track/pldi-2026-student-volu
+ nteering
+END:VEVENT
+BEGIN:VEVENT
+UID:69639bcd3996f2d5b135cdf2c5c229f602252b01@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260417
+DTEND;VALUE=DATE:20260418
+SUMMARY:[CAV 2026] Notification
+DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:e3bab0d4fdd4cfab74edfd7de78cd63bc56e75cf@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260420
+DTEND;VALUE=DATE:20260424
+SUMMARY:[ICFP 2026] Rebuttal
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:ffacaacbd94884e5deee4e58f907dfe067dbb6f0@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260514
+DTEND;VALUE=DATE:20260515
+SUMMARY:[ICFP 2026] Notification
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:616a14649af3b70000b72b9d1d9b10594badbbfd@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260519
+DTEND;VALUE=DATE:20260523
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Rebuttal
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260610
+DTEND;VALUE=DATE:20260611
+SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Notification
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:2769659299d36061cad3c30c9c4910a8170bac8f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260615
+DTEND;VALUE=DATE:20260620
+SUMMARY:[PLDI 2026] Conference
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+LOCATION:Boulder\, United States
+END:VEVENT
+BEGIN:VEVENT
+UID:74b8df24773551c667cd32913d619377da0749d1@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260703
+DTEND;VALUE=DATE:20260704
+SUMMARY:[ICFP 2026] Volunteer Application Deadline
+DESCRIPTION:Students and Programming Languages researchers from around the
+  world are welcome to apply. Priority is given to junior members\, such a
+ s full- or part-time computer science students. Volunteers receive a comp
+ limentary conference registration\, free lunches and refreshments\, a vol
+ unteer shirt\, and free admission to social events\, though they must arr
+ ange their own travel and accommodation. To apply\, visit the provided li
+ nk.\n\nSource: https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers
+END:VEVENT
+BEGIN:VEVENT
+UID:47577bcf91d716d36265c4fc1a778ce186710f86@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260712
+DTEND;VALUE=DATE:20260713
+SUMMARY:[SPLASH 2026 (OOPSLA)] Volunteer Application Deadline
+DESCRIPTION:Students and researchers from computer science and related fie
+ lds are welcome to apply. Volunteers receive a complimentary conference r
+ egistration (including access to all sessions and proceedings)\, free lun
+ ches\, refreshments\, a volunteer shirt\, and free admission to social ev
+ ents. To apply\, send an email to thalakottur.m@northeastern.edu\, robert
+ .zhang@utexas.edu\, or hnzhu@ucdavis.edu.\n\nSource: https://2026.splashc
+ on.org/track/splash-issta-2026-student-volunteers
+END:VEVENT
+BEGIN:VEVENT
+UID:2cc72dea11c989a0f4ee3fe7a61186fb6879c5de@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260726
+DTEND;VALUE=DATE:20260730
+SUMMARY:[CAV 2026] Conference
+DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260824
+DTEND;VALUE=DATE:20260830
+SUMMARY:[ICFP 2026] Conference
+DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
+ \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
+ ob/main/MAINTENANCE.md
+LOCATION:Indianapolis\, United States
+END:VEVENT
+BEGIN:VEVENT
+UID:6e484dbff11c7141852b8b558827e134c89b0461@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261010
+SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+LOCATION:Oakland\, United States
+END:VEVENT
+END:VCALENDAR

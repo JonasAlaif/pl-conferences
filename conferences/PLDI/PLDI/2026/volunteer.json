@@ -1,0 +1,28 @@
+{
+  "conference": "PLDI",
+  "track": "PLDI",
+  "year": 2026,
+  "label": "PLDI 2026",
+  "fetched_at": "2026-09-15T22:53:22.297148035Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://pldi26.sigplan.org/track/pldi-2026-student-volunteering",
+    "query": "links of https://pldi26.sigplan.org/track/pldi-2026-papers",
+    "backend": null,
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "deadline": "2026-04-13",
+    "how_to_apply": "Undergraduate, Master's, Ph.D., full- or part-time students (current or prospective) of computer science and related fields can apply. Volunteers receive complimentary registration to PLDI but do not get travel expenses covered. Spots are limited, and selection involves coordination with Video Chairs for video volunteers and a lottery-based system for general volunteers. Applications should be submitted via the provided form."
+  },
+  "raw": {
+    "application_deadline": "2026-04-13",
+    "application_deadline_quote": "Mon 13 Apr 2026\nVolunteer Application Deadline",
+    "has_volunteer_program": true,
+    "how_to_apply": "Undergraduate, Master's, Ph.D., full- or part-time students (current or prospective) of computer science and related fields can apply. Volunteers receive complimentary registration to PLDI but do not get travel expenses covered. Spots are limited, and selection involves coordination with Video Chairs for video volunteers and a lottery-based system for general volunteers. Applications should be submitted via the provided form.",
+    "page_is_about_conference": true
+  }
+}

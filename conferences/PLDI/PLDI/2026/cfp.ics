@@ -1,0 +1,48 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:PLDI 2026
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:9c6402aeba43992e443b00b6e2a7c7b91815cafc@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251113
+DTEND;VALUE=DATE:20251114
+SUMMARY:[PLDI 2026] Paper Submission Deadline
+DESCRIPTION:PACMPL Issue PLDI 2026 seeks contributions on all aspects of p
+ rogramming languages research. The selection of papers will be made in tw
+ o rounds of reviewing with an author response period. Author names and af
+ filiations must be omitted from submissions (double-blind reviewing). Aut
+ hors can submit multiple times prior to the deadline\, but only the last 
+ submission will be reviewed. There is no deadline for submitting abstract
+ s. The submission site is https://pldi2026.hotcrp.com.\n\nSource: https:/
+ /pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260217
+DTEND;VALUE=DATE:20260223
+SUMMARY:[PLDI 2026] Rebuttal
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:b9a54c1f48a05c1e412879ecca278771aee02f3e@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260305
+DTEND;VALUE=DATE:20260306
+SUMMARY:[PLDI 2026] Notification
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+END:VEVENT
+BEGIN:VEVENT
+UID:2769659299d36061cad3c30c9c4910a8170bac8f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260615
+DTEND;VALUE=DATE:20260620
+SUMMARY:[PLDI 2026] Conference
+DESCRIPTION:Source: https://pldi26.sigplan.org/track/pldi-2026-papers
+LOCATION:Boulder\, United States
+END:VEVENT
+END:VCALENDAR

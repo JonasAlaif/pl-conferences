@@ -1,0 +1,22 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:POPL 2026 volunteers
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:ec304eaa792b4399bad21d55cb0973e91f7deab3@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251110
+DTEND;VALUE=DATE:20251111
+SUMMARY:[POPL 2026] Volunteer Application Deadline
+DESCRIPTION:Applicants can be undergraduate\, Master's\, Ph.D. full- or pa
+ rt-time students from computer science or related fields. They receive a 
+ complimentary conference registration\, free lunches/refreshments\, and v
+ olunteer garments in exchange for approximately 18 hours of work covering
+  four days at the conference. To apply\, fill out the provided form befor
+ e November 10th\, 2025.\n\nSource: https://popl26.sigplan.org/track/POPL-
+ 2026-student-volunteers
+END:VEVENT
+END:VCALENDAR

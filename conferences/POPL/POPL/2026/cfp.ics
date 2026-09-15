@@ -1,0 +1,58 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:POPL 2026
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20250710
+DTEND;VALUE=DATE:20250711
+SUMMARY:[POPL 2026] Paper Submission Deadline
+DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
+ nguages and programming systems\, both theoretical and practical. Authors
+  must omit their names and institutions from their paper submissions due 
+ to full double-blind reviewing. References to authors' own prior work sho
+ uld be in the third person. The submission site is https://popl26.hotcrp.
+ com. Each paper should have no more than 25 pages of text\, excluding bib
+ liography\, using the PACMPL format (specifically\, the acmart LaTeX clas
+ s with acmsmall option). Concurrent paper submissions to other conference
+ s\, workshops\, journals\, or similar forums of publication are not allow
+ ed.\n\nSource: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-
+ research-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl
+ -conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20250908
+DTEND;VALUE=DATE:20250912
+SUMMARY:[POPL 2026] Rebuttal
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251106
+DTEND;VALUE=DATE:20251107
+SUMMARY:[POPL 2026] Notification
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4174a3837d1ccdfc7b24ad0ae078c9e652361f3f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260118
+SUMMARY:[POPL 2026] Conference
+DESCRIPTION:Source: https://conf.researchr.org/track/POPL-2026/POPL-2026-p
+ opl-research-papers\nMaintenance: E003 - see https://github.com/JonasAlai
+ f/pl-conferences/blob/main/MAINTENANCE.md
+LOCATION:Rennes\, France
+END:VEVENT
+END:VCALENDAR
