@@ -348,15 +348,35 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     Ok(())
 }
 
+/// Fields that may be refreshed without counting as a change (links).
+trait SoftUpdate {
+    fn soft_update(&mut self, from: &Self);
+}
+impl SoftUpdate for schema::Cfp {
+    fn soft_update(&mut self, from: &Self) {
+        if from.submission_url.is_some() {
+            self.submission_url = from.submission_url.clone();
+        }
+    }
+}
+impl SoftUpdate for schema::Volunteer {
+    fn soft_update(&mut self, from: &Self) {
+        if from.application_url.is_some() {
+            self.application_url = from.application_url.clone();
+        }
+    }
+}
+
 /// Combine a fresh extraction with the stored record: unchanged data only
 /// bumps `last_verified`; changed data replaces it and extends the history.
-fn merge_record<T: Clone + Serialize>(existing: Option<Record<T>>, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<T>, model: &str, now: chrono::DateTime<Utc>, diff: impl Fn(&T, &T) -> Vec<schema::Change>) -> Record<T> {
+fn merge_record<T: Clone + Serialize + SoftUpdate>(existing: Option<Record<T>>, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<T>, model: &str, now: chrono::DateTime<Utc>, diff: impl Fn(&T, &T) -> Vec<schema::Change>) -> Record<T> {
     match existing {
         Some(mut old) => {
             let changes = diff(&old.data, &found.value);
             old.last_verified = Some(now);
             if changes.is_empty() {
                 log::info!("{}: unchanged", cfg.key(year));
+                old.data.soft_update(&found.value);
             } else {
                 for c in &changes {
                     log::warn!("{}: {} changed: {} -> {}", cfg.key(year), c.field, c.old, c.new);
@@ -555,6 +575,7 @@ mod tests {
             conference: None,
             rounds: vec![schema::ValidRound { label: String::new(), submission: NaiveDate::parse_from_str(sub, "%Y-%m-%d").unwrap(), response_start: None, response_end: None, notification: None }],
             submission_details: "prose".into(),
+            submission_url: None,
         }
     }
 

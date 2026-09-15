@@ -262,6 +262,33 @@ fn ordered_hits(ctx: &Ctx, trail: &mut Trail, hits: Vec<Hit>, what: &str) -> Res
     Ok(out)
 }
 
+/// Page text plus every link target, so a URL the model reports can be
+/// checked against both.
+fn grounding_text(md: &str, links: &[(String, String)]) -> String {
+    let mut s = String::with_capacity(md.len() + links.len() * 64);
+    s.push_str(md);
+    for (_, u) in links {
+        s.push('\n');
+        s.push_str(u);
+    }
+    s
+}
+
+/// Ask the model which of the page's links is `what`; None if it says none.
+fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], what: &str) -> Result<Option<String>> {
+    if links.is_empty() {
+        return Ok(None);
+    }
+    let shown: Vec<&(String, String)> = links.iter().take(200).collect();
+    let list = numbered(shown.iter().map(|(t, u)| (t.as_str(), u.as_str(), "")));
+    let q = format!("Which of these links on the page is {what}? Answer with the index, or null if no link is that.");
+    let pick = choose(ctx, trail, &q, &list, shown.len())?.map(|i| shown[i].1.clone());
+    if let Some(u) = &pick {
+        trail.note(format!("model picked link {u} as {what}"));
+    }
+    Ok(pick)
+}
+
 /// Links on a page, most promising first (mention of the conference, track
 /// or a call-for-papers word, then same host), capped so the list fits the
 /// model's context.
@@ -379,19 +406,24 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
+    let links = clean::links(&page.html, &page.url);
+    let grounding = grounding_text(&md, &links);
     let prompt = cfp_prompt(cfg, year, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &md))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
     }
     match validated {
-        Ok(cfp) => {
+        Ok(mut cfp) => {
             if hops > 0 {
                 trail.code(Code::E003);
             }
             if retried {
                 trail.code(Code::E005);
+            }
+            if cfp.submission_url.is_none() && !cfp.rounds.is_empty() {
+                cfp.submission_url = pick_link(ctx, trail, &links, &format!("the paper submission site of {} {year} ({} track), where authors upload their papers", cfg.conference, cfg.track))?;
             }
             let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
             let found = Found { value: cfp, raw, prov, html: page.html.clone(), md: md.clone() };
@@ -480,8 +512,10 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
+    let links = clean::links(&page.html, &page.url);
+    let grounding = grounding_text(&md, &links);
     let prompt = volunteer_prompt(cfg, year, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer(x, year, &md, conference_end))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer(x, year, &grounding, conference_end))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
@@ -489,12 +523,15 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
     if x.has_volunteer_program {
         saw.0 = true;
         match validated {
-            Ok(Some(v)) => {
+            Ok(Some(mut v)) => {
                 if hops > 0 {
                     trail.code(Code::E003);
                 }
                 if retried {
                     trail.code(Code::E005);
+                }
+                if v.application_url.is_none() {
+                    v.application_url = pick_link(ctx, trail, &links, &format!("the form or page where students apply to be student volunteers at {} {year}", cfg.conference))?;
                 }
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
                 return Ok(Some(Found { value: v, raw, prov, html: page.html.clone(), md }));

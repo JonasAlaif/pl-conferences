@@ -46,6 +46,9 @@ pub struct CfpExtraction {
     pub rounds: Vec<Round>,
     /// A few sentences for authors: how and where to submit, page limit, review process, anonymisation, anything an author must know before submitting.
     pub submission_details: String,
+    /// Full URL of the paper submission site (where authors upload their paper), if it is written on the page; null otherwise.
+    #[schemars(required)]
+    pub submission_url: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
@@ -107,6 +110,9 @@ pub struct VolunteerExtraction {
     /// A few sentences on who can apply, what volunteers get, and how to apply.
     #[schemars(required)]
     pub how_to_apply: Option<String>,
+    /// Full URL of the application form or sign-up page for volunteers, if it is written on the page; null otherwise.
+    #[schemars(required)]
+    pub application_url: Option<String>,
 }
 
 /// Which search hit (0-based index into the list shown) is the best match, or null if none fits.
@@ -258,6 +264,9 @@ pub struct Cfp {
     pub rounds: Vec<ValidRound>,
     #[serde(default)]
     pub submission_details: String,
+    /// Paper submission site, when found on the page or among its links.
+    #[serde(default)]
+    pub submission_url: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -285,6 +294,18 @@ pub struct ValidRound {
 
 fn clean_opt(s: &Option<String>) -> Option<String> {
     s.as_deref().map(str::trim).filter(|s| !s.is_empty() && !s.eq_ignore_ascii_case("null") && !s.eq_ignore_ascii_case("unknown")).map(String::from)
+}
+
+/// A URL the model reported is kept only if it is well-formed and appears in
+/// `grounding` (the page text plus its link targets).
+pub fn grounded_url(u: &Option<String>, grounding: &str) -> Option<String> {
+    let u = clean_opt(u)?;
+    let parsed = url::Url::parse(&u).ok()?;
+    if !matches!(parsed.scheme(), "http" | "https") {
+        return None;
+    }
+    let key = u.trim_end_matches('/').to_lowercase();
+    grounding.to_lowercase().contains(&key).then_some(u)
 }
 
 /// Check dates parse and are consistent with each other and with `year`.
@@ -357,7 +378,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         }
     }
     if errs.is_empty() {
-        Ok(Cfp { conference, rounds, submission_details: x.submission_details.trim().to_string() })
+        Ok(Cfp { conference, rounds, submission_details: x.submission_details.trim().to_string(), submission_url: grounded_url(&x.submission_url, page) })
     } else {
         Err(errs)
     }
@@ -369,6 +390,9 @@ pub struct Volunteer {
     pub deadline: NaiveDate,
     #[serde(default)]
     pub how_to_apply: String,
+    /// Application form or sign-up page, when found on the page or among its links.
+    #[serde(default)]
+    pub application_url: Option<String>,
 }
 
 /// `conference_end`, when known, bounds the application deadline: volunteers
@@ -398,7 +422,7 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),
     }
     if errs.is_empty() {
-        Ok(Some(Volunteer { deadline, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default() }))
+        Ok(Some(Volunteer { deadline, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
     } else {
         Err(errs)
     }
@@ -429,7 +453,18 @@ mod tests {
             conference: Some(ConferenceInfo { start_date: "2026-01-11".into(), end_date: "2026-01-17".into(), city: Some("Rennes".into()), country: Some("France".into()) }),
             rounds: vec![round("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some("2025-11-06"))],
             submission_details: "Submit via HotCRP.".into(),
+            submission_url: Some("https://popl26.hotcrp.com".into()),
         }
+    }
+
+    #[test]
+    fn urls_are_kept_only_when_on_the_page() {
+        let page = "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025. Submit at https://popl26.hotcrp.com/";
+        let c = validate_cfp(&ok_extraction(), 2026, page).unwrap();
+        assert_eq!(c.submission_url.as_deref(), Some("https://popl26.hotcrp.com"));
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        assert_eq!(c.submission_url, None, "a URL that is not on the page is dropped");
+        assert_eq!(grounded_url(&Some("javascript:void(0)".into()), "javascript:void(0)"), None);
     }
 
     #[test]
@@ -471,7 +506,7 @@ mod tests {
         assert_eq!(stage(Some(&c), d("2025-09-11")), Stage::DeadlinesAvailable);
         assert_eq!(stage(Some(&c), d("2025-09-12")), Stage::PostRebuttal);
         assert_eq!(stage(Some(&c), d("2026-01-18")), Stage::Happened);
-        let only = Cfp { conference: c.conference.clone(), rounds: vec![], submission_details: String::new() };
+        let only = Cfp { conference: c.conference.clone(), rounds: vec![], submission_details: String::new(), submission_url: None };
         assert_eq!(stage(Some(&only), d("2025-08-01")), Stage::ConferenceAvailable);
         assert!(Stage::ConferenceAvailable.active() && !Stage::PostRebuttal.active());
     }

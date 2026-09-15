@@ -66,11 +66,15 @@ pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: D
     for (i, r) in cfp.rounds.iter().enumerate() {
         let prefix = if two { format!("R{} ", i + 1) } else { String::new() };
         let n = i + 1;
-        let desc = if cfp.submission_details.is_empty() {
-            prov.note(&format!("round {n} submission"))
-        } else {
-            format!("{}\n\n{}", cfp.submission_details, prov.note(&format!("round {n} submission")))
-        };
+        let mut parts = vec![];
+        if !cfp.submission_details.is_empty() {
+            parts.push(cfp.submission_details.clone());
+        }
+        if let Some(u) = &cfp.submission_url {
+            parts.push(format!("Submit at: {u}"));
+        }
+        parts.push(prov.note(&format!("round {n} submission")));
+        let desc = parts.join("\n\n");
         events.push(mk(&format!("{prefix}Paper Submission Deadline"), desc, "", r.submission, r.submission));
         if let (Some(s), Some(e)) = (r.response_start, r.response_end.or(r.response_start)) {
             events.push(mk(&format!("{prefix}Rebuttal"), prov.note(&format!("round {n} response")), "", s, e));
@@ -91,8 +95,15 @@ pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: D
 }
 
 pub fn volunteer_events(label: &str, key: &str, v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
-    let note = prov.note("volunteer deadline");
-    let desc = if v.how_to_apply.is_empty() { note } else { format!("{}\n\n{}", v.how_to_apply, note) };
+    let mut parts = vec![];
+    if !v.how_to_apply.is_empty() {
+        parts.push(v.how_to_apply.clone());
+    }
+    if let Some(u) = &v.application_url {
+        parts.push(format!("Apply at: {u}"));
+    }
+    parts.push(prov.note("volunteer deadline"));
+    let desc = parts.join("\n\n");
     vec![Event {
         uid: uid(key, "Volunteer Application Deadline"),
         summary: format!("[{label}] Volunteer Application Deadline"),
@@ -184,6 +195,7 @@ mod tests {
                 notification: NaiveDate::from_ymd_opt(2025, 11, 6),
             }],
             submission_details: "Submit via HotCRP; 25 pages, double-blind.".into(),
+            submission_url: Some("https://popl26.hotcrp.com".into()),
         };
         let prov = Provenance {
             source_url: "https://popl26.sigplan.org/dates".into(),
@@ -200,6 +212,7 @@ mod tests {
         assert!(ics.contains("DTEND;VALUE=DATE:20250912"));
         assert!(ics.contains("LOCATION:Rennes\\, France"));
         assert!(unfolded.contains("Maintenance: E003"));
+        assert!(unfolded.contains("Submit at: https://popl26.hotcrp.com"));
         assert!(unfolded.contains("Changed 2026-09-20: was 2025-07-03"));
         assert_eq!(unfolded.matches("Changed 2026-09-20").count(), 1, "only the submission event carries the change");
         assert_eq!(ev.len(), 4);
