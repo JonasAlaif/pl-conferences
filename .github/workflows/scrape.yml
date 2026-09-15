@@ -1,0 +1,187 @@
+name: Collect conference dates
+
+on:
+  schedule:
+    # Monthly. Never on push: the run itself pushes.
+    - cron: "0 3 2 * *"
+  workflow_dispatch:
+    inputs:
+      conference:
+        description: "Only this conference (name from conferences.json); empty = all"
+        type: string
+        required: false
+      model:
+        description: "Ollama model"
+        type: string
+        default: "qwen3.5:4b"
+      dry_run:
+        description: "Do not commit results"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  actions: write
+  issues: write
+
+concurrency:
+  group: scrape
+  cancel-in-progress: false
+
+env:
+  # Pinned; both have fallbacks below. Bump deliberately.
+  OLLAMA_VERSION: "0.34.1"
+  MODEL: ${{ inputs.model || 'qwen3.5:4b' }}
+  MODEL_FALLBACK: "hf.co/unsloth/Qwen3.5-4B-GGUF:Q4_K_M"
+  # sha256 of the registry manifest for MODEL (= the ID `ollama list` shows). Ollama cannot pull by
+  # digest, so this only detects a silent upstream change (E010) rather than preventing it.
+  MODEL_DIGEST: "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust toolchain (pinned by rust-toolchain.toml)
+        run: |
+          rustup show active-toolchain || rustup toolchain install
+          cargo --version
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+
+      - name: Cache Ollama models
+        uses: actions/cache@v4
+        with:
+          path: ~/.ollama/models
+          key: ollama-models-${{ env.MODEL }}
+
+      - name: Cache Ollama binary
+        uses: actions/cache@v4
+        with:
+          path: ~/ollama-linux-amd64.tar.zst
+          key: ollama-bin-${{ env.OLLAMA_VERSION }}
+
+      - name: Install Ollama
+        run: |
+          set -e
+          codes=""
+          # Primary: pinned release asset from GitHub (cached above). Fallback: vendor install script (latest).
+          vault="https://github.com/${GITHUB_REPOSITORY}/releases/download/vault"
+          if [ -s ~/ollama-linux-amd64.tar.zst ] \
+             || curl -fsSL --retry 3 -o ~/ollama-linux-amd64.tar.zst "https://github.com/ollama/ollama/releases/download/v${OLLAMA_VERSION}/ollama-linux-amd64.tar.zst" \
+             || { echo "::warning::upstream Ollama unavailable, trying the vault release (E007)"; codes="E007"; curl -fsSL --retry 3 -o ~/ollama-linux-amd64.tar.zst "$vault/ollama-linux-amd64.tar.zst"; }; then
+            sudo tar -C /usr --zstd -xf ~/ollama-linux-amd64.tar.zst
+          else
+            echo "::warning::pinned Ollama v${OLLAMA_VERSION} unavailable, using install script (E007)"
+            curl -fsSL https://ollama.com/install.sh | sh
+            codes="E007"
+          fi
+          echo "PLC_WORKFLOW_CODES=$codes" >> "$GITHUB_ENV"
+          ollama --version
+
+      - name: Start Ollama and pull model
+        run: |
+          set -e
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in $(seq 1 60); do curl -fs http://localhost:11434/api/tags >/dev/null && break; sleep 1; done
+          curl -fs http://localhost:11434/api/tags >/dev/null || { cat /tmp/ollama.log; exit 1; }
+          if ! ollama pull "$MODEL"; then
+            echo "PLC_WORKFLOW_CODES=${PLC_WORKFLOW_CODES:+$PLC_WORKFLOW_CODES,}E007" >> "$GITHUB_ENV"
+            if ollama pull "$MODEL_FALLBACK"; then
+              echo "::warning::could not pull $MODEL, using $MODEL_FALLBACK (E007)"
+              echo "MODEL=$MODEL_FALLBACK" >> "$GITHUB_ENV"
+            else
+              # Last resort: a GGUF stored as assets of this repository's "vault" release, split into <2 GB parts.
+              echo "::warning::could not pull $MODEL or $MODEL_FALLBACK, trying the vault release (E007)"
+              vault="https://github.com/${GITHUB_REPOSITORY}/releases/download/vault"
+              rm -f /tmp/model.gguf
+              for part in aa ab ac ad; do
+                curl -fsSL -o "/tmp/model.gguf.part-$part" "$vault/model.gguf.part-$part" || break
+                cat "/tmp/model.gguf.part-$part" >> /tmp/model.gguf
+              done
+              [ -s /tmp/model.gguf ] || { echo "no model available"; exit 1; }
+              printf 'FROM /tmp/model.gguf\n' > /tmp/Modelfile
+              ollama create vault-model -f /tmp/Modelfile
+              echo "MODEL=vault-model" >> "$GITHUB_ENV"
+            fi
+          fi
+          ollama list
+          # Detect a silently changed upstream build of the pinned tag.
+          if [ "$MODEL" = "${{ inputs.model || 'qwen3.5:4b' }}" ] && [ -n "$MODEL_DIGEST" ]; then
+            name="${MODEL%%:*}"; tag="${MODEL#*:}"
+            actual=$(curl -fsSL -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+              "https://registry.ollama.ai/v2/library/${name}/manifests/${tag}" | sha256sum | cut -d' ' -f1 || true)
+            if [ -n "$actual" ] && [ "$actual" != "$MODEL_DIGEST" ]; then
+              echo "::warning::model $MODEL now has manifest digest $actual (pinned $MODEL_DIGEST) (E010)"
+              echo "PLC_WORKFLOW_CODES=${PLC_WORKFLOW_CODES:+$PLC_WORKFLOW_CODES,}E010" >> "$GITHUB_ENV"
+            fi
+          fi
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Collect
+        env:
+          PLC_MODEL: ${{ env.MODEL }}
+          PLC_TIME_BUDGET_MIN: "240"
+          RUST_LOG: info
+          ONLY_CONFERENCE: ${{ inputs.conference }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          free -m
+          args=()
+          [ -n "$ONLY_CONFERENCE" ] && args+=(--conference "$ONLY_CONFERENCE")
+          [ "$DRY_RUN" = "true" ] && args+=(--dry-run)
+          ./target/release/pl-conferences "${args[@]}"
+          echo "--- memory after run ---"
+          ollama ps
+          free -m
+
+      - name: Commit results
+        # Also after a failure or timeout: whatever was written is kept.
+        if: ${{ always() && inputs.dry_run != true }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for p in conferences state.json all.ics README.md MAINTENANCE.md; do
+            [ -e "$p" ] && git add -A -- "$p"
+          done
+          if git diff --staged --quiet; then
+            echo "nothing changed"
+          else
+            git commit -m "Update conference dates $(date -u +%Y-%m)"
+            git pull --rebase -X ours origin "${GITHUB_REF_NAME}" || true
+            git push
+          fi
+
+      - name: Keep the schedule alive
+        # Public repos have scheduled workflows disabled after 60 days without a push;
+        # the commit above resets that, and this call re-enables the workflow regardless.
+        if: ${{ always() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/scrape.yml/enable" || true
+
+      - name: Report failure
+        if: ${{ failure() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Monthly scrape failed"
+          url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+          gh label create automation-failure --color d73a4a --description "The scheduled scrape failed" 2>/dev/null || true
+          existing=$(gh issue list --label automation-failure --state open --search "$title" --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Failed again: $url"
+          else
+            gh issue create --title "$title" --label automation-failure --body "The scheduled run failed: $url"
+          fi

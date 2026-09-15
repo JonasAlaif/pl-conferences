@@ -1,0 +1,8 @@
+[
+  { "conference": "POPL",   "track": "POPL",   "since": 2026 },
+  { "conference": "PLDI",   "track": "PLDI",   "since": 2026 },
+  { "conference": "SPLASH", "track": "OOPSLA", "since": 2026 },
+  { "conference": "ICFP",   "track": "ICFP",   "since": 2026 },
+  { "conference": "CAV",    "track": "CAV",    "since": 2026 },
+  { "conference": "ETAPS",  "track": "ESOP",   "since": 2026 }
+]
