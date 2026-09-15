@@ -5,7 +5,7 @@ use crate::clean;
 use crate::config::ConferenceCfg;
 use crate::fetch;
 use crate::llm::{Llm, LlmError};
-use crate::schema::{self, Cfp, CfpExtraction, Choice, Extraction, UrlGuesses, Volunteer, VolunteerExtraction};
+use crate::schema::{self, Cfp, CfpExtraction, Choice, Conference, Deadlines, Extraction, UrlGuesses, Volunteer, VolunteerExtraction};
 use crate::search::{Hit, Searcher, merge};
 use crate::state::Code;
 use anyhow::Result;
@@ -50,6 +50,14 @@ pub struct Found<T> {
     pub md: String,
 }
 
+/// What a call-for-papers attempt produced: the two parts can come from
+/// different pages (home page for the dates, a later page for deadlines).
+#[derive(Debug, Clone, Default)]
+pub struct CfpFound {
+    pub conference: Option<Found<Conference>>,
+    pub deadlines: Option<Found<Deadlines>>,
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Miss {
     NotFound,
@@ -61,7 +69,7 @@ pub enum Miss {
 /// What an attempt produced, plus everything worth recording.
 #[derive(Debug)]
 pub struct Attempted<T> {
-    pub result: Result<Found<T>, Miss>,
+    pub result: Result<T, Miss>,
     pub trail: Trail,
 }
 
@@ -394,11 +402,11 @@ pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Resul
     Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
-/// Try one page for the CFP, following at most two links. A page with only
-/// the conference dates is remembered in `partial` and the search goes on
-/// for deadlines; `Some` is returned only for deadlines.
+/// Try one page for the CFP, following at most two links. Conference dates
+/// found on the way are kept in `acc`; `Some` is returned only once
+/// deadlines were found.
 #[allow(clippy::too_many_arguments)]
-fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, url: &str, hops: u32, saw_invalid: &mut bool, partial: &mut Option<Found<Cfp>>) -> Result<Option<Found<Cfp>>> {
+fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, url: &str, hops: u32, saw_invalid: &mut bool, acc: &mut CfpFound) -> Result<Option<Found<Deadlines>>> {
     let Some(page) = fetch_page(trail, url) else { return Ok(None) };
     let md = clean::html_to_markdown(&page.html);
     log::info!("page {} ({} chars, ~{} tokens, hops {hops})", page.url, md.len(), clean::estimate_tokens(&md));
@@ -422,18 +430,18 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
             if retried {
                 trail.code(Code::E005);
             }
-            if cfp.submission_url.is_none() && !cfp.rounds.is_empty() {
-                cfp.submission_url = pick_link(ctx, trail, &links, &format!("the paper submission site of {} {year} ({} track), where authors upload their papers", cfg.conference, cfg.track))?;
-            }
             let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
-            let found = Found { value: cfp, raw, prov, html: page.html.clone(), md: md.clone() };
-            if !found.value.rounds.is_empty() {
-                return Ok(Some(found));
+            if let (Some(c), None) = (&cfp.conference, &acc.conference) {
+                acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
+            }
+            if !cfp.rounds.is_empty() {
+                if cfp.submission_url.is_none() {
+                    cfp.submission_url = pick_link(ctx, trail, &links, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page", cfg.conference, cfg.track))?;
+                }
+                let deadlines = cfp.deadlines().expect("rounds present");
+                return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
             }
             trail.note(format!("{} has the conference dates but no deadlines yet", page.url));
-            if partial.is_none() {
-                *partial = Some(found);
-            }
         }
         Err(_) if x.has_submission_deadline && !x.rounds.is_empty() => {
             *saw_invalid = true;
@@ -448,26 +456,35 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     match follow_link(ctx, trail, &page.html, &page.url, &what, &[&cfg.track, &cfg.conference])? {
         Some(next) if next != page.url => {
             trail.note(format!("following link {next}"));
-            try_cfp_page(ctx, cfg, year, trail, &next, hops + 1, saw_invalid, partial)
+            try_cfp_page(ctx, cfg, year, trail, &next, hops + 1, saw_invalid, acc)
         }
         _ => Ok(None),
     }
 }
 
-/// Find (or re-validate) the call for papers. `known_url` is the page the
-/// stored data came from; it is tried first and a web search only happens
-/// when it is gone or no longer yields deadlines.
-pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>) -> Result<Attempted<Cfp>> {
+/// Find (or re-validate) the call for papers: conference dates and paper
+/// deadlines. `known_url` is the page the stored data came from; it is
+/// tried first and a web search only happens when it is gone or no longer
+/// yields deadlines. The result is `Ok` when at least one part was found.
+pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>) -> Result<Attempted<CfpFound>> {
     let mut trail = Trail::default();
     let mut saw_invalid = false;
-    let mut partial: Option<Found<Cfp>> = None;
+    let mut acc = CfpFound::default();
+    let finish = |acc: CfpFound, trail: Trail, saw_invalid: bool| {
+        if acc.conference.is_some() || acc.deadlines.is_some() {
+            Ok(Attempted { result: Ok(acc), trail })
+        } else {
+            Ok(Attempted { result: Err(if saw_invalid { Miss::Invalid } else { Miss::NotFound }), trail })
+        }
+    };
     if let Some(u) = known_url {
         trail.query = format!("stored URL {u}");
         trail.note(format!("re-checking stored page {u}"));
-        if let Some(found) = try_cfp_page(ctx, cfg, year, &mut trail, u, 0, &mut saw_invalid, &mut partial)? {
-            return Ok(Attempted { result: Ok(found), trail });
+        if let Some(found) = try_cfp_page(ctx, cfg, year, &mut trail, u, 0, &mut saw_invalid, &mut acc)? {
+            acc.deadlines = Some(found);
+            return finish(acc, trail, saw_invalid);
         }
-        trail.note("stored page no longer yields deadlines; searching");
+        trail.note("stored page yields no deadlines; searching");
     }
     let same = cfg.track.eq_ignore_ascii_case(&cfg.conference);
     let queries = if same {
@@ -479,24 +496,20 @@ pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&st
     let hits = gather_hits(ctx, cfg, year, &queries, &mut trail)?;
     if hits.is_empty() {
         trail.note("no candidate pages");
-        if let Some(p) = partial {
-            return Ok(Attempted { result: Ok(p), trail });
-        }
-        return Ok(Attempted { result: Err(Miss::NotFound), trail });
+        return finish(acc, trail, saw_invalid);
     }
     let what = format!("the official website or call for papers of {} {year}", cfg.conference);
     let hits = ordered_hits(ctx, &mut trail, hits, &what)?;
     for h in hits.iter().take(3) {
-        if let Some(found) = try_cfp_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw_invalid, &mut partial)? {
-            return Ok(Attempted { result: Ok(found), trail });
+        if let Some(found) = try_cfp_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw_invalid, &mut acc)? {
+            acc.deadlines = Some(found);
+            return finish(acc, trail, saw_invalid);
         }
     }
-    if let Some(p) = partial {
+    if acc.conference.is_some() {
         trail.note("only conference dates found so far");
-        return Ok(Attempted { result: Ok(p), trail });
     }
-    let miss = if saw_invalid { Miss::Invalid } else { Miss::NotFound };
-    Ok(Attempted { result: Err(miss), trail })
+    finish(acc, trail, saw_invalid)
 }
 
 fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
@@ -531,7 +544,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
                     trail.code(Code::E005);
                 }
                 if v.application_url.is_none() {
-                    v.application_url = pick_link(ctx, trail, &links, &format!("the form or page where students apply to be student volunteers at {} {year}", cfg.conference))?;
+                    v.application_url = pick_link(ctx, trail, &links, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference))?;
                 }
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
                 return Ok(Some(Found { value: v, raw, prov, html: page.html.clone(), md }));
@@ -562,7 +575,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
 /// first). `hint_url` is the CFP page: its links usually include the
 /// volunteers page, so it is tried next and a web search only happens if
 /// that fails.
-pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>, hint_url: Option<&str>, conference_end: Option<chrono::NaiveDate>) -> Result<Attempted<Volunteer>> {
+pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>, hint_url: Option<&str>, conference_end: Option<chrono::NaiveDate>) -> Result<Attempted<Found<Volunteer>>> {
     let mut trail = Trail::default();
     // (has_program seen, invalid seen)
     let mut saw = (false, false);

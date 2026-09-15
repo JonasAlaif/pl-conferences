@@ -198,21 +198,50 @@ impl Stage {
     }
 }
 
+/// The deadlines part of a call for papers, stored as `cfp.json`.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Deadlines {
+    pub rounds: Vec<ValidRound>,
+    #[serde(default)]
+    pub submission_details: String,
+    #[serde(default)]
+    pub submission_url: Option<String>,
+}
+
+impl Cfp {
+    /// The deadlines part, if the page had any.
+    pub fn deadlines(&self) -> Option<Deadlines> {
+        (!self.rounds.is_empty()).then(|| Deadlines { rounds: self.rounds.clone(), submission_details: self.submission_details.clone(), submission_url: self.submission_url.clone() })
+    }
+}
+
 /// Date after which the stored deadlines can no longer change.
-pub fn deadlines_final_after(cfp: &Cfp) -> Option<NaiveDate> {
-    let last = cfp.rounds.last()?;
+pub fn deadlines_final_after(d: &Deadlines) -> Option<NaiveDate> {
+    let last = d.rounds.last()?;
     Some(last.response_end.or(last.response_start).or(last.notification).unwrap_or(last.submission))
 }
 
-pub fn stage(cfp: Option<&Cfp>, today: NaiveDate) -> Stage {
-    let Some(c) = cfp else { return Stage::Future };
-    if c.conference.as_ref().is_some_and(|k| today > k.end) {
+/// Conference dates keep being (re)collected until the conference is over.
+pub fn conference_active(c: Option<&Conference>, today: NaiveDate) -> bool {
+    c.is_none_or(|c| today <= c.end)
+}
+
+/// Deadlines keep being (re)collected until the last rebuttal has ended.
+pub fn deadlines_active(d: Option<&Deadlines>, today: NaiveDate) -> bool {
+    d.is_none_or(|d| deadlines_final_after(d).is_none_or(|cut| today <= cut))
+}
+
+pub fn stage(conference: Option<&Conference>, deadlines: Option<&Deadlines>, today: NaiveDate) -> Stage {
+    if conference.is_some_and(|k| today > k.end) {
         return Stage::Happened;
     }
-    match deadlines_final_after(c) {
-        Some(cutoff) if today > cutoff => Stage::PostRebuttal,
-        Some(_) => Stage::DeadlinesAvailable,
-        None => Stage::ConferenceAvailable,
+    match deadlines {
+        Some(d) => match deadlines_final_after(d) {
+            Some(cutoff) if today > cutoff => Stage::PostRebuttal,
+            _ => Stage::DeadlinesAvailable,
+        },
+        None if conference.is_some() => Stage::ConferenceAvailable,
+        None => Stage::Future,
     }
 }
 
@@ -232,6 +261,29 @@ fn fmt_opt(d: Option<NaiveDate>) -> String {
 
 /// Differences in dates and location (prose is ignored) between two records.
 pub fn diff_cfp(old: &Cfp, new: &Cfp, at: chrono::DateTime<chrono::Utc>) -> Vec<Change> {
+    let mut out = match (old.deadlines(), new.deadlines()) {
+        (Some(o), Some(n)) => diff_deadlines(&o, &n, at),
+        _ => vec![],
+    };
+    out.extend(diff_conference(old.conference.as_ref(), new.conference.as_ref(), at));
+    out
+}
+
+fn conference_text(c: Option<&Conference>) -> String {
+    match c {
+        Some(c) => format!("{}..{} {}", c.start, c.end, [c.city.clone(), c.country.clone()].into_iter().flatten().collect::<Vec<_>>().join(", ")),
+        None => "none".into(),
+    }
+}
+
+/// Change in conference dates or location.
+pub fn diff_conference(old: Option<&Conference>, new: Option<&Conference>, at: chrono::DateTime<chrono::Utc>) -> Vec<Change> {
+    let (o, n) = (conference_text(old), conference_text(new));
+    if o == n { vec![] } else { vec![Change { at, field: "conference".into(), old: o, new: n }] }
+}
+
+/// Changes in deadline dates (prose and links are ignored).
+pub fn diff_deadlines(old: &Deadlines, new: &Deadlines, at: chrono::DateTime<chrono::Utc>) -> Vec<Change> {
     let mut out = vec![];
     let mut push = |field: String, o: String, n: String| {
         if o != n {
@@ -247,11 +299,6 @@ pub fn diff_cfp(old: &Cfp, new: &Cfp, at: chrono::DateTime<chrono::Utc>) -> Vec<
         push(format!("round {r} response"), format!("{}..{}", fmt_opt(o.response_start), fmt_opt(o.response_end)), format!("{}..{}", fmt_opt(n.response_start), fmt_opt(n.response_end)));
         push(format!("round {r} notification"), fmt_opt(o.notification), fmt_opt(n.notification));
     }
-    let loc = |c: &Option<Conference>| match c {
-        Some(c) => format!("{}..{} {}", c.start, c.end, [c.city.clone(), c.country.clone()].into_iter().flatten().collect::<Vec<_>>().join(", ")),
-        None => "none".into(),
-    };
-    push("conference".into(), loc(&old.conference), loc(&new.conference));
     out
 }
 
@@ -501,14 +548,18 @@ mod tests {
     fn stages_follow_the_calendar() {
         let d = |s: &str| NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
         let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
-        assert_eq!(stage(None, d("2025-01-01")), Stage::Future);
-        assert_eq!(stage(Some(&c), d("2025-08-01")), Stage::DeadlinesAvailable);
-        assert_eq!(stage(Some(&c), d("2025-09-11")), Stage::DeadlinesAvailable);
-        assert_eq!(stage(Some(&c), d("2025-09-12")), Stage::PostRebuttal);
-        assert_eq!(stage(Some(&c), d("2026-01-18")), Stage::Happened);
-        let only = Cfp { conference: c.conference.clone(), rounds: vec![], submission_details: String::new(), submission_url: None };
-        assert_eq!(stage(Some(&only), d("2025-08-01")), Stage::ConferenceAvailable);
+        let (conf, dl) = (c.conference.as_ref(), c.deadlines());
+        assert_eq!(stage(None, None, d("2025-01-01")), Stage::Future);
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-09-11")), Stage::DeadlinesAvailable);
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-09-12")), Stage::PostRebuttal);
+        assert_eq!(stage(conf, dl.as_ref(), d("2026-01-18")), Stage::Happened);
+        assert_eq!(stage(conf, None, d("2025-08-01")), Stage::ConferenceAvailable);
+        assert_eq!(stage(None, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
         assert!(Stage::ConferenceAvailable.active() && !Stage::PostRebuttal.active());
+        assert!(deadlines_active(dl.as_ref(), d("2025-09-11")) && !deadlines_active(dl.as_ref(), d("2025-09-12")));
+        assert!(conference_active(conf, d("2026-01-17")) && !conference_active(conf, d("2026-01-18")));
+        assert!(conference_active(None, d("2030-01-01")) && deadlines_active(None, d("2030-01-01")));
     }
 
     #[test]

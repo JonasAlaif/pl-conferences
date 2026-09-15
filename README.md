@@ -11,9 +11,11 @@ https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/all.ics
 ```
 
 Per-conference calendars live under `conferences/<CONF>/<TRACK>/<YEAR>/` as
-`cfp.ics` (submission deadline, rebuttal, notification, conference dates) and
-`volunteer.ics` (student-volunteer application deadline), next to the JSON the
-model produced.
+`conference.ics` (conference dates and location), `cfp.ics` (submission
+deadline, rebuttal, notification per round, with the submission site linked)
+and `volunteer.ics` (student-volunteer application deadline with the sign-up
+page linked), each next to the JSON the model produced and the page it came
+from.
 
 <!-- maintenance:start -->
 <!-- maintenance:end -->
@@ -38,16 +40,20 @@ model produced.
    to Markdown and asks the model for the dates as schema-constrained JSON.
    If the chosen page has no deadline, the model picks a link to follow.
 3. Dates are checked for consistency (ordering, year, calendar validity); on
-   failure the model gets one corrective retry. Valid results are written as
-   JSON and iCalendar files, together with the fetched page (`cfp.html`) and
-   the Markdown the model saw (`cfp.md`), and committed.
+   failure the model gets one corrective retry. One extraction yields two
+   records with separate lifecycles: `conference.json` (dates, location) and
+   `cfp.json` (deadlines, submission details and link). Each is written with
+   its calendar, the fetched page (`*.html`) and the Markdown the model saw
+   (`*.md`), and committed. A page with only the conference dates still
+   produces the conference record; deadlines keep being looked for.
 4. Every conference-year has a stage derived from its data and the date:
    *future* (nothing known), *conference available* (dates and location, no
    deadlines yet), *deadlines available*, *post-rebuttal* (the last round's
-   rebuttal has ended, so nothing can change) and *happened*. The first three
-   are re-collected on every run, starting from the stored source page: if
-   a date changed, the JSON keeps a history entry and the calendar event says
-   "Changed <date>: was <old>". The last two are archived and never touched
+   rebuttal has ended, so the deadlines are final) and *happened*. Conference
+   dates are re-collected on every run until the conference is over, deadlines
+   until the last rebuttal has ended, each starting from its stored source
+   page: if a value changed, the JSON keeps a history entry and the calendar
+   event says "Changed <date>: was <old>". Archived parts are never touched
    again. Volunteer pages open late, so that pass stays active until the
    conference has happened or the application deadline has passed.
 5. Anything that worked only through a fallback is flagged with a maintenance
@@ -135,9 +141,9 @@ conferences.json        input
 state.json              per conference-year attempt log (drives retries and maintenance codes)
 all.ics                 aggregate calendar
 MAINTENANCE.md          active maintenance codes and recent outcomes
-conferences/…/cfp.json  validated extraction + provenance (source URL, search backend, hops)
-conferences/…/cfp.ics
-conferences/…/volunteer.{json,ics}
+conferences/…/conference.{json,ics,html,md}  dates and location + provenance, calendar, source page
+conferences/…/cfp.{json,ics,html,md}         deadlines, submission details and link
+conferences/…/volunteer.{json,ics,html,md}   student-volunteer deadline and sign-up link
 src/                    the Rust pipeline (search, discover, fetch, clean, llm, schema, ics, state)
 tests/fixtures/         saved pages for offline tests
 ```

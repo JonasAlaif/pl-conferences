@@ -1,6 +1,6 @@
 //! iCalendar output. Hand-written: the format needed here is tiny.
 
-use crate::schema::{Cfp, Change, Volunteer};
+use crate::schema::{Cfp, Change, Conference, Deadlines, Volunteer};
 use chrono::{DateTime, Datelike, NaiveDate, Utc};
 use sha1::{Digest, Sha1};
 
@@ -49,28 +49,33 @@ fn uid(key: &str, event: &str) -> String {
     format!("{hex}@pl-conferences")
 }
 
-/// Events for a call for papers. `label` is e.g. "POPL 2026"; `key` is the
-/// stable directory key used for UIDs.
-pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
-    let mut events = vec![];
-    let two = cfp.rounds.len() > 1;
-    let mk = |name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate| Event {
-        uid: uid(key, name),
-        summary: format!("[{label}] {name}"),
-        description: desc,
-        location: loc.to_string(),
-        start,
-        end,
-        stamp,
+fn event(label: &str, key: &str, stamp: DateTime<Utc>, name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate) -> Event {
+    Event { uid: uid(key, name), summary: format!("[{label}] {name}"), description: desc, location: loc.to_string(), start, end, stamp }
+}
+
+/// The single conference event (dates and location).
+pub fn conference_events(label: &str, key: &str, c: &Conference, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+    let loc = match (&c.city, &c.country) {
+        (Some(ci), Some(co)) => format!("{ci}, {co}"),
+        (Some(x), None) | (None, Some(x)) => x.clone(),
+        (None, None) => String::new(),
     };
-    for (i, r) in cfp.rounds.iter().enumerate() {
+    vec![event(label, key, stamp, "Conference", prov.note("conference"), &loc, c.start, c.end)]
+}
+
+/// Deadline events: submission, rebuttal and notification per round.
+pub fn deadline_events(label: &str, key: &str, d: &Deadlines, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+    let mut events = vec![];
+    let two = d.rounds.len() > 1;
+    let mk = |name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate| event(label, key, stamp, name, desc, loc, start, end);
+    for (i, r) in d.rounds.iter().enumerate() {
         let prefix = if two { format!("R{} ", i + 1) } else { String::new() };
         let n = i + 1;
         let mut parts = vec![];
-        if !cfp.submission_details.is_empty() {
-            parts.push(cfp.submission_details.clone());
+        if !d.submission_details.is_empty() {
+            parts.push(d.submission_details.clone());
         }
-        if let Some(u) = &cfp.submission_url {
+        if let Some(u) = &d.submission_url {
             parts.push(format!("Submit at: {u}"));
         }
         parts.push(prov.note(&format!("round {n} submission")));
@@ -83,13 +88,17 @@ pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: D
             events.push(mk(&format!("{prefix}Notification"), prov.note(&format!("round {n} notification")), "", nd, nd));
         }
     }
+    events
+}
+
+/// Both parts of a call for papers, for tests and the aggregate view.
+pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+    let mut events = vec![];
+    if let Some(d) = cfp.deadlines() {
+        events.extend(deadline_events(label, key, &d, prov, stamp));
+    }
     if let Some(c) = &cfp.conference {
-        let loc = match (&c.city, &c.country) {
-            (Some(ci), Some(co)) => format!("{ci}, {co}"),
-            (Some(x), None) | (None, Some(x)) => x.clone(),
-            (None, None) => String::new(),
-        };
-        events.push(mk("Conference", prov.note("conference"), &loc, c.start, c.end));
+        events.extend(conference_events(label, key, c, prov, stamp));
     }
     events
 }
