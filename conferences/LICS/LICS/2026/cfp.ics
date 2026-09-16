@@ -1,0 +1,45 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:LICS 2026 cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:f596da76d62a7299ee3939aae38f4e9b53a4e096@pl-conferences
+DTSTAMP:20260916T125407Z
+DTSTART;VALUE=DATE:20260122
+DTEND;VALUE=DATE:20260123
+SUMMARY:[LICS 2026] Paper Submission Deadline
+DESCRIPTION:Papers must be submitted in the ACM SIGCONF Proceedings 2-colu
+ mn format and may be at most 12 pages\, excluding references. Papers auth
+ ored or co-authored by members of the PC are allowed\, with at most one s
+ ubmission per PC member. Results must be unpublished and not submitted fo
+ r publication elsewhere. The paper must be in English. LICS 2026 will use
+  a lightweight double-blind reviewing process.\n\nSubmit at: https://subm
+ issions.floc26.org/lics/\n\nExtracted automatically by a small language m
+ odel\; please cross-check against the source before relying on it: https:
+ //lics.siglog.org/lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-confer
+ ences
+END:VEVENT
+BEGIN:VEVENT
+UID:7aae3cfef64b13afafb777e5fa7bc104a4871f4a@pl-conferences
+DTSTAMP:20260916T125407Z
+DTSTART;VALUE=DATE:20260326
+DTEND;VALUE=DATE:20260330
+SUMMARY:[LICS 2026] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://lics.siglog.org
+ /lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:724868c1f4bae6395e4206c70f3a3a45d886c330@pl-conferences
+DTSTAMP:20260916T125407Z
+DTSTART;VALUE=DATE:20260416
+DTEND;VALUE=DATE:20260417
+SUMMARY:[LICS 2026] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://lics.siglog.org
+ /lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+END:VCALENDAR

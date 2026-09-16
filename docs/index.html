@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PL conference deadlines</title>
+<style>
+  :root { color-scheme: light dark; --fg: #1a1a1a; --bg: #fff; --muted: #666; --line: #ddd; --accent: #0b57d0; --open: #e8f5e9; --closed: #fff3e0; --past: #f5f5f5; --future: #e3f2fd; --conference: #ede7f6; }
+  @media (prefers-color-scheme: dark) { :root { --fg: #e6e6e6; --bg: #121212; --muted: #9a9a9a; --line: #333; --accent: #8ab4f8; --open: #1b3a22; --closed: #3d2e14; --past: #1e1e1e; --future: #14283a; --conference: #2a2340; } }
+  body { font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: var(--bg); margin: 0; padding: 0 16px 48px; }
+  main { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 1.6rem; margin: 32px 0 4px; }
+  h2 { font-size: 1.15rem; margin: 32px 0 8px; }
+  p.lead { color: var(--muted); margin: 0 0 16px; }
+  code { background: var(--past); padding: 2px 6px; border-radius: 4px; font-size: .9em; word-break: break-all; }
+  a { color: var(--accent); }
+  table { border-collapse: collapse; width: 100%; font-size: .93rem; }
+  th, td { text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }
+  th { font-weight: 600; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; }
+  tr.open { background: var(--open); } tr.closed { background: var(--closed); } tr.past { background: var(--past); color: var(--muted); } tr.future { background: var(--future); } tr.conference { background: var(--conference); }
+  .stage { font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); white-space: nowrap; }
+  .small { font-size: .85rem; color: var(--muted); }
+  ul.upcoming { list-style: none; padding: 0; margin: 0; }
+  ul.upcoming li { padding: 4px 0; border-bottom: 1px solid var(--line); }
+  ul.upcoming time { display: inline-block; min-width: 8.5em; font-variant-numeric: tabular-nums; }
+  .wrap { overflow-x: auto; }
+  footer { margin-top: 40px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>PL conference deadlines</h1>
+<p class="lead">Submission deadlines, rebuttals, notifications, conference dates and student-volunteer deadlines for programming-languages conferences, collected automatically twice a week by a small language model.</p>
+<p>Subscribe in your calendar app: <code>https://jonasalaif.github.io/pl-conferences/all.ics</code> (or <a href="webcal://jonasalaif.github.io/pl-conferences/all.ics">webcal link</a>). Every entry says which page it was extracted from; the source is authoritative, the calendar is a convenience.</p>
+<h2>Upcoming</h2>
+<ul class="upcoming">
+<li><time datetime="2026-10-04">4 Oct 2026</time> <strong>SPLASH 2026 (OOPSLA)</strong> · Conference</li>
+<li><time datetime="2026-10-14">14 Oct 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Paper Submission Deadline</li>
+<li><time datetime="2026-11-12">12 Nov 2026</time> <strong>PLDI 2027</strong> · Paper Submission Deadline</li>
+<li><time datetime="2026-12-01">1 Dec 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Rebuttal</li>
+<li><time datetime="2026-12-18">18 Dec 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Notification</li>
+<li><time datetime="2027-02-16">16 Feb 2027</time> <strong>PLDI 2027</strong> · Rebuttal</li>
+<li><time datetime="2027-04-01">1 Apr 2027</time> <strong>PLDI 2027</strong> · Notification</li>
+<li><time datetime="2027-04-07">7 Apr 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Paper Submission Deadline</li>
+<li><time datetime="2027-04-12">12 Apr 2027</time> <strong>ETAPS 2027 (ESOP)</strong> · Conference</li>
+<li><time datetime="2027-06-05">5 Jun 2027</time> <strong>PLDI 2027</strong> · Conference</li>
+<li><time datetime="2027-06-15">15 Jun 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Rebuttal</li>
+<li><time datetime="2027-08-13">13 Aug 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Notification</li>
+<li><time datetime="2027-10-10">10 Oct 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · Conference</li>
+</ul>
+<h2>Conferences</h2>
+<div class="wrap"><table>
+<tr><th>Conference</th><th>Status</th><th>Paper deadlines</th><th>Conference</th><th>Volunteers</th><th>Links</th></tr>
+<tr class="conference"><td><strong>ETAPS 2027 (ESOP)</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">conference available</td><td><span class="small">not announced yet</span></td><td>12 Apr 2027 – 15 Apr 2027<br><span class="small">Copenhagen, Denmark</span></td><td><span class="small">–</span></td><td class="small"><a href="https://etaps.org/2027/cfp/">conference page</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ETAPS/ESOP/2027/conference.ics">conference .ics</a></td></tr>
+<tr class="open"><td><strong>PLDI 2027</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">deadlines available</td><td><strong>12 Nov 2026</strong><br><span class="small">rebuttal 16 Feb 2027 – 18 Feb 2027</span><br><span class="small">notification 1 Apr 2027</span></td><td>5 Jun 2027 – 11 Jun 2027<br><span class="small">Atlanta, United States</span></td><td><span class="small">–</span></td><td class="small"><a href="https://pldi27.sigplan.org/">call for papers</a><br><a href="https://conf.researchr.org/signin/pldi-2027/https%3A%5Es%5Espldi27.sigplan.org%5Es">submission site</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/PLDI/PLDI/2027/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/PLDI/PLDI/2027/conference.ics">conference .ics</a></td></tr>
+<tr class="open"><td><strong>SPLASH 2027 (OOPSLA)</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">deadlines available</td><td>R1 <strong>14 Oct 2026</strong><br><span class="small">rebuttal 1 Dec 2026 – 5 Dec 2026</span><br><span class="small">notification 18 Dec 2026</span><br>R2 <strong>7 Apr 2027</strong><br><span class="small">rebuttal 15 Jun 2027 – 19 Jun 2027</span><br><span class="small">notification 13 Aug 2027</span></td><td>10 Oct 2027 – 15 Oct 2027<br><span class="small">Prague, Czechia</span></td><td><span class="small">–</span></td><td class="small"><a href="https://conf.researchr.org/track/splash-2027/splashoopsla2027">call for papers</a><br><a href="https://oopsla27.hotcrp.com/">submission site</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/SPLASH/OOPSLA/2027/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/SPLASH/OOPSLA/2027/conference.ics">conference .ics</a></td></tr>
+<tr class="past"><td><strong>CAV 2026</strong><br><span class="small">checked 15 Sep 2026</span></td><td class="stage">happened</td><td><strong>28 Jan 2026</strong><br><span class="small">rebuttal 30 Mar 2026 – 2 Apr 2026</span><br><span class="small">notification 17 Apr 2026</span></td><td>26 Jul 2026 – 29 Jul 2026</td><td><span class="small">–</span></td><td class="small"><a href="http://conferences.i-cav.org/2026/cfp/">call for papers</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/CAV/CAV/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/CAV/CAV/2026/conference.ics">conference .ics</a></td></tr>
+<tr class="past"><td><strong>ETAPS 2026 (ESOP)</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">happened</td><td>R1 <strong>3 Jun 2025</strong><br><span class="small">rebuttal 21 Jul 2025 – 23 Jul 2025</span><br><span class="small">notification 1 Aug 2025</span><br>R2 <strong>16 Oct 2025</strong><br><span class="small">rebuttal 8 Dec 2025 – 10 Dec 2025</span><br><span class="small">notification 22 Dec 2025</span></td><td>13 Apr 2026 – 16 Apr 2026<br><span class="small">Turin, Italy</span></td><td><span class="small">–</span></td><td class="small"><a href="https://etaps.org/2026/cfp/">call for papers</a><br><a href="https://etaps.org/2026/esop">submission site</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ETAPS/ESOP/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ETAPS/ESOP/2026/conference.ics">conference .ics</a></td></tr>
+<tr class="past"><td><strong>ICFP 2026</strong><br><span class="small">checked 15 Sep 2026</span></td><td class="stage">happened</td><td><strong>19 Feb 2026</strong><br><span class="small">rebuttal 20 Apr 2026 – 23 Apr 2026</span><br><span class="small">notification 14 May 2026</span></td><td>24 Aug 2026 – 29 Aug 2026<br><span class="small">Indianapolis, United States</span></td><td>apply by <strong>3 Jul 2026</strong></td><td class="small"><a href="https://icfp26.sigplan.org/track/icfp-2026-icfp-papers">call for papers</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ICFP/ICFP/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ICFP/ICFP/2026/conference.ics">conference .ics</a><br><a href="https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers">volunteers page</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/ICFP/ICFP/2026/volunteer.ics">volunteer .ics</a></td></tr>
+<tr class="past"><td><strong>LICS 2026</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">happened</td><td><strong>22 Jan 2026</strong><br><span class="small">rebuttal 26 Mar 2026 – 29 Mar 2026</span><br><span class="small">notification 16 Apr 2026</span></td><td>20 Jul 2026 – 23 Jul 2026<br><span class="small">Lisbon</span></td><td><span class="small">–</span></td><td class="small"><a href="https://lics.siglog.org/lics26/cfp.php">call for papers</a><br><a href="https://submissions.floc26.org/lics/">submission site</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/LICS/LICS/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/LICS/LICS/2026/conference.ics">conference .ics</a></td></tr>
+<tr class="past"><td><strong>PLDI 2026</strong><br><span class="small">checked 15 Sep 2026</span></td><td class="stage">happened</td><td><strong>13 Nov 2025</strong><br><span class="small">rebuttal 17 Feb 2026 – 22 Feb 2026</span><br><span class="small">notification 5 Mar 2026</span></td><td>15 Jun 2026 – 19 Jun 2026<br><span class="small">Boulder, United States</span></td><td>apply by <strong>13 Apr 2026</strong></td><td class="small"><a href="https://pldi26.sigplan.org/track/pldi-2026-papers">call for papers</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/PLDI/PLDI/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/PLDI/PLDI/2026/conference.ics">conference .ics</a><br><a href="https://pldi26.sigplan.org/track/pldi-2026-student-volunteering">volunteers page</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/PLDI/PLDI/2026/volunteer.ics">volunteer .ics</a></td></tr>
+<tr class="past"><td><strong>POPL 2026</strong><br><span class="small">checked 15 Sep 2026</span></td><td class="stage">happened</td><td><strong>10 Jul 2025</strong><br><span class="small">rebuttal 8 Sep 2025 – 11 Sep 2025</span><br><span class="small">notification 6 Nov 2025</span></td><td>11 Jan 2026 – 17 Jan 2026<br><span class="small">Rennes, France</span></td><td>apply by <strong>10 Nov 2025</strong></td><td class="small"><a href="https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-research-papers">call for papers</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/conference.ics">conference .ics</a><br><a href="https://popl26.sigplan.org/track/POPL-2026-student-volunteers">volunteers page</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/volunteer.ics">volunteer .ics</a></td></tr>
+<tr class="closed"><td><strong>SPLASH 2026 (OOPSLA)</strong><br><span class="small">checked 16 Sep 2026</span></td><td class="stage">post-rebuttal</td><td>R1 <strong>10 Oct 2025</strong><br><span class="small">rebuttal 2 Dec 2025 – 5 Dec 2025</span><br><span class="small">notification 17 Dec 2025</span><br>R2 <strong>17 Mar 2026</strong><br><span class="small">rebuttal 19 May 2026 – 22 May 2026</span><br><span class="small">notification 10 Jun 2026</span></td><td>4 Oct 2026 – 9 Oct 2026<br><span class="small">Oakland, United States</span></td><td><span class="small">–</span></td><td class="small"><a href="https://2026.splashcon.org/track/oopsla-2026">call for papers</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/SPLASH/OOPSLA/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/SPLASH/OOPSLA/2026/conference.ics">conference .ics</a></td></tr>
+</table></div>
+<footer>
+<p>Status: Last run: 2026-09-16. **Maintenance codes active: E003** - see [MAINTENANCE.md](MAINTENANCE.md).. Dates are extracted by a small language model (Qwen3.5-4B via Ollama on a GitHub Actions runner) and validated for consistency, but read the linked pages before relying on them. Generated 16 Sep 2026 13:04 UTC.</p>
+<p><a href="https://github.com/JonasAlaif/pl-conferences">Source, data and how it works</a> · <a href="https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md">Maintenance status</a></p>
+</footer>
+</main>
+</body>
+</html>

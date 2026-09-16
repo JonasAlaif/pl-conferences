@@ -1,0 +1,61 @@
+{
+  "conference": "LICS",
+  "track": "LICS",
+  "year": 2026,
+  "label": "LICS 2026",
+  "fetched_at": "2026-09-16T12:54:07.626060810Z",
+  "last_verified": "2026-09-16T12:54:07.626060810Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://lics.siglog.org/lics26/cfp.php",
+    "query": "LICS 2026 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "Full Papers Due",
+        "submission": "2026-01-22",
+        "submission_conflict": null,
+        "response_start": "2026-03-26",
+        "response_end": "2026-03-29",
+        "notification": "2026-04-16"
+      }
+    ],
+    "submission_details": "Papers must be submitted in the ACM SIGCONF Proceedings 2-column format and may be at most 12 pages, excluding references. Papers authored or co-authored by members of the PC are allowed, with at most one submission per PC member. Results must be unpublished and not submitted for publication elsewhere. The paper must be in English. LICS 2026 will use a lightweight double-blind reviewing process.",
+    "submission_url": "https://submissions.floc26.org/lics/"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2026-07-20",
+      "end_date": "2026-07-23",
+      "city": "Lisbon",
+      "country": "null"
+    },
+    "rounds": [
+      {
+        "label": "Full Papers Due",
+        "submission_deadline_quote": "**Full Papers Due**",
+        "submission_deadline_as_written": "22 January 2026",
+        "submission_deadline": "2026-01-22",
+        "submission_deadline_conflict": "null",
+        "author_response_quote": "**Author Response Period**",
+        "author_response_as_written": "26–29 March 2026",
+        "author_response_start": "2026-03-26",
+        "author_response_end": "2026-03-29",
+        "notification_quote": "**Author Notification**",
+        "notification_as_written": "16 April 2026",
+        "notification": "2026-04-16"
+      }
+    ],
+    "submission_details": "Papers must be submitted in the ACM SIGCONF Proceedings 2-column format and may be at most 12 pages, excluding references. Papers authored or co-authored by members of the PC are allowed, with at most one submission per PC member. Results must be unpublished and not submitted for publication elsewhere. The paper must be in English. LICS 2026 will use a lightweight double-blind reviewing process.",
+    "submission_url": "https://submissions.floc26.org/lics/"
+  }
+}

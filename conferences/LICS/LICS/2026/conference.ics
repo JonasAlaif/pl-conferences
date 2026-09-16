@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:LICS 2026 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:e29f494db58b69ca29138e0d6ff169cfeafce382@pl-conferences
+DTSTAMP:20260916T125407Z
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260724
+SUMMARY:[LICS 2026] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://lics.siglog.org
+ /lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Lisbon
+END:VEVENT
+END:VCALENDAR
