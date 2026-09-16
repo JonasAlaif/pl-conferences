@@ -30,15 +30,6 @@
       "codes": [],
       "note": ""
     },
-    "ETAPS/ESOP/2027/cfp": {
-      "last_attempt": "2026-09-16T06:40:38.988415449Z",
-      "attempts": 1,
-      "outcome": "ok",
-      "consecutive_failures": 0,
-      "backend": null,
-      "codes": [],
-      "note": "re-checking stored page https://etaps.org/2027/cfp/"
-    },
     "ETAPS/ESOP/2027/volunteer": {
       "last_attempt": "2026-09-16T06:40:38.988415449Z",
       "attempts": 1,
@@ -133,15 +124,6 @@
       "codes": [],
       "note": "re-checking stored page https://2026.splashcon.org/track/oopsla-2026"
     },
-    "SPLASH/OOPSLA/2026/volunteer": {
-      "last_attempt": "2026-09-15T22:53:22.297148035Z",
-      "attempts": 1,
-      "outcome": "ok",
-      "consecutive_failures": 0,
-      "backend": null,
-      "codes": [],
-      "note": "trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page"
-    },
     "SPLASH/OOPSLA/2027/cfp": {
       "last_attempt": "2026-09-16T02:37:10.270527567Z",
       "attempts": 1,
@@ -150,15 +132,6 @@
       "backend": "brave",
       "codes": [],
       "note": "validation failed: round 2 author_response_start 2027-01-22 is before an earlier date 2027-04-07; round 2 notification 2027-02-12 is before an earlier date 2027-03-05; validation failed again: round 2 author_response_start 2027-01-22 is before an earlier date 2027-04-07; round 2 notification 2027-02-12 is before an earlier date 2027-03-05"
-    },
-    "SPLASH/OOPSLA/2027/volunteer": {
-      "last_attempt": "2026-09-16T02:37:10.270527567Z",
-      "attempts": 1,
-      "outcome": "ok",
-      "consecutive_failures": 0,
-      "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://2027.splashcon.org/signup from the conference page; https://stanfordesp.org/getinvolved/index.html is not about SPLASH 2027 (OOPSLA); model picked link https://cornell.learningu.org/volunteer/Splash/current/signup as the application form or sign-up page where students apply to be student volunteers at SPLASH 2027; not a general information page"
     }
   }
 }

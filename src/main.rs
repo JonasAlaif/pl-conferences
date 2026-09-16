@@ -14,6 +14,7 @@ const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [
        pl-conferences clean <file.html>
        pl-conferences fetch <url>
        pl-conferences extract <file.html> <conference> <year> <track>
+       pl-conferences extract-volunteer <file.html> <conference> <year> <track> [site]
        pl-conferences sections <file.html>";
 
 #[derive(Debug, Default)]
@@ -87,6 +88,23 @@ fn main() -> Result<()> {
             eprintln!("{raw}\n--- {usage:?} wall {:.1}s", t.elapsed().as_secs_f64());
             match schema::validate_cfp(&x, year, &md) {
                 Ok(c) => println!("{}", serde_json::to_string_pretty(&c)?),
+                Err(errs) => println!("INVALID: {errs:?}"),
+            }
+            return Ok(());
+        }
+        Some("extract-volunteer") => {
+            // extract-volunteer <file.html> <conference> <year> <track> [site]
+            let html = std::fs::read_to_string(argv.get(1).context(USAGE)?)?;
+            let cfg = config::ConferenceCfg { conference: argv.get(2).context(USAGE)?.clone(), track: argv.get(4).context(USAGE)?.clone(), since: 0 };
+            let year: i32 = argv.get(3).context(USAGE)?.parse()?;
+            let md = clean::html_to_markdown(&html);
+            let llm = llm::Llm::from_env();
+            llm.check()?;
+            let prompt = discover::volunteer_prompt(&cfg, year, argv.get(5).map(String::as_str), &md);
+            let (x, raw, usage): (schema::VolunteerExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
+            eprintln!("{raw}\n--- {usage:?}");
+            match schema::validate_volunteer(&x, year, &md, None) {
+                Ok(v) => println!("{}", serde_json::to_string_pretty(&v)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
             return Ok(());
@@ -393,9 +411,9 @@ trait SoftUpdate {
 }
 impl SoftUpdate for schema::Deadlines {
     fn soft_update(&mut self, from: &Self) {
-        if from.submission_url.is_some() {
-            self.submission_url = from.submission_url.clone();
-        }
+        // Always take the fresh value: a wrong link must be replaceable, and
+        // a link that vanished from the page should not linger.
+        self.submission_url = from.submission_url.clone();
     }
 }
 impl SoftUpdate for schema::Conference {
@@ -403,9 +421,7 @@ impl SoftUpdate for schema::Conference {
 }
 impl SoftUpdate for schema::Volunteer {
     fn soft_update(&mut self, from: &Self) {
-        if from.application_url.is_some() {
-            self.application_url = from.application_url.clone();
-        }
+        self.application_url = from.application_url.clone();
     }
 }
 

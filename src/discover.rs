@@ -466,7 +466,7 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
             }
             if !cfp.rounds.is_empty() {
                 if cfp.submission_url.is_none() {
-                    cfp.submission_url = pick_link(ctx, trail, &links, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page", cfg.conference, cfg.track))?;
+                    cfp.submission_url = pick_link(ctx, trail, &links, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track))?;
                 }
                 let deadlines = cfp.deadlines().expect("rounds present");
                 return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
@@ -549,12 +549,22 @@ pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&st
     finish(acc, trail, saw_invalid)
 }
 
-fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
-    format!("Conference: {} {year}. Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\nPAGE:\n{md}", cfg.conference)
+/// `site` is the conference's own website (host of the page its dates came
+/// from). It lets the model tell the conference apart from namesakes: a page
+/// on another site is about this conference only if it refers to this event.
+pub fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> String {
+    let site_note = site.map(|s| format!(" The conference's own website is {s}; a page elsewhere is about this conference only if it explicitly refers to this event.")).unwrap_or_default();
+    format!("Conference: {} {year} (the academic conference; its {} track has paper deadlines).{site_note} Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\nPAGE:\n{md}", cfg.conference, cfg.track)
+}
+
+/// `https://host` of a URL, for prompts.
+fn site_of(url: &str) -> Option<String> {
+    let u = url::Url::parse(url).ok()?;
+    Some(format!("{}://{}", u.scheme(), u.host_str()?))
 }
 
 #[allow(clippy::too_many_arguments)]
-fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, url: &str, hops: u32, saw: &mut (bool, bool), conference_end: Option<chrono::NaiveDate>) -> Result<Option<Found<Volunteer>>> {
+fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, url: &str, hops: u32, saw: &mut (bool, bool), conference_end: Option<chrono::NaiveDate>, site: Option<&str>) -> Result<Option<Found<Volunteer>>> {
     let Some(page) = fetch_page(trail, url) else { return Ok(None) };
     let md = clean::html_to_markdown(&page.html);
     log::info!("page {} ({} chars, hops {hops})", page.url, md.len());
@@ -564,7 +574,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
     }
     let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
-    let prompt = volunteer_prompt(cfg, year, &md);
+    let prompt = volunteer_prompt(cfg, year, site, &md);
     let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer(x, year, &grounding, conference_end))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
@@ -603,7 +613,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         match follow_link(ctx, trail, &page.html, &page.url, &what, &["volunteer"])? {
             Some(next) if !trail.tried(&next) => {
                 trail.note(format!("following link {next}"));
-                if let Some(found) = try_volunteer_page(ctx, cfg, year, trail, &next, hops + 1, saw, conference_end)? {
+                if let Some(found) = try_volunteer_page(ctx, cfg, year, trail, &next, hops + 1, saw, conference_end, site)? {
                     return Ok(Some(found));
                 }
                 trail.mark_tried(&next);
@@ -622,10 +632,13 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
     let mut trail = Trail::default();
     // (has_program seen, invalid seen)
     let mut saw = (false, false);
+    // The conference's own site, known from the page its dates came from.
+    let site = hint_url.and_then(site_of);
+    let site = site.as_deref();
     if let Some(u) = known_url {
         trail.query = format!("stored URL {u}");
         trail.note(format!("re-checking stored page {u}"));
-        if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, u, 0, &mut saw, conference_end)? {
+        if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, u, 0, &mut saw, conference_end, site)? {
             return Ok(Attempted { result: Ok(found), trail });
         }
     }
@@ -639,7 +652,7 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
                     break;
                 }
                 trail.note(format!("trying volunteer link {next} from the conference page"));
-                if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &next, 0, &mut saw, conference_end)? {
+                if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &next, 0, &mut saw, conference_end, site)? {
                     return Ok(Attempted { result: Ok(found), trail });
                 }
                 if saw.0 {
@@ -652,11 +665,17 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
     }
     let queries = vec![format!("{} {year} student volunteers", cfg.conference)];
     trail.query = queries[0].clone();
-    let hits = gather_hits(ctx, cfg, year, &queries, &mut trail)?;
-    let what = format!("the page explaining how students apply to be student volunteers at {} {year} (not a list of committee members or volunteers' names)", cfg.conference);
+    let mut hits = gather_hits(ctx, cfg, year, &queries, &mut trail)?;
+    // Pages on the conference's own site first: namesakes (a school
+    // programme called "Splash", a company called "CAV") live elsewhere.
+    if let Some(s) = site {
+        hits.sort_by_key(|h| !h.url.starts_with(s));
+    }
+    let site_note = site.map(|s| format!(" The conference's own website is {s}.")).unwrap_or_default();
+    let what = format!("the page explaining how students apply to be student volunteers at the {} {year} academic conference (not a list of committee members or volunteers' names, and not an unrelated event with a similar name).{site_note}", cfg.conference);
     let hits = ordered_hits(ctx, &mut trail, hits, &what)?;
     for h in hits.iter().take(3) {
-        if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw, conference_end)? {
+        if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw, conference_end, site)? {
             return Ok(Attempted { result: Ok(found), trail });
         }
     }
