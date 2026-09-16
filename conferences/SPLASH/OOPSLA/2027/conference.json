@@ -1,0 +1,57 @@
+{
+  "conference": "SPLASH",
+  "track": "OOPSLA",
+  "year": 2027,
+  "label": "SPLASH 2027 (OOPSLA)",
+  "fetched_at": "2026-09-16T02:37:10.270527567Z",
+  "last_verified": "2026-09-16T02:37:10.270527567Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://conf.researchr.org/track/splash-2027/splashoopsla2027",
+    "query": "SPLASH 2027 OOPSLA call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "start": "2027-10-10",
+    "end": "2027-10-15",
+    "city": "Prague",
+    "country": "Czechia"
+  },
+  "history": [],
+  "raw": {
+    "conference": {
+      "city": "Prague",
+      "country": "Czechia",
+      "end_date": "2027-10-15",
+      "start_date": "2027-10-10"
+    },
+    "has_submission_deadline": true,
+    "page_is_about_conference": true,
+    "rounds": [
+      {
+        "author_response_end": "2026-12-05",
+        "author_response_start": "2026-12-01",
+        "label": "Round 1",
+        "notification": "2026-12-18",
+        "notification_quote": "Author Notification (Round 1)",
+        "submission_deadline": "2026-10-14",
+        "submission_deadline_quote": "Round 1 submission deadline October 14, 2026"
+      },
+      {
+        "author_response_end": "2027-06-19",
+        "author_response_start": "2027-06-15",
+        "label": "Round 2",
+        "notification": "2027-08-13",
+        "notification_quote": "Author Notification (Round 2)",
+        "submission_deadline": "2027-04-07",
+        "submission_deadline_quote": "Round 2 submission deadline April 7, 2027 (AoE)"
+      }
+    ],
+    "submission_details": "Papers must be submitted using HotCRP. Initial submissions must be at most 23 pages; revisions and camera-ready papers can go up to 25 pages plus references and data-availability/funding/acknowledgments sections. At least one senior author must register as a reserve reviewer unless exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2, but papers rejected from OOPSLA 2026 are welcome. Authors must maintain anonymity until acceptance or rejection.",
+    "submission_url": "https://oopsla27.hotcrp.com/"
+  }
+}

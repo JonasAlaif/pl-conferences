@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:SPLASH 2026 (OOPSLA) conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:6e484dbff11c7141852b8b558827e134c89b0461@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20261004
+DTEND;VALUE=DATE:20261010
+SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
+DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
+ nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
+ INTENANCE.md
+LOCATION:Oakland\, United States
+END:VEVENT
+END:VCALENDAR

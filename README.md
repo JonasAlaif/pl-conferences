@@ -18,7 +18,7 @@ page linked), each next to the JSON the model produced and the page it came
 from.
 
 <!-- maintenance:start -->
-Last run: 2026-09-15. **Maintenance codes active: E003** - see [MAINTENANCE.md](MAINTENANCE.md).
+Last run: 2026-09-16. **Maintenance codes active: E003** - see [MAINTENANCE.md](MAINTENANCE.md).
 <!-- maintenance:end -->
 
 ## Upcoming dates
@@ -27,12 +27,35 @@ Last run: 2026-09-15. **Maintenance codes active: E003** - see [MAINTENANCE.md](
 | Date | Conference | Event |
 |---|---|---|
 | 2026-10-04 | SPLASH 2026 (OOPSLA) | Conference |
+| 2026-10-14 | SPLASH 2027 (OOPSLA) | R1 Paper Submission Deadline |
+| 2026-11-06 | SPLASH 2027 (OOPSLA) | Volunteer Application Deadline |
+| 2026-11-12 | PLDI 2027 | Paper Submission Deadline |
+| 2026-12-01 | SPLASH 2027 (OOPSLA) | R1 Rebuttal |
+| 2026-12-18 | SPLASH 2027 (OOPSLA) | R1 Notification |
+| 2027-02-16 | PLDI 2027 | Rebuttal |
+| 2027-04-01 | PLDI 2027 | Notification |
+| 2027-04-07 | SPLASH 2027 (OOPSLA) | R2 Paper Submission Deadline |
+| 2027-06-05 | PLDI 2027 | Conference |
+| 2027-06-15 | SPLASH 2027 (OOPSLA) | R2 Rebuttal |
+| 2027-08-13 | SPLASH 2027 (OOPSLA) | R2 Notification |
+| 2027-10-10 | SPLASH 2027 (OOPSLA) | Conference |
 
 <!-- dates:end -->
 
 ## Status
 
 <!-- status:start -->
+| Conference | Stage | Submission deadline(s) | Conference dates | Last verified |
+|---|---|---|---|---|
+| CAV 2026 | happened | 2026-01-28 | 2026-07-26..2026-07-29 | 2026-09-15 |
+| ETAPS 2026 (ESOP) | happened | 2025-06-03, 2025-10-16 | 2026-04-13..2026-04-16 | 2026-09-16 |
+| ICFP 2026 | happened | 2026-02-19 | 2026-08-24..2026-08-29 | 2026-09-15 |
+| PLDI 2026 | happened | 2025-11-13 | 2026-06-15..2026-06-19 | 2026-09-15 |
+| PLDI 2027 | deadlines available | 2026-11-12 | 2027-06-05..2027-06-11 | 2026-09-16 |
+| POPL 2026 | happened | 2025-07-10 | 2026-01-11..2026-01-17 | 2026-09-15 |
+| SPLASH 2026 (OOPSLA) | post-rebuttal | 2025-10-10, 2026-03-17 | 2026-10-04..2026-10-09 | 2026-09-16 |
+| SPLASH 2027 (OOPSLA) | deadlines available | 2026-10-14, 2027-04-07 | 2027-10-10..2027-10-15 | 2026-09-16 |
+
 <!-- status:end -->
 
 ## How it works

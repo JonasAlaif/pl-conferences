@@ -1,0 +1,55 @@
+{
+  "conference": "PLDI",
+  "track": "PLDI",
+  "year": 2027,
+  "label": "PLDI 2027",
+  "fetched_at": "2026-09-16T02:37:10.270527567Z",
+  "last_verified": "2026-09-16T02:37:10.270527567Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://pldi27.sigplan.org/",
+    "query": "PLDI 2027 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "",
+        "submission": "2026-11-12",
+        "response_start": "2027-02-16",
+        "response_end": "2027-02-18",
+        "notification": "2027-04-01"
+      }
+    ],
+    "submission_details": "",
+    "submission_url": "https://conf.researchr.org/signin/pldi-2027/https%3A%5Es%5Espldi27.sigplan.org%5Es"
+  },
+  "history": [],
+  "raw": {
+    "conference": {
+      "city": "Atlanta",
+      "country": "United States",
+      "end_date": "2027-06-11",
+      "start_date": "2027-06-05"
+    },
+    "has_submission_deadline": true,
+    "page_is_about_conference": true,
+    "rounds": [
+      {
+        "author_response_end": "2027-02-18",
+        "author_response_start": "2027-02-16",
+        "label": "",
+        "notification": "2027-04-01",
+        "notification_quote": "Thu 1 Apr 2027\n*PLDI Research Papers* Final acceptance notification",
+        "submission_deadline": "2026-11-12",
+        "submission_deadline_quote": "Thu 12 Nov 2026\n*PLDI Research Papers* Submission deadline"
+      }
+    ],
+    "submission_details": "",
+    "submission_url": ""
+  }
+}

@@ -4,6 +4,7 @@
   "year": 2026,
   "label": "SPLASH 2026 (OOPSLA)",
   "fetched_at": "2026-09-15T22:53:22.297148035Z",
+  "last_verified": "2026-09-16T02:37:10.270527567Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://2026.splashcon.org/track/oopsla-2026",
@@ -22,6 +23,7 @@
     "city": "Oakland",
     "country": "United States"
   },
+  "history": [],
   "raw": {
     "conference": {
       "city": "Oakland",
@@ -52,6 +54,5 @@
       }
     ],
     "submission_details": "Papers must be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds of review. At least one senior author must register as a reserve reviewer unless exempt. Papers accepted in either round will be published in the 2026 volume of PACMPL and invited to present in-person at the SPLASH conference in 2026; remote presentations are not possible."
-  },
-  "history": []
+  }
 }

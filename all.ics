@@ -6,6 +6,27 @@ METHOD:PUBLISH
 X-WR-CALNAME:PL conference deadlines
 URL:https://github.com/JonasAlaif/pl-conferences
 BEGIN:VEVENT
+UID:3904f78ce0edf464b40bacb1a04d6e34de7311c1@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20250603
+DTEND;VALUE=DATE:20250604
+SUMMARY:[ETAPS 2026 (ESOP)] R1 Paper Submission Deadline
+DESCRIPTION:Submitted papers must be in English\, presenting original rese
+ arch. They must be unpublished and not submitted for publication elsewher
+ e. In particular\, simultaneous submission of the same contribution to mu
+ ltiple ETAPS conferences is forbidden. Submissions must follow the format
+ ting guidelines of Springer's LNCS (use the llncs.cls class) - except for
+  ESOP\, see above - and be submitted electronically in pdf through the Ea
+ sychair author interface of the respective conference. Submissions not ad
+ hering to the specified format and length may be rejected immediately. ET
+ APS conferences will use double-blind reviewing (in the case of TACAS\, o
+ nly for regular research papers). Authors are asked to omit their names a
+ nd institutions\; refer to prior work in the third person\, just as prior
+  work by others\; not to include acknowledgments that might identify them
+ . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
+ t: https://etaps.org/2026/esop\n\nSource: https://etaps.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20250710
@@ -23,6 +44,22 @@ DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
  ed.\n\nSource: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-
  research-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl
  -conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:af39bedd785ce06164ee46323168cf76c9ba8a2f@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20250721
+DTEND;VALUE=DATE:20250724
+SUMMARY:[ETAPS 2026 (ESOP)] R1 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:a7a59deaeb384709140a31fcbb011f94991d5478@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20250801
+DTEND;VALUE=DATE:20250802
+SUMMARY:[ETAPS 2026 (ESOP)] R1 Notification
+DESCRIPTION:Source: https://etaps.org/2026/cfp/
 END:VEVENT
 BEGIN:VEVENT
 UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
@@ -49,6 +86,27 @@ DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
  erence in 2026\; remote presentations are not possible.\n\nSource: https:
  //2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://g
  ithub.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:4ec8b764bcafb1909f48be279d68cfe37760708f@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20251016
+DTEND;VALUE=DATE:20251017
+SUMMARY:[ETAPS 2026 (ESOP)] R2 Paper Submission Deadline
+DESCRIPTION:Submitted papers must be in English\, presenting original rese
+ arch. They must be unpublished and not submitted for publication elsewher
+ e. In particular\, simultaneous submission of the same contribution to mu
+ ltiple ETAPS conferences is forbidden. Submissions must follow the format
+ ting guidelines of Springer's LNCS (use the llncs.cls class) - except for
+  ESOP\, see above - and be submitted electronically in pdf through the Ea
+ sychair author interface of the respective conference. Submissions not ad
+ hering to the specified format and length may be rejected immediately. ET
+ APS conferences will use double-blind reviewing (in the case of TACAS\, o
+ nly for regular research papers). Authors are asked to omit their names a
+ nd institutions\; refer to prior work in the third person\, just as prior
+  work by others\; not to include acknowledgments that might identify them
+ . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
+ t: https://etaps.org/2026/esop\n\nSource: https://etaps.org/2026/cfp/
 END:VEVENT
 BEGIN:VEVENT
 UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
@@ -100,6 +158,14 @@ DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
  INTENANCE.md
 END:VEVENT
 BEGIN:VEVENT
+UID:c12ae72af4504825a45ca97f320e67f119330536@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20251208
+DTEND;VALUE=DATE:20251211
+SUMMARY:[ETAPS 2026 (ESOP)] R2 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:32ea03af1aa124423498fe701b74cd08a31c94a3@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20251217
@@ -108,6 +174,14 @@ SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Notification
 DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
  nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
  INTENANCE.md
+END:VEVENT
+BEGIN:VEVENT
+UID:5fedfa1b66d4d7b3d28cb3788517c0049040c4c1@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20251222
+DTEND;VALUE=DATE:20251223
+SUMMARY:[ETAPS 2026 (ESOP)] R2 Notification
+DESCRIPTION:Source: https://etaps.org/2026/cfp/
 END:VEVENT
 BEGIN:VEVENT
 UID:4174a3837d1ccdfc7b24ad0ae078c9e652361f3f@pl-conferences
@@ -196,6 +270,15 @@ DTSTART;VALUE=DATE:20260330
 DTEND;VALUE=DATE:20260403
 SUMMARY:[CAV 2026] Rebuttal
 DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:2cf087f24b6e6c71416ce7c2565c0991b726c03d@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20260413
+DTEND;VALUE=DATE:20260417
+SUMMARY:[ETAPS 2026 (ESOP)] Conference
+DESCRIPTION:Source: https://etaps.org/2026/cfp/
+LOCATION:Turin\, Italy
 END:VEVENT
 BEGIN:VEVENT
 UID:3129cc8e718c2631abbbc448e9df62c8ccc0cac1@pl-conferences
@@ -326,5 +409,131 @@ DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
  nce: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MA
  INTENANCE.md
 LOCATION:Oakland\, United States
+END:VEVENT
+BEGIN:VEVENT
+UID:1ef9f75a696b74ec57ee5e3a2d8b58b69834a7ea@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20261014
+DTEND;VALUE=DATE:20261015
+SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
+ t be at most 23 pages\; revisions and camera-ready papers can go up to 25
+  pages plus references and data-availability/funding/acknowledgments sect
+ ions. At least one senior author must register as a reserve reviewer unle
+ ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
+ but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
+ nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
+ tcrp.com/\n\nSource: https://conf.researchr.org/track/splash-2027/splasho
+ opsla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:1b0fd54afa441842fabfe50214d35acceeade5da@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20261106
+DTEND;VALUE=DATE:20261107
+SUMMARY:[SPLASH 2027 (OOPSLA)] Volunteer Application Deadline
+DESCRIPTION:College students can apply to volunteer for Splash! at Cornell
+ . Volunteers help with program setup\, registration\, lunch\, and clean-u
+ p. They receive free lunch and a t-shirt. Service hours can be provided. 
+ To moderate classes\, volunteers must email the organizers to state their
+  preference and complete additional forms including a background check.\n
+ \nApply at: https://cornell.learningu.org/volunteer/Splash/current/signup
+ \n\nSource: https://cornell.learningu.org/volunteer.html
+END:VEVENT
+BEGIN:VEVENT
+UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20261112
+DTEND;VALUE=DATE:20261113
+SUMMARY:[PLDI 2027] Paper Submission Deadline
+DESCRIPTION:Submit at: https://conf.researchr.org/signin/pldi-2027/https%3
+ A%5Es%5Espldi27.sigplan.org%5Es\n\nSource: https://pldi27.sigplan.org/
+END:VEVENT
+BEGIN:VEVENT
+UID:15238fe288a9d767157a685f0ff6e69de0fa097e@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20261201
+DTEND;VALUE=DATE:20261206
+SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Rebuttal
+DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
+ sla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20261218
+DTEND;VALUE=DATE:20261219
+SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
+DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
+ sla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270216
+DTEND;VALUE=DATE:20270219
+SUMMARY:[PLDI 2027] Rebuttal
+DESCRIPTION:Source: https://pldi27.sigplan.org/
+END:VEVENT
+BEGIN:VEVENT
+UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270401
+DTEND;VALUE=DATE:20270402
+SUMMARY:[PLDI 2027] Notification
+DESCRIPTION:Source: https://pldi27.sigplan.org/
+END:VEVENT
+BEGIN:VEVENT
+UID:c0f36c28b550a9525220f70c4170aeef5729ac7e@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270407
+DTEND;VALUE=DATE:20270408
+SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Paper Submission Deadline
+DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
+ t be at most 23 pages\; revisions and camera-ready papers can go up to 25
+  pages plus references and data-availability/funding/acknowledgments sect
+ ions. At least one senior author must register as a reserve reviewer unle
+ ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
+ but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
+ nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
+ tcrp.com/\n\nSource: https://conf.researchr.org/track/splash-2027/splasho
+ opsla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:0da66b4b12afc687655d84631e5cc2fa1d182e1d@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270605
+DTEND;VALUE=DATE:20270612
+SUMMARY:[PLDI 2027] Conference
+DESCRIPTION:Source: https://pldi27.sigplan.org/
+LOCATION:Atlanta\, United States
+END:VEVENT
+BEGIN:VEVENT
+UID:28dccef44623a30c949cc8c27e64162a99e8ad71@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270615
+DTEND;VALUE=DATE:20270620
+SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Rebuttal
+DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
+ sla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20270813
+DTEND;VALUE=DATE:20270814
+SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
+DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
+ sla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:b1fa4b6c541ad88875018778b9f0ea05f478b8e0@pl-conferences
+DTSTAMP:20260916T023710Z
+DTSTART;VALUE=DATE:20271010
+DTEND;VALUE=DATE:20271016
+SUMMARY:[SPLASH 2027 (OOPSLA)] Conference
+DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
+ sla2027
+LOCATION:Prague\, Czechia
 END:VEVENT
 END:VCALENDAR
