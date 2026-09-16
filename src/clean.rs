@@ -10,12 +10,14 @@ use regex::Regex;
 use std::collections::HashSet;
 use std::sync::LazyLock;
 
-/// Tags whose whole subtree is dropped. Keeping `<header>`/`<aside>` was
-/// tried: on researchr pages it adds 5-10K chars of site chrome, pushing
-/// the big track pages over the budget, and the harness regressed.
+/// Tags whose whole subtree is dropped. `<header>` is kept: CAV 2027 puts
+/// its dates and venue in a hero block inside `<header>`, and the site
+/// chrome such a header carries on researchr pages is navigation, removed
+/// by `STRIP_SELECTORS`. (`<aside>` was tried and adds 5-10K chars of
+/// chrome on researchr pages.)
 const SKIP_TAGS: &[&str] = &[
     "script", "style", "noscript", "template", "svg", "img", "picture", "video", "audio", "iframe",
-    "canvas", "form", "input", "button", "select", "textarea", "nav", "header", "footer", "aside",
+    "canvas", "form", "input", "button", "select", "textarea", "nav", "footer", "aside",
 ];
 
 /// Elements removed before conversion. Bootstrap-era class names are common
@@ -354,6 +356,15 @@ mod tests {
         let t = tidy(md);
         assert_eq!(t.matches("14 May 2026").count(), 2);
         assert_eq!(t.matches("Program").count(), 1);
+    }
+
+    #[test]
+    fn page_header_content_is_kept_but_navigation_is_not() {
+        // CAV 2027: dates and venue live in a hero block inside <header>.
+        let html = r#"<html><body><header class="header-section"><nav><a href="/x">Menu item</a></nav><div class="navbar">Site menu</div><div class="hero"><h1>39th CAV</h1><span>July 19-23</span> <span>Amsterdam</span></div></header><main><p>Submission deadline 20 January 2027</p></main></body></html>"#;
+        let md = html_to_markdown(html);
+        assert!(md.contains("July 19-23") && md.contains("Amsterdam") && md.contains("39th CAV"), "{md}");
+        assert!(!md.contains("Menu item") && !md.contains("Site menu"), "{md}");
     }
 
     #[test]
