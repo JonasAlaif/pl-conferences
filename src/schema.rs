@@ -263,6 +263,36 @@ fn real_conflict(conflict: &Option<String>, quote: &str, label: &str, accepted_a
     Some(c)
 }
 
+/// Whether every piece of evidence a stored record was built on (each
+/// `*_quote` and `*_as_written` in the model's raw answer) is still on the
+/// page. When it is, a re-read that comes out differently means the model
+/// read another entry of an unchanged page (a page listing two "Author
+/// Notification (Round 1)" dates made it flip between runs), not that the
+/// page changed; the stored value is kept. False when the raw answer holds
+/// no evidence to check.
+pub fn evidence_still_on_page(raw: &serde_json::Value, page: &str) -> bool {
+    fn walk(v: &serde_json::Value, page: &str, norm_page: &str, checked: &mut usize) -> bool {
+        match v {
+            serde_json::Value::Object(m) => m.iter().all(|(k, v)| {
+                let Some(s) = v.as_str().map(str::trim).filter(|s| !s.is_empty() && !s.eq_ignore_ascii_case("null")) else { return walk(v, page, norm_page, checked) };
+                if k.ends_with("_as_written") {
+                    *checked += 1;
+                    date_tokens_in(norm_page, &norm(s))
+                } else if k.ends_with("_quote") {
+                    *checked += 1;
+                    page_contains(page, s)
+                } else {
+                    true
+                }
+            }),
+            serde_json::Value::Array(a) => a.iter().all(|v| walk(v, page, norm_page, checked)),
+            _ => true,
+        }
+    }
+    let mut checked = 0;
+    walk(raw, page, &norm(page), &mut checked) && checked > 0
+}
+
 /// The day numbers of `start` and `end` occur in `quote` ("Sun 4 - Fri 9
 /// October 2026", "October 4–9, 2026", "4th-9th October").
 fn days_in_quote(quote: &str, start: NaiveDate, end: NaiveDate) -> bool {

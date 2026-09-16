@@ -527,8 +527,17 @@ impl SoftUpdate for schema::Volunteer {
 fn merge_record<T: Clone + Serialize + SoftUpdate>(existing: Option<Record<T>>, cfg: &config::ConferenceCfg, year: i32, found: &discover::Found<T>, model: &str, now: chrono::DateTime<Utc>, diff: impl Fn(&T, &T) -> Vec<schema::Change>) -> Record<T> {
     match existing {
         Some(mut old) => {
-            let changes = diff(&old.data, &found.value);
+            let mut changes = diff(&old.data, &found.value);
             old.last_verified = Some(now);
+            // A different reading of a page that still states everything
+            // the stored record was built on is the model changing its
+            // mind, not the page changing; the stored value stays.
+            if !changes.is_empty() && !found.md.is_empty() && schema::evidence_still_on_page(&old.raw, &found.md) {
+                for c in &changes {
+                    log::warn!("{}: the model now reads {} as {} (stored: {}), but the page still states the stored value; keeping it", cfg.key(year), c.field, c.new, c.old);
+                }
+                changes.clear();
+            }
             if changes.is_empty() {
                 log::info!("{}: unchanged", cfg.key(year));
                 old.data.soft_update(&found.value);
@@ -834,10 +843,24 @@ mod tests {
         assert_eq!(second.data.submission_details, "prose");
 
         // A moved deadline replaces the data and is remembered.
-        let third = merge_record(Some(second), &cfg, 2027, &found("2026-07-08"), "m", t1, |a, b| schema::diff_deadlines(a, b, t1));
+        let third = merge_record(Some(second.clone()), &cfg, 2027, &found("2026-07-08"), "m", t1, |a, b| schema::diff_deadlines(a, b, t1));
         assert_eq!(third.history.len(), 1);
         assert_eq!((third.history[0].field.as_str(), third.history[0].old.as_str(), third.history[0].new.as_str()), ("round 1 submission", "2026-07-01", "2026-07-08"));
         assert_eq!(third.data.rounds[0].submission.to_string(), "2026-07-08");
         assert_eq!(third.fetched_at, t1);
+
+        // A different reading of a page that still states the stored
+        // value (its quote and date as written) is not a change.
+        let mut stored = second;
+        stored.raw = serde_json::json!({"rounds": [{"submission_deadline_quote": "Submission deadline", "submission_deadline_as_written": "Wed 1 Jul 2026"}]});
+        let mut reread = found("2026-07-08");
+        reread.md = "Submission deadline\nWed 1 Jul 2026\nExtended submission deadline\nWed 8 Jul 2026".into();
+        let kept = merge_record(Some(stored.clone()), &cfg, 2027, &reread, "m", t1, |a, b| schema::diff_deadlines(a, b, t1));
+        assert!(kept.history.is_empty(), "{:?}", kept.history);
+        assert_eq!(kept.data.rounds[0].submission.to_string(), "2026-07-01");
+        reread.md = "Submission deadline\nWed 8 Jul 2026".into();
+        let moved = merge_record(Some(stored), &cfg, 2027, &reread, "m", t1, |a, b| schema::diff_deadlines(a, b, t1));
+        assert_eq!(moved.history.len(), 1, "the old date is gone from the page: a real change");
+        assert_eq!(moved.data.rounds[0].submission.to_string(), "2026-07-08");
     }
 }

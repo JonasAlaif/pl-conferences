@@ -258,3 +258,27 @@ fn extraction_accuracy() {
     eprintln!("=== {passed}/{total} passed, model {}, think {}, temp {}, avg {:.1}s", llm.model, llm.think, llm.temperature, total_secs / total.max(1) as f64);
     assert_eq!(passed, total);
 }
+
+/// The application-form pick: the SPLASH 2026 volunteers page links its form
+/// from the word "here" in "Apply here by July 12", next to a committee page
+/// whose name mentions volunteers. The pick must resolve the form (it once
+/// chose the committee page), and must decline on a page without a form.
+#[test]
+#[ignore]
+fn application_link_pick() {
+    let llm = Llm::from_env();
+    llm.check().expect("ollama with model");
+    let cfg = pl_conferences::config::ConferenceCfg { conference: "SPLASH".into(), track: "OOPSLA".into(), since: 0 };
+    let html = fixture("splash26-volunteers.html");
+    let mut passed = 0;
+    for r in 0..2 {
+        let got = discover::pick_application_link(&llm, &cfg, 2026, &html, "https://2026.splashcon.org/track/splash-issta-2026-student-volunteers").unwrap();
+        let ok = got.as_deref().is_some_and(|u| u.contains("tinyurl.com/splash-issta-sv26"));
+        eprintln!("{} splash26-volunteers run {r}: {got:?}", if ok { "ok  " } else { "FAIL" });
+        passed += ok as usize;
+    }
+    // A page that has no form: the committee list of the same site.
+    let cornell = discover::pick_application_link(&llm, &cfg, 2027, &fixture("cornell-splash.html"), "https://cornell.learningu.org/volunteer.html").unwrap();
+    eprintln!("cornell-splash (namesake, for reference): {cornell:?}");
+    assert_eq!(passed, 2);
+}

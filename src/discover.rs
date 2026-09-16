@@ -512,6 +512,15 @@ pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Resul
     Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md, &cfg.track))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
+/// The link pick for a volunteer application form, for the harness (the
+/// pipeline calls `pick_link` from `try_volunteer_page`).
+pub fn pick_application_link(llm: &Llm, cfg: &ConferenceCfg, year: i32, html: &str, url: &str) -> Result<Option<String>> {
+    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
+    let mut trail = Trail::default();
+    let links = clean::links_with_context(html, url);
+    pick_link(&ctx, &mut trail, &links, url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference), false)
+}
+
 /// Extraction + validation + one corrective retry for a volunteer page, for
 /// the harness (the pipeline goes through `try_volunteer_page`).
 pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
@@ -788,6 +797,18 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn handed_over_links_are_never_the_page_its_root_or_for_submissions_its_site() {
+        let page = "https://conferences.i-cav.org/2027/";
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027", page, true), Err("this very page"));
+        assert_eq!(usable_link("https://conf.researchr.org/", page, false), Err("the front page of a website"));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/artifacts/", page, true), Err("on the conference site itself"));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false), Ok(()), "an application form may be on the site");
+        assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true), Err("the front page of a website"), "a submission system's root still counts as a root");
+        assert_eq!(usable_link("https://cav27.hotcrp.com/paper/new", page, true), Ok(()));
+        assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false), Ok(()));
+    }
 
     #[test]
     fn relevance_filter_needs_conference_or_track_mention() {
