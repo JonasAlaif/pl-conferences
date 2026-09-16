@@ -456,10 +456,10 @@ DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
  t might identify them. If authors do not obey the double-blind submission
   policy or do not specify their conflicts of interest in the submission s
  ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
- d FoSSaCS will use an author rebuttal phase.\n\nExtracted automatically b
- y a small language model\; please cross-check against the source before r
- elying on it: https://etaps.org/2027/cfp/\nhttps://github.com/JonasAlaif/
- pl-conferences
+ d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27
+ .hotcrp.com/\n\nExtracted automatically by a small language model\; pleas
+ e cross-check against the source before relying on it: https://etaps.org/
+ 2027/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
@@ -666,10 +666,10 @@ DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
  t might identify them. If authors do not obey the double-blind submission
   policy or do not specify their conflicts of interest in the submission s
  ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
- d FoSSaCS will use an author rebuttal phase.\n\nExtracted automatically b
- y a small language model\; please cross-check against the source before r
- elying on it: https://etaps.org/2027/cfp/\nhttps://github.com/JonasAlaif/
- pl-conferences
+ d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27
+ .hotcrp.com/\n\nExtracted automatically by a small language model\; pleas
+ e cross-check against the source before relying on it: https://etaps.org/
+ 2027/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
@@ -868,6 +868,19 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
  org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
  conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:e24e3ca0c9eec42006227d4ac9efbebf0f18dc77@pl-conferences
+DTSTAMP:20260916T181457Z
+DTSTART;VALUE=DATE:20270621
+DTEND;VALUE=DATE:20270625
+SUMMARY:[LICS 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://lics.siglog.org
+ /lics27/\nMaintenance: E001\, E003 - see https://github.com/JonasAlaif/pl
+ -conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-c
+ onferences
+LOCATION:Montreal\, Canada
 END:VEVENT
 BEGIN:VEVENT
 UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences

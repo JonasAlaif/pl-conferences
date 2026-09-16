@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:LICS 2027 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:e24e3ca0c9eec42006227d4ac9efbebf0f18dc77@pl-conferences
+DTSTAMP:20260916T181457Z
+DTSTART;VALUE=DATE:20270621
+DTEND;VALUE=DATE:20270625
+SUMMARY:[LICS 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://lics.siglog.org
+ /lics27/\nMaintenance: E001\, E003 - see https://github.com/JonasAlaif/pl
+ -conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-c
+ onferences
+LOCATION:Montreal\, Canada
+END:VEVENT
+END:VCALENDAR

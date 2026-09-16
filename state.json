@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T17:52:45.636611480Z",
-  "run_count": 13,
+  "last_run": "2026-09-16T18:15:27.542432243Z",
+  "run_count": 14,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -22,24 +22,26 @@
       "note": "trying volunteer link https://submissions.floc26.org/cav/ from the conference page; fetch https://submissions.floc26.org/cav/ failed: GET https://submissions.floc26.org/cav/: HTTP 403 Forbidden; https://taoscav.org/volunteer is not about CAV 2026; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
     },
     "CAV/CAV/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:34.677591189Z",
-      "attempts": 5,
+      "last_attempt": "2026-09-16T18:14:46.951596302Z",
+      "attempts": 6,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [
         "E005"
       ],
-      "note": "re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; round 1 notification is given but notification_quote is null; quote the page or set notification to null"
+      "note": "re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; round 1 notification is given but notification_quote is null; quote the page or set notification to null; 2 candidate link(s) for the call for papers of the CAV track of CAV 2027; looking for the submission site on https://conferences.i-cav.org/2027/cfp/; validation failed: round 1 notification_as_written \"Tuesday, 18 May 2027\" is not in the same entry as \"Notification\"; the date belongs to a different line of the page. Use the date written next to \"Notification\"; validation failed again: round 1 notification_as_written \"Tuesday, 18 May 2027\" is not in the same entry as \"Notification\"; the date belongs to a different line of the page. Use the date written next to \"Notification\""
     },
     "CAV/CAV/2027/volunteer": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T18:14:46.951596302Z",
+      "attempts": 2,
       "outcome": "not_found",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://conferences.i-cav.org/2027/registration/ from the conference page; following link https://github.com/i-cav/2027/edit/master/pages/registration.md; https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fi-cav%2F2027%2Fedit%2Fmaster%2Fpages%2Fregistration.md is not about CAV 2027; following link https://conferences.i-cav.org/2027/contact/; following link https://github.com/i-cav/2027/edit/master/pages/contact.md; https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fi-cav%2F2027%2Fedit%2Fmaster%2Fpages%2Fcontact.md is not about CAV 2027; following link https://conferences.i-cav.org/2027/organization/; trying volunteer link https://github.com/i-cav/2027/edit/master/index.md from the conference page; page budget of 6 used up; not fetching https://github.com/i-cav/2027/edit/master/index.md; page budget of 6 used up; not fetching https://taoscav.org/volunteer; page budget of 6 used up; not fetching https://i-cav.org/cavlinks/who-are-we/; page budget of 6 used up; not fetching https://www.cavscare.org/champions-of-the-community"
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
     },
     "ETAPS/ESOP/2026/cfp": {
       "last_attempt": "2026-09-16T02:37:10.270527567Z",
@@ -51,22 +53,24 @@
       "note": ""
     },
     "ETAPS/ESOP/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:31.315633356Z",
-      "attempts": 4,
+      "last_attempt": "2026-09-16T18:15:06.850460633Z",
+      "attempts": 5,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://etaps.org/2027/cfp/; 2 candidate link(s) for the call for papers of the ESOP track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/esop"
+      "note": "re-checking stored page https://etaps.org/2027/cfp/; submission link https://etaps.org/about/esop is on the conference site itself; dropped; 3 candidate link(s) for the call for papers of the ESOP track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/esop; submission site https://esop27.hotcrp.com/ taken from https://etaps.org/2027/esop"
     },
     "ETAPS/ESOP/2027/volunteer": {
-      "last_attempt": "2026-09-16T06:40:38.988415449Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T18:15:06.850460633Z",
+      "attempts": 2,
       "outcome": "not_found",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://etaps.org/about/fopss-schools from the conference page; following link https://etaps.org/about/fopss-schools; https://etaps.org/2024/student-scholarship/ is not about ETAPS 2027 (ESOP); following link https://etaps.org/about/fopss-schools; following link https://cgi.cse.unsw.edu.au/; https://cgi.cse.unsw.edu.au/ has almost no text (180 chars); skipped"
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; https://etaps.org/2022/student-scholarships.html is not about ETAPS 2027 (ESOP)"
     },
     "ICFP/ICFP/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",
@@ -89,22 +93,24 @@
       "note": "trying volunteer link https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers from the conference page"
     },
     "ICFP/ICFP/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:45.636611480Z",
-      "attempts": 4,
+      "last_attempt": "2026-09-16T18:15:27.542432243Z",
+      "attempts": 5,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://icfp27.sigplan.org/; 1 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers"
+      "note": "re-checking stored page https://icfp27.sigplan.org/; 2 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers"
     },
     "ICFP/ICFP/2027/volunteer": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 1,
-      "outcome": "not_found",
-      "consecutive_failures": 1,
+      "last_attempt": "2026-09-16T18:15:27.542432243Z",
+      "attempts": 2,
+      "outcome": "invalid",
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://icfp27.sigplan.org/signup from the conference page; following link https://icfp27.sigplan.org/support; https://icfp27.sigplan.org/support is not about ICFP 2027; following link https://conf.researchr.org/signin/icfp-2027/https%3A%5Es%5Esicfp27.sigplan.org%5Essignup; following link https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; following link https://icfp27.sigplan.org/contact; trying volunteer link https://icfp27.sigplan.org/committee/icfp-2027-organizing-committee from the conference page; page budget of 6 used up; not fetching https://icfp27.sigplan.org/committee/icfp-2027-organizing-committee; page budget of 6 used up; not fetching http://www.wikicfp.com/cfp/program?id=1369; page budget of 6 used up; not fetching https://icfp17.sigplan.org/attending/student-volunteers; page budget of 6 used up; not fetching https://icfp18.sigplan.org/attending/Student+Volunteering"
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; https://icfp17.sigplan.org/attending/student-volunteers is not about ICFP 2027; validation failed: application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null; validation failed again: application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null; https://conf.researchr.org/attending/icfp-2016/Student+Volunteers is not about ICFP 2027"
     },
     "LICS/LICS/2026/cfp": {
       "last_attempt": "2026-09-16T12:54:07.626060810Z",
@@ -116,13 +122,16 @@
       "note": "https://lics.siglog.org/ is not about LICS 2026"
     },
     "LICS/LICS/2027/cfp": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 2,
-      "outcome": "not_found",
-      "consecutive_failures": 2,
+      "last_attempt": "2026-09-16T18:14:57.005752294Z",
+      "attempts": 3,
+      "outcome": "ok",
+      "consecutive_failures": 0,
       "backend": "brave",
-      "codes": [],
-      "note": "https://lics.siglog.org/ is not about LICS 2027; validation failed: conference dates are not in 2027; validation failed again: page_is_about_conference is false; conference dates are not in 2027; http://www.wikicfp.com/cfp/program?id=1959 is not about LICS 2027; fetch https://dl.acm.org/conference/lics failed: GET https://dl.acm.org/conference/lics: HTTP 403 Forbidden"
+      "codes": [
+        "E001",
+        "E003"
+      ],
+      "note": "https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; 3 candidate link(s) for the call for papers or important dates of the LICS track of LICS 2027; following link https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; following link https://lics.siglog.org/lics26/; https://lics.siglog.org/lics26/ is not about LICS 2027; following link https://lics.siglog.org/lics24/toc.html; https://lics.siglog.org/lics24/toc.html is not about LICS 2027; only conference dates found so far"
     },
     "PLDI/PLDI/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",
@@ -143,22 +152,24 @@
       "note": "trying volunteer link https://pldi26.sigplan.org/track/pldi-2026-student-volunteering from the conference page"
     },
     "PLDI/PLDI/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:32.639641219Z",
-      "attempts": 5,
+      "last_attempt": "2026-09-16T18:15:23.863079964Z",
+      "attempts": 6,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://pldi27.sigplan.org/; 1 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers"
+      "note": "re-checking stored page https://pldi27.sigplan.org/; 2 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers"
     },
     "PLDI/PLDI/2027/volunteer": {
-      "last_attempt": "2026-09-16T02:37:10.270527567Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T18:15:23.863079964Z",
+      "attempts": 2,
       "outcome": "not_found",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://pldi27.sigplan.org/signup from the conference page; https://pldi26.sigplan.org/track/pldi-2026-student-volunteering is not about PLDI 2027; https://conf.researchr.org/attending/pldi-2016/Student+Volunteers is not about PLDI 2027; https://pldi25.sigplan.org/track/pldi-2025-student-volunteering is not about PLDI 2027"
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; validation failed: application deadline 2016-04-07 is not in 2026 or 2027; validation failed again: page_is_about_conference is false; application deadline 2016-04-07 is not in 2026 or 2027; https://conf.researchr.org/attending/pldi-2016/Student+Volunteers is not about PLDI 2027; https://pldi26.sigplan.org/track/pldi-2026-student-volunteering is not about PLDI 2027"
     },
     "POPL/POPL/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",
@@ -181,26 +192,29 @@
       "note": "trying volunteer link https://popl26.sigplan.org/track/POPL-2026-student-volunteers from the conference page"
     },
     "POPL/POPL/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:07.030993280Z",
-      "attempts": 4,
+      "last_attempt": "2026-09-16T18:15:07.454440473Z",
+      "attempts": 5,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://popl27.sigplan.org/dates; 5 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers"
+      "note": "re-checking stored page https://popl27.sigplan.org/dates; 7 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers"
     },
     "POPL/POPL/2027/volunteer": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T18:15:07.454440473Z",
+      "attempts": 2,
       "outcome": "not_found",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://popl27.sigplan.org/committee/POPL-2027-student-volunteers from the conference page; following link https://conf.researchr.org/signin/POPL-2027/https%3A%5Es%5Espopl27.sigplan.org%5Escommittee%5EsPOPL-2027-student-volunteers; following link https://popl27.sigplan.org/signup; following link https://popl27.sigplan.org/track/POPL-2027-student-research-competition; following link https://popl27.sigplan.org/support; https://popl27.sigplan.org/support is not about POPL 2027; trying volunteer link https://popl27.sigplan.org/home/PLMW-POPL-2027 from the conference page; page budget of 6 used up; not fetching https://popl27.sigplan.org/home/PLMW-POPL-2027; page budget of 6 used up; not fetching https://popl26.sigplan.org/track/POPL-2026-student-volunteers; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; page budget of 6 used up; not fetching https://popl27.sigplan.org/people-index"
+      "codes": [
+        "E001",
+        "E004"
+      ],
+      "note": "11 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; trying volunteer link https://popl27.sigplan.org/committee/POPL-2027-student-volunteers from the conference page; 2 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/signup; 5 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/track/POPL-2027-student-research-competition; following link https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; following link https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; model found no plausible search hit; trying them in the engine's order; page budget of 6 used up; not fetching https://conf.researchr.org/home/POPL-2027"
     },
     "SPLASH/OOPSLA/2026/cfp": {
-      "last_attempt": "2026-09-16T17:52:06.082746627Z",
-      "attempts": 6,
+      "last_attempt": "2026-09-16T18:15:12.262321236Z",
+      "attempts": 7,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -217,8 +231,8 @@
       "note": "trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page; model picked link https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee as the application form or sign-up page where students apply to be student volunteers at SPLASH 2026; not a general information page"
     },
     "SPLASH/OOPSLA/2027/cfp": {
-      "last_attempt": "2026-09-16T17:52:06.082746627Z",
-      "attempts": 5,
+      "last_attempt": "2026-09-16T18:15:12.262321236Z",
+      "attempts": 6,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -226,13 +240,15 @@
       "note": "re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027"
     },
     "SPLASH/OOPSLA/2027/volunteer": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T18:15:12.262321236Z",
+      "attempts": 2,
       "outcome": "not_found",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "backend": "brave",
-      "codes": [],
-      "note": "trying volunteer link https://2027.splashcon.org/signup from the conference page; following link https://conf.researchr.org/signin/splash-2027/https%3A%5Es%5Es2027.splashcon.org%5Essignup; following link https://2027.splashcon.org/people-index; following link https://2027.splashcon.org/contact; following link https://2027.splashcon.org/support; https://2027.splashcon.org/support is not about SPLASH 2027 (OOPSLA); trying volunteer link https://2027.splashcon.org/committee/splash-2027-organizing-committee from the conference page; page budget of 6 used up; not fetching https://2027.splashcon.org/committee/splash-2027-organizing-committee; page budget of 6 used up; not fetching https://2023.splashcon.org/track/splash-2023-Volunteers; page budget of 6 used up; not fetching https://cornell.learningu.org/volunteer.html; page budget of 6 used up; not fetching https://2022.splashcon.org/track/splash-2022-Student-Volunteers"
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; https://cornell.learningu.org/volunteer.html is not about SPLASH 2027 (OOPSLA); https://2022.splashcon.org/track/splash-2022-Student-Volunteers is not about SPLASH 2027 (OOPSLA); https://stanfordesp.org/getinvolved/index.html is not about SPLASH 2027 (OOPSLA)"
     }
   }
 }

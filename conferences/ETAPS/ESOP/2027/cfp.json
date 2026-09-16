@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "ETAPS 2027 (ESOP)",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T17:52:31.315633356Z",
+  "last_verified": "2026-09-16T18:15:06.850460633Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://etaps.org/2027/cfp/",
@@ -35,7 +35,7 @@
       }
     ],
     "submission_details": "ESOP: regular research papers of max 25 pp, experience reports of max 15 pp, and fresh perspectives providing new insights on programming languages and systems of max 15 pp. There is no page limit at the submission time. Please refer to https://etaps.org/2027/esop for more details. Submitted papers must be in English, presenting original research. They must be unpublished and not submitted for publication elsewhere. In particular, simultaneous submission of the same contribution to multiple ETAPS conferences is forbidden. Submissions must follow the formatting guidelines of Springer's LNCS (use the llncs.cls class) - except for ESOP, see above - and be submitted electronically in pdf through the Easychair author interface of the respective conference. Data availability statement in proceedings papers is mandatory for all ETAPS conference papers. It is to be placed just before the references and does not count into the page limit. ETAPS conferences will use double-blind reviewing (in the case of TACAS and iFS, only for regular research papers). Authors are asked to omit their names and institutions; refer to prior work in the third person, just as prior work by others; not to include acknowledgments that might identify them. If authors do not obey the double-blind submission policy or do not specify their conflicts of interest in the submission system, this may result in a desk rejection of the paper. ESOP, TACAS and FoSSaCS will use an author rebuttal phase.",
-    "submission_url": null
+    "submission_url": "https://esop27.hotcrp.com/"
   },
   "history": [],
   "raw": {

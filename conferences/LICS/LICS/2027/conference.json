@@ -1,0 +1,43 @@
+{
+  "conference": "LICS",
+  "track": "LICS",
+  "year": 2027,
+  "label": "LICS 2027",
+  "fetched_at": "2026-09-16T18:14:57.005752294Z",
+  "last_verified": "2026-09-16T18:14:57.005752294Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://lics.siglog.org/lics27/",
+    "query": "LICS 2027 call for papers",
+    "backend": "brave",
+    "hops": 1,
+    "via_chrome": false,
+    "retried": false,
+    "codes": [
+      "E001",
+      "E003"
+    ]
+  },
+  "data": {
+    "start": "2027-06-21",
+    "end": "2027-06-24",
+    "city": "Montreal",
+    "country": "Canada"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": false,
+    "conference": {
+      "dates_quote": "21–24 June 2027",
+      "start_date": "2027-06-21",
+      "end_date": "2027-06-24",
+      "city": "Montreal",
+      "country": "Canada"
+    },
+    "rounds": [],
+    "submission_details": "Further information will appear here in due course.",
+    "submission_site_quote": "null",
+    "submission_url": "null"
+  }
+}
