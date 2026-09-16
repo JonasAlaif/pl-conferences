@@ -72,9 +72,10 @@ Last run: 2026-09-16. **Maintenance codes active: E003** - see [MAINTENANCE.md](
    no API keys), lets the model pick the official page, fetches it, converts it
    to Markdown and asks the model for the dates as schema-constrained JSON.
    If the chosen page has no deadline, the model picks a link to follow.
-   A page that is mostly one big dates table for many tracks (30+ rows) is
-   narrowed to the rows naming the track before the model sees it; a small
-   model otherwise binds dates to neighbouring rows.
+   For every date the model must first quote the words on the page and copy
+   the date exactly as written there; validation checks that the two sit in
+   the same entry of the page (same or adjacent line), which stops a small
+   model from pairing a label with a neighbouring row's date on dense tables.
 3. Dates are checked for consistency (ordering, year, calendar validity); on
    failure the model gets one corrective retry. One extraction yields two
    records with separate lifecycles: `conference.json` (dates, location) and

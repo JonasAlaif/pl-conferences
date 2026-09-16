@@ -76,12 +76,17 @@ pub struct Round {
     pub label: String,
     /// The exact words on the page that state the deadline for submitting new papers to this track, copied verbatim (a short fragment).
     pub submission_deadline_quote: String,
-    /// Deadline for submitting new papers to this track (not abstracts, artifacts, revisions or camera-ready versions), YYYY-MM-DD.
+    /// The date exactly as it is written on the page in the same entry as that quote (same line or the line next to it), e.g. "Tue 17 Mar 2026".
+    pub submission_deadline_as_written: String,
+    /// The same date as YYYY-MM-DD.
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub submission_deadline: String,
     /// The exact words on the page that state the author response / rebuttal period, copied verbatim; null if there is none.
     #[schemars(required)]
     pub author_response_quote: Option<String>,
+    /// The period exactly as written on the page in the same entry as that quote, e.g. "Tue 19 - Fri 22 May 2026"; null if there is none.
+    #[schemars(required)]
+    pub author_response_as_written: Option<String>,
     /// First day of the author response / rebuttal period, YYYY-MM-DD, if any.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
@@ -93,6 +98,9 @@ pub struct Round {
     /// The exact words on the page that state when authors first learn the decision on their submission (accept, reject or revise), copied verbatim; null if not stated.
     #[schemars(required)]
     pub notification_quote: Option<String>,
+    /// That date exactly as written on the page in the same entry as the quote, e.g. "Wed 10 Jun 2026"; null if not stated.
+    #[schemars(required)]
+    pub notification_as_written: Option<String>,
     /// The first date authors learn the decision on their submission to this round (the initial author notification; not later revision decisions, camera-ready or revision deadlines), YYYY-MM-DD, if stated.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
@@ -109,6 +117,9 @@ pub struct VolunteerExtraction {
     /// The exact words on the page that state the deadline for applying as a student volunteer, copied verbatim; null if no deadline is stated.
     #[schemars(required)]
     pub application_deadline_quote: Option<String>,
+    /// That date exactly as written on the page in the same entry as the quote, e.g. "Sun 19 Jul 2026"; null if no deadline is stated.
+    #[schemars(required)]
+    pub application_deadline_as_written: Option<String>,
     /// Deadline for applying as a student volunteer, YYYY-MM-DD; null whenever application_deadline_quote is null.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
@@ -136,11 +147,16 @@ pub struct UrlGuesses {
     pub urls: Vec<String>,
 }
 
-/// Whitespace-insensitive, case-insensitive containment check used to make
-/// sure a quoted fragment really is on the page.
+/// Punctuation-, whitespace- and case-insensitive containment check used to
+/// make sure a quoted fragment really is on the page. Small copying slips
+/// are tolerated (a stripped URL, a dropped word) but never in the numbers
+/// or in short words such as month and weekday abbreviations, so a quote
+/// whose date was altered ("Thu 17 Jul 2025" for "Thu 10 Jul 2025") fails.
 pub fn page_contains(page: &str, quote: &str) -> bool {
-    let norm = |t: &str| t.split_whitespace().collect::<Vec<_>>().join(" ").to_lowercase();
-    let q = norm(quote);
+    // The Markdown the model saw carries no URLs; a quote that kept one
+    // from the original text is compared without it.
+    static URL: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"https?://\S+").unwrap());
+    let q = norm(&URL.replace_all(quote, " "));
     if q.len() < 4 {
         return false;
     }
@@ -148,11 +164,82 @@ pub fn page_contains(page: &str, quote: &str) -> bool {
     if p.contains(&q) {
         return true;
     }
-    // Tolerate small copying slips (a stripped URL, a fixed typo): most of
-    // the longer words must appear.
-    let words: Vec<&str> = q.split(' ').filter(|w| w.len() >= 4).collect();
-    let found = words.iter().filter(|w| p.contains(*w)).count();
-    !words.is_empty() && found * 4 >= words.len() * 3
+    let have: std::collections::HashSet<&str> = p.split(' ').collect();
+    let tokens: Vec<&str> = q.split(' ').filter(|w| !w.contains('/')).collect();
+    let strict = |w: &str| w.chars().any(|c| c.is_ascii_digit()) || w.len() == 3;
+    if tokens.iter().any(|w| strict(w) && !have.contains(w)) {
+        return false;
+    }
+    let words: Vec<&str> = tokens.iter().copied().filter(|w| w.len() >= 4).collect();
+    let found = words.iter().filter(|w| have.contains(*w)).count();
+    words.is_empty() || found * 4 >= words.len() * 3
+}
+
+/// Lowercase, whitespace collapsed, punctuation turned into spaces ("July
+/// 10, 2025", "July 10 2025" and "double-blind"/"double blind" compare equal).
+fn norm(t: &str) -> String {
+    t.replace([',', '.', ';', ':', '(', ')', '-', '–', '"', '\'', '*', '|'], " ").split_whitespace().collect::<Vec<_>>().join(" ").to_lowercase()
+}
+
+/// True if `text` (a date as written) occurs in the same entry of the page
+/// as `quote`: on the line containing the quote or an adjacent line
+/// (sidebars put a date on the line before its label). This is what stops a
+/// small model from pairing a label with the date of a neighbouring row.
+pub fn near_on_page(page: &str, quote: &str, text: &str) -> bool {
+    let (q, t) = (norm(quote), norm(text));
+    if q.len() < 4 || t.is_empty() {
+        return false;
+    }
+    let lines: Vec<String> = page.lines().map(norm).filter(|l| !l.is_empty()).collect();
+    // A table row is an entry on its own: neighbouring rows are exactly the
+    // confusion to rule out. Other text gets a window of three lines, since
+    // a quote may span two lines and a sidebar puts the date on the line
+    // before its label. The quote may be slightly paraphrased (fuzzy match);
+    // the date must be there token by token (a bare year would match too
+    // many lines).
+    let rows: Vec<bool> = page.lines().filter(|l| !norm(l).is_empty()).map(|l| l.trim_start().starts_with('|')).collect();
+    for i in 0..lines.len() {
+        let is_row = rows[i];
+        let hi = if is_row { i + 1 } else { (i + 3).min(lines.len()) };
+        let window: String = (i..hi).filter(|j| is_row || !rows[*j]).map(|j| lines[j].as_str()).collect::<Vec<_>>().join(" ");
+        if date_tokens_in(&window, &t) && (window.contains(&q) || page_contains(&window, &q)) {
+            return true;
+        }
+    }
+    false
+}
+
+/// Every token of a date as written ("Mon 8 Sep 2025 - Thu 11 Sep 2025":
+/// mon, 8, sep, 2025, thu, 11) occurs as a whole token in `text`. Tolerates
+/// the page compressing a range ("Mon 8 - Thu 11 Sep 2025") while a bare
+/// "2025" still fails against the wrong line.
+fn date_tokens_in(text: &str, date: &str) -> bool {
+    let have: std::collections::HashSet<&str> = text.split(|c: char| c.is_whitespace() || c == '-' || c == '–' || c == '(' || c == ')' || c == '|').filter(|w| !w.is_empty()).collect();
+    let mut any = false;
+    for tok in date.split(|c: char| c.is_whitespace() || c == '-' || c == '–' || c == '(' || c == ')' || c == '|').filter(|w| !w.is_empty()) {
+        any = true;
+        if !have.contains(tok) {
+            return false;
+        }
+    }
+    any
+}
+
+/// Checks that a date the model reported is written next to its evidence:
+/// `as_written` must be on the page and in the same entry as `quote`,
+/// unless the quote itself already states the date.
+fn check_written(what: &str, field: &str, page: &str, quote: &str, as_written: &Option<String>, errs: &mut Vec<String>) {
+    if page.is_empty() {
+        return;
+    }
+    let quote_has_date = quote.chars().any(|c| c.is_ascii_digit());
+    match clean_opt(as_written) {
+        None if quote_has_date => {}
+        None => errs.push(format!("{what} {field}_as_written is missing; copy the date exactly as written next to {quote:?}")),
+        Some(w) if !date_tokens_in(&norm(page), &norm(&w)) => errs.push(format!("{what} {field}_as_written {w:?} is not on the page; copy the date exactly as written")),
+        Some(w) if !quote_has_date && !near_on_page(page, quote, &w) => errs.push(format!("{what} {field}_as_written {w:?} is not in the same entry as {quote:?}; the date belongs to a different line of the page. Use the date written next to {quote:?}")),
+        Some(_) => {}
+    }
 }
 
 pub fn parse_date(s: &str) -> Result<NaiveDate, String> {
@@ -404,6 +491,8 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         // sits in another cell, so the model rightly quotes the label.)
         if !page.is_empty() && !page_contains(page, &r.submission_deadline_quote) {
             errs.push(format!("{what} submission_deadline_quote {:?} does not appear on the page; quote the page verbatim", r.submission_deadline_quote));
+        } else {
+            check_written(&what, "submission_deadline", page, &r.submission_deadline_quote, &Some(r.submission_deadline_as_written.clone()), &mut errs);
         }
         if submission.year() < year - 1 || submission.year() > year {
             errs.push(format!("{what} submission deadline {submission} is not in {} or {year}", year - 1));
@@ -412,7 +501,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         let response_end = parse_opt(&r.author_response_end, &format!("{what} author_response_end"), &mut errs);
         if (response_start.is_some() || response_end.is_some()) && !page.is_empty() {
             match clean_opt(&r.author_response_quote) {
-                Some(q) if page_contains(page, &q) => {}
+                Some(q) if page_contains(page, &q) => check_written(&what, "author_response", page, &q, &r.author_response_as_written, &mut errs),
                 Some(q) => errs.push(format!("{what} author_response_quote {q:?} does not appear on the page; quote the page verbatim")),
                 None => errs.push(format!("{what} author response dates are given but author_response_quote is null; quote the page or set them to null")),
             }
@@ -420,7 +509,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         let notification = parse_opt(&r.notification, &format!("{what} notification"), &mut errs);
         if notification.is_some() && !page.is_empty() {
             match clean_opt(&r.notification_quote) {
-                Some(q) if page_contains(page, &q) => {}
+                Some(q) if page_contains(page, &q) => check_written(&what, "notification", page, &q, &r.notification_as_written, &mut errs),
                 Some(q) => errs.push(format!("{what} notification_quote {q:?} does not appear on the page; quote the page verbatim")),
                 None => errs.push(format!("{what} notification is given but notification_quote is null; quote the page or set notification to null")),
             }
@@ -486,7 +575,7 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         }
     }
     match clean_opt(&x.application_deadline_quote) {
-        Some(q) if page.is_empty() || page_contains(page, &q) => {}
+        Some(q) if page.is_empty() || page_contains(page, &q) => check_written("volunteer", "application_deadline", page, &q, &x.application_deadline_as_written, &mut errs),
         Some(q) => errs.push(format!("application_deadline_quote {q:?} does not appear on the page; quote the page verbatim")),
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),
     }
@@ -507,9 +596,12 @@ mod tests {
         Round {
             label: String::new(),
             submission_deadline: sub.into(),
-            submission_deadline_quote: "Thu 10 Jul 2025".into(),
-            notification_quote: notif.map(|_| "Final acceptance notification Thu 6 Nov 2025".to_string()),
-            author_response_quote: rs.map(|_| "author response period Mon 8 Sep 2025 - Thu 11 Sep 2025".to_string()),
+            submission_deadline_quote: "Submission deadline".into(),
+            submission_deadline_as_written: "Thu 10 Jul 2025".into(),
+            notification_quote: notif.map(|_| "Final acceptance notification".to_string()),
+            notification_as_written: notif.map(|_| "Thu 6 Nov 2025".to_string()),
+            author_response_quote: rs.map(|_| "author response period".to_string()),
+            author_response_as_written: rs.map(|_| "Mon 8 Sep 2025 - Thu 11 Sep 2025".to_string()),
             author_response_start: rs.map(String::from),
             author_response_end: re.map(String::from),
             notification: notif.map(String::from),
@@ -566,6 +658,14 @@ mod tests {
         assert!(page_contains("Deadline:   Thu 10\n Jul 2025", "thu 10 jul 2025"));
         assert!(page_contains("Submissions due October 10, 2025 (AoE)", "October 10 2025"));
         assert!(!page_contains("nothing here", "Thu 10 Jul 2025"));
+        // An altered date never passes, whatever else matches.
+        let page = "Important dates. Paper submission deadline: Thu 10 Jul 2025.";
+        assert!(page_contains(page, "Paper submission deadline: Thu 10 Jul 2025"));
+        assert!(!page_contains(page, "Paper submission deadline: Thu 17 Jul 2025"));
+        assert!(!page_contains(page, "Paper submission deadline: Thu 10 Aug 2025"));
+        assert!(!page_contains(page, "Paper submission deadline: Thu 10 Jul 2026"));
+        // A stripped URL in the quote is still tolerated.
+        assert!(page_contains("The deadline is July 10, 2025 anywhere on earth (AoE)", "The deadline is July 10, 2025 anywhere on earth (AoE): https://en.wikipedia.org/wiki/Anywhere_on_Earth"));
     }
 
     #[test]
@@ -587,6 +687,31 @@ mod tests {
     }
 
     #[test]
+    fn date_must_be_written_next_to_its_quote() {
+        // A table where the model could pair a label with a neighbouring row's date.
+        let page = "| Tue 19 May - Mon 25 May 2026 | SAS Artifact | Clarification Period |\n| Tue 19 - Fri 22 May 2026 | OOPSLA | Author Response (Round 2) |\n| Wed 10 Jun 2026 | OOPSLA | Author Notification (Round 2) |\n| Submission deadline | Thu 10 Jul 2025 | x |\n| Final acceptance notification | Thu 6 Nov 2025 | x |\n| author response period | Mon 8 Sep 2025 - Thu 11 Sep 2025 | x |";
+        assert!(near_on_page(page, "Author Response (Round 2)", "Tue 19 - Fri 22 May 2026"));
+        assert!(!near_on_page(page, "Author Notification (Round 2)", "Tue 19 May - Mon 25 May 2026"));
+        // Sidebar style: date on the line before its label, quotes spanning two lines.
+        let side = "**Fri 10 Oct 2025**\n**Submission (Round 1)**\nTue 2 - Fri 5 Dec 2025\nAuthor Response (Round 1)";
+        assert!(near_on_page(side, "Submission (Round 1)", "Fri 10 Oct 2025"));
+        assert!(near_on_page(side, "Fri 10 Oct 2025\nSubmission (Round 1)", "Fri 10 Oct 2025"));
+        assert!(!near_on_page(side, "Author Response (Round 1)", "Fri 10 Oct 2025"));
+        // Punctuation differences are tolerated like everywhere else.
+        assert!(near_on_page("Please apply before November 10th, 2025 AoE.", "before November 10th", "November 10th 2025, AoE"));
+        // A quote that states the date itself needs no separate entry.
+        let mut y = ok_extraction();
+        y.rounds[0].submission_deadline_quote = "The submission deadline is 11:59PM July 10, 2025".into();
+        y.rounds[0].submission_deadline_as_written = "Thu 10 Jul 2025".into();
+        assert!(validate_cfp(&y, 2026, "The submission deadline is 11:59PM July 10, 2025 anywhere on earth.\n\n| Thu 10 Jul 2025 | Submission |\n| Final acceptance notification | Thu 6 Nov 2025 |\n| author response period | Mon 8 Sep 2025 - Thu 11 Sep 2025 |").is_ok());
+        let mut x = ok_extraction();
+        x.rounds[0].notification_as_written = Some("Wed 10 Jun 2026".into());
+        let errs = validate_cfp(&x, 2026, page).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("not in the same entry")), "{errs:?}");
+        assert!(validate_cfp(&ok_extraction(), 2026, page).is_ok());
+    }
+
+    #[test]
     fn lone_round_labelled_first_is_rejected() {
         let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
         let mut x = ok_extraction();
@@ -603,7 +728,8 @@ mod tests {
         let x = VolunteerExtraction {
             page_is_about_conference: true,
             has_volunteer_program: true,
-            application_deadline_quote: Some("Application deadline: Wed 16 Sep 2026".into()),
+            application_deadline_quote: Some("Application deadline".into()),
+            application_deadline_as_written: Some("Wed 16 Sep 2026".into()),
             application_deadline: Some("2026-09-16".into()),
             how_to_apply: Some("Fill in the form.".into()),
             application_url: None,

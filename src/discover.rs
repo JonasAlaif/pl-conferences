@@ -292,13 +292,13 @@ fn grounding_text(md: &str, links: &[(String, String)]) -> String {
 }
 
 /// Ask the model which of the page's links is `what`; None if it says none.
-fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], what: &str) -> Result<Option<String>> {
+fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], page_url: &str, what: &str) -> Result<Option<String>> {
     if links.is_empty() {
         return Ok(None);
     }
     // Links from another host first: a submission system or a form lives
     // elsewhere more often than not, and this page's own navigation is noise.
-    let host = links.first().and_then(|(_, u)| url::Url::parse(u).ok()).and_then(|u| u.host_str().map(String::from));
+    let host = url::Url::parse(page_url).ok().and_then(|u| u.host_str().map(String::from));
     let mut ranked: Vec<&(String, String)> = links.iter().filter(|(_, u)| !trail.tried(u)).collect();
     ranked.sort_by_key(|(_, u)| host.as_deref().is_some_and(|h| u.contains(h)));
     let shown: Vec<&(String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
@@ -374,6 +374,8 @@ fn fetch_page(trail: &mut Trail, url: &str) -> Option<fetch::Page> {
     match fetch::get_rendered(url) {
         Ok(p) => {
             trail.pages += 1;
+            // The page may have redirected: its final URL counts as tried too.
+            trail.mark_tried(&p.url);
             if p.via_chrome {
                 trail.code(Code::E004);
             }
@@ -428,8 +430,17 @@ pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
 pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
-    let prompt = cfp_prompt(cfg, year, &focused_page(&mut trail, cfg, md));
+    let prompt = cfp_prompt(cfg, year, md);
     Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+}
+
+/// Extraction + validation + one corrective retry for a volunteer page, for
+/// the harness (the pipeline goes through `try_volunteer_page`).
+pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
+    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
+    let mut trail = Trail::default();
+    let prompt = volunteer_prompt(cfg, year, site, md);
+    Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x| schema::validate_volunteer(x, year, md, None))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Try one page for the CFP, following at most two links. Conference dates
@@ -446,7 +457,7 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     }
     let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
-    let prompt = cfp_prompt(cfg, year, &focused_page(trail, cfg, &md));
+    let prompt = cfp_prompt(cfg, year, &md);
     let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
@@ -466,7 +477,7 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
             }
             if !cfp.rounds.is_empty() {
                 if cfp.submission_url.is_none() {
-                    cfp.submission_url = pick_link(ctx, trail, &links, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track))?;
+                    cfp.submission_url = pick_link(ctx, trail, &links, &page.url, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track))?;
                 }
                 let deadlines = cfp.deadlines().expect("rounds present");
                 return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
@@ -557,24 +568,8 @@ pub fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: 
     format!("Conference: {} {year} (the academic conference; its {} track has paper deadlines).{site_note} Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\nPAGE:\n{md}", cfg.conference, cfg.track)
 }
 
-/// The page as the model should see it for deadline extraction: a big
-/// multi-track dates table is narrowed to the rows naming the track (see
-/// `clean::focus_table`). Tried and rejected on the harness: letting the
-/// model copy or number the relevant rows (it drops or mixes rows).
-fn focused_page(trail: &mut Trail, cfg: &ConferenceCfg, md: &str) -> String {
-    match clean::focus_table(md, &cfg.track) {
-        Some(f) => {
-            let before = md.lines().filter(|l| l.trim_start().starts_with('|')).count();
-            let after = f.lines().filter(|l| l.trim_start().starts_with('|')).count();
-            trail.note(format!("big dates table narrowed to the {} rows: {after} of {before}", cfg.track));
-            f
-        }
-        None => md.to_string(),
-    }
-}
-
 /// `https://host` of a URL, for prompts.
-fn site_of(url: &str) -> Option<String> {
+pub fn site_of(url: &str) -> Option<String> {
     let u = url::Url::parse(url).ok()?;
     Some(format!("{}://{}", u.scheme(), u.host_str()?))
 }
@@ -607,7 +602,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
                     trail.code(Code::E005);
                 }
                 if v.application_url.is_none() {
-                    v.application_url = pick_link(ctx, trail, &links, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference))?;
+                    v.application_url = pick_link(ctx, trail, &links, &page.url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference))?;
                 }
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
                 return Ok(Some(Found { value: v, raw, prov, html: page.html.clone(), md }));
@@ -644,13 +639,13 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
 /// first). `hint_url` is the CFP page: its links usually include the
 /// volunteers page, so it is tried next and a web search only happens if
 /// that fails.
-pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>, hint_url: Option<&str>, conference_end: Option<chrono::NaiveDate>) -> Result<Attempted<Found<Volunteer>>> {
+/// `site` is the conference's own website when one is known (see
+/// `main::own_site`); a shared host such as conf.researchr.org is never
+/// passed here, since it would mark the real volunteers page as "elsewhere".
+pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&str>, hint_url: Option<&str>, conference_end: Option<chrono::NaiveDate>, site: Option<&str>) -> Result<Attempted<Found<Volunteer>>> {
     let mut trail = Trail::default();
     // (has_program seen, invalid seen)
     let mut saw = (false, false);
-    // The conference's own site, known from the page its dates came from.
-    let site = hint_url.and_then(site_of);
-    let site = site.as_deref();
     if let Some(u) = known_url {
         trail.query = format!("stored URL {u}");
         trail.note(format!("re-checking stored page {u}"));

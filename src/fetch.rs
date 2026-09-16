@@ -103,9 +103,16 @@ pub fn meta_refresh(html: &str, base: &str) -> Option<String> {
         if !m.value().attr("http-equiv").is_some_and(|v| v.eq_ignore_ascii_case("refresh")) {
             continue;
         }
-        let content = m.value().attr("content")?;
-        let (_, rest) = content.split_once(';')?;
-        let target = rest.trim().trim_start_matches(|c: char| c == 'u' || c == 'U').trim_start_matches(|c: char| c == 'r' || c == 'R').trim_start_matches(|c: char| c == 'l' || c == 'L').trim().trim_start_matches('=').trim().trim_matches('"').trim_matches('\'');
+        // A malformed refresh must not stop the scan: another may be valid.
+        let Some(content) = m.value().attr("content") else { continue };
+        let Some((_, rest)) = content.split_once(';') else { continue };
+        // "0; url=target", "0;URL='target'" or just "0;target".
+        let rest = rest.trim();
+        let target = match rest.get(..3).filter(|p| p.eq_ignore_ascii_case("url")) {
+            Some(_) => rest[3..].trim_start().strip_prefix('=').unwrap_or(""),
+            None => rest,
+        };
+        let target = target.trim().trim_matches('"').trim_matches('\'');
         if target.is_empty() {
             continue;
         }
@@ -240,6 +247,11 @@ mod tests {
         let h = r#"<meta content="5;url=https://y.org/" http-equiv="refresh">"#;
         assert_eq!(meta_refresh(h, "https://x.org/").as_deref(), Some("https://y.org/"));
         assert_eq!(meta_refresh("<html><meta name=viewport></html>", "https://x.org/"), None);
+        // No "url=" at all: the target starts with u/r/l and must survive intact.
+        assert_eq!(meta_refresh(r#"<meta http-equiv="refresh" content="0;register.html">"#, "https://x.org/a/").as_deref(), Some("https://x.org/a/register.html"));
+        assert_eq!(meta_refresh(r#"<meta http-equiv="refresh" content="0;upcoming.html">"#, "https://x.org/a/").as_deref(), Some("https://x.org/a/upcoming.html"));
+        // A malformed refresh does not hide a valid one after it.
+        assert_eq!(meta_refresh(r#"<meta http-equiv="refresh"><meta http-equiv="refresh" content="5"><meta http-equiv="refresh" content="0;url=https://y.org/">"#, "https://x.org/").as_deref(), Some("https://y.org/"));
         // A multibyte character straddling the 20 000-byte cut must not panic.
         let big = format!("<html><head></head><body>{}</body></html>", "–".repeat(9_000));
         assert_eq!(meta_refresh(&big, "https://x.org/"), None);

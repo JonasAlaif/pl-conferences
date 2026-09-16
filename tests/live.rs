@@ -161,19 +161,24 @@ fn volunteer_accuracy() {
         }
         let md = clean::html_to_markdown(&fixture(case.fixture));
         let cfg = pl_conferences::config::ConferenceCfg { conference: case.conference.into(), track: case.track.into(), since: 0 };
-        let prompt = discover::volunteer_prompt(&cfg, case.year, Some(case.site), &md);
         for r in 0..runs {
             let t = Instant::now();
-            let (x, raw, _): (schema::VolunteerExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).unwrap();
+            // Same path as production: validation failure gets one corrective retry.
+            let Some((x, raw, validated, retried, _trail)) = discover::extract_volunteer(&llm, &cfg, case.year, Some(case.site), &md).unwrap() else {
+                total += 1;
+                eprintln!("FAIL {:24} run {r}: model output unusable", case.fixture);
+                continue;
+            };
             let secs = t.elapsed().as_secs_f64();
             total += 1;
-            let got = match schema::validate_volunteer(&x, case.year, &md, None) {
+            let tag = if retried { " (after retry)" } else { "" };
+            let got = match validated {
                 Ok(Some(v)) => Some(v.deadline.to_string()),
                 Ok(None) => None,
                 // "Not about this conference" is a rejection, which is the right answer for namesakes.
                 Err(_) if !x.page_is_about_conference => None,
                 Err(e) => {
-                    eprintln!("FAIL {:24} run {r} {secs:5.1}s: INVALID {}\n     raw: {}", case.fixture, e.join("; "), raw.replace('\n', " "));
+                    eprintln!("FAIL {:24} run {r} {secs:5.1}s{tag}: INVALID {}\n     raw: {}", case.fixture, e.join("; "), raw.to_string().replace('\n', " "));
                     continue;
                 }
             };
@@ -183,9 +188,9 @@ fn volunteer_accuracy() {
             };
             if ok {
                 passed += 1;
-                eprintln!("PASS {:24} run {r} {secs:5.1}s deadline {got:?}", case.fixture);
+                eprintln!("PASS {:24} run {r} {secs:5.1}s{tag} deadline {got:?}", case.fixture);
             } else {
-                eprintln!("FAIL {:24} run {r} {secs:5.1}s: deadline {got:?} not in {:?}\n     raw: {}", case.fixture, case.deadlines, raw.replace('\n', " "));
+                eprintln!("FAIL {:24} run {r} {secs:5.1}s{tag}: deadline {got:?} not in {:?}\n     raw: {}", case.fixture, case.deadlines, raw.to_string().replace('\n', " "));
             }
         }
     }

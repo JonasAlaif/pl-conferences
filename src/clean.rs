@@ -117,45 +117,6 @@ fn compact_row(row: &str) -> String {
     format!("| {} |", cells.join(" | "))
 }
 
-/// Tables with at least this many rows are narrowed to the track's rows.
-pub const FOCUS_MIN_ROWS: usize = 30;
-
-/// A page that is mostly one big table of dates for many tracks (a
-/// conference "important dates" overview) confuses a small model: it binds a
-/// date to a neighbouring row. When a table has many rows and some of them
-/// name the track, keep only those rows (plus header and separator) and drop
-/// the rest; everything outside the table stays. Tables with no row naming
-/// the track are left untouched. Returns None when nothing was narrowed.
-pub fn focus_table(md: &str, track: &str) -> Option<String> {
-    let re = Regex::new(&format!(r"(?i)(^|[^a-z0-9]){}([^a-z0-9]|$)", regex::escape(track))).ok()?;
-    let rows: Vec<&str> = md.lines().filter(|l| l.trim_start().starts_with('|')).collect();
-    if rows.len() < FOCUS_MIN_ROWS || !rows.iter().any(|r| re.is_match(r)) {
-        return None;
-    }
-    let mut out = String::with_capacity(md.len());
-    let mut in_table = false;
-    let mut header_rows = 0;
-    for l in md.lines() {
-        let is_row = l.trim_start().starts_with('|');
-        if is_row {
-            let cells = l.trim().trim_matches('|');
-            let is_sep = cells.chars().all(|c| matches!(c, '-' | ':' | '|' | ' '));
-            // Keep the header row and its separator, then only matching rows.
-            let keep = if !in_table { header_rows = 0; true } else if is_sep && header_rows == 1 { true } else { re.is_match(l) };
-            in_table = true;
-            if keep {
-                header_rows += 1;
-                out.push_str(l);
-                out.push('\n');
-            }
-        } else {
-            in_table = false;
-            out.push_str(l);
-            out.push('\n');
-        }
-    }
-    Some(out)
-}
 
 /// Split at headings; the first element is the preamble.
 pub fn sections(md: &str) -> Vec<String> {
@@ -180,6 +141,8 @@ pub fn score(s: &str) -> f64 {
 
 /// Keep the whole text when it fits; otherwise keep the preamble plus the
 /// most relevant heading-delimited sections that fit, in document order.
+/// The result stays within `max` up to the few bytes of the `[…]` markers
+/// that mark dropped sections.
 pub fn budget(md: &str, max: usize) -> String {
     if md.len() <= max {
         return md.to_string();
@@ -337,20 +300,6 @@ mod tests {
         let t = tidy(md);
         assert_eq!(t.matches("14 May 2026").count(), 2);
         assert_eq!(t.matches("Program").count(), 1);
-    }
-
-    #[test]
-    fn big_multi_track_table_is_narrowed_to_the_track() {
-        let md = html_to_markdown(&fixture("splash26-dates.html"));
-        let focused = focus_table(&md, "OOPSLA").expect("big table");
-        let rows: Vec<&str> = focused.lines().filter(|l| l.starts_with('|')).collect();
-        assert!(rows.len() < 20 && rows.len() > 10, "{}", rows.len());
-        assert!(rows.iter().skip(2).all(|r| r.contains("OOPSLA")), "{focused}");
-        assert!(rows[0].contains("When"), "header kept: {}", rows[0]);
-        assert!(focused.contains("Oakland"), "text outside the table stays");
-        // Small tables and tables without the track are left alone.
-        assert!(focus_table(&html_to_markdown(&fixture("cav26.html")), "CAV").is_none());
-        assert!(focus_table(&md, "NOSUCHTRACK").is_none());
     }
 
     #[test]

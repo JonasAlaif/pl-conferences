@@ -288,7 +288,8 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     let mut stage = schema::stage(conf_rec.as_ref().map(|r| &r.data), dl_rec.as_ref().map(|r| &r.data), today);
     let conf_active = schema::conference_active(conf_rec.as_ref().map(|r| &r.data), today) && stage != schema::Stage::Happened;
     let dl_active = schema::deadlines_active(dl_rec.as_ref().map(|r| &r.data), today) && stage != schema::Stage::Happened;
-    let mut cfp_url: Option<String> = dl_rec.as_ref().or(conf_rec.as_ref().map(|_| dl_rec.as_ref()).flatten()).map(|r| r.provenance.source_url.clone()).or_else(|| conf_rec.as_ref().map(|r| r.provenance.source_url.clone()));
+    // The deadlines' source page, else the conference dates' source page.
+    let mut cfp_url: Option<String> = dl_rec.as_ref().map(|r| r.provenance.source_url.clone()).or_else(|| conf_rec.as_ref().map(|r| r.provenance.source_url.clone()));
     if !conf_active && !dl_active {
         log::info!("{cfp_key}: archived ({})", stage.label());
     } else if !have_any && skip_reason(state, &cfp_key, year, current_year).is_some() {
@@ -376,7 +377,8 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     let t = Instant::now();
     let known = existing_vol.as_ref().map(|r| r.provenance.source_url.clone());
     let conference_end = read_record::<schema::Conference>(&dir.join("conference.json")).ok().map(|r| r.data.end);
-    let att = discover::find_volunteer(vol_ctx, cfg, year, known.as_deref(), Some(&cfp_url), conference_end)?;
+    let site = own_site(root, cfg);
+    let att = discover::find_volunteer(vol_ctx, cfg, year, known.as_deref(), Some(&cfp_url), conference_end, site.as_deref())?;
     let secs = t.elapsed().as_secs();
     let outcome = match &att.result {
         Ok(found) => {
@@ -471,6 +473,32 @@ fn prior_urls(root: &Path, cfg: &config::ConferenceCfg) -> (Vec<(i32, String)>, 
         }
     }
     (cfp, vol)
+}
+
+/// The conference's own website, derived from the data: a host that this
+/// conference's stored pages use and no other conference's do. A host shared
+/// between conferences (conf.researchr.org hosts hundreds) is never "own",
+/// so it cannot mislabel the real pages as foreign. Newest year first.
+fn own_site(root: &Path, cfg: &config::ConferenceCfg) -> Option<String> {
+    let mut hosts: std::collections::HashMap<String, std::collections::HashSet<String>> = Default::default();
+    let mut mine: Vec<(i32, String)> = vec![];
+    let conf_dir = root.join("conferences");
+    for entry in walk(&conf_dir).unwrap_or_default() {
+        let name = entry.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+        if !matches!(name.as_str(), "conference.json" | "cfp.json" | "volunteer.json") {
+            continue;
+        }
+        let Ok(text) = std::fs::read_to_string(&entry) else { continue };
+        let Ok(v) = serde_json::from_str::<serde_json::Value>(&text) else { continue };
+        let (Some(conference), Some(url)) = (v["conference"].as_str(), v["provenance"]["source_url"].as_str()) else { continue };
+        let Some(site) = discover::site_of(url) else { continue };
+        hosts.entry(site.clone()).or_default().insert(conference.to_string());
+        if conference == cfg.conference {
+            mine.push((v["year"].as_i64().unwrap_or(0) as i32, site));
+        }
+    }
+    mine.sort_by_key(|(y, _)| std::cmp::Reverse(*y));
+    mine.into_iter().map(|(_, s)| s).find(|s| hosts.get(s).is_some_and(|c| c.len() == 1))
 }
 
 /// Why a conference-year without data is not attempted: abandoned once its
@@ -606,7 +634,13 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
         table.push_str("| | *(nothing upcoming yet)* | |\n");
     }
     let readme_path = root.join("README.md");
-    let readme = std::fs::read_to_string(&readme_path).unwrap_or_default();
+    // A missing README is bootstrapped; any other read error must not end
+    // in overwriting the file with just the generated blocks.
+    let readme = match std::fs::read_to_string(&readme_path) {
+        Ok(s) => s,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => String::new(),
+        Err(e) => return Err(anyhow::Error::new(e).context("reading README.md")),
+    };
     let readme = state::replace_marked(&readme, "dates", &table);
     let mut st = String::from("| Conference | Stage | Submission deadline(s) | Conference dates | Last verified |\n|---|---|---|---|---|\n");
     status.sort();
@@ -652,6 +686,25 @@ mod tests {
 
     fn found(sub: &str) -> discover::Found<schema::Deadlines> {
         discover::Found { value: cfp(sub), raw: serde_json::Value::Null, prov: discover::Provenance { source_url: "https://x.org/new".into(), ..Default::default() }, html: String::new(), md: String::new() }
+    }
+
+    #[test]
+    fn own_site_ignores_hosts_shared_between_conferences() {
+        let root = std::env::temp_dir().join(format!("plc-own-site-{}", std::process::id()));
+        let write = |conf: &str, year: i32, kind: &str, url: &str| {
+            let dir = root.join("conferences").join(conf).join(conf).join(year.to_string());
+            std::fs::create_dir_all(&dir).unwrap();
+            std::fs::write(dir.join(format!("{kind}.json")), format!(r#"{{"conference":"{conf}","track":"{conf}","year":{year},"label":"x","fetched_at":"2026-01-01T00:00:00Z","provenance":{{"source_url":"{url}"}},"data":{{}}}}"#)).unwrap();
+        };
+        write("POPL", 2026, "cfp", "https://conf.researchr.org/track/POPL-2026/x");
+        write("POPL", 2026, "volunteer", "https://popl26.sigplan.org/track/sv");
+        write("POPL", 2025, "cfp", "https://popl25.sigplan.org/track/x");
+        write("SPLASH", 2027, "cfp", "https://conf.researchr.org/track/splash-2027/x");
+        let popl = config::ConferenceCfg { conference: "POPL".into(), track: "POPL".into(), since: 2025 };
+        let splash = config::ConferenceCfg { conference: "SPLASH".into(), track: "OOPSLA".into(), since: 2027 };
+        assert_eq!(own_site(&root, &popl).as_deref(), Some("https://popl26.sigplan.org"));
+        assert_eq!(own_site(&root, &splash), None, "only a shared host is known");
+        let _ = std::fs::remove_dir_all(&root);
     }
 
     #[test]

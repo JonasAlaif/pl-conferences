@@ -122,8 +122,12 @@ jobs:
           # Detect a silently changed upstream build of the pinned tag.
           if [ "$MODEL" = "${{ inputs.model || 'qwen3.5:4b' }}" ] && [ -n "$MODEL_DIGEST" ]; then
             name="${MODEL%%:*}"; tag="${MODEL#*:}"
-            actual=$(curl -fsSL -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
-              "https://registry.ollama.ai/v2/library/${name}/manifests/${tag}" | sha256sum | cut -d' ' -f1 || true)
+            # Hash the body only if the fetch succeeded: hashing an empty
+            # stream would report a bogus digest change (E010) on a network blip.
+            body=$(curl -fsSL -H "Accept: application/vnd.docker.distribution.manifest.v2+json" \
+              "https://registry.ollama.ai/v2/library/${name}/manifests/${tag}") || body=""
+            actual=""
+            if [ -n "$body" ]; then actual=$(printf '%s' "$body" | sha256sum | cut -d' ' -f1); fi
             if [ -n "$actual" ] && [ "$actual" != "$MODEL_DIGEST" ]; then
               echo "::warning::model $MODEL now has manifest digest $actual (pinned $MODEL_DIGEST) (E010)"
               echo "PLC_WORKFLOW_CODES=${PLC_WORKFLOW_CODES:+$PLC_WORKFLOW_CODES,}E010" >> "$GITHUB_ENV"
@@ -165,7 +169,14 @@ jobs:
             echo "nothing changed"
           else
             git commit -m "Update conference dates $(date -u +%Y-%m-%d)"
-            git pull --rebase -X ours origin "${GITHUB_REF_NAME}" || true
+            # Someone may have pushed during the run. Under a rebase "theirs"
+            # is the run's own commit, so its files win any conflict; a
+            # rebase that still fails must not be papered over.
+            if ! git pull --rebase -X theirs origin "${GITHUB_REF_NAME}"; then
+              git rebase --abort || true
+              echo "::error::could not rebase the results onto ${GITHUB_REF_NAME}; they are in the job's workspace only"
+              exit 1
+            fi
             git push
           fi
 

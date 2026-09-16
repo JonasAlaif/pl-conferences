@@ -156,7 +156,10 @@ impl State {
             }
         }
         s.push_str("## Recent outcomes\n\n| Conference-year | Outcome | Attempts | Last attempt | Note |\n|---|---|---|---|---|\n");
-        for (k, a) in self.runs.iter().rev() {
+        // Most recent attempt first.
+        let mut recent: Vec<(&String, &Attempt)> = self.runs.iter().collect();
+        recent.sort_by(|a, b| b.1.last_attempt.cmp(&a.1.last_attempt).then_with(|| a.0.cmp(b.0)));
+        for (k, a) in recent {
             s.push_str(&format!("| `{k}` | {} | {} | {} | {} |\n", format!("{:?}", a.outcome).to_lowercase(), a.attempts, a.last_attempt.format("%Y-%m-%d"), a.note.replace('|', "/")));
         }
         s
