@@ -53,6 +53,8 @@ pub struct CfpExtraction {
 
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct ConferenceInfo {
+    /// The exact words on the page that give the conference dates, copied verbatim with the dates in them, e.g. "Sun 4 - Fri 9 October 2026".
+    pub dates_quote: String,
     /// First day of the conference, YYYY-MM-DD.
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub start_date: String,
@@ -227,21 +229,75 @@ pub fn near_on_page(page: &str, quote: &str, text: &str) -> bool {
 }
 
 /// A "conflicting statement" is kept only if it is on the page and really
-/// gives a different date: one that repeats the accepted date's numbers
-/// ("Thursay, 19 Feb 2026" next to "Thu 19 Feb 2026") is the same date.
-fn real_conflict(conflict: &Option<String>, accepted_as_written: &str, page: &str) -> Option<String> {
+/// is another statement of the same deadline with a different date:
+/// - one that repeats the accepted date's numbers ("Thursay, 19 Feb 2026"
+///   next to "Thu 19 Feb 2026", "ESOP–round 1 May 28" for "May 28, 2026")
+///   is the same date;
+/// - a restatement names the deadline, so it shares a word with the quote
+///   or label ("submission", "round", "ESOP"); a bare date somewhere else
+///   on the page ("up till Thu 1 Jul 2027") is some other date;
+/// - when the accepted entry names the track, the other one must too (the
+///   workshops row of a dates table is not a conflict for the papers row).
+fn real_conflict(conflict: &Option<String>, quote: &str, label: &str, accepted_as_written: &str, page: &str, track: &str) -> Option<String> {
     let c = clean_opt(conflict)?;
     if !page.is_empty() && !page_contains(page, &c) {
         return None;
     }
     let cn = norm(&c);
+    let have: std::collections::HashSet<&str> = cn.split(' ').collect();
     let accepted = norm(accepted_as_written);
-    let numbers: Vec<&str> = accepted.split(' ').filter(|t| t.chars().any(|ch| ch.is_ascii_digit())).collect();
-    let have: std::collections::HashSet<&str> = cn.split(|ch: char| ch.is_whitespace() || ch == '-' || ch == '–').collect();
+    let has_year = have.iter().any(|t| t.len() == 4 && t.chars().all(|ch| ch.is_ascii_digit()));
+    let numbers: Vec<&str> = accepted.split(' ').filter(|t| t.chars().any(|ch| ch.is_ascii_digit()) && (has_year || t.len() != 4)).collect();
     if !numbers.is_empty() && numbers.iter().all(|n| have.contains(n)) {
         return None;
     }
+    let date_words: std::collections::HashSet<&str> = accepted.split(' ').collect();
+    let names = format!("{} {}", norm(quote), norm(label));
+    let names: Vec<&str> = names.split(' ').filter(|w| w.len() >= 3 && !w.chars().any(|ch| ch.is_ascii_digit()) && !date_words.contains(w)).collect();
+    if !names.is_empty() && !names.iter().any(|w| have.contains(w)) {
+        return None;
+    }
+    if !page.is_empty() && !track.is_empty() && near_on_page(page, quote, track) && !near_on_page(page, &c, track) {
+        return None;
+    }
     Some(c)
+}
+
+/// The day numbers of `start` and `end` occur in `quote` ("Sun 4 - Fri 9
+/// October 2026", "October 4–9, 2026", "4th-9th October").
+fn days_in_quote(quote: &str, start: NaiveDate, end: NaiveDate) -> bool {
+    let q = norm(quote);
+    let nums: std::collections::HashSet<u32> = q.split(' ').filter_map(|t| t.trim_end_matches(|c: char| c.is_ascii_alphabetic()).parse().ok()).collect();
+    nums.contains(&start.day()) && nums.contains(&end.day())
+}
+
+/// The numbers of a date as written agree with the quote it was read from
+/// (years are exempt, a quote often omits them).
+fn same_numbers(quote: &str, as_written: &str) -> bool {
+    let q = norm(quote);
+    let have: std::collections::HashSet<&str> = q.split(' ').collect();
+    norm(as_written).split(' ').filter(|t| t.chars().any(|c| c.is_ascii_digit()) && t.len() != 4).all(|t| have.contains(t))
+}
+
+/// The conflicting statement the model reported, or, when it reported none
+/// but its own quote gives a different day than the date it chose ("Apply
+/// here by July 12" next to a sidebar saying "Sun 19 Jul 2026"), that
+/// quote: the page states both, and the calendar should say so. Asking the
+/// model to re-align the two instead was tried; it repeats itself.
+fn conflict_or_quote(conflict: &Option<String>, quote: &str, as_written: &str) -> Option<String> {
+    if clean_opt(conflict).is_some() {
+        return conflict.clone();
+    }
+    (shares_month(quote, as_written) && !same_numbers(quote, as_written)).then(|| quote.to_string())
+}
+
+/// The quote names the month (or weekday) of the date as written ("July"
+/// for "Jul"), so its numbers are a date, not a round number.
+fn shares_month(quote: &str, as_written: &str) -> bool {
+    let (q, w) = (norm(quote), norm(as_written));
+    let words = |s: &str| s.split(' ').filter(|t| t.len() >= 3 && t.chars().all(char::is_alphabetic)).map(String::from).collect::<Vec<_>>();
+    let (qw, ww) = (words(&q), words(&w));
+    ww.iter().any(|m| qw.iter().any(|t| t.starts_with(&m[..3]) && m.starts_with(&t[..3])))
 }
 
 /// Every token of a date as written ("Mon 8 Sep 2025 - Thu 11 Sep 2025":
@@ -404,10 +460,16 @@ fn conference_text(c: Option<&Conference>) -> String {
     }
 }
 
-/// Change in conference dates or location.
+/// Change in conference dates or city. A differently worded country
+/// ("United States" vs "California, United States") is not a change; the
+/// stored text is simply refreshed.
 pub fn diff_conference(old: Option<&Conference>, new: Option<&Conference>, at: chrono::DateTime<chrono::Utc>) -> Vec<Change> {
-    let (o, n) = (conference_text(old), conference_text(new));
-    if o == n { vec![] } else { vec![Change { at, field: "conference".into(), old: o, new: n }] }
+    let same = match (old, new) {
+        (Some(o), Some(n)) => o.start == n.start && o.end == n.end && o.city.as_deref().map(norm) == n.city.as_deref().map(norm),
+        (None, None) => true,
+        _ => false,
+    };
+    if same { vec![] } else { vec![Change { at, field: "conference".into(), old: conference_text(old), new: conference_text(new) }] }
 }
 
 /// Changes in deadline dates (prose and links are ignored).
@@ -488,7 +550,7 @@ pub fn grounded_url(u: &Option<String>, grounding: &str) -> Option<String> {
 }
 
 /// Check dates parse and are consistent with each other and with `year`.
-pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec<String>> {
+pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Result<Cfp, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -507,6 +569,20 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         }
         if start.year() != year && end.year() != year {
             errs.push(format!("conference dates are not in {year}"));
+        }
+        // Grounding: the dates must be quoted from the page. A model asked
+        // for dates a page does not give has invented them (a call for
+        // papers without a venue yet once yielded "15-19 August"). With
+        // deadlines on the page the invented dates are simply dropped; a
+        // page that offers nothing else gets the corrective retry.
+        if !page.is_empty() && !(page_contains(page, &c.dates_quote) && days_in_quote(&c.dates_quote, start, end)) {
+            let msg = format!("conference dates_quote {:?} is not on the page or does not contain the day numbers of {start} and {end}; quote the words on the page that give the conference dates, or set conference to null if the page does not state them", c.dates_quote);
+            if has_rounds {
+                log::warn!("dropping the conference dates: {msg}");
+            } else {
+                errs.push(msg);
+            }
+            return None;
         }
         Some(Conference { start, end, city: clean_opt(&c.city), country: clean_opt(&c.country) })
     });
@@ -569,7 +645,8 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
                 errs.push(format!("{what} dates run past the conference start {}", c.start));
             }
         }
-        let submission_conflict = real_conflict(&r.submission_deadline_conflict, &r.submission_deadline_as_written, page);
+        let conflict = conflict_or_quote(&r.submission_deadline_conflict, &r.submission_deadline_quote, &r.submission_deadline_as_written);
+        let submission_conflict = real_conflict(&conflict, &r.submission_deadline_quote, &r.label, &r.submission_deadline_as_written, page, track);
         rounds.push(ValidRound { label: r.label.trim().to_string(), submission, submission_conflict, response_start, response_end, notification });
     }
     for w in rounds.windows(2) {
@@ -624,7 +701,9 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),
     }
     if errs.is_empty() {
-        let deadline_conflict = real_conflict(&x.application_deadline_conflict, x.application_deadline_as_written.as_deref().unwrap_or(""), page);
+        let (quote, written) = (x.application_deadline_quote.as_deref().unwrap_or(""), x.application_deadline_as_written.as_deref().unwrap_or(""));
+        let conflict = conflict_or_quote(&x.application_deadline_conflict, quote, written);
+        let deadline_conflict = real_conflict(&conflict, quote, "", written, page, "");
         Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
     } else {
         Err(errs)
@@ -658,7 +737,7 @@ mod tests {
         CfpExtraction {
             page_is_about_conference: true,
             has_submission_deadline: true,
-            conference: Some(ConferenceInfo { start_date: "2026-01-11".into(), end_date: "2026-01-17".into(), city: Some("Rennes".into()), country: Some("France".into()) }),
+            conference: Some(ConferenceInfo { dates_quote: "Sun 11 - Sat 17 January 2026".into(), start_date: "2026-01-11".into(), end_date: "2026-01-17".into(), city: Some("Rennes".into()), country: Some("France".into()) }),
 
             rounds: vec![round("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some("2025-11-06"))],
             submission_details: "Submit via HotCRP.".into(),
@@ -669,34 +748,49 @@ mod tests {
     #[test]
     fn urls_are_kept_only_when_on_the_page() {
         let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025. Submit at https://popl26.hotcrp.com/";
-        let c = validate_cfp(&ok_extraction(), 2026, page).unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, page, "").unwrap();
         assert_eq!(c.submission_url.as_deref(), Some("https://popl26.hotcrp.com"));
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025", "").unwrap();
         assert_eq!(c.submission_url, None, "a URL that is not on the page is dropped");
         assert_eq!(grounded_url(&Some("javascript:void(0)".into()), "javascript:void(0)"), None);
     }
 
     #[test]
     fn accepts_consistent_dates() {
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let page = "POPL 2026, Sun 11 - Sat 17 January 2026, Rennes. Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
+        let c = validate_cfp(&ok_extraction(), 2026, page, "").unwrap();
         assert_eq!(c.rounds[0].submission, NaiveDate::from_ymd_opt(2025, 7, 10).unwrap());
         assert_eq!(c.conference.unwrap().city.as_deref(), Some("Rennes"));
+        // Conference dates the page does not state are dropped when there
+        // are deadlines, and rejected (for the retry) when there is nothing else.
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025", "").unwrap();
+        assert!(c.conference.is_none(), "invented conference dates are dropped");
+        let mut x = ok_extraction();
+        x.rounds.clear();
+        x.has_submission_deadline = false;
+        let errs = validate_cfp(&x, 2026, "POPL 2026 takes place in Rennes.", "").unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("dates_quote")), "{errs:?}");
+        assert!(validate_cfp(&x, 2026, "POPL 2026, Sun 11 - Sat 17 January 2026, Rennes.", "").unwrap().conference.is_some());
+        x.conference.as_mut().unwrap().dates_quote = "January 11–17, 2026".into();
+        assert!(validate_cfp(&x, 2026, "POPL 2026 takes place January 11–17, 2026 in Rennes.", "").unwrap().conference.is_some());
+        x.conference.as_mut().unwrap().dates_quote = "January 2026".into();
+        assert!(validate_cfp(&x, 2026, "POPL 2026 takes place in January 2026 in Rennes.", "").is_err(), "a quote without the days does not ground the dates");
     }
 
     #[test]
     fn rejects_bad_ordering_and_dates() {
         let mut x = ok_extraction();
         x.rounds[0].notification = Some("2025-08-01".into());
-        assert!(validate_cfp(&x, 2026, "").unwrap_err().iter().any(|e| e.contains("before an earlier date")));
+        assert!(validate_cfp(&x, 2026, "", "").unwrap_err().iter().any(|e| e.contains("before an earlier date")));
         let mut x = ok_extraction();
         x.rounds[0].submission_deadline = "2025-02-31".into();
-        assert!(validate_cfp(&x, 2026, "").is_err());
+        assert!(validate_cfp(&x, 2026, "", "").is_err());
         let mut x = ok_extraction();
         x.conference.as_mut().unwrap().start_date = "2027-01-11".into();
         x.conference.as_mut().unwrap().end_date = "2027-01-17".into();
-        assert!(validate_cfp(&x, 2026, "").unwrap_err().iter().any(|e| e.contains("not in 2026")));
+        assert!(validate_cfp(&x, 2026, "", "").unwrap_err().iter().any(|e| e.contains("not in 2026")));
         let x = ok_extraction();
-        assert!(validate_cfp(&x, 2026, "a page without that date").unwrap_err().iter().any(|e| e.contains("does not appear")));
+        assert!(validate_cfp(&x, 2026, "a page without that date", "").unwrap_err().iter().any(|e| e.contains("does not appear")));
     }
 
     #[test]
@@ -717,7 +811,7 @@ mod tests {
     #[test]
     fn stages_follow_the_calendar() {
         let d = |s: &str| NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Sun 11 - Sat 17 January 2026. Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025", "").unwrap();
         let (conf, dl) = (c.conference.as_ref(), c.deadlines());
         assert_eq!(stage(None, None, d("2025-01-01")), Stage::Future);
         assert_eq!(stage(conf, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
@@ -749,24 +843,52 @@ mod tests {
         let mut y = ok_extraction();
         y.rounds[0].submission_deadline_quote = "The submission deadline is 11:59PM July 10, 2025".into();
         y.rounds[0].submission_deadline_as_written = "Thu 10 Jul 2025".into();
-        assert!(validate_cfp(&y, 2026, "The submission deadline is 11:59PM July 10, 2025 anywhere on earth.\n\n| Thu 10 Jul 2025 | Submission |\n| Final acceptance notification | Thu 6 Nov 2025 |\n| author response period | Mon 8 Sep 2025 - Thu 11 Sep 2025 |").is_ok());
+        assert!(validate_cfp(&y, 2026, "The submission deadline is 11:59PM July 10, 2025 anywhere on earth.\n\n| Thu 10 Jul 2025 | Submission |\n| Final acceptance notification | Thu 6 Nov 2025 |\n| author response period | Mon 8 Sep 2025 - Thu 11 Sep 2025 |", "").is_ok());
         let mut x = ok_extraction();
         x.rounds[0].notification_as_written = Some("Wed 10 Jun 2026".into());
-        let errs = validate_cfp(&x, 2026, page).unwrap_err();
+        let errs = validate_cfp(&x, 2026, page, "").unwrap_err();
         assert!(errs.iter().any(|e| e.contains("not in the same entry")), "{errs:?}");
-        assert!(validate_cfp(&ok_extraction(), 2026, page).is_ok());
+        assert!(validate_cfp(&ok_extraction(), 2026, page, "").is_ok());
     }
 
     #[test]
     fn conflict_is_kept_only_for_a_different_date() {
-        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025. The deadline is Thursay, 10 July 2025 AoE. Extended to 17 July 2025.";
+        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025. The deadline is Thursay, 10 July 2025 AoE. The deadline was extended to 17 July 2025. Important dates up till 1 Jul 2026. The deadline is 10 July.";
         let mut x = ok_extraction();
         x.rounds[0].submission_deadline_conflict = Some("Thursay, 10 July 2025 AoE".into());
-        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict, None, "same date restated is not a conflict");
-        x.rounds[0].submission_deadline_conflict = Some("Extended to 17 July 2025".into());
-        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict.as_deref(), Some("Extended to 17 July 2025"));
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict, None, "same date restated is not a conflict");
+        x.rounds[0].submission_deadline_conflict = Some("The deadline is 10 July".into());
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict, None, "same date without the year is not a conflict");
+        x.rounds[0].submission_deadline_conflict = Some("deadline was extended to 17 July 2025".into());
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict.as_deref(), Some("deadline was extended to 17 July 2025"));
+        x.rounds[0].submission_deadline_conflict = Some("up till 1 Jul 2026".into());
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict, None, "a date that does not name the deadline is not a conflict");
         x.rounds[0].submission_deadline_conflict = Some("Extended to 24 July 2025".into());
-        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict, None, "a statement not on the page is dropped");
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict, None, "a statement not on the page is dropped");
+        // A quote whose own day differs from the date chosen is itself the
+        // conflicting statement; a round number in the quote is not a day.
+        let page = "Submission (Round 1)\nFri 10 Oct 2025\nApply here by July 12. Sun 19 Jul 2026 Application Deadline";
+        let mut x = ok_extraction();
+        x.conference = None;
+        x.rounds = vec![round("2025-10-10", None, None, None)];
+        x.rounds[0].submission_deadline_quote = "Submission (Round 1)".into();
+        x.rounds[0].submission_deadline_as_written = "Fri 10 Oct 2025".into();
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict, None);
+        x.rounds[0].submission_deadline_quote = "Apply here by July 12".into();
+        x.rounds[0].submission_deadline_as_written = "Sun 19 Jul 2026".into();
+        x.rounds[0].submission_deadline = "2026-07-19".into();
+        assert_eq!(validate_cfp(&x, 2026, page, "").unwrap().rounds[0].submission_conflict.as_deref(), Some("Apply here by July 12"));
+        // A dates table: the workshops row is not a conflict for the papers row.
+        let table = "| Thu 9 Jul 2026 | POPL | Paper submission deadline |\n| Fri 24 Jul 2026 | Workshops | Submission deadline |\n| Mon 5 Oct 2026 | POPL | Author notification |";
+        let mut y = ok_extraction();
+        y.conference = None;
+        y.rounds = vec![round("2026-07-09", None, None, None)];
+        y.rounds[0].submission_deadline_quote = "Paper submission deadline".into();
+        y.rounds[0].submission_deadline_as_written = "Thu 9 Jul 2026".into();
+        y.rounds[0].submission_deadline_conflict = Some("Fri 24 Jul 2026 | Workshops | Submission deadline".into());
+        assert_eq!(validate_cfp(&y, 2026, table, "POPL").unwrap().rounds[0].submission_conflict, None, "another track's row is not a conflict");
+        y.rounds[0].submission_deadline_conflict = Some("Fri 24 Jul 2026 | POPL | Submission deadline".into());
+        assert_eq!(validate_cfp(&y, 2026, &format!("{table}\n| Fri 24 Jul 2026 | POPL | Submission deadline |"), "POPL").unwrap().rounds[0].submission_conflict.is_some(), true);
     }
 
     #[test]
@@ -774,10 +896,10 @@ mod tests {
         let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
         let mut x = ok_extraction();
         x.rounds[0].label = "Round 1".into();
-        let errs = validate_cfp(&x, 2026, page).unwrap_err();
+        let errs = validate_cfp(&x, 2026, page, "").unwrap_err();
         assert!(errs.iter().any(|e| e.contains("the only round is labelled")), "{errs:?}");
         x.rounds[0].label = String::new();
-        assert!(validate_cfp(&x, 2026, page).is_ok());
+        assert!(validate_cfp(&x, 2026, page, "").is_ok());
     }
 
     #[test]
@@ -812,20 +934,20 @@ mod tests {
         let mut x = ok_extraction();
         x.has_submission_deadline = false;
         x.rounds.clear();
-        let c = validate_cfp(&x, 2026, "").unwrap();
+        let c = validate_cfp(&x, 2026, "", "").unwrap();
         assert!(c.rounds.is_empty() && c.conference.is_some());
         x.conference = None;
-        assert!(validate_cfp(&x, 2026, "").is_err());
+        assert!(validate_cfp(&x, 2026, "", "").is_err());
     }
 
     #[test]
     fn diff_reports_changed_dates_only() {
         let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
-        let a = validate_cfp(&ok_extraction(), 2026, page).unwrap();
+        let a = validate_cfp(&ok_extraction(), 2026, page, "").unwrap();
         let mut x = ok_extraction();
         x.rounds[0].submission_deadline = "2025-07-17".into();
         x.submission_details = "different prose".into();
-        let b = validate_cfp(&x, 2026, page).unwrap();
+        let b = validate_cfp(&x, 2026, page, "").unwrap();
         let d = diff_cfp(&a, &b, chrono::Utc::now());
         assert_eq!(d.len(), 1);
         assert_eq!((d[0].field.as_str(), d[0].old.as_str(), d[0].new.as_str()), ("round 1 submission", "2025-07-10", "2025-07-17"));

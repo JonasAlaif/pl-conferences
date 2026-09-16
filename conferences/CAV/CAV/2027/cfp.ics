@@ -11,11 +11,10 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270120
 DTEND;VALUE=DATE:20270121
 SUMMARY:[CAV 2027] Paper Submission Deadline
-DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nSubmit at: https
- ://conferences.i-cav.org/2027/artifacts/\n\nExtracted automatically by a 
- small language model\; please cross-check against the source before relyi
- ng on it: https://conferences.i-cav.org/2027/\nhttps://github.com/JonasAl
- aif/pl-conferences
+DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nExtracted automa
+ tically by a small language model\; please cross-check against the source
+  before relying on it: https://conferences.i-cav.org/2027/\nhttps://githu
+ b.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:411008c30d19ded2dc7cc642eae4f52e9e41efa4@pl-conferences

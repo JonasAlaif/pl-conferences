@@ -9,6 +9,11 @@ use std::time::{Duration, Instant};
 
 /// Days before a negative volunteer result (not found / no programme) is retried.
 const VOLUNTEER_RETRY_DAYS: i64 = 21;
+/// Days before a call for papers that was not found (or did not validate) is looked for again.
+const CFP_RETRY_DAYS: i64 = 7;
+/// Days a stored record is trusted before its page is re-checked. Discovery
+/// of missing data always goes first; re-validation fills the remaining slots.
+const REVALIDATE_DAYS: i64 = 14;
 
 const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [--year YYYY] [--dry-run] [--no-volunteer]
        pl-conferences clean <file.html>
@@ -82,11 +87,11 @@ fn main() -> Result<()> {
             let md = clean::html_to_markdown(&html);
             let llm = llm::Llm::from_env();
             llm.check()?;
-            let prompt = discover::cfp_prompt(&cfg, year, &md);
+            let prompt = discover::cfp_prompt(&cfg, year, "", &md);
             let t = std::time::Instant::now();
             let (x, raw, usage): (schema::CfpExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
             eprintln!("{raw}\n--- {usage:?} wall {:.1}s", t.elapsed().as_secs_f64());
-            match schema::validate_cfp(&x, year, &md) {
+            match schema::validate_cfp(&x, year, &md, &cfg.track) {
                 Ok(c) => println!("{}", serde_json::to_string_pretty(&c)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
@@ -100,7 +105,7 @@ fn main() -> Result<()> {
             let md = clean::html_to_markdown(&html);
             let llm = llm::Llm::from_env();
             llm.check()?;
-            let prompt = discover::volunteer_prompt(&cfg, year, argv.get(5).map(String::as_str), &md);
+            let prompt = discover::volunteer_prompt(&cfg, year, argv.get(5).map(String::as_str), "", &md);
             let (x, raw, usage): (schema::VolunteerExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
             eprintln!("{raw}\n--- {usage:?}");
             match schema::validate_volunteer(&x, year, &md, None) {
@@ -154,36 +159,38 @@ fn run(args: &Args) -> Result<()> {
     let max_items: usize = std::env::var("PLC_MAX_ITEMS").ok().and_then(|s| s.parse().ok()).unwrap_or(5);
     let started = Instant::now();
 
-    // Work list: every conference-year that still needs something, current
-    // and past years before next year, conferences rotated between runs.
-    // Only the first `max_items` are attempted; the rest wait for the next
-    // (weekly) run, which keeps every run short.
-    let mut items: Vec<(&config::ConferenceCfg, i32)> = vec![];
+    // Work list: every conference-year that still needs something. Only the
+    // first `max_items` are attempted; the rest wait for the next run, which
+    // keeps every run short. Missing data is looked for before stored data
+    // is re-checked, so re-validation of this year's conferences can never
+    // crowd out next year's calls for papers.
+    let mut items: Vec<(&config::ConferenceCfg, i32, Need)> = vec![];
     for cfg in &selected {
         let years: Vec<i32> = match args.year {
             Some(y) => vec![y],
             None => (cfg.since..=current_year + 1).collect(),
         };
         for year in years {
-            if needs_work(args, root, &state, cfg, year, current_year) {
-                items.push((cfg, year));
+            if let Some(need) = needs_work(args, root, &state, cfg, year, current_year, now) {
+                items.push((cfg, year, need));
             }
         }
     }
-    // Never-attempted first, then least recently attempted; next year's
-    // editions after this year's.
-    items.sort_by_key(|(cfg, y)| {
+    // Discovery before re-validation; within each, this year's editions
+    // before next year's, never-attempted first, then least recently
+    // attempted, so every pending item gets its turn.
+    items.sort_by_key(|(cfg, y, need)| {
         let a = state.get(&format!("{}/cfp", cfg.key(*y)));
-        (*y > current_year, a.is_some(), a.map(|a| a.last_attempt))
+        (*need, *y > current_year, a.is_some(), a.map(|a| a.last_attempt))
     });
     let pending = items.len();
     items.truncate(max_items);
-    log::info!("{pending} conference-years pending, attempting {} this run (budget {budget:?})", items.len());
+    log::info!("{pending} conference-years pending, attempting {} this run (budget {budget:?}): {}", items.len(), items.iter().map(|(c, y, n)| format!("{} ({})", c.key(*y), n.verb())).collect::<Vec<_>>().join(", "));
 
     let mut consecutive_errors = 0u32;
     let mut fatal: Option<anyhow::Error> = None;
     let mut ctxs: std::collections::HashMap<String, (Ctx, Ctx)> = std::collections::HashMap::new();
-    for (cfg, year) in items {
+    for (cfg, year, _) in items {
         if started.elapsed() > budget {
             log::warn!("time budget of {budget:?} used up; remaining conference-years wait for the next run");
             break;
@@ -214,6 +221,7 @@ fn run(args: &Args) -> Result<()> {
                 }
             }
         }
+        llm.unload();
     }
     log::info!("run took {:.0?}", started.elapsed());
 
@@ -236,35 +244,123 @@ fn run(args: &Args) -> Result<()> {
     }
 }
 
-/// Whether a conference-year still has something to attempt this run:
-/// active parts are re-collected every run, archived ones never.
-fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, year: i32, current_year: i32) -> bool {
-    let today = Utc::now().date_naive();
+/// What a run does for a conference-year: look for data that is missing, or
+/// re-check stored data whose page has not been looked at for a while.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+enum Need {
+    Discover,
+    Revalidate,
+}
+
+impl Need {
+    fn verb(self) -> &'static str {
+        match self {
+            Need::Discover => "searching",
+            Need::Revalidate => "re-validating",
+        }
+    }
+}
+
+/// Why a conference-year (or one of its parts) is left alone this run.
+#[derive(Debug, Clone, PartialEq, Eq)]
+enum Idle {
+    /// Over, or its deadline has passed: never touched again.
+    Archived,
+    /// Never found and its year is in the past.
+    Abandoned,
+    /// Recently attempted or recently verified.
+    Waiting(String),
+}
+
+impl std::fmt::Display for Idle {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Idle::Archived => write!(f, "archived"),
+            Idle::Abandoned => write!(f, "abandoned"),
+            Idle::Waiting(why) => write!(f, "{why}"),
+        }
+    }
+}
+
+/// Whether a conference-year has something to attempt this run. The same
+/// per-part rules decide what the run then does, so the work list and the
+/// run never disagree. A year with nothing stored is listed for its call for
+/// papers only: the volunteer search starts from that page.
+fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Option<Need> {
     let key = cfg.key(year);
     let dir = root.join("conferences").join(&key);
     let conf = read_record::<schema::Conference>(&dir.join("conference.json")).ok();
     let dl = read_record::<schema::Deadlines>(&dir.join("cfp.json")).ok();
-    let have_any = conf.is_some() || dl.is_some();
-    let stage = schema::stage(conf.as_ref().map(|r| &r.data), dl.as_ref().map(|r| &r.data), today);
-    let cfp_active = schema::conference_active(conf.as_ref().map(|r| &r.data), today) || schema::deadlines_active(dl.as_ref().map(|r| &r.data), today);
-    let cfp_work = cfp_active && stage != schema::Stage::Happened && (have_any || skip_reason(state, &format!("{key}/cfp"), year, current_year).is_none());
-    let vol_recent_negative = state.get(&format!("{key}/volunteer")).is_some_and(|a| matches!(a.outcome, Outcome::NotFound | Outcome::NoVolunteerProgram) && Utc::now() - a.last_attempt < chrono::Duration::days(VOLUNTEER_RETRY_DAYS));
-    let vol_has_data = dir.join("volunteer.json").exists();
-    let vol_work = !args.no_volunteer && volunteer_active(root, cfg, year, stage, today) && (vol_has_data || (!vol_recent_negative && (have_any || skip_reason(state, &format!("{key}/volunteer"), year, current_year).is_none())));
-    cfp_work || vol_work
+    let vol = read_record::<schema::Volunteer>(&dir.join("volunteer.json")).ok();
+    let stage = schema::stage(conf.as_ref().map(|r| &r.data), dl.as_ref().map(|r| &r.data), now.date_naive());
+    let cfp = cfp_need(state, &format!("{key}/cfp"), conf.as_ref(), dl.as_ref(), year, current_year, now).ok();
+    let vol = if args.no_volunteer || (conf.is_none() && dl.is_none()) {
+        None
+    } else {
+        volunteer_need(state, &format!("{key}/volunteer"), vol.as_ref(), stage, year, current_year, now).ok()
+    };
+    cfp.into_iter().chain(vol).min()
 }
 
-/// Volunteer applications open late (after rebuttals), so the volunteer
-/// pass stays active until the conference has happened or its own
-/// deadline has passed.
-fn volunteer_active(root: &Path, cfg: &config::ConferenceCfg, year: i32, stage: schema::Stage, today: chrono::NaiveDate) -> bool {
+/// Conference dates and deadlines: discovery while a part is missing (not
+/// retried within `CFP_RETRY_DAYS` of a failed search), re-validation once a
+/// stored part is older than `REVALIDATE_DAYS`; archived when the conference
+/// is over (dates) or the last rebuttal has ended (deadlines).
+fn cfp_need(state: &State, key: &str, conf: Option<&Record<schema::Conference>>, dl: Option<&Record<schema::Deadlines>>, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Result<Need, Idle> {
+    let today = now.date_naive();
+    let stage = schema::stage(conf.map(|r| &r.data), dl.map(|r| &r.data), today);
+    let conf_active = schema::conference_active(conf.map(|r| &r.data), today) && stage != schema::Stage::Happened;
+    let dl_active = schema::deadlines_active(dl.map(|r| &r.data), today) && stage != schema::Stage::Happened;
+    if !conf_active && !dl_active {
+        return Err(Idle::Archived);
+    }
+    if conf.is_none() && dl.is_none() && skip_reason(state, key, year, current_year).is_some() {
+        return Err(Idle::Abandoned);
+    }
+    let missing = (conf_active && conf.is_none()) || (dl_active && dl.is_none());
+    let due = (conf_active && conf.is_some_and(|r| stale(r, now))) || (dl_active && dl.is_some_and(|r| stale(r, now)));
+    if missing {
+        return match recent_negative(state, key, now, CFP_RETRY_DAYS) {
+            Some(wait) if !due => Err(wait),
+            _ => Ok(Need::Discover),
+        };
+    }
+    if due {
+        Ok(Need::Revalidate)
+    } else {
+        Err(Idle::Waiting(format!("verified within the last {REVALIDATE_DAYS} days")))
+    }
+}
+
+/// Volunteer applications open late (after rebuttals), so this part stays
+/// active until the conference has happened or its own deadline has passed.
+fn volunteer_need(state: &State, key: &str, vol: Option<&Record<schema::Volunteer>>, stage: schema::Stage, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Result<Need, Idle> {
     if stage == schema::Stage::Happened {
-        return false;
+        return Err(Idle::Archived);
     }
-    match read_record::<schema::Volunteer>(&root.join("conferences").join(cfg.key(year)).join("volunteer.json")) {
-        Ok(r) => today <= r.data.deadline,
-        Err(_) => true,
+    match vol {
+        Some(r) if now.date_naive() > r.data.deadline => Err(Idle::Archived),
+        Some(r) if stale(r, now) => Ok(Need::Revalidate),
+        Some(_) => Err(Idle::Waiting(format!("verified within the last {REVALIDATE_DAYS} days"))),
+        None if skip_reason(state, key, year, current_year).is_some() => Err(Idle::Abandoned),
+        None => match recent_negative(state, key, now, VOLUNTEER_RETRY_DAYS) {
+            Some(wait) => Err(wait),
+            None => Ok(Need::Discover),
+        },
     }
+}
+
+fn stale<T>(r: &Record<T>, now: chrono::DateTime<Utc>) -> bool {
+    now - r.last_verified.unwrap_or(r.fetched_at) >= chrono::Duration::days(REVALIDATE_DAYS)
+}
+
+/// A failed search (not found, invalid, no programme) is not repeated for
+/// `days`; fetch failures and errors are retried on the next run.
+fn recent_negative(state: &State, key: &str, now: chrono::DateTime<Utc>, days: i64) -> Option<Idle> {
+    let a = state.get(key)?;
+    let age = now - a.last_attempt;
+    let negative = matches!(a.outcome, Outcome::NotFound | Outcome::Invalid | Outcome::NoVolunteerProgram);
+    (negative && age < chrono::Duration::days(days)).then(|| Idle::Waiting(format!("{} {} days ago; retried after {days} days", format!("{:?}", a.outcome).to_lowercase(), age.num_days())))
 }
 
 /// One conference-year: call for papers, then student volunteers. Stored
@@ -290,20 +386,20 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     let dl_active = schema::deadlines_active(dl_rec.as_ref().map(|r| &r.data), today) && stage != schema::Stage::Happened;
     // The deadlines' source page, else the conference dates' source page.
     let mut cfp_url: Option<String> = dl_rec.as_ref().map(|r| r.provenance.source_url.clone()).or_else(|| conf_rec.as_ref().map(|r| r.provenance.source_url.clone()));
-    if !conf_active && !dl_active {
-        log::info!("{cfp_key}: archived ({})", stage.label());
-    } else if !have_any && skip_reason(state, &cfp_key, year, current_year).is_some() {
-        log::info!("{cfp_key}: abandoned");
-        if state.get(&cfp_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
-            state.record(&cfp_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
+    match cfp_need(state, &cfp_key, conf_rec.as_ref(), dl_rec.as_ref(), year, current_year, now) {
+        Err(idle) => {
+            log::info!("{cfp_key}: {idle} ({})", stage.label());
+            if idle == Idle::Abandoned && state.get(&cfp_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
+                state.record(&cfp_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
+            }
         }
-    } else {
+        Ok(need) => {
         let wanted = match (conf_active, dl_active) {
             (true, true) => "conference dates and deadlines",
             (true, false) => "conference dates",
             _ => "deadlines",
         };
-        log::info!("=== {cfp_key}: {} {wanted} ({})", if have_any { "re-validating" } else { "searching" }, stage.label());
+        log::info!("=== {cfp_key}: {} {wanted} ({})", need.verb(), stage.label());
         let t = Instant::now();
         let att = discover::find_cfp(ctx, cfg, year, cfp_url.as_deref())?;
         let secs = t.elapsed().as_secs();
@@ -346,38 +442,33 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
         let conf_now = read_record::<schema::Conference>(&dir.join("conference.json")).ok();
         let dl_now = read_record::<schema::Deadlines>(&dir.join("cfp.json")).ok();
         stage = schema::stage(conf_now.as_ref().map(|r| &r.data), dl_now.as_ref().map(|r| &r.data), today);
+        }
     }
 
     // --- Student volunteers ---
-    if args.no_volunteer || !volunteer_active(root, cfg, year, stage, today) {
+    if args.no_volunteer {
         return Ok(());
     }
     let existing_vol = read_record::<schema::Volunteer>(&dir.join("volunteer.json")).ok();
-    if existing_vol.is_none() && skip_reason(state, &vol_key, year, current_year).is_some() {
-        log::info!("{vol_key}: abandoned");
-        if state.get(&vol_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
-            state.record(&vol_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
+    let need = match volunteer_need(state, &vol_key, existing_vol.as_ref(), stage, year, current_year, now) {
+        Ok(need) => need,
+        Err(idle) => {
+            log::info!("{vol_key}: {idle}");
+            if idle == Idle::Abandoned && state.get(&vol_key).map(|a| a.outcome) != Some(Outcome::Abandoned) {
+                state.record(&vol_key, Outcome::Abandoned, None, vec![], "year is in the past".into(), now, overdue);
+            }
+            return Ok(());
         }
-        return Ok(());
-    }
+    };
     let Some(cfp_url) = cfp_url else {
         log::info!("{vol_key}: skipped (no call for papers found yet)");
         return Ok(());
     };
-    // Volunteer pages appear late; a negative result is not retried for a while.
-    if existing_vol.is_none() {
-        if let Some(a) = state.get(&vol_key) {
-            if matches!(a.outcome, Outcome::NotFound | Outcome::NoVolunteerProgram) && now - a.last_attempt < chrono::Duration::days(VOLUNTEER_RETRY_DAYS) {
-                log::info!("{vol_key}: {:?} {} days ago; not retried yet", a.outcome, (now - a.last_attempt).num_days());
-                return Ok(());
-            }
-        }
-    }
-    log::info!("=== {vol_key}: {}", if existing_vol.is_some() { "re-validating" } else { "searching" });
+    log::info!("=== {vol_key}: {}", need.verb());
     let t = Instant::now();
     let known = existing_vol.as_ref().map(|r| r.provenance.source_url.clone());
     let conference_end = read_record::<schema::Conference>(&dir.join("conference.json")).ok().map(|r| r.data.end);
-    let site = own_site(root, cfg);
+    let site = own_site(root, cfg, year);
     let att = discover::find_volunteer(vol_ctx, cfg, year, known.as_deref(), Some(&cfp_url), conference_end, site.as_deref())?;
     let secs = t.elapsed().as_secs();
     let outcome = match &att.result {
@@ -419,7 +510,11 @@ impl SoftUpdate for schema::Deadlines {
     }
 }
 impl SoftUpdate for schema::Conference {
-    fn soft_update(&mut self, _from: &Self) {}
+    fn soft_update(&mut self, from: &Self) {
+        // Same dates and city (see `diff_conference`): take the fresh wording.
+        self.city = from.city.clone();
+        self.country = from.country.clone();
+    }
 }
 impl SoftUpdate for schema::Volunteer {
     fn soft_update(&mut self, from: &Self) {
@@ -475,11 +570,13 @@ fn prior_urls(root: &Path, cfg: &config::ConferenceCfg) -> (Vec<(i32, String)>, 
     (cfp, vol)
 }
 
-/// The conference's own website, derived from the data: a host that this
-/// conference's stored pages use and no other conference's do. A host shared
-/// between conferences (conf.researchr.org hosts hundreds) is never "own",
-/// so it cannot mislabel the real pages as foreign. Newest year first.
-fn own_site(root: &Path, cfg: &config::ConferenceCfg) -> Option<String> {
+/// The conference's own website for `year`, derived from the data: a host
+/// that this conference's stored pages use and no other conference's do. A
+/// host shared between conferences (conf.researchr.org hosts hundreds) is
+/// never "own", so it cannot mislabel the real pages as foreign. Newest
+/// year first; a host that carries its edition's year (2026.splashcon.org,
+/// popl26.sigplan.org) is moved to `year`.
+fn own_site(root: &Path, cfg: &config::ConferenceCfg, year: i32) -> Option<String> {
     let mut hosts: std::collections::HashMap<String, std::collections::HashSet<String>> = Default::default();
     let mut mine: Vec<(i32, String)> = vec![];
     let conf_dir = root.join("conferences");
@@ -498,7 +595,9 @@ fn own_site(root: &Path, cfg: &config::ConferenceCfg) -> Option<String> {
         }
     }
     mine.sort_by_key(|(y, _)| std::cmp::Reverse(*y));
-    mine.into_iter().map(|(_, s)| s).find(|s| hosts.get(s).is_some_and(|c| c.len() == 1))
+    let (y, site) = mine.into_iter().find(|(_, s)| hosts.get(s).is_some_and(|c| c.len() == 1))?;
+    let moved = discover::derived_urls(&[(y, site.clone())], year).into_iter().next().unwrap_or(site);
+    Some(moved.trim_end_matches('/').to_string())
 }
 
 /// Why a conference-year without data is not attempted: abandoned once its
@@ -589,6 +688,9 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
                 let ev = ics::conference_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 rows.push((r.data.start, r.label.clone(), "Conference".into()));
+                // The calendar next to the JSON is derived from it, so it is
+                // rebuilt here too and never drifts from an edited record.
+                std::fs::write(entry.with_file_name("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).1 = Some(r);
@@ -599,6 +701,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 for e in &ev {
                     rows.push((e.start, r.label.clone(), e.summary.trim_start_matches(&format!("[{}] ", r.label)).to_string()));
                 }
+                std::fs::write(entry.with_file_name("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).2 = Some(r);
@@ -609,6 +712,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 for e in &ev {
                     rows.push((e.start, r.label.clone(), "Volunteer Application Deadline".into()));
                 }
+                std::fs::write(entry.with_file_name("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).3 = Some(r);
@@ -704,8 +808,9 @@ mod tests {
         write("SPLASH", 2027, "cfp", "https://conf.researchr.org/track/splash-2027/x");
         let popl = config::ConferenceCfg { conference: "POPL".into(), track: "POPL".into(), since: 2025 };
         let splash = config::ConferenceCfg { conference: "SPLASH".into(), track: "OOPSLA".into(), since: 2027 };
-        assert_eq!(own_site(&root, &popl).as_deref(), Some("https://popl26.sigplan.org"));
-        assert_eq!(own_site(&root, &splash), None, "only a shared host is known");
+        assert_eq!(own_site(&root, &popl, 2026).as_deref(), Some("https://popl26.sigplan.org"));
+        assert_eq!(own_site(&root, &popl, 2027).as_deref(), Some("https://popl27.sigplan.org"), "the host follows the edition's year");
+        assert_eq!(own_site(&root, &splash, 2027), None, "only a shared host is known");
         let _ = std::fs::remove_dir_all(&root);
     }
 

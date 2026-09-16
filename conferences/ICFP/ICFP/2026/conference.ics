@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ICFP 2026 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260824
+DTEND;VALUE=DATE:20260830
+SUMMARY:[ICFP 2026] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp26.sigplan.
+ org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
+ om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
+ /JonasAlaif/pl-conferences
+LOCATION:Indianapolis\, United States
+END:VEVENT
+END:VCALENDAR

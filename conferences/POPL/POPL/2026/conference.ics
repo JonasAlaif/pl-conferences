@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:POPL 2026 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:4174a3837d1ccdfc7b24ad0ae078c9e652361f3f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260111
+DTEND;VALUE=DATE:20260118
+SUMMARY:[POPL 2026] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
+ ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
+ nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Rennes\, France
+END:VEVENT
+END:VCALENDAR

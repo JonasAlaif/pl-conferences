@@ -3,7 +3,7 @@ VERSION:2.0
 PRODID:-//pl-conferences//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:CAV 2026
+X-WR-CALNAME:CAV 2026 cfp
 URL:https://github.com/JonasAlaif/pl-conferences
 BEGIN:VEVENT
 UID:bea709e9b429af695848aaa42297f609576509eb@pl-conferences
@@ -17,8 +17,10 @@ DESCRIPTION:Papers can include a clearly marked appendix\, however\, the r
  tegories must be submitted by January 28\, 2026 AoE\, and should be in LN
  CS format. Note Springer's guidelines regarding AI Authorship. Simultaneo
  us submission to other conferences with proceedings or submission of mate
- rial that has already been published elsewhere is not allowed.\n\nSource:
-  http://conferences.i-cav.org/2026/cfp/
+ rial that has already been published elsewhere is not allowed.\n\nExtract
+ ed automatically by a small language model\; please cross-check against t
+ he source before relying on it: http://conferences.i-cav.org/2026/cfp/\nh
+ ttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:94ca848027d55ef7f3c1e1ef61acb89ba7b425c5@pl-conferences
@@ -26,7 +28,9 @@ DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260330
 DTEND;VALUE=DATE:20260403
 SUMMARY:[CAV 2026] Rebuttal
-DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: http://conferences.i-ca
+ v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:69639bcd3996f2d5b135cdf2c5c229f602252b01@pl-conferences
@@ -34,14 +38,8 @@ DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260417
 DTEND;VALUE=DATE:20260418
 SUMMARY:[CAV 2026] Notification
-DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
-END:VEVENT
-BEGIN:VEVENT
-UID:2cc72dea11c989a0f4ee3fe7a61186fb6879c5de@pl-conferences
-DTSTAMP:20260915T225322Z
-DTSTART;VALUE=DATE:20260726
-DTEND;VALUE=DATE:20260730
-SUMMARY:[CAV 2026] Conference
-DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: http://conferences.i-ca
+ v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

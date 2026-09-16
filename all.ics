@@ -502,13 +502,12 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
 SUMMARY:[POPL 2027] Paper Submission Deadline
-DESCRIPTION:Submit at: https://popl27.sigplan.org/committee/POPL-2027-popl
- -research-papers-program-committee\n\nNote: the page also states "Fri 24 
- Jul 2026 | Workshops and Co-located Events | Submission Deadline".\n\nExt
- racted automatically by a small language model\; please cross-check again
- st the source before relying on it: https://popl27.sigplan.org/dates\nMai
- ntenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/ma
- in/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:Note: the page also states "Fri 24 Jul 2026 | Workshops and Co
+ -located Events | Submission Deadline".\n\nExtracted automatically by a s
+ mall language model\; please cross-check against the source before relyin
+ g on it: https://popl27.sigplan.org/dates\nMaintenance: E003 - see https:
+ //github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://
+ github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:47577bcf91d716d36265c4fc1a778ce186710f86@pl-conferences
@@ -524,12 +523,11 @@ DESCRIPTION:The page states that everyone is welcome to apply\, with prior
  mission to social events. They are responsible for their own travel and a
  ccommodation. To apply\, one must send an email to thalakottur.m@northeas
  tern.edu\, robert.zhang@utexas.edu\, or hnzhu@ucdavis.edu if they have qu
- estions\, though the page also provides a direct link to apply.\n\nApply 
- at: https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2
- 026-student-volunteers-student-volunteer-committee\n\nExtracted automatic
- ally by a small language model\; please cross-check against the source be
- fore relying on it: https://2026.splashcon.org/track/splash-issta-2026-st
- udent-volunteers\nhttps://github.com/JonasAlaif/pl-conferences
+ estions\, though the page also provides a direct link to apply.\n\nExtrac
+ ted automatically by a small language model\; please cross-check against 
+ the source before relying on it: https://2026.splashcon.org/track/splash-
+ issta-2026-student-volunteers\nhttps://github.com/JonasAlaif/pl-conferenc
+ es
 END:VEVENT
 BEGIN:VEVENT
 UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
@@ -676,10 +674,9 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
 SUMMARY:[PLDI 2027] Paper Submission Deadline
-DESCRIPTION:null\n\nSubmit at: https://conf.researchr.org/\n\nExtracted au
- tomatically by a small language model\; please cross-check against the so
- urce before relying on it: https://pldi27.sigplan.org/\nhttps://github.co
- m/JonasAlaif/pl-conferences
+DESCRIPTION:null\n\nExtracted automatically by a small language model\; pl
+ ease cross-check against the source before relying on it: https://pldi27.
+ sigplan.org/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:15238fe288a9d767157a685f0ff6e69de0fa097e@pl-conferences
@@ -729,11 +726,10 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270120
 DTEND;VALUE=DATE:20270121
 SUMMARY:[CAV 2027] Paper Submission Deadline
-DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nSubmit at: https
- ://conferences.i-cav.org/2027/artifacts/\n\nExtracted automatically by a 
- small language model\; please cross-check against the source before relyi
- ng on it: https://conferences.i-cav.org/2027/\nhttps://github.com/JonasAl
- aif/pl-conferences
+DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nExtracted automa
+ tically by a small language model\; please cross-check against the source
+  before relying on it: https://conferences.i-cav.org/2027/\nhttps://githu
+ b.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
@@ -762,12 +758,11 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270225
 DTEND;VALUE=DATE:20270226
 SUMMARY:[ICFP 2027] Paper Submission Deadline
-DESCRIPTION:ICFP Papers\n\nSubmit at: https://conf.researchr.org/\n\nNote:
-  the page also states "up till Thu 1 Jul 2027".\n\nExtracted automaticall
- y by a small language model\; please cross-check against the source befor
- e relying on it: https://icfp27.sigplan.org/\nMaintenance: E003 - see htt
- ps://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps
- ://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:ICFP Papers\n\nNote: the page also states "up till Thu 1 Jul 2
+ 027".\n\nExtracted automatically by a small language model\; please cross
+ -check against the source before relying on it: https://icfp27.sigplan.or
+ g/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/
+ blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences
@@ -881,17 +876,6 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
  org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
  conferences
-END:VEVENT
-BEGIN:VEVENT
-UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
-DTSTAMP:20260916T131008Z
-DTSTART;VALUE=DATE:20270815
-DTEND;VALUE=DATE:20270820
-SUMMARY:[CAV 2027] Conference
-DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://conferences.i-c
- av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
-LOCATION:Amsterdam\, Netherlands
 END:VEVENT
 BEGIN:VEVENT
 UID:f8f31a9f890ec346e86377ee7370716b1453c603@pl-conferences

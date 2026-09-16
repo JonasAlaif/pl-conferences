@@ -246,6 +246,14 @@ pub fn title(html: &str) -> Option<String> {
 /// All links on the page as (anchor text, absolute URL), deduplicated, in
 /// document order. Used for LLM-guided link following.
 pub fn links(html: &str, base: &str) -> Vec<(String, String)> {
+    links_with_context(html, base).into_iter().map(|(t, u, _)| (t, u)).collect()
+}
+
+/// `(anchor text, absolute URL, context)`: the context is the text of the
+/// element around the link, cut to a window around the anchor, so that a
+/// link reading "here" comes with "Apply here by July 12". Empty when the
+/// element adds nothing to the anchor text.
+pub fn links_with_context(html: &str, base: &str) -> Vec<(String, String, String)> {
     let doc = scraper::Html::parse_document(html);
     let Ok(sel) = scraper::Selector::parse("a[href]") else {
         return vec![];
@@ -273,9 +281,34 @@ pub fn links(html: &str, base: &str) -> Vec<(String, String)> {
         if text.is_empty() || !seen.insert(abs.to_string()) {
             continue;
         }
-        out.push((text, abs.to_string()));
+        let around = a.parent().and_then(scraper::ElementRef::wrap).map(|p| p.text().collect::<String>()).unwrap_or_default();
+        let around = around.split_whitespace().collect::<Vec<_>>().join(" ");
+        let context = if around == text { String::new() } else { window_around(&around, &text, 60) };
+        out.push((text, abs.to_string(), context));
     }
     out
+}
+
+/// `text` with up to `radius` characters on each side of `needle`.
+fn window_around(text: &str, needle: &str, radius: usize) -> String {
+    let pos = text.find(needle).unwrap_or(0);
+    let mut start = pos.saturating_sub(radius);
+    while !text.is_char_boundary(start) {
+        start -= 1;
+    }
+    let mut end = (pos + needle.len() + radius).min(text.len());
+    while !text.is_char_boundary(end) {
+        end += 1;
+    }
+    let mut s = String::new();
+    if start > 0 {
+        s.push('…');
+    }
+    s.push_str(&text[start..end]);
+    if end < text.len() {
+        s.push('…');
+    }
+    s
 }
 
 #[cfg(test)]

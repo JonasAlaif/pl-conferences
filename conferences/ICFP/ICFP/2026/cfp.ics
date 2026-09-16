@@ -3,7 +3,7 @@ VERSION:2.0
 PRODID:-//pl-conferences//EN
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
-X-WR-CALNAME:ICFP 2026
+X-WR-CALNAME:ICFP 2026 cfp
 URL:https://github.com/JonasAlaif/pl-conferences
 BEGIN:VEVENT
 UID:5bff4e3ebc2b466f5238784a2134a9d4c381d86d@pl-conferences
@@ -22,10 +22,12 @@ DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
  s are omitted from submissions. Authors may submit improved versions befo
  re the deadline. Authors of conditionally accepted papers must provide re
  vised submissions by 3 June 2026 accompanied by a cover letter mapping ea
- ch mandatory revision request to specific parts of the paper.\n\nSource: 
- https://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nMaintenance: E003
-  - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE
- .md
+ ch mandatory revision request to specific parts of the paper.\n\nExtracte
+ d automatically by a small language model\; please cross-check against th
+ e source before relying on it: https://icfp26.sigplan.org/track/icfp-2026
+ -icfp-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-co
+ nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
+ erences
 END:VEVENT
 BEGIN:VEVENT
 UID:e3bab0d4fdd4cfab74edfd7de78cd63bc56e75cf@pl-conferences
@@ -33,9 +35,11 @@ DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260420
 DTEND;VALUE=DATE:20260424
 SUMMARY:[ICFP 2026] Rebuttal
-DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
- \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
- ob/main/MAINTENANCE.md
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp26.sigplan.
+ org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
+ om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
+ /JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ffacaacbd94884e5deee4e58f907dfe067dbb6f0@pl-conferences
@@ -43,19 +47,10 @@ DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260514
 DTEND;VALUE=DATE:20260515
 SUMMARY:[ICFP 2026] Notification
-DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
- \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
- ob/main/MAINTENANCE.md
-END:VEVENT
-BEGIN:VEVENT
-UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
-DTSTAMP:20260915T225322Z
-DTSTART;VALUE=DATE:20260824
-DTEND;VALUE=DATE:20260830
-SUMMARY:[ICFP 2026] Conference
-DESCRIPTION:Source: https://icfp26.sigplan.org/track/icfp-2026-icfp-papers
- \nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/bl
- ob/main/MAINTENANCE.md
-LOCATION:Indianapolis\, United States
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp26.sigplan.
+ org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
+ om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
+ /JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

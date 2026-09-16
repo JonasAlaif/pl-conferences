@@ -24,7 +24,9 @@ DESCRIPTION:Submitted papers must be in English\, presenting original rese
  nd institutions\; refer to prior work in the third person\, just as prior
   work by others\; not to include acknowledgments that might identify them
  . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
- t: https://etaps.org/2026/esop\n\nSource: https://etaps.org/2026/cfp/
+ t: https://etaps.org/2026/esop\n\nExtracted automatically by a small lang
+ uage model\; please cross-check against the source before relying on it: 
+ https://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:af39bedd785ce06164ee46323168cf76c9ba8a2f@pl-conferences
@@ -32,7 +34,9 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20250721
 DTEND;VALUE=DATE:20250724
 SUMMARY:[ETAPS 2026 (ESOP)] R1 Rebuttal
-DESCRIPTION:Source: https://etaps.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:a7a59deaeb384709140a31fcbb011f94991d5478@pl-conferences
@@ -40,7 +44,9 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20250801
 DTEND;VALUE=DATE:20250802
 SUMMARY:[ETAPS 2026 (ESOP)] R1 Notification
-DESCRIPTION:Source: https://etaps.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4ec8b764bcafb1909f48be279d68cfe37760708f@pl-conferences
@@ -61,7 +67,9 @@ DESCRIPTION:Submitted papers must be in English\, presenting original rese
  nd institutions\; refer to prior work in the third person\, just as prior
   work by others\; not to include acknowledgments that might identify them
  . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
- t: https://etaps.org/2026/esop\n\nSource: https://etaps.org/2026/cfp/
+ t: https://etaps.org/2026/esop\n\nExtracted automatically by a small lang
+ uage model\; please cross-check against the source before relying on it: 
+ https://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c12ae72af4504825a45ca97f320e67f119330536@pl-conferences
@@ -69,7 +77,9 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20251208
 DTEND;VALUE=DATE:20251211
 SUMMARY:[ETAPS 2026 (ESOP)] R2 Rebuttal
-DESCRIPTION:Source: https://etaps.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:5fedfa1b66d4d7b3d28cb3788517c0049040c4c1@pl-conferences
@@ -77,6 +87,8 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20251222
 DTEND;VALUE=DATE:20251223
 SUMMARY:[ETAPS 2026 (ESOP)] R2 Notification
-DESCRIPTION:Source: https://etaps.org/2026/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

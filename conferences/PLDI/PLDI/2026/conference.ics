@@ -1,0 +1,19 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:PLDI 2026 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:2769659299d36061cad3c30c9c4910a8170bac8f@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260615
+DTEND;VALUE=DATE:20260620
+SUMMARY:[PLDI 2026] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://pldi26.sigplan.
+ org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Boulder\, United States
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,18 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CAV 2026 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:2cc72dea11c989a0f4ee3fe7a61186fb6879c5de@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20260726
+DTEND;VALUE=DATE:20260730
+SUMMARY:[CAV 2026] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: http://conferences.i-ca
+ v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+END:VCALENDAR

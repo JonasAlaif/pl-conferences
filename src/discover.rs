@@ -81,6 +81,9 @@ pub struct Trail {
     pub notes: Vec<String>,
     /// Number of pages fetched.
     pub pages: u32,
+    /// Pages of the budget held back for a later step (the web search after
+    /// a link walk), so that step is not left with nothing to fetch.
+    pub reserve: u32,
     pub llm_calls: u32,
     /// URLs already tried in this attempt (never fetched twice).
     pub visited: std::collections::HashSet<String>,
@@ -306,23 +309,62 @@ fn grounding_text(md: &str, links: &[(String, String)]) -> String {
 }
 
 /// Ask the model which of the page's links is `what`; None if it says none.
-fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], page_url: &str, what: &str) -> Result<Option<String>> {
+/// Each link is shown with the words around it, so that "here" in "Apply
+/// here by July 12" is readable. A system or form the page hands over to
+/// is never the page itself, nor the bare front page of a website; with
+/// `offsite` it must also be on another host than the page (a submission
+/// system is a separate service; a link within the conference site is an
+/// information page, whatever the model thinks). A pick that breaks these
+/// rules is dropped rather than published.
+fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String, String)], page_url: &str, what: &str, offsite: bool) -> Result<Option<String>> {
     if links.is_empty() {
         return Ok(None);
     }
     // Links from another host first: a submission system or a form lives
     // elsewhere more often than not, and this page's own navigation is noise.
     let host = url::Url::parse(page_url).ok().and_then(|u| u.host_str().map(String::from));
-    let mut ranked: Vec<&(String, String)> = links.iter().filter(|(_, u)| !trail.tried(u)).collect();
-    ranked.sort_by_key(|(_, u)| host.as_deref().is_some_and(|h| u.contains(h)));
-    let shown: Vec<&(String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
-    let list = numbered(shown.iter().map(|(t, u)| (t.as_str(), u.as_str(), "")));
-    let q = format!("Which of these links on the page is {what}? Answer with the index, or null if no link is that.");
-    let pick = choose(ctx, trail, &q, &list, shown.len())?.map(|i| shown[i].1.clone());
-    if let Some(u) = &pick {
-        trail.note(format!("model picked link {u} as {what}"));
+    let same_host = |u: &str| host.as_deref().is_some_and(|h| url::Url::parse(u).ok().and_then(|p| p.host_str().map(|x| x == h)).unwrap_or(false));
+    let mut ranked: Vec<&(String, String, String)> = links.iter().filter(|(_, u, _)| !trail.tried(u) && usable_link(u, page_url, offsite).is_ok()).collect();
+    ranked.sort_by_key(|(_, u, _)| same_host(u));
+    let shown: Vec<&(String, String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
+    // "None of these" is offered as an entry of its own: asked for an index
+    // or null, the model always gives an index (a GitHub "edit this page"
+    // link was once its submission system).
+    let mut list = numbered(shown.iter().map(|(t, u, c)| (t.as_str(), u.as_str(), c.as_str())));
+    list.push_str(&format!("{}. None of these links\n", shown.len()));
+    let q = format!("Which of these links on {page_url} is {what}? Answer with the index.");
+    let Some(i) = choose(ctx, trail, &q, &list, shown.len() + 1)? else { return Ok(None) };
+    if i == shown.len() {
+        trail.note(format!("model says none of the links is {what}"));
+        return Ok(None);
     }
-    Ok(pick)
+    let u = shown[i].1.clone();
+    if let Err(why) = usable_link(&u, page_url, offsite) {
+        trail.note(format!("model picked link {u} as {what}, which is {why}; dropped"));
+        return Ok(None);
+    }
+    trail.note(format!("model picked link {u} as {what}"));
+    Ok(Some(u))
+}
+
+/// Whether a link the page hands over to (a submission system, an
+/// application form) can be published, whether the model picked it from the
+/// link list or copied it from the text: never the page itself, never the
+/// bare front page of a website, and with `offsite` never a page on the
+/// same host as the page (a submission system is a separate service; a
+/// link within the conference site is an information page).
+fn usable_link(u: &str, page_url: &str, offsite: bool) -> Result<(), &'static str> {
+    let host = |s: &str| url::Url::parse(s).ok().and_then(|p| p.host_str().map(str::to_lowercase));
+    if u.trim_end_matches('/') == page_url.trim_end_matches('/') {
+        return Err("this very page");
+    }
+    if url::Url::parse(u).ok().is_some_and(|p| p.path().trim_matches('/').is_empty() && p.query().is_none()) {
+        return Err("the front page of a website");
+    }
+    if offsite && host(u).is_some() && host(u) == host(page_url) {
+        return Err("on the conference site itself");
+    }
+    Ok(())
 }
 
 /// Links on a page, most promising first (mention of the conference, track
@@ -375,7 +417,7 @@ fn follow_links(ctx: &Ctx, trail: &mut Trail, html: &str, url: &str, what: &str,
     let host = url::Url::parse(url).ok().and_then(|u| u.host_str().map(String::from));
     let shown: Vec<String> = links.iter().map(|(_, u)| shown_url(u, host.as_deref())).collect();
     let list = numbered(links.iter().zip(&shown).map(|((t, _), su)| (t.as_str(), su.as_str(), "")));
-    let q = format!("Which of these links could lead to {what}? List the plausible ones, most likely first; leave out links that clearly do not.");
+    let q = format!("Which of these links on {url} could lead to {what}? List the plausible ones, most likely first; leave out links that clearly do not, such as sign-in, sign-up, contact, support and search pages of the website, and other years' editions.");
     let picks = choose_many(ctx, trail, &q, &list, links.len())?;
     if !picks.is_empty() {
         trail.note(format!("{} candidate link(s) for {what}", picks.len()));
@@ -392,7 +434,7 @@ const MAX_FOLLOW: usize = 3;
 pub const MAX_PAGES_PER_ATTEMPT: u32 = 6;
 
 fn fetch_page(trail: &mut Trail, url: &str) -> Option<fetch::Page> {
-    if trail.pages >= MAX_PAGES_PER_ATTEMPT {
+    if trail.pages + trail.reserve >= MAX_PAGES_PER_ATTEMPT {
         trail.note(format!("page budget of {MAX_PAGES_PER_ATTEMPT} used up; not fetching {url}"));
         return None;
     }
@@ -447,11 +489,18 @@ where
     }
 }
 
-pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
+/// `url` is where the page came from (empty when unknown, as for a saved
+/// fixture): the model needs it to tell the conference's own site from an
+/// aggregator or a namesake, which the text alone often does not say.
+pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, url: &str, md: &str) -> String {
     format!(
-        "Conference: {} {year}. Track: {} (the main research-paper track; ignore workshops, co-located events, artifact evaluation, camera-ready and revision deadlines). When the page lists dates for several tracks or events, use only the entries that name the {} track and read each date from the same entry as its label.\n\nPAGE:\n{md}",
-        cfg.conference, cfg.track, cfg.track
+        "Conference: {} {year}. Track: {} (the main research-paper track; ignore workshops, co-located events, artifact evaluation, camera-ready and revision deadlines). When the page lists dates for several tracks or events, use only the entries that name the {} track and read each date from the same entry as its label.\n\n{}PAGE:\n{md}",
+        cfg.conference, cfg.track, cfg.track, page_line(url)
     )
+}
+
+fn page_line(url: &str) -> String {
+    if url.is_empty() { String::new() } else { format!("Page URL: {url}\n") }
 }
 
 /// Extraction + validation + one corrective retry for a CFP page. Returns
@@ -459,8 +508,8 @@ pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
 pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
-    let prompt = cfp_prompt(cfg, year, md);
-    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+    let prompt = cfp_prompt(cfg, year, "", md);
+    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md, &cfg.track))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Extraction + validation + one corrective retry for a volunteer page, for
@@ -468,7 +517,7 @@ pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Resul
 pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
-    let prompt = volunteer_prompt(cfg, year, site, md);
+    let prompt = volunteer_prompt(cfg, year, site, "", md);
     Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x| schema::validate_volunteer(x, year, md, None))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
@@ -484,10 +533,11 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
-    let links = clean::links(&page.html, &page.url);
+    let links_ctx = clean::links_with_context(&page.html, &page.url);
+    let links: Vec<(String, String)> = links_ctx.iter().map(|(t, u, _)| (t.clone(), u.clone())).collect();
     let grounding = grounding_text(&md, &links);
-    let prompt = cfp_prompt(cfg, year, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding))? else { return Ok(None) };
+    let prompt = cfp_prompt(cfg, year, &page.url, &md);
+    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding, &cfg.track))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
@@ -505,8 +555,14 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
                 acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
             }
             if !cfp.rounds.is_empty() {
+                if let Some(u) = cfp.submission_url.clone() {
+                    if let Err(why) = usable_link(&u, &page.url, true) {
+                        trail.note(format!("submission link {u} from the page text is {why}; dropped"));
+                        cfp.submission_url = None;
+                    }
+                }
                 if cfp.submission_url.is_none() {
-                    cfp.submission_url = pick_link(ctx, trail, &links, &page.url, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track))?;
+                    cfp.submission_url = pick_link(ctx, trail, &links_ctx, &page.url, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track), true)?;
                 }
                 let deadlines = cfp.deadlines().expect("rounds present");
                 return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
@@ -589,9 +645,9 @@ pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&st
 /// `site` is the conference's own website (host of the page its dates came
 /// from). It lets the model tell the conference apart from namesakes: a page
 /// on another site is about this conference only if it refers to this event.
-pub fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> String {
+pub fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, site: Option<&str>, url: &str, md: &str) -> String {
     let site_note = site.map(|s| format!(" The conference's own website is {s}; a page elsewhere is about this conference only if it explicitly refers to this event.")).unwrap_or_default();
-    format!("Conference: {} {year} (the academic conference; its {} track has paper deadlines).{site_note} Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\nPAGE:\n{md}", cfg.conference, cfg.track)
+    format!("Conference: {} {year} (the academic conference; its {} track has paper deadlines).{site_note} Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\n{}PAGE:\n{md}", cfg.conference, cfg.track, page_line(url))
 }
 
 /// `https://host` of a URL, for prompts.
@@ -609,9 +665,10 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
-    let links = clean::links(&page.html, &page.url);
+    let links_ctx = clean::links_with_context(&page.html, &page.url);
+    let links: Vec<(String, String)> = links_ctx.iter().map(|(t, u, _)| (t.clone(), u.clone())).collect();
     let grounding = grounding_text(&md, &links);
-    let prompt = volunteer_prompt(cfg, year, site, &md);
+    let prompt = volunteer_prompt(cfg, year, site, &page.url, &md);
     let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer(x, year, &grounding, conference_end))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
@@ -627,8 +684,14 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
                 if retried {
                     trail.code(Code::E005);
                 }
+                if let Some(u) = v.application_url.clone() {
+                    if let Err(why) = usable_link(&u, &page.url, false) {
+                        trail.note(format!("application link {u} from the page text is {why}; dropped"));
+                        v.application_url = None;
+                    }
+                }
                 if v.application_url.is_none() {
-                    v.application_url = pick_link(ctx, trail, &links, &page.url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference))?;
+                    v.application_url = pick_link(ctx, trail, &links_ctx, &page.url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference), false)?;
                 }
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
                 return Ok(Some(Found { value: v, raw, prov, html: page.html.clone(), md }));
@@ -679,6 +742,10 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
     }
     if let Some(h) = hint_url {
         trail.query = format!("links of {h}");
+        // The link walk may not use the whole page budget: the web search
+        // below still needs pages to try (one run walked six utility pages
+        // and then could not fetch a single search hit).
+        trail.reserve = 2;
         if let Some(page) = fetch_page(&mut trail, h) {
             let what = format!("the page explaining how students apply to be student volunteers at {} {year}", cfg.conference);
             for next in follow_links(ctx, &mut trail, &page.html, &page.url, &what, &["volunteer"])? {
@@ -697,6 +764,7 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
             }
         }
     }
+    trail.reserve = 0;
     let queries = vec![format!("{} {year} student volunteers", cfg.conference)];
     trail.query = queries[0].clone();
     let mut hits = gather_hits(ctx, cfg, year, &queries, &mut trail)?;
@@ -705,8 +773,8 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
     if let Some(s) = site {
         hits.sort_by_key(|h| !h.url.starts_with(s));
     }
-    let site_note = site.map(|s| format!(" The conference's own website is {s}.")).unwrap_or_default();
-    let what = format!("the page explaining how students apply to be student volunteers at the {} {year} academic conference (not a list of committee members or volunteers' names, and not an unrelated event with a similar name).{site_note}", cfg.conference);
+    let site_note = site.map(|s| format!("; the conference's own website is {s}")).unwrap_or_default();
+    let what = format!("the page explaining how students apply to be student volunteers at the {} {year} academic conference (not a list of committee members or volunteers' names, and not an unrelated event with a similar name{site_note})", cfg.conference);
     let hits = ordered_hits(ctx, &mut trail, hits, &what)?;
     for h in hits.iter().take(3) {
         if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw, conference_end, site)? {

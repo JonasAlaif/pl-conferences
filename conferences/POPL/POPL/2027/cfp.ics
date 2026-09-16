@@ -11,13 +11,12 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
 SUMMARY:[POPL 2027] Paper Submission Deadline
-DESCRIPTION:Submit at: https://popl27.sigplan.org/committee/POPL-2027-popl
- -research-papers-program-committee\n\nNote: the page also states "Fri 24 
- Jul 2026 | Workshops and Co-located Events | Submission Deadline".\n\nExt
- racted automatically by a small language model\; please cross-check again
- st the source before relying on it: https://popl27.sigplan.org/dates\nMai
- ntenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/ma
- in/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:Note: the page also states "Fri 24 Jul 2026 | Workshops and Co
+ -located Events | Submission Deadline".\n\nExtracted automatically by a s
+ mall language model\; please cross-check against the source before relyin
+ g on it: https://popl27.sigplan.org/dates\nMaintenance: E003 - see https:
+ //github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://
+ github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ff4b1584b5053da477cff7c2cf72a1e8b15b1ffb@pl-conferences

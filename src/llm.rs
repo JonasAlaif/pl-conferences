@@ -93,6 +93,20 @@ impl Llm {
         Ok((value, raw, usage))
     }
 
+    /// Unload the model so its server process is started afresh by the next
+    /// request. The runner process was seen growing from 5 GB to 13 GB of
+    /// resident memory over a 90-minute run; a reload from the page cache
+    /// costs seconds and resets that. Failures are only logged.
+    pub fn unload(&self) {
+        let body = json!({ "model": self.model, "keep_alive": 0 });
+        let res = reqwest::blocking::Client::builder().timeout(Duration::from_secs(60)).build().and_then(|c| c.post(format!("{}/api/generate", self.base)).json(&body).send());
+        match res {
+            Ok(r) if r.status().is_success() => log::info!("model unloaded to free memory"),
+            Ok(r) => log::warn!("unloading the model failed: HTTP {}", r.status()),
+            Err(e) => log::warn!("unloading the model failed: {e}"),
+        }
+    }
+
     /// One chat completion. `format` constrains decoding to a JSON schema.
     pub fn chat(&self, system: &str, user: &str, format: Option<Value>) -> Result<(String, Usage)> {
         let mut body = json!({

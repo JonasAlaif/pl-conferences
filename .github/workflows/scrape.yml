@@ -172,6 +172,8 @@ jobs:
           ollama ps
           free -m
           ps -eo rss,vsz,comm --sort=-rss | head -8
+          # Whether flash attention really was on, from the server's own log.
+          grep -iE "flash|kv_cache|memory" /tmp/ollama.log | tail -8 || true
 
       - name: Commit results
         # Also after a failure or timeout: whatever was written is kept.

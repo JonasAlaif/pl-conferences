@@ -2,7 +2,7 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-09-16 13:10 UTC
+Last run: 2026-09-16 15:01 UTC
 
 ## E003
 
