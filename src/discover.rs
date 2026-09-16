@@ -324,7 +324,7 @@ fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String, String)], p
     // elsewhere more often than not, and this page's own navigation is noise.
     let host = url::Url::parse(page_url).ok().and_then(|u| u.host_str().map(String::from));
     let same_host = |u: &str| host.as_deref().is_some_and(|h| url::Url::parse(u).ok().and_then(|p| p.host_str().map(|x| x == h)).unwrap_or(false));
-    let mut ranked: Vec<&(String, String, String)> = links.iter().filter(|(_, u, _)| !trail.tried(u) && usable_link(u, page_url, offsite).is_ok()).collect();
+    let mut ranked: Vec<&(String, String, String)> = links.iter().filter(|(_, u, _)| !trail.tried(u) && usable_link(u, page_url, offsite, false).is_ok()).collect();
     ranked.sort_by_key(|(_, u, _)| same_host(u));
     let shown: Vec<&(String, String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
     // "None of these" is offered as an entry of its own: asked for an index
@@ -339,7 +339,7 @@ fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String, String)], p
         return Ok(None);
     }
     let u = shown[i].1.clone();
-    if let Err(why) = usable_link(&u, page_url, offsite) {
+    if let Err(why) = usable_link(&u, page_url, offsite, false) {
         trail.note(format!("model picked link {u} as {what}, which is {why}; dropped"));
         return Ok(None);
     }
@@ -348,17 +348,20 @@ fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String, String)], p
 }
 
 /// Whether a link the page hands over to (a submission system, an
-/// application form) can be published, whether the model picked it from the
-/// link list or copied it from the text: never the page itself, never the
-/// bare front page of a website, and with `offsite` never a page on the
-/// same host as the page (a submission system is a separate service; a
-/// link within the conference site is an information page).
-fn usable_link(u: &str, page_url: &str, offsite: bool) -> Result<(), &'static str> {
+/// application form) can be published: never the page itself; with
+/// `offsite` never a page on the same host as the page (a submission
+/// system is a separate service; a link within the conference site is an
+/// information page); and unless `allow_root`, never the bare front page
+/// of a website. A URL the model copied from the text may be a bare host
+/// ("Submission site: https://oopsla27.hotcrp.com/"), so roots are allowed
+/// there; a pick from the link list that lands on a site root is the
+/// model settling for the platform's home page.
+fn usable_link(u: &str, page_url: &str, offsite: bool, allow_root: bool) -> Result<(), &'static str> {
     let host = |s: &str| url::Url::parse(s).ok().and_then(|p| p.host_str().map(str::to_lowercase));
     if u.trim_end_matches('/') == page_url.trim_end_matches('/') {
         return Err("this very page");
     }
-    if url::Url::parse(u).ok().is_some_and(|p| p.path().trim_matches('/').is_empty() && p.query().is_none()) {
+    if !allow_root && url::Url::parse(u).ok().is_some_and(|p| p.path().trim_matches('/').is_empty() && p.query().is_none()) {
         return Err("the front page of a website");
     }
     if offsite && host(u).is_some() && host(u) == host(page_url) {
@@ -564,14 +567,17 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
                 acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
             }
             if !cfp.rounds.is_empty() {
+                // The submission system comes from the page text only
+                // ("Submission site: https://...hotcrp.com"). Picking it
+                // from the link list was tried and never once right: with
+                // the conference's own pages excluded, the model settles
+                // for whatever off-site link is left (a paper-matching
+                // service, the site generator's changelog).
                 if let Some(u) = cfp.submission_url.clone() {
-                    if let Err(why) = usable_link(&u, &page.url, true) {
+                    if let Err(why) = usable_link(&u, &page.url, true, true) {
                         trail.note(format!("submission link {u} from the page text is {why}; dropped"));
                         cfp.submission_url = None;
                     }
-                }
-                if cfp.submission_url.is_none() {
-                    cfp.submission_url = pick_link(ctx, trail, &links_ctx, &page.url, &format!("the submission system where authors upload their papers for {} {year} ({} track); not a call-for-papers or information page, and not a sign-in or account page of the conference website", cfg.conference, cfg.track), true)?;
                 }
                 let deadlines = cfp.deadlines().expect("rounds present");
                 return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
@@ -694,7 +700,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
                     trail.code(Code::E005);
                 }
                 if let Some(u) = v.application_url.clone() {
-                    if let Err(why) = usable_link(&u, &page.url, false) {
+                    if let Err(why) = usable_link(&u, &page.url, false, true) {
                         trail.note(format!("application link {u} from the page text is {why}; dropped"));
                         v.application_url = None;
                     }
@@ -801,13 +807,13 @@ mod tests {
     #[test]
     fn handed_over_links_are_never_the_page_its_root_or_for_submissions_its_site() {
         let page = "https://conferences.i-cav.org/2027/";
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027", page, true), Err("this very page"));
-        assert_eq!(usable_link("https://conf.researchr.org/", page, false), Err("the front page of a website"));
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027/artifacts/", page, true), Err("on the conference site itself"));
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false), Ok(()), "an application form may be on the site");
-        assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true), Err("the front page of a website"), "a submission system's root still counts as a root");
-        assert_eq!(usable_link("https://cav27.hotcrp.com/paper/new", page, true), Ok(()));
-        assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false), Ok(()));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027", page, true, true), Err("this very page"));
+        assert_eq!(usable_link("https://conf.researchr.org/", page, false, false), Err("the front page of a website"), "a pick landing on a site root");
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/artifacts/", page, true, true), Err("on the conference site itself"));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false, false), Ok(()), "an application form may be on the site");
+        assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true, true), Ok(()), "a submission system named in the text is usually a bare host");
+        assert_eq!(usable_link("https://cav27.hotcrp.com/paper/new", page, true, true), Ok(()));
+        assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false, false), Ok(()));
     }
 
     #[test]

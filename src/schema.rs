@@ -685,7 +685,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Re
         }
     }
     if errs.is_empty() {
-        Ok(Cfp { conference, rounds, submission_details: x.submission_details.trim().to_string(), submission_url: grounded_url(&x.submission_url, page) })
+        Ok(Cfp { conference, rounds, submission_details: clean_opt(&Some(x.submission_details.clone())).unwrap_or_default(), submission_url: grounded_url(&x.submission_url, page) })
     } else {
         Err(errs)
     }

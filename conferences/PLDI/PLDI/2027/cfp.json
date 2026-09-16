@@ -26,8 +26,8 @@
         "notification": "2027-03-04"
       }
     ],
-    "submission_details": "null",
-    "submission_url": "http://yellowgrass.org/roadmap/conf.researchr.org"
+    "submission_details": "",
+    "submission_url": null
   },
   "history": [
     {
@@ -62,7 +62,7 @@
         "notification": "2027-03-04"
       }
     ],
-    "submission_details": "null",
+    "submission_details": "",
     "submission_url": "null"
   }
 }
