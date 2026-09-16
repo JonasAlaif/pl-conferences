@@ -17,10 +17,11 @@ DESCRIPTION:PACMPL Issue PLDI 2026 seeks contributions on all aspects of p
  filiations must be omitted from submissions (double-blind reviewing). Aut
  hors can submit multiple times prior to the deadline\, but only the last 
  submission will be reviewed. There is no deadline for submitting abstract
- s. The submission site is https://pldi2026.hotcrp.com.\n\nExtracted autom
- atically by a small language model\; please cross-check against the sourc
- e before relying on it: https://pldi26.sigplan.org/track/pldi-2026-papers
- \nhttps://github.com/JonasAlaif/pl-conferences
+ s. The submission site is https://pldi2026.hotcrp.com.\n\nSubmit at: http
+ s://pldi2026.hotcrp.com\n\nExtracted automatically by a small language mo
+ del\; please cross-check against the source before relying on it: https:/
+ /pldi26.sigplan.org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif
+ /pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences

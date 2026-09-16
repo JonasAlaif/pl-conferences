@@ -16,7 +16,8 @@
   },
   "data": {
     "deadline": "2026-04-13",
-    "how_to_apply": "Undergraduate, Master's, Ph.D., full- or part-time students (current or prospective) of computer science and related fields can apply. Volunteers receive complimentary registration to PLDI but do not get travel expenses covered. Spots are limited, and selection involves coordination with Video Chairs for video volunteers and a lottery-based system for general volunteers. Applications should be submitted via the provided form."
+    "how_to_apply": "Undergraduate, Master's, Ph.D., full- or part-time students (current or prospective) of computer science and related fields can apply. Volunteers receive complimentary registration to PLDI but do not get travel expenses covered. Spots are limited, and selection involves coordination with Video Chairs for video volunteers and a lottery-based system for general volunteers. Applications should be submitted via the provided form.",
+    "application_url": "https://forms.gle/QzqHZhXCj87SGeq67"
   },
   "raw": {
     "application_deadline": "2026-04-13",

@@ -24,9 +24,9 @@ DESCRIPTION:Submitted papers must be in English\, presenting original rese
  nd institutions\; refer to prior work in the third person\, just as prior
   work by others\; not to include acknowledgments that might identify them
  . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
- t: https://etaps.org/2026/esop\n\nExtracted automatically by a small lang
- uage model\; please cross-check against the source before relying on it: 
- https://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+ t: https://esop26.hotcrp.com/\n\nExtracted automatically by a small langu
+ age model\; please cross-check against the source before relying on it: h
+ ttps://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
@@ -43,11 +43,12 @@ DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
  liography\, using the PACMPL format (specifically\, the acmart LaTeX clas
  s with acmsmall option). Concurrent paper submissions to other conference
  s\, workshops\, journals\, or similar forums of publication are not allow
- ed.\n\nExtracted automatically by a small language model\; please cross-c
- heck against the source before relying on it: https://conf.researchr.org/
- track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - see h
- ttps://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhtt
- ps://github.com/JonasAlaif/pl-conferences
+ ed.\n\nSubmit at: https://popl26.hotcrp.com\n\nExtracted automatically by
+  a small language model\; please cross-check against the source before re
+ lying on it: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-re
+ search-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-c
+ onferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-con
+ ferences
 END:VEVENT
 BEGIN:VEVENT
 UID:af39bedd785ce06164ee46323168cf76c9ba8a2f@pl-conferences
@@ -82,6 +83,18 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
+DTSTAMP:20260915T225322Z
+DTSTART;VALUE=DATE:20251002
+DTEND;VALUE=DATE:20251003
+SUMMARY:[POPL 2026] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
+ ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
+ nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:61192732771c46bc1b2a40e0421f1379e34c56a7@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20251010
@@ -93,11 +106,12 @@ DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
  of review. At least one senior author must register as a reserve reviewer
   unless exempt. Papers accepted in either round will be published in the 
  2026 volume of PACMPL and invited to present in-person at the SPLASH conf
- erence in 2026\; remote presentations are not possible.\n\nExtracted auto
- matically by a small language model\; please cross-check against the sour
- ce before relying on it: https://2026.splashcon.org/track/oopsla-2026\nMa
- intenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/m
- ain/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+ erence in 2026\; remote presentations are not possible.\n\nSubmit at: htt
+ ps://oopsla26.hotcrp.com/\n\nExtracted automatically by a small language 
+ model\; please cross-check against the source before relying on it: https
+ ://2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://
+ github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://gi
+ thub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4ec8b764bcafb1909f48be279d68cfe37760708f@pl-conferences
@@ -118,21 +132,9 @@ DESCRIPTION:Submitted papers must be in English\, presenting original rese
  nd institutions\; refer to prior work in the third person\, just as prior
   work by others\; not to include acknowledgments that might identify them
  . ESOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit a
- t: https://etaps.org/2026/esop\n\nExtracted automatically by a small lang
- uage model\; please cross-check against the source before relying on it: 
- https://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
-END:VEVENT
-BEGIN:VEVENT
-UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
-DTSTAMP:20260915T225322Z
-DTSTART;VALUE=DATE:20251106
-DTEND;VALUE=DATE:20251107
-SUMMARY:[POPL 2026] Notification
-DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
- ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
- nhttps://github.com/JonasAlaif/pl-conferences
+ t: https://esop26.hotcrp.com/\n\nExtracted automatically by a small langu
+ age model\; please cross-check against the source before relying on it: h
+ ttps://etaps.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ec304eaa792b4399bad21d55cb0973e91f7deab3@pl-conferences
@@ -145,10 +147,11 @@ DESCRIPTION:Applicants can be undergraduate\, Master's\, Ph.D. full- or pa
  complimentary conference registration\, free lunches/refreshments\, and v
  olunteer garments in exchange for approximately 18 hours of work covering
   four days at the conference. To apply\, fill out the provided form befor
- e November 10th\, 2025.\n\nExtracted automatically by a small language mo
- del\; please cross-check against the source before relying on it: https:/
- /popl26.sigplan.org/track/POPL-2026-student-volunteers\nhttps://github.co
- m/JonasAlaif/pl-conferences
+ e November 10th\, 2025.\n\nApply at: https://forms.gle/YiMy1PXVF6QWggsb8\
+ n\nExtracted automatically by a small language model\; please cross-check
+  against the source before relying on it: https://popl26.sigplan.org/trac
+ k/POPL-2026-student-volunteers\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 END:VEVENT
 BEGIN:VEVENT
 UID:9c6402aeba43992e443b00b6e2a7c7b91815cafc@pl-conferences
@@ -162,10 +165,11 @@ DESCRIPTION:PACMPL Issue PLDI 2026 seeks contributions on all aspects of p
  filiations must be omitted from submissions (double-blind reviewing). Aut
  hors can submit multiple times prior to the deadline\, but only the last 
  submission will be reviewed. There is no deadline for submitting abstract
- s. The submission site is https://pldi2026.hotcrp.com.\n\nExtracted autom
- atically by a small language model\; please cross-check against the sourc
- e before relying on it: https://pldi26.sigplan.org/track/pldi-2026-papers
- \nhttps://github.com/JonasAlaif/pl-conferences
+ s. The submission site is https://pldi2026.hotcrp.com.\n\nSubmit at: http
+ s://pldi2026.hotcrp.com\n\nExtracted automatically by a small language mo
+ del\; please cross-check against the source before relying on it: https:/
+ /pldi26.sigplan.org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif
+ /pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:367a8753d7cc3e5e84a482932b3c2948ca831967@pl-conferences
@@ -253,10 +257,11 @@ DESCRIPTION:Papers can include a clearly marked appendix\, however\, the r
  tegories must be submitted by January 28\, 2026 AoE\, and should be in LN
  CS format. Note Springer's guidelines regarding AI Authorship. Simultaneo
  us submission to other conferences with proceedings or submission of mate
- rial that has already been published elsewhere is not allowed.\n\nExtract
- ed automatically by a small language model\; please cross-check against t
- he source before relying on it: http://conferences.i-cav.org/2026/cfp/\nh
- ttps://github.com/JonasAlaif/pl-conferences
+ rial that has already been published elsewhere is not allowed.\n\nSubmit 
+ at: https://submissions.floc26.org/cav/\n\nExtracted automatically by a s
+ mall language model\; please cross-check against the source before relyin
+ g on it: http://conferences.i-cav.org/2026/cfp/\nhttps://github.com/Jonas
+ Alaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences
@@ -285,12 +290,12 @@ DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
  s are omitted from submissions. Authors may submit improved versions befo
  re the deadline. Authors of conditionally accepted papers must provide re
  vised submissions by 3 June 2026 accompanied by a cover letter mapping ea
- ch mandatory revision request to specific parts of the paper.\n\nExtracte
- d automatically by a small language model\; please cross-check against th
- e source before relying on it: https://icfp26.sigplan.org/track/icfp-2026
- -icfp-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-co
- nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
- erences
+ ch mandatory revision request to specific parts of the paper.\n\nSubmit a
+ t: https://icfp26.hotcrp.com\n\nExtracted automatically by a small langua
+ ge model\; please cross-check against the source before relying on it: ht
+ tps://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nMaintenance: E003 -
+  see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.m
+ d\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:b9a54c1f48a05c1e412879ecca278771aee02f3e@pl-conferences
@@ -314,11 +319,12 @@ DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
  of review. At least one senior author must register as a reserve reviewer
   unless exempt. Papers accepted in either round will be published in the 
  2026 volume of PACMPL and invited to present in-person at the SPLASH conf
- erence in 2026\; remote presentations are not possible.\n\nExtracted auto
- matically by a small language model\; please cross-check against the sour
- ce before relying on it: https://2026.splashcon.org/track/oopsla-2026\nMa
- intenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/m
- ain/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+ erence in 2026\; remote presentations are not possible.\n\nSubmit at: htt
+ ps://oopsla26.hotcrp.com/\n\nExtracted automatically by a small language 
+ model\; please cross-check against the source before relying on it: https
+ ://2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://
+ github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://gi
+ thub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:7aae3cfef64b13afafb777e5fa7bc104a4871f4a@pl-conferences
@@ -363,10 +369,10 @@ DESCRIPTION:Undergraduate\, Master's\, Ph.D.\, full- or part-time students
  ravel expenses covered. Spots are limited\, and selection involves coordi
  nation with Video Chairs for video volunteers and a lottery-based system 
  for general volunteers. Applications should be submitted via the provided
-  form.\n\nExtracted automatically by a small language model\; please cros
- s-check against the source before relying on it: https://pldi26.sigplan.o
- rg/track/pldi-2026-student-volunteering\nhttps://github.com/JonasAlaif/pl
- -conferences
+  form.\n\nApply at: https://forms.gle/QzqHZhXCj87SGeq67\n\nExtracted auto
+ matically by a small language model\; please cross-check against the sour
+ ce before relying on it: https://pldi26.sigplan.org/track/pldi-2026-stude
+ nt-volunteering\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:724868c1f4bae6395e4206c70f3a3a45d886c330@pl-conferences
@@ -490,10 +496,10 @@ DESCRIPTION:Students and Programming Languages researchers from around the
  limentary conference registration\, free lunches and refreshments\, a vol
  unteer shirt\, and free admission to social events\, though they must arr
  ange their own travel and accommodation. To apply\, visit the provided li
- nk.\n\nExtracted automatically by a small language model\; please cross-c
- heck against the source before relying on it: https://icfp26.sigplan.org/
- track/icfp-2026-icfp-volunteers\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ nk.\n\nApply at: https://forms.gle/wdogVw3P25pizryk6\n\nExtracted automat
+ ically by a small language model\; please cross-check against the source 
+ before relying on it: https://icfp26.sigplan.org/track/icfp-2026-icfp-vol
+ unteers\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:989f7d942d26fb85e2975f901c2ad3b4e1a18398@pl-conferences
@@ -521,11 +527,12 @@ DESCRIPTION:The page states that everyone is welcome to apply\, with prior
  mission to social events. They are responsible for their own travel and a
  ccommodation. To apply\, one must send an email to thalakottur.m@northeas
  tern.edu\, robert.zhang@utexas.edu\, or hnzhu@ucdavis.edu if they have qu
- estions\, though the page also provides a direct link to apply.\n\nExtrac
- ted automatically by a small language model\; please cross-check against 
- the source before relying on it: https://2026.splashcon.org/track/splash-
- issta-2026-student-volunteers\nhttps://github.com/JonasAlaif/pl-conferenc
- es
+ estions\, though the page also provides a direct link to apply.\n\nApply 
+ at: https://tinyurl.com/splash-issta-sv26\n\nNote: the page also states "
+ Apply here by July 12".\n\nExtracted automatically by a small language mo
+ del\; please cross-check against the source before relying on it: https:/
+ /2026.splashcon.org/track/splash-issta-2026-student-volunteers\nhttps://g
+ ithub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
@@ -546,7 +553,7 @@ SUMMARY:[LICS 2026] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://lics.siglog.org
  /lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-conferences
-LOCATION:Lisbon
+LOCATION:Lisbon\, Portugal
 END:VEVENT
 BEGIN:VEVENT
 UID:2cc72dea11c989a0f4ee3fe7a61186fb6879c5de@pl-conferences
@@ -557,6 +564,7 @@ SUMMARY:[CAV 2026] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: http://conferences.i-ca
  v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Lisbon\, Portugal
 END:VEVENT
 BEGIN:VEVENT
 UID:33c29fbcd5369b387977ba4f70c01128dd9ac277@pl-conferences
@@ -602,7 +610,7 @@ SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
  org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
-LOCATION:Oakland\, California\, United States
+LOCATION:Oakland\, United States
 END:VEVENT
 BEGIN:VEVENT
 UID:30897a12c3f1cdd255353017ee26345e4514e224@pl-conferences
@@ -862,6 +870,17 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270702
+DTEND;VALUE=DATE:20270703
+SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
 DTSTAMP:20260916T155005Z
 DTSTART;VALUE=DATE:20270719
@@ -873,17 +892,6 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
  erences
 LOCATION:Amsterdam\, The Netherlands
-END:VEVENT
-BEGIN:VEVENT
-UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
-DTSTAMP:20260916T131008Z
-DTSTART;VALUE=DATE:20270813
-DTEND;VALUE=DATE:20270814
-SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
-DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
- conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:f8f31a9f890ec346e86377ee7370716b1453c603@pl-conferences

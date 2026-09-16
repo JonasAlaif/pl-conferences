@@ -73,8 +73,8 @@ END:VEVENT
 BEGIN:VEVENT
 UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
 DTSTAMP:20260916T131008Z
-DTSTART;VALUE=DATE:20270813
-DTEND;VALUE=DATE:20270814
+DTSTART;VALUE=DATE:20270702
+DTEND;VALUE=DATE:20270703
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.

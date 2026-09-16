@@ -494,38 +494,74 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     let prompt = cfp_prompt(cfg, year, &page.url, &md);
     let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp_links(x, year, &grounding, &cfg.track, &links))? else { return Ok(None) };
     if !x.page_is_about_conference {
-        trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
-        return Ok(None);
-    }
-    match validated {
-        Ok(mut cfp) => {
-            if hops > 0 {
-                trail.code(Code::E003);
-            }
-            if retried {
-                trail.code(Code::E005);
-            }
-            let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
-            if let (Some(c), None) = (&cfp.conference, &acc.conference) {
-                acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
-            }
-            if !cfp.rounds.is_empty() {
-                if let Some(u) = cfp.submission_url.clone() {
-                    if let Err(why) = usable_link(&u, &page.url, true) {
-                        trail.note(format!("submission link {u} is {why}; dropped"));
-                        cfp.submission_url = None;
-                    }
-                }
-                let deadlines = cfp.deadlines().expect("rounds present");
-                return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
-            }
-            trail.note(format!("{} has the conference dates but no deadlines yet", page.url));
-        }
-        Err(_) if x.has_submission_deadline && !x.rounds.is_empty() => {
-            *saw_invalid = true;
+        // A page that is not this edition's but talks about it (a series
+        // home page saying "LICS 2027 will be held in Montreal") usually
+        // links to it: its links are still worth a look.
+        let text = md.to_lowercase();
+        let mentions = text.contains(&cfg.conference.to_lowercase()) && text.contains(&year.to_string());
+        if !mentions || hops >= 2 {
+            trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
             return Ok(None);
         }
-        Err(_) => {}
+        trail.note(format!("{} is not about {} but mentions it; trying its links", page.url, cfg.label(year)));
+    } else {
+        match validated {
+            Ok(mut cfp) => {
+                if hops > 0 {
+                    trail.code(Code::E003);
+                }
+                if retried {
+                    trail.code(Code::E005);
+                }
+                let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
+                if let (Some(c), None) = (&cfp.conference, &acc.conference) {
+                    acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
+                }
+                if !cfp.rounds.is_empty() {
+                    if let Some(u) = cfp.submission_url.clone() {
+                        if let Err(why) = usable_link(&u, &page.url, true) {
+                            trail.note(format!("submission link {u} is {why}; dropped"));
+                            cfp.submission_url = None;
+                        }
+                    }
+                    // The page states the deadlines but not where to
+                    // submit (a home page's sidebar, a dates page, a joint
+                    // call): the call-for-papers page one link away
+                    // usually names the site. One more page is read, and
+                    // only its site (and its details, when this page has
+                    // none) is borrowed; the deadlines stay this page's,
+                    // and only if that page states the same deadline.
+                    if cfp.submission_url.is_none() && hops == 0 {
+                        let what = format!("the call for papers of the {} track of {} {year}", cfg.track, cfg.conference);
+                        if let Some(next) = follow_links(ctx, trail, &page.html, &page.url, &what, &[&cfg.track, &cfg.conference])?.into_iter().find(|u| !trail.tried(u)) {
+                            trail.note(format!("looking for the submission site on {next}"));
+                            let codes_before = trail.codes.clone();
+                            let (mut scratch, mut ignored) = (CfpFound::default(), false);
+                            if let Some(other) = try_cfp_page(ctx, cfg, year, trail, &next, 2, &mut ignored, &mut scratch)? {
+                                let same_deadline = other.value.rounds.first().map(|r| r.submission) == cfp.rounds.first().map(|r| r.submission);
+                                if let (true, Some(site)) = (same_deadline, other.value.submission_url.clone()) {
+                                    trail.note(format!("submission site {site} taken from {next}"));
+                                    cfp.submission_url = Some(site);
+                                    if cfp.submission_details.len() < 40 {
+                                        cfp.submission_details = other.value.submission_details.clone();
+                                    }
+                                }
+                            }
+                            trail.codes = codes_before;
+                            trail.mark_tried(&next);
+                        }
+                    }
+                    let deadlines = cfp.deadlines().expect("rounds present");
+                    return Ok(Some(Found { value: deadlines, raw, prov, html: page.html.clone(), md }));
+                }
+                trail.note(format!("{} has the conference dates but no deadlines yet", page.url));
+            }
+            Err(_) if x.has_submission_deadline && !x.rounds.is_empty() => {
+                *saw_invalid = true;
+                return Ok(None);
+            }
+            Err(_) => {}
+        }
     }
     if hops >= 2 {
         return Ok(None);

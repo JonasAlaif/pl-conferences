@@ -24,7 +24,8 @@
         "notification": "2026-03-05"
       }
     ],
-    "submission_details": "PACMPL Issue PLDI 2026 seeks contributions on all aspects of programming languages research. The selection of papers will be made in two rounds of reviewing with an author response period. Author names and affiliations must be omitted from submissions (double-blind reviewing). Authors can submit multiple times prior to the deadline, but only the last submission will be reviewed. There is no deadline for submitting abstracts. The submission site is https://pldi2026.hotcrp.com."
+    "submission_details": "PACMPL Issue PLDI 2026 seeks contributions on all aspects of programming languages research. The selection of papers will be made in two rounds of reviewing with an author response period. Author names and affiliations must be omitted from submissions (double-blind reviewing). Authors can submit multiple times prior to the deadline, but only the last submission will be reviewed. There is no deadline for submitting abstracts. The submission site is https://pldi2026.hotcrp.com.",
+    "submission_url": "https://pldi2026.hotcrp.com"
   },
   "raw": {
     "conference": {
