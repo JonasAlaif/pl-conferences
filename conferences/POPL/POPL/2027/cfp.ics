@@ -11,11 +11,11 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20260709
 DTEND;VALUE=DATE:20260710
 SUMMARY:[POPL 2027] Paper Submission Deadline
-DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://popl27.sigplan.
- org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
- rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
- nces
+DESCRIPTION:Submit at: https://popl27.hotcrp.com\n\nExtracted automaticall
+ y by a small language model\; please cross-check against the source befor
+ e relying on it: https://popl27.sigplan.org/dates\nMaintenance: E003 - se
+ e https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\n
+ https://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ff4b1584b5053da477cff7c2cf72a1e8b15b1ffb@pl-conferences

@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T18:15:27.542432243Z",
-  "run_count": 14,
+  "last_run": "2026-09-16T18:50:43.019787142Z",
+  "run_count": 15,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -192,8 +192,8 @@
       "note": "trying volunteer link https://popl26.sigplan.org/track/POPL-2026-student-volunteers from the conference page"
     },
     "POPL/POPL/2027/cfp": {
-      "last_attempt": "2026-09-16T18:15:07.454440473Z",
-      "attempts": 5,
+      "last_attempt": "2026-09-16T18:50:43.019787142Z",
+      "attempts": 6,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -201,10 +201,10 @@
       "note": "re-checking stored page https://popl27.sigplan.org/dates; 7 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers"
     },
     "POPL/POPL/2027/volunteer": {
-      "last_attempt": "2026-09-16T18:15:07.454440473Z",
-      "attempts": 2,
+      "last_attempt": "2026-09-16T18:50:43.019787142Z",
+      "attempts": 3,
       "outcome": "not_found",
-      "consecutive_failures": 2,
+      "consecutive_failures": 3,
       "backend": "brave",
       "codes": [
         "E001",
