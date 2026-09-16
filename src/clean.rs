@@ -10,7 +10,9 @@ use regex::Regex;
 use std::collections::HashSet;
 use std::sync::LazyLock;
 
-/// Tags whose whole subtree is dropped.
+/// Tags whose whole subtree is dropped. Keeping `<header>`/`<aside>` was
+/// tried: on researchr pages it adds 5-10K chars of site chrome, pushing
+/// the big track pages over the budget, and the harness regressed.
 const SKIP_TAGS: &[&str] = &[
     "script", "style", "noscript", "template", "svg", "img", "picture", "video", "audio", "iframe",
     "canvas", "form", "input", "button", "select", "textarea", "nav", "header", "footer", "aside",
@@ -29,6 +31,12 @@ pub const MAX_CHARS: usize = 45_000;
 /// Sections scoring at least this are treated as relevant when a page must be cut.
 const RELEVANT_SCORE: f64 = 2.0;
 
+/// Relevance signals used only when a page exceeds the budget. These are
+/// English: a language-neutral variant (years plus "day number next to a
+/// word") was tried and scored the conference programme (times, rooms,
+/// "20 min") above the call for papers; boosting mentions of the track name
+/// was tried too and let programme listings (which name the track on every
+/// talk) fill the budget.
 static KEYWORDS: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?i)deadline|submission|submit|notification|notif|call for papers|important dates|rebuttal|author response|camera|aoe|anywhere on earth|round|volunteer|apply|application").unwrap()
 });
@@ -43,16 +51,29 @@ pub fn html_to_markdown(html: &str) -> String {
 
 /// Full conversion without the length budget.
 pub fn html_to_markdown_unbudgeted(html: &str) -> String {
-    let html = strip_elements(html);
-    let converter = HtmlToMarkdown::builder()
-        .skip_tags(SKIP_TAGS.to_vec())
-        // Anchor text only: URLs are pure token waste for extraction.
-        .add_handler(vec!["a"], |handlers: &dyn Handlers, el: Element| {
-            Some(handlers.walk_children(el.node))
-        })
-        .build();
-    let md = converter.convert(&html).unwrap_or_default();
-    tidy(&md)
+    let convert = |html: &str| {
+        let converter = HtmlToMarkdown::builder()
+            .skip_tags(SKIP_TAGS.to_vec())
+            // Anchor text only: URLs are pure token waste for extraction.
+            .add_handler(vec!["a"], |handlers: &dyn Handlers, el: Element| {
+                Some(handlers.walk_children(el.node))
+            })
+            .build();
+        tidy(&converter.convert(html).unwrap_or_default())
+    };
+    let stripped = convert(&strip_elements(html));
+    // Safety net: if stripping boilerplate by selector left almost nothing,
+    // the selectors hit real content (a site that puts its body in a
+    // `.modal`, say); fall back to the unstripped conversion. The absolute
+    // floor matters: on researchr pages the navigation alone is several
+    // times the content, so a ratio on its own fires on every page there.
+    if stripped.len() < 1_500 {
+        let full = convert(html);
+        if full.len() > 3 * stripped.len() {
+            return full;
+        }
+    }
+    stripped
 }
 
 /// Remove boilerplate containers by CSS selector and re-serialize.
@@ -318,8 +339,9 @@ mod tests {
             "cav26.html", "etaps26.html", "etaps26-esop.html", "oopsla25.html",
         ] {
             let html = fixture(name);
-            let md = html_to_markdown(&html);
-            eprintln!("{name:26} html={:>8} md={:>7} ~tokens={:>6}", html.len(), md.len(), estimate_tokens(&md));
+            let raw = html_to_markdown_unbudgeted(&html);
+            let md = budget(&raw, MAX_CHARS);
+            eprintln!("{name:26} html={:>8} unbudgeted={:>7} md={:>7} ~tokens={:>6}", html.len(), raw.len(), md.len(), estimate_tokens(&md));
         }
     }
 }

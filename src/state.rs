@@ -43,6 +43,8 @@ pub enum Code {
     E009,
     /// The model tag now resolves to a different build than the one pinned in the workflow.
     E010,
+    /// The same conference-year ended in an error (a panic or an unexpected failure) in two or more consecutive runs.
+    E011,
 }
 
 impl Code {
@@ -58,6 +60,7 @@ impl Code {
             Code::E008 => "The primary search backend (Brave HTML) throttled or blocked the runner (HTTP 429/202/403); a fallback backend was used. Nothing to fix unless it happens every month; then raise `PLC_SEARCH_GAP` or reorder backends in `src/search.rs`.",
             Code::E009 => "The page's TLS certificate was invalid and was ignored. Check whether the conference site moved; the source URL is in the JSON next to the calendar.",
             Code::E010 => "The Ollama registry now serves a different build for the pinned model tag (manifest digest changed). Re-run the accuracy harness (`cargo test --test live -- --ignored`) and update `MODEL_DIGEST` in `.github/workflows/scrape.yml` if results are still good.",
+            Code::E011 => "This conference-year errored (a panic or an unexpected failure, see the note) in two or more consecutive runs; the run continued without it. Reproduce locally with `cargo run -- --conference <name> --year <year> --dry-run`.",
         }
     }
 }
@@ -116,6 +119,9 @@ impl State {
         let consecutive_failures = if failed { prev.as_ref().map(|a| a.consecutive_failures).unwrap_or(0) + 1 } else { 0 };
         if outcome == Outcome::NotFound && consecutive_failures >= 3 && overdue {
             codes.push(Code::E006);
+        }
+        if outcome == Outcome::Error && prev.as_ref().is_some_and(|a| a.outcome == Outcome::Error) {
+            codes.push(Code::E011);
         }
         codes.sort();
         codes.dedup();
@@ -210,6 +216,11 @@ mod tests {
         assert_eq!(a.codes, vec![Code::E003]);
         assert!(st.render_maintenance().contains("## E003"));
         assert!(st.summary_line().contains("E003"));
+        // Repeated errors on one conference-year surface as E011.
+        st.record("Y/Y/2027/cfp", Outcome::Error, None, vec![], "panic: x".into(), now, true);
+        assert!(st.get("Y/Y/2027/cfp").unwrap().codes.is_empty());
+        st.record("Y/Y/2027/cfp", Outcome::Error, None, vec![], "panic: x".into(), now, true);
+        assert_eq!(st.get("Y/Y/2027/cfp").unwrap().codes, vec![Code::E011]);
     }
 
     #[test]

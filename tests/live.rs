@@ -67,6 +67,13 @@ fn cases() -> Vec<Case> {
             ],
             conference_dates: None, city: None,
         },
+        // A plain page on the conference's own domain (not researchr), with
+        // an abstract deadline a week before the paper deadline.
+        Case {
+            fixture: "lics26-cfp.html", conference: "LICS", track: "LICS", year: 2026,
+            rounds: vec![("2026-01-22", Some("2026-03-26"), Some("2026-03-29"), Some(&["2026-04-16"]))],
+            conference_dates: Some(&[("2026-07-20", "2026-07-23")]), city: Some("Lisbon"),
+        },
         Case {
             fixture: "oopsla25.html", conference: "SPLASH", track: "OOPSLA", year: 2025,
             rounds: vec![
@@ -225,10 +232,20 @@ fn extraction_accuracy() {
             let secs = t.elapsed().as_secs_f64();
             total_secs += secs;
             total += 1;
-            let errs = match validated {
+            let mut errs = match validated {
                 Ok(cfp) => check(&case, &cfp),
                 Err(e) => vec![format!("INVALID: {}", e.join("; "))],
             };
+            // The evidence-before-answer design relies on the runtime honouring
+            // schema property order; check it on the raw answer.
+            let text = raw.to_string();
+            for (before, after) in [("submission_deadline_quote", "\"submission_deadline\""), ("submission_deadline_as_written", "\"submission_deadline\""), ("notification_quote", "\"notification\"")] {
+                if let (Some(a), Some(b)) = (text.find(before), text.find(after)) {
+                    if a > b {
+                        errs.push(format!("{before} came after {after} in the model output: the runtime no longer honours schema order"));
+                    }
+                }
+            }
             let tag = if retried { " (after retry)" } else { "" };
             if errs.is_empty() {
                 passed += 1;

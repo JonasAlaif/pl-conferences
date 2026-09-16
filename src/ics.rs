@@ -34,10 +34,11 @@ impl Provenance {
         for c in self.history.iter().filter(|c| c.field == field || c.field == "rounds") {
             s.push_str(&format!("Changed {}: was {} (now {}).\n", c.at.format("%Y-%m-%d"), c.old, c.new));
         }
-        s.push_str(&format!("Source: {}", self.source_url));
+        s.push_str(&format!("Extracted automatically by a small language model; please cross-check against the source before relying on it: {}", self.source_url));
         if !self.codes.is_empty() {
             s.push_str(&format!("\nMaintenance: {} - see {MAINTENANCE_URL}", self.codes.join(", ")));
         }
+        s.push_str(&format!("\n{REPO_URL}"));
         s
     }
 }
@@ -78,6 +79,9 @@ pub fn deadline_events(label: &str, key: &str, d: &Deadlines, prov: &Provenance,
         if let Some(u) = &d.submission_url {
             parts.push(format!("Submit at: {u}"));
         }
+        if let Some(c) = &r.submission_conflict {
+            parts.push(format!("Note: the page also states \"{c}\"."));
+        }
         parts.push(prov.note(&format!("round {n} submission")));
         let desc = parts.join("\n\n");
         events.push(mk(&format!("{prefix}Paper Submission Deadline"), desc, "", r.submission, r.submission));
@@ -110,6 +114,9 @@ pub fn volunteer_events(label: &str, key: &str, v: &Volunteer, prov: &Provenance
     }
     if let Some(u) = &v.application_url {
         parts.push(format!("Apply at: {u}"));
+    }
+    if let Some(c) = &v.deadline_conflict {
+        parts.push(format!("Note: the page also states \"{c}\"."));
     }
     parts.push(prov.note("volunteer deadline"));
     let desc = parts.join("\n\n");
@@ -199,6 +206,7 @@ mod tests {
             rounds: vec![ValidRound {
                 label: String::new(),
                 submission: NaiveDate::from_ymd_opt(2025, 7, 10).unwrap(),
+                submission_conflict: Some("Apply here by July 3".into()),
                 response_start: NaiveDate::from_ymd_opt(2025, 9, 8),
                 response_end: NaiveDate::from_ymd_opt(2025, 9, 11),
                 notification: NaiveDate::from_ymd_opt(2025, 11, 6),
@@ -221,6 +229,9 @@ mod tests {
         assert!(ics.contains("DTEND;VALUE=DATE:20250912"));
         assert!(ics.contains("LOCATION:Rennes\\, France"));
         assert!(unfolded.contains("Maintenance: E003"));
+        assert!(unfolded.contains("Extracted automatically by a small language model"));
+        assert!(unfolded.contains("Note: the page also states \"Apply here by July 3\"."));
+        assert_eq!(unfolded.matches("cross-check against the source").count(), 4, "every event carries the disclaimer");
         assert!(unfolded.contains("Submit at: https://popl26.hotcrp.com"));
         assert!(unfolded.contains("Changed 2026-09-20: was 2025-07-03"));
         assert_eq!(unfolded.matches("Changed 2026-09-20").count(), 1, "only the submission event carries the change");

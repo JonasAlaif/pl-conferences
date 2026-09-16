@@ -14,7 +14,7 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 
 /// Pages with less text than this cannot describe a call for papers or a
 /// volunteer programme; they are skipped without a model call.
-pub const MIN_PAGE_CHARS: usize = 400;
+pub const MIN_PAGE_CHARS: usize = 150;
 
 pub const SYSTEM_PROMPT: &str = "You extract information from conference web pages. Use only facts stated on the page you are given. Never invent, guess or infer a date: every date you report must be written on the page, and you quote the words it comes from before converting it to YYYY-MM-DD. When something is not stated, answer null.";
 
@@ -348,14 +348,12 @@ fn shown_url(u: &str, host: Option<&str>) -> String {
     }
 }
 
-const LINK_WORDS: &[&str] = &["call for papers", "cfp", "dates", "deadline", "submission", "papers", "volunteer", "student"];
-
 fn follow_link(ctx: &Ctx, trail: &mut Trail, html: &str, url: &str, what: &str, names: &[&str]) -> Result<Option<String>> {
-    let mut kws: Vec<&str> = names.to_vec();
-    kws.extend_from_slice(LINK_WORDS);
+    // Ranking uses only the conference/track names and the host, no word
+    // list, so it holds for any language or site vocabulary.
     // Links already tried in this attempt are not offered again: the model
     // would otherwise keep picking the same one.
-    let links: Vec<(String, String)> = candidate_links(html, url, &kws).into_iter().filter(|(_, u)| !trail.tried(u)).collect();
+    let links: Vec<(String, String)> = candidate_links(html, url, names).into_iter().filter(|(_, u)| !trail.tried(u)).collect();
     if links.is_empty() {
         return Ok(None);
     }
@@ -366,7 +364,16 @@ fn follow_link(ctx: &Ctx, trail: &mut Trail, html: &str, url: &str, what: &str, 
     Ok(choose(ctx, trail, &q, &list, links.len())?.map(|i| links[i].1.clone()))
 }
 
+/// Pages fetched per attempt (search hits, followed links, re-picks). On the
+/// runner every page costs minutes of model time; an attempt that has not
+/// found its answer after this many pages waits for the next run.
+pub const MAX_PAGES_PER_ATTEMPT: u32 = 6;
+
 fn fetch_page(trail: &mut Trail, url: &str) -> Option<fetch::Page> {
+    if trail.pages >= MAX_PAGES_PER_ATTEMPT {
+        trail.note(format!("page budget of {MAX_PAGES_PER_ATTEMPT} used up; not fetching {url}"));
+        return None;
+    }
     if !trail.visited.insert(url.trim_end_matches('/').to_string()) {
         log::info!("{url}: already tried in this attempt");
         return None;

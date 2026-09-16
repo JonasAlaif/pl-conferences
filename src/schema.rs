@@ -81,6 +81,9 @@ pub struct Round {
     /// The same date as YYYY-MM-DD.
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub submission_deadline: String,
+    /// If the page states a different date for this same deadline somewhere else (an extension, or an outdated mention), quote that other statement verbatim; null otherwise.
+    #[schemars(required)]
+    pub submission_deadline_conflict: Option<String>,
     /// The exact words on the page that state the author response / rebuttal period, copied verbatim; null if there is none.
     #[schemars(required)]
     pub author_response_quote: Option<String>,
@@ -124,6 +127,9 @@ pub struct VolunteerExtraction {
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub application_deadline: Option<String>,
+    /// If the page states a different date for this same deadline somewhere else (an extension, or an outdated mention), quote that other statement verbatim; null otherwise.
+    #[schemars(required)]
+    pub application_deadline_conflict: Option<String>,
     /// A few sentences on who can apply, what volunteers get, and how to apply.
     #[schemars(required)]
     pub how_to_apply: Option<String>,
@@ -200,6 +206,8 @@ pub fn near_on_page(page: &str, quote: &str, text: &str) -> bool {
     let rows: Vec<bool> = page.lines().filter(|l| !norm(l).is_empty()).map(|l| l.trim_start().starts_with('|')).collect();
     for i in 0..lines.len() {
         let is_row = rows[i];
+        // Prose and sidebars: three lines, enough for a two-line quote or a
+        // sidebar entry, but not two sidebar entries at once.
         let hi = if is_row { i + 1 } else { (i + 3).min(lines.len()) };
         let window: String = (i..hi).filter(|j| is_row || !rows[*j]).map(|j| lines[j].as_str()).collect::<Vec<_>>().join(" ");
         if date_tokens_in(&window, &t) && (window.contains(&q) || page_contains(&window, &q)) {
@@ -424,6 +432,10 @@ pub struct ValidRound {
     #[serde(default)]
     pub label: String,
     pub submission: NaiveDate,
+    /// Another statement of the submission deadline found on the page, if
+    /// the page contradicts itself; shown to calendar users.
+    #[serde(default)]
+    pub submission_conflict: Option<String>,
     #[serde(default)]
     pub response_start: Option<NaiveDate>,
     #[serde(default)]
@@ -475,7 +487,9 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
     // either the other rounds are on the page too, or the label is wrong.
     if has_rounds && x.rounds.len() == 1 {
         let label = x.rounds[0].label.to_lowercase();
-        let looks_first = ["round 1", "round one", "r1", "first round", "1st round"].iter().any(|p| label.contains(p));
+        // Any label that numbers the round as the first one, whatever the
+        // wording ("Round 1", "Cycle 1", "Phase One", "first deadline").
+        let looks_first = label.contains('1') && !label.contains("11") || label.contains("first") || label.contains(" one") || label.ends_with(" i") || label.ends_with(" a");
         if looks_first && !page.is_empty() {
             errs.push(format!("the only round is labelled {:?}: if the page also states a Round 2 (or later) submission deadline for this track, add every round; if there is only one submission deadline, leave the label empty", x.rounds[0].label));
         }
@@ -528,7 +542,9 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
                 errs.push(format!("{what} dates run past the conference start {}", c.start));
             }
         }
-        rounds.push(ValidRound { label: r.label.trim().to_string(), submission, response_start, response_end, notification });
+        // A conflicting statement is kept only when it really is on the page.
+        let submission_conflict = clean_opt(&r.submission_deadline_conflict).filter(|c| page.is_empty() || page_contains(page, c));
+        rounds.push(ValidRound { label: r.label.trim().to_string(), submission, submission_conflict, response_start, response_end, notification });
     }
     for w in rounds.windows(2) {
         if w[1].submission <= w[0].submission {
@@ -546,6 +562,8 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Volunteer {
     pub deadline: NaiveDate,
+    #[serde(default)]
+    pub deadline_conflict: Option<String>,
     #[serde(default)]
     pub how_to_apply: String,
     /// Application form or sign-up page, when found on the page or among its links.
@@ -580,7 +598,8 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),
     }
     if errs.is_empty() {
-        Ok(Some(Volunteer { deadline, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
+        let deadline_conflict = clean_opt(&x.application_deadline_conflict).filter(|c| page.is_empty() || page_contains(page, c));
+        Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
     } else {
         Err(errs)
     }
@@ -598,6 +617,7 @@ mod tests {
             submission_deadline: sub.into(),
             submission_deadline_quote: "Submission deadline".into(),
             submission_deadline_as_written: "Thu 10 Jul 2025".into(),
+            submission_deadline_conflict: None,
             notification_quote: notif.map(|_| "Final acceptance notification".to_string()),
             notification_as_written: notif.map(|_| "Thu 6 Nov 2025".to_string()),
             author_response_quote: rs.map(|_| "author response period".to_string()),
@@ -730,6 +750,7 @@ mod tests {
             has_volunteer_program: true,
             application_deadline_quote: Some("Application deadline".into()),
             application_deadline_as_written: Some("Wed 16 Sep 2026".into()),
+            application_deadline_conflict: None,
             application_deadline: Some("2026-09-16".into()),
             how_to_apply: Some("Fill in the form.".into()),
             application_url: None,

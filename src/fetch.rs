@@ -64,7 +64,16 @@ fn get_inner(url: &str, depth: u32) -> Result<Page> {
     if !status.is_success() {
         return Err(anyhow!("GET {url}: HTTP {status}"));
     }
-    let html = resp.text().with_context(|| format!("reading body of {url}"))?;
+    let is_pdf = resp.headers().get("content-type").and_then(|v| v.to_str().ok()).is_some_and(|t| t.contains("pdf"));
+    let bytes = resp.bytes().with_context(|| format!("reading body of {url}"))?;
+    if is_pdf || bytes.starts_with(b"%PDF") {
+        // A call for papers published as a PDF: render its text as a
+        // minimal HTML page so the rest of the pipeline is unchanged.
+        let text = pdf_text(&bytes).with_context(|| format!("{final_url}: PDF without pdftotext available"))?;
+        let html = format!("<html><body><pre>{}</pre></body></html>", text.replace('&', "&amp;").replace('<', "&lt;"));
+        return Ok(Page { url: final_url, html, via_chrome: false, insecure_tls: insecure });
+    }
+    let html = String::from_utf8_lossy(&bytes).into_owned();
     if depth < 2 {
         if let Some(target) = meta_refresh(&html, &final_url) {
             if target != final_url {
@@ -76,6 +85,24 @@ fn get_inner(url: &str, depth: u32) -> Result<Page> {
         }
     }
     Ok(Page { url: final_url, html, via_chrome: false, insecure_tls: insecure })
+}
+
+/// Text of a PDF via `pdftotext -layout` (poppler), which the workflow installs.
+fn pdf_text(bytes: &[u8]) -> Result<String> {
+    use std::io::Write;
+    let mut child = Command::new("pdftotext")
+        .args(["-layout", "-", "-"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .context("pdftotext not found")?;
+    child.stdin.take().context("pdftotext stdin")?.write_all(bytes)?;
+    let out = child.wait_with_output()?;
+    if !out.status.success() {
+        return Err(anyhow!("pdftotext failed"));
+    }
+    Ok(String::from_utf8_lossy(&out.stdout).into_owned())
 }
 
 fn is_cert_error(e: &reqwest::Error) -> bool {

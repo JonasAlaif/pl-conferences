@@ -21,47 +21,13 @@ from.
 Last run: 2026-09-16. **Maintenance codes active: E003** - see [MAINTENANCE.md](MAINTENANCE.md).
 <!-- maintenance:end -->
 
-## Upcoming dates
+## The site
 
-<!-- dates:start -->
-| Date | Conference | Event |
-|---|---|---|
-| 2026-10-04 | SPLASH 2026 (OOPSLA) | Conference |
-| 2026-10-14 | SPLASH 2027 (OOPSLA) | R1 Paper Submission Deadline |
-| 2026-10-15 | ETAPS 2027 (ESOP) | R2 Paper Submission Deadline |
-| 2026-11-06 | SPLASH 2027 (OOPSLA) | Volunteer Application Deadline |
-| 2026-11-12 | PLDI 2027 | Paper Submission Deadline |
-| 2026-12-01 | SPLASH 2027 (OOPSLA) | R1 Rebuttal |
-| 2026-12-07 | ETAPS 2027 (ESOP) | R2 Rebuttal |
-| 2026-12-18 | SPLASH 2027 (OOPSLA) | R1 Notification |
-| 2026-12-22 | ETAPS 2027 (ESOP) | R2 Notification |
-| 2027-02-16 | PLDI 2027 | Rebuttal |
-| 2027-04-01 | PLDI 2027 | Notification |
-| 2027-04-07 | SPLASH 2027 (OOPSLA) | R2 Paper Submission Deadline |
-| 2027-04-12 | ETAPS 2027 (ESOP) | Conference |
-| 2027-06-05 | PLDI 2027 | Conference |
-| 2027-06-15 | SPLASH 2027 (OOPSLA) | R2 Rebuttal |
-| 2027-08-13 | SPLASH 2027 (OOPSLA) | R2 Notification |
-| 2027-10-10 | SPLASH 2027 (OOPSLA) | Conference |
-
-<!-- dates:end -->
-
-## Status
-
-<!-- status:start -->
-| Conference | Stage | Submission deadline(s) | Conference dates | Last verified |
-|---|---|---|---|---|
-| CAV 2026 | happened | 2026-01-28 | 2026-07-26..2026-07-29 | 2026-09-15 |
-| ETAPS 2026 (ESOP) | happened | 2025-06-03, 2025-10-16 | 2026-04-13..2026-04-16 | 2026-09-16 |
-| ETAPS 2027 (ESOP) | deadlines available | 2026-05-28, 2026-10-15 | 2027-04-12..2027-04-15 | 2026-09-16 |
-| ICFP 2026 | happened | 2026-02-19 | 2026-08-24..2026-08-29 | 2026-09-15 |
-| PLDI 2026 | happened | 2025-11-13 | 2026-06-15..2026-06-19 | 2026-09-15 |
-| PLDI 2027 | deadlines available | 2026-11-12 | 2027-06-05..2027-06-11 | 2026-09-16 |
-| POPL 2026 | happened | 2025-07-10 | 2026-01-11..2026-01-17 | 2026-09-15 |
-| SPLASH 2026 (OOPSLA) | post-rebuttal | 2025-10-10, 2026-03-17 | 2026-10-04..2026-10-09 | 2026-09-16 |
-| SPLASH 2027 (OOPSLA) | deadlines available | 2026-10-14, 2027-04-07 | 2027-10-10..2027-10-15 | 2026-09-16 |
-
-<!-- status:end -->
+Every run regenerates **https://jonasalaif.github.io/pl-conferences/** from
+the data in this repository: upcoming dates, one row per conference-year with
+its deadlines, conference dates, volunteer deadline and links (call for
+papers, submission site, sign-up page, per-year `.ics` files), and the
+calendar subscription. The page is in `docs/` and deployed by the workflow.
 
 ## How it works
 
@@ -120,6 +86,22 @@ this repository (`ollama-linux-amd64.tar.zst` and the model GGUF split into
 registry ever disappear. Those assets are about 5 GB and are deliberately not
 uploaded for now; until they are, the fallback is a no-op and a missing
 upstream shows up as a failed run with an issue.
+
+## Things to know
+
+- Every calendar entry says it was extracted by a language model and links
+  the page it came from; treat the source as authoritative. If a page states
+  two different dates for the same deadline, the entry quotes the other
+  statement as a note.
+- The workflow's commit favours the run's files over concurrent hand edits to
+  the same files (`git pull --rebase -X theirs`); edit `state.json` or a record
+  by hand only between runs.
+- Runs are twice a week partly because GitHub evicts caches unused for seven
+  days: a monthly cadence would re-download the model and Ollama every time.
+- Renaming a conference or track in `conferences.json` changes the calendar
+  UIDs, so subscribers see the events twice; prefer adding a new entry.
+- Maintenance codes: see [MAINTENANCE.md](MAINTENANCE.md); E011 marks a
+  conference-year that errored in two consecutive runs.
 
 ## Running locally
 

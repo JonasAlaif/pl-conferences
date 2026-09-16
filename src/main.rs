@@ -1,5 +1,5 @@
 use anyhow::{Context, Result};
-use pl_conferences::{clean, config, discover, fetch, ics, llm, schema, search, state};
+use pl_conferences::{clean, config, discover, fetch, ics, llm, schema, search, site, state};
 use chrono::{Datelike, Utc};
 use discover::{Attempted, Ctx, Miss};
 use serde::{Deserialize, Serialize};
@@ -575,11 +575,12 @@ fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Rec
 fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     let mut events = vec![];
     let mut rows: Vec<(chrono::NaiveDate, String, String)> = vec![];
-    let mut status: Vec<(String, String, String, String, String)> = vec![];
-    let today = Utc::now().date_naive();
+    let now = Utc::now();
+    let today = now.date_naive();
     let conf_dir = root.join("conferences");
-    // One status row per conference-year, assembled from both records.
-    let mut by_year: std::collections::BTreeMap<String, (String, Option<Record<schema::Conference>>, Option<Record<schema::Deadlines>>)> = Default::default();
+    // One row per conference-year on the site, assembled from all three records.
+    type Parts = (String, Option<Record<schema::Conference>>, Option<Record<schema::Deadlines>>, Option<Record<schema::Volunteer>>);
+    let mut by_year: std::collections::BTreeMap<String, Parts> = Default::default();
     if conf_dir.exists() {
         for entry in walk(&conf_dir)? {
             let name = entry.file_name().unwrap().to_string_lossy().to_string();
@@ -590,7 +591,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 rows.push((r.data.start, r.label.clone(), "Conference".into()));
                 events.extend(ev);
                 let label = r.label.clone();
-                by_year.entry(key).or_insert_with(|| (label, None, None)).1 = Some(r);
+                by_year.entry(key).or_insert_with(|| (label, None, None, None)).1 = Some(r);
             } else if name == "cfp.json" {
                 let Some(r) = read_or_skip::<schema::Deadlines>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
@@ -600,7 +601,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 }
                 events.extend(ev);
                 let label = r.label.clone();
-                by_year.entry(key).or_insert_with(|| (label, None, None)).2 = Some(r);
+                by_year.entry(key).or_insert_with(|| (label, None, None, None)).2 = Some(r);
             } else if name == "volunteer.json" {
                 let Some(r) = read_or_skip::<schema::Volunteer>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
@@ -609,30 +610,41 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                     rows.push((e.start, r.label.clone(), "Volunteer Application Deadline".into()));
                 }
                 events.extend(ev);
+                let label = r.label.clone();
+                by_year.entry(key).or_insert_with(|| (label, None, None, None)).3 = Some(r);
             }
         }
     }
-    for (_, (label, conf, dl)) in by_year {
-        let stage = schema::stage(conf.as_ref().map(|r| &r.data), dl.as_ref().map(|r| &r.data), today);
-        let deadlines = dl.as_ref().map(|r| r.data.rounds.iter().map(|x| x.submission.to_string()).collect::<Vec<_>>().join(", ")).unwrap_or_default();
-        let cdates = conf.as_ref().map(|r| format!("{}..{}", r.data.start, r.data.end)).unwrap_or_default();
-        let verified = [conf.as_ref().map(|r| r.last_verified.unwrap_or(r.fetched_at)), dl.as_ref().map(|r| r.last_verified.unwrap_or(r.fetched_at))].into_iter().flatten().max().map(|t| t.format("%Y-%m-%d").to_string()).unwrap_or_default();
-        status.push((label, stage.label().to_string(), deadlines, cdates, verified));
-    }
-    std::fs::write(root.join("all.ics"), ics::calendar("PL conference deadlines", &events))?;
+    let views: Vec<site::YearView> = by_year
+        .into_iter()
+        .map(|(key, (label, conf, dl, vol))| {
+            let stage = schema::stage(conf.as_ref().map(|r| &r.data), dl.as_ref().map(|r| &r.data), today);
+            let last_verified = [conf.as_ref().map(|r| r.last_verified.unwrap_or(r.fetched_at)), dl.as_ref().map(|r| r.last_verified.unwrap_or(r.fetched_at))].into_iter().flatten().max();
+            site::YearView {
+                key,
+                label,
+                stage,
+                conference: conf.map(|r| (r.data, r.provenance.source_url)),
+                deadlines: dl.map(|r| (r.data, r.provenance.source_url)),
+                volunteer: vol.map(|r| (r.data, r.provenance.source_url)),
+                last_verified,
+            }
+        })
+        .collect();
+    let calendar = ics::calendar("PL conference deadlines", &events);
+    std::fs::write(root.join("all.ics"), &calendar)?;
     std::fs::write(root.join("MAINTENANCE.md"), state.render_maintenance())?;
 
-    // README: upcoming dates table, status table, maintenance line.
+    // The site: docs/index.html plus the calendar at a Pages URL.
     rows.sort();
-    let mut table = String::from("| Date | Conference | Event |\n|---|---|---|\n");
-    let mut count = 0;
-    for (d, label, what) in rows.iter().filter(|(d, _, _)| *d >= today) {
-        table.push_str(&format!("| {d} | {label} | {what} |\n"));
-        count += 1;
-    }
-    if count == 0 {
-        table.push_str("| | *(nothing upcoming yet)* | |\n");
-    }
+    let upcoming: Vec<_> = rows.iter().filter(|(d, _, _)| *d >= today).cloned().collect();
+    let docs = root.join("docs");
+    std::fs::create_dir_all(&docs)?;
+    std::fs::write(docs.join("index.html"), site::render(&views, &upcoming, &state.summary_line(), now))?;
+    std::fs::write(docs.join("all.ics"), &calendar)?;
+    std::fs::write(docs.join(".nojekyll"), "")?;
+
+    // README: only the maintenance line is generated.
     let readme_path = root.join("README.md");
     // A missing README is bootstrapped; any other read error must not end
     // in overwriting the file with just the generated blocks.
@@ -641,19 +653,9 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => String::new(),
         Err(e) => return Err(anyhow::Error::new(e).context("reading README.md")),
     };
-    let readme = state::replace_marked(&readme, "dates", &table);
-    let mut st = String::from("| Conference | Stage | Submission deadline(s) | Conference dates | Last verified |\n|---|---|---|---|---|\n");
-    status.sort();
-    for (l, s, d, c, v) in &status {
-        st.push_str(&format!("| {l} | {s} | {d} | {c} | {v} |\n"));
-    }
-    if status.is_empty() {
-        st.push_str("| *(nothing collected yet)* | | | | |\n");
-    }
-    let readme = state::replace_marked(&readme, "status", &st);
     let readme = state::replace_marked(&readme, "maintenance", &state.summary_line());
     std::fs::write(&readme_path, readme)?;
-    log::info!("wrote all.ics ({} events), README.md, MAINTENANCE.md", events.len());
+    log::info!("wrote all.ics ({} events), docs/index.html ({} conference-years), README.md, MAINTENANCE.md", events.len(), views.len());
     Ok(())
 }
 
@@ -678,7 +680,7 @@ mod tests {
 
     fn cfp(sub: &str) -> schema::Deadlines {
         schema::Deadlines {
-            rounds: vec![schema::ValidRound { label: String::new(), submission: NaiveDate::parse_from_str(sub, "%Y-%m-%d").unwrap(), response_start: None, response_end: None, notification: None }],
+            rounds: vec![schema::ValidRound { label: String::new(), submission: NaiveDate::parse_from_str(sub, "%Y-%m-%d").unwrap(), submission_conflict: None, response_start: None, response_end: None, notification: None }],
             submission_details: "prose".into(),
             submission_url: None,
         }

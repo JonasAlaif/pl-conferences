@@ -7,4 +7,5 @@ pub mod ics;
 pub mod llm;
 pub mod schema;
 pub mod search;
+pub mod site;
 pub mod state;
