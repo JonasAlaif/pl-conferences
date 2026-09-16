@@ -334,6 +334,28 @@ DESCRIPTION:Source: https://2026.splashcon.org/track/oopsla-2026\nMaintena
  INTENANCE.md
 END:VEVENT
 BEGIN:VEVENT
+UID:c699f36855efbb75502b913e6f8406b6865f38dd@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260528
+DTEND;VALUE=DATE:20260529
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Paper Submission Deadline
+DESCRIPTION:The four main conferences of ETAPS 2027 solicit contributions.
+  ESOP accepts regular research papers (max 25 pp)\, experience reports (m
+ ax 15 pp)\, and fresh perspectives (max 15 pp). iFS accepts long (16pp + 
+ 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSa
+ CS accepts regular research papers (max 18 pp). TACAS accepts regular res
+ earch\, case study\, and tool papers (max 18 pp)\, plus tool demonstratio
+ n papers (max 6 pp). All page limits exclude the bibliography. Submission
+ s must be in English\, original\, unpublished\, and not submitted elsewhe
+ re. Simultaneous submission is forbidden. Formatting must follow Springer
+ 's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is
+  used for TACAS and iFS regular research papers\; authors must omit names
+ /institutions. Data availability statements are mandatory. Artifact evalu
+ ation is voluntary for most tracks but required for tool papers at TACAS.
+  Authors must attend the conference to present their paper.\n\nSubmit at:
+  https://etaps.org/2027/esop\n\nSource: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260610
@@ -381,12 +403,28 @@ DESCRIPTION:Students and researchers from computer science and related fie
  on.org/track/splash-issta-2026-student-volunteers
 END:VEVENT
 BEGIN:VEVENT
+UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260807
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:2cc72dea11c989a0f4ee3fe7a61186fb6879c5de@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260726
 DTEND;VALUE=DATE:20260730
 SUMMARY:[CAV 2026] Conference
 DESCRIPTION:Source: http://conferences.i-cav.org/2026/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:33c29fbcd5369b387977ba4f70c01128dd9ac277@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Notification
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
 END:VEVENT
 BEGIN:VEVENT
 UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
@@ -427,6 +465,28 @@ DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
  opsla2027
 END:VEVENT
 BEGIN:VEVENT
+UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261016
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Paper Submission Deadline
+DESCRIPTION:The four main conferences of ETAPS 2027 solicit contributions.
+  ESOP accepts regular research papers (max 25 pp)\, experience reports (m
+ ax 15 pp)\, and fresh perspectives (max 15 pp). iFS accepts long (16pp + 
+ 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSa
+ CS accepts regular research papers (max 18 pp). TACAS accepts regular res
+ earch\, case study\, and tool papers (max 18 pp)\, plus tool demonstratio
+ n papers (max 6 pp). All page limits exclude the bibliography. Submission
+ s must be in English\, original\, unpublished\, and not submitted elsewhe
+ re. Simultaneous submission is forbidden. Formatting must follow Springer
+ 's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is
+  used for TACAS and iFS regular research papers\; authors must omit names
+ /institutions. Data availability statements are mandatory. Artifact evalu
+ ation is voluntary for most tracks but required for tool papers at TACAS.
+  Authors must attend the conference to present their paper.\n\nSubmit at:
+  https://etaps.org/2027/esop\n\nSource: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:1b0fd54afa441842fabfe50214d35acceeade5da@pl-conferences
 DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20261106
@@ -459,6 +519,14 @@ DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
  sla2027
 END:VEVENT
 BEGIN:VEVENT
+UID:ffd540b54a789f527dc800181de2719a8943ee6f@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261210
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
 DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20261218
@@ -466,6 +534,14 @@ DTEND;VALUE=DATE:20261219
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
 DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
  sla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:0d346c688c36346dde4809ec6d978e822b453840@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261222
+DTEND;VALUE=DATE:20261223
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Notification
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
 END:VEVENT
 BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences
@@ -498,6 +574,15 @@ DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
  nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
  tcrp.com/\n\nSource: https://conf.researchr.org/track/splash-2027/splasho
  opsla2027
+END:VEVENT
+BEGIN:VEVENT
+UID:2eb8703604c0f51c968c5e4ddbc86dd46ee2c6f1@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20270412
+DTEND;VALUE=DATE:20270416
+SUMMARY:[ETAPS 2027 (ESOP)] Conference
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+LOCATION:Copenhagen\, Denmark
 END:VEVENT
 BEGIN:VEVENT
 UID:0da66b4b12afc687655d84631e5cc2fa1d182e1d@pl-conferences

@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T02:37:10.270527567Z",
-  "run_count": 2,
+  "last_run": "2026-09-16T06:40:38.988415449Z",
+  "run_count": 3,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -29,6 +29,24 @@
       "backend": "brave",
       "codes": [],
       "note": ""
+    },
+    "ETAPS/ESOP/2027/cfp": {
+      "last_attempt": "2026-09-16T06:40:38.988415449Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": null,
+      "codes": [],
+      "note": "re-checking stored page https://etaps.org/2027/cfp/"
+    },
+    "ETAPS/ESOP/2027/volunteer": {
+      "last_attempt": "2026-09-16T06:40:38.988415449Z",
+      "attempts": 1,
+      "outcome": "not_found",
+      "consecutive_failures": 1,
+      "backend": "brave",
+      "codes": [],
+      "note": "trying volunteer link https://etaps.org/about/fopss-schools from the conference page; following link https://etaps.org/about/fopss-schools; https://etaps.org/2024/student-scholarship/ is not about ETAPS 2027 (ESOP); following link https://etaps.org/about/fopss-schools; following link https://cgi.cse.unsw.edu.au/; https://cgi.cse.unsw.edu.au/ has almost no text (180 chars); skipped"
     },
     "ICFP/ICFP/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",
