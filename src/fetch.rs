@@ -92,7 +92,12 @@ fn is_cert_error(e: &reqwest::Error) -> bool {
 
 /// Target of a `<meta http-equiv="refresh" content="0; url=...">`, absolute.
 pub fn meta_refresh(html: &str, base: &str) -> Option<String> {
-    let doc = scraper::Html::parse_document(&html[..html.len().min(20_000)]);
+    // Only the head matters; cut at a char boundary.
+    let mut end = html.len().min(20_000);
+    while !html.is_char_boundary(end) {
+        end -= 1;
+    }
+    let doc = scraper::Html::parse_document(&html[..end]);
     let sel = scraper::Selector::parse("meta[http-equiv]").ok()?;
     for m in doc.select(&sel) {
         if !m.value().attr("http-equiv").is_some_and(|v| v.eq_ignore_ascii_case("refresh")) {
@@ -235,5 +240,8 @@ mod tests {
         let h = r#"<meta content="5;url=https://y.org/" http-equiv="refresh">"#;
         assert_eq!(meta_refresh(h, "https://x.org/").as_deref(), Some("https://y.org/"));
         assert_eq!(meta_refresh("<html><meta name=viewport></html>", "https://x.org/"), None);
+        // A multibyte character straddling the 20 000-byte cut must not panic.
+        let big = format!("<html><head></head><body>{}</body></html>", "–".repeat(9_000));
+        assert_eq!(meta_refresh(&big, "https://x.org/"), None);
     }
 }
