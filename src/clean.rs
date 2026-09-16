@@ -27,9 +27,14 @@ const STRIP_SELECTORS: &str = "[role=navigation], [role=banner], [role=contentin
     .footer, .footer-box, .site-footer, .modal, .cookie, .cookie-banner, .cookie-consent, .skip-link, \
     .sr-only, .visually-hidden, [hidden], [aria-hidden=true]";
 
-/// Upper bound on the text handed to the model (roughly 11K tokens). Prompt
-/// processing dominates CPU time, so this is the main speed knob.
-pub const MAX_CHARS: usize = 45_000;
+/// Upper bound on the text handed to the model (roughly 6K tokens). Prompt
+/// processing dominates CPU time, so this is the main speed knob. At this
+/// size the budget drops the programme, accepted-paper lists and committee
+/// of the big researchr pages and keeps their call for papers and dates
+/// sidebar whole (harness 33/33; it was 45K before the section splitter
+/// recognised headings inside list items, and 24K then scored 18/33
+/// because the sidebar hung off an oversize section and got truncated).
+pub const MAX_CHARS: usize = 24_000;
 /// Sections scoring at least this are treated as relevant when a page must be cut.
 const RELEVANT_SCORE: f64 = 2.0;
 
@@ -150,7 +155,7 @@ fn compact_row(row: &str) -> String {
 pub fn sections(md: &str) -> Vec<String> {
     let mut sections: Vec<String> = vec![String::new()];
     for line in md.lines() {
-        if line.starts_with('#') {
+        if is_heading(line) {
             sections.push(String::new());
         }
         let cur = sections.last_mut().unwrap();
@@ -158,6 +163,15 @@ pub fn sections(md: &str) -> Vec<String> {
         cur.push('\n');
     }
     sections
+}
+
+/// A Markdown heading, also when it sits inside a list item ("*   #####
+/// Name"): researchr renders each committee member that way, and without
+/// this the whole committee (and the dates sidebar before it) hung off
+/// whatever heading came last, as one oversize section that the budget
+/// could only truncate from the tail, where the dates were.
+fn is_heading(line: &str) -> bool {
+    line.trim_start().trim_start_matches(|c: char| matches!(c, '*' | '-' | '+' | '.' | ' ') || c.is_ascii_digit()).starts_with('#')
 }
 
 /// Relevance of a section for date extraction, per unit length.
@@ -328,6 +342,20 @@ mod tests {
         let t = tidy(md);
         assert_eq!(t.matches("14 May 2026").count(), 2);
         assert_eq!(t.matches("Program").count(), 1);
+    }
+
+    #[test]
+    fn headings_inside_list_items_split_sections_so_a_committee_can_be_dropped() {
+        // A researchr sidebar: dates, then a committee of "*   ##### Name" items.
+        let mut md = String::from("# Call for Papers\n\nSubmission deadline is firm.\n\n### FAQ\n\nMay I post on arXiv? Yes.\n\nImportant Dates\n\n**Wed 14 Oct 2026**\n**Submission (Round 1)**\n\nFri 18 Dec 2026\nAuthor Notification (Round 1)\n\nOOPSLA Review Committee\n\n");
+        for i in 0..300 {
+            md.push_str(&format!("*   ##### Person Number {i}\n\n    ##### Some University\n\n    ##### Some Country\n\n"));
+        }
+        let secs = sections(&md);
+        assert!(secs.len() > 300, "each committee member is its own section, got {}", secs.len());
+        let out = budget(&md, 6_000);
+        assert!(out.contains("Submission (Round 1)") && out.contains("Author Notification (Round 1)") && out.contains("May I post on arXiv"), "{out}");
+        assert!(!out.contains("Person Number 250"), "the committee is filler and goes first");
     }
 
     #[test]

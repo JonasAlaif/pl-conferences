@@ -130,8 +130,9 @@ context with `OLLAMA_FLASH_ATTENTION=1` (10 GB without; an 8-bit KV cache
 saves a little more but measurably changed answers on the harness, so it is
 not used), so it fits the 16 GB of a public-repository GitHub runner. That
 runner processes prompts at roughly 20-30 tokens/s and generates at 7
-tokens/s, so a call-for-papers page (7-9K tokens after cleaning) costs 4-7
-minutes and a whole conference-year (search, page, link choices, volunteer
+tokens/s, so a call-for-papers page (up to about 6K tokens after cleaning
+and budgeting: programme, paper lists and committees are dropped first)
+costs 3-5 minutes and a whole conference-year (search, page, link choices, volunteer
 pass) 10-15 minutes; hence one worker per conference in parallel, twice a
 week, each attempting at most two conference-years (up to about 30 minutes
 per worker, against a 330-minute job timeout).
