@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "PLDI 2027",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T17:32:29.241905410Z",
+  "last_verified": "2026-09-16T17:52:32.639641219Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://pldi27.sigplan.org/",

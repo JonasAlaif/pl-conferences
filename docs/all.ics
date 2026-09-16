@@ -610,7 +610,7 @@ SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
  org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
-LOCATION:Oakland\, United States
+LOCATION:Oakland\, California\, United States
 END:VEVENT
 BEGIN:VEVENT
 UID:30897a12c3f1cdd255353017ee26345e4514e224@pl-conferences
@@ -761,11 +761,11 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270225
 DTEND;VALUE=DATE:20270226
 SUMMARY:[ICFP 2027] Paper Submission Deadline
-DESCRIPTION:ICFP Papers\n\nExtracted automatically by a small language mod
- el\; please cross-check against the source before relying on it: https://
- icfp27.sigplan.org/\nMaintenance: E003 - see https://github.com/JonasAlai
- f/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/
- pl-conferences
+DESCRIPTION:ICFP Papers\n\nSubmit at: https://icfp27.hotcrp.com\n\nExtract
+ ed automatically by a small language model\; please cross-check against t
+ he source before relying on it: https://icfp27.sigplan.org/\nMaintenance:
+  E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTE
+ NANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences

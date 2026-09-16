@@ -11,11 +11,11 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270225
 DTEND;VALUE=DATE:20270226
 SUMMARY:[ICFP 2027] Paper Submission Deadline
-DESCRIPTION:ICFP Papers\n\nExtracted automatically by a small language mod
- el\; please cross-check against the source before relying on it: https://
- icfp27.sigplan.org/\nMaintenance: E003 - see https://github.com/JonasAlai
- f/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/
- pl-conferences
+DESCRIPTION:ICFP Papers\n\nSubmit at: https://icfp27.hotcrp.com\n\nExtract
+ ed automatically by a small language model\; please cross-check against t
+ he source before relying on it: https://icfp27.sigplan.org/\nMaintenance:
+  E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTE
+ NANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences
