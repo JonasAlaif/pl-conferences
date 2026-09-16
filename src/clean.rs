@@ -291,7 +291,11 @@ pub fn links(html: &str, base: &str) -> Vec<(String, String)> {
         abs.set_fragment(None);
         let text = a.text().collect::<String>();
         let text = text.split_whitespace().collect::<Vec<_>>().join(" ");
-        if text.is_empty() || !seen.insert(abs.to_string()) {
+        // Deduplicated by (text, URL), not by URL alone: the same target
+        // linked twice with different words ("https://esop27.hotcrp.com/"
+        // in a list, then "here" in "The papers can be submitted here")
+        // must keep both, since a quote is grounded by the anchor text.
+        if text.is_empty() || !seen.insert((text.clone(), abs.to_string())) {
             continue;
         }
         out.push((text, abs.to_string()));
@@ -365,6 +369,14 @@ mod tests {
         let md = html_to_markdown(html);
         assert!(md.contains("July 19-23") && md.contains("Amsterdam") && md.contains("39th CAV"), "{md}");
         assert!(!md.contains("Menu item") && !md.contains("Site menu"), "{md}");
+    }
+
+    #[test]
+    fn the_same_target_linked_with_different_words_keeps_both_anchors() {
+        let html = r#"<a href="https://esop27.hotcrp.com/">Submit paper</a><p>The papers can be submitted <a href="https://esop27.hotcrp.com/">here</a>.</p><a href="https://esop27.hotcrp.com/">Submit paper</a>"#;
+        let links = links(html, "https://etaps.org/2027/conferences/esop/");
+        assert_eq!(links.len(), 2, "{links:?}");
+        assert!(links.iter().any(|(t, _)| t == "here"));
     }
 
     #[test]

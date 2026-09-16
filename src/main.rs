@@ -390,6 +390,10 @@ fn stale_after<T>(r: &Record<T>, now: chrono::DateTime<Utc>, days: i64) -> bool 
 /// A failed search (not found, invalid, no programme) is not repeated for
 /// `days`; fetch failures and errors are retried on the next run.
 fn recent_negative(state: &State, key: &str, now: chrono::DateTime<Utc>, days: i64) -> Option<Idle> {
+    // A forced run re-reads everything, including what was not found lately.
+    if std::env::var("PLC_FORCE_REVALIDATE").is_ok_and(|v| v == "1" || v == "true") {
+        return None;
+    }
     let a = state.get(key)?;
     let age = now - a.last_attempt;
     let negative = matches!(a.outcome, Outcome::NotFound | Outcome::Invalid | Outcome::NoVolunteerProgram);
