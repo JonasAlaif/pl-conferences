@@ -46,7 +46,10 @@ pub struct CfpExtraction {
     pub rounds: Vec<Round>,
     /// A few sentences for authors: how and where to submit, page limit, review process, anonymisation, anything an author must know before submitting.
     pub submission_details: String,
-    /// Full URL of the paper submission site (where authors upload their paper), if it is written on the page; null otherwise.
+    /// The exact words on the page that name the paper submission site or system (where authors upload their paper), copied verbatim with the URL if one is written there, e.g. "Submission Web Site: https://icfp27.hotcrp.com"; null if the page names none.
+    #[schemars(required)]
+    pub submission_site_quote: Option<String>,
+    /// Full URL of that submission site: the URL written in those words, or the link those words point to; null otherwise.
     #[schemars(required)]
     pub submission_url: Option<String>,
 }
@@ -135,17 +138,12 @@ pub struct VolunteerExtraction {
     /// A few sentences on who can apply, what volunteers get, and how to apply.
     #[schemars(required)]
     pub how_to_apply: Option<String>,
-    /// Full URL of the application form or sign-up page for volunteers, if it is written on the page; null otherwise.
+    /// The exact words on the page that point students to the application form or sign-up page, copied verbatim with the URL if one is written there, e.g. "Apply here by July 12" or "Application form: https://forms.gle/..."; null if the page has none.
+    #[schemars(required)]
+    pub application_quote: Option<String>,
+    /// Full URL of that application form or sign-up page: the URL written in those words, or the link those words point to; null otherwise.
     #[schemars(required)]
     pub application_url: Option<String>,
-}
-
-/// Which search hit (0-based index into the list shown) is the best match, or null if none fits.
-#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
-pub struct Choice {
-    /// 0-based index of the chosen entry, or null if none is suitable.
-    #[schemars(required)]
-    pub index: Option<u32>,
 }
 
 /// Which entries of a numbered list could fit, best first. One answer
@@ -353,6 +351,15 @@ fn check_written(what: &str, field: &str, page: &str, quote: &str, as_written: &
     if page.is_empty() {
         return;
     }
+    // A quote that is nothing but the date proves nothing about which
+    // entry it came from ("Fri 30 Jul 2027" was once the round-2
+    // notification: on the page it is labelled "Revision submission").
+    // Two remedies were tried and rejected: refusing bare-date quotes
+    // (on prose like "the Round 1 submission deadline **October 15,
+    // 2024**" the model keeps quoting the bold date, and the page is
+    // lost), and handing the entry's label back in a corrective retry
+    // (the model kept its answer even when told the label read "Revision
+    // submission", and every page with bare quotes paid for a retry).
     let quote_has_date = quote.chars().any(|c| c.is_ascii_digit());
     match clean_opt(as_written) {
         None if quote_has_date => {}
@@ -579,8 +586,55 @@ pub fn grounded_url(u: &Option<String>, grounding: &str) -> Option<String> {
     grounding.to_lowercase().contains(&key).then_some(u)
 }
 
+/// A link the page hands over to (submission site, application form) is
+/// kept only with its evidence: `quote` must be on the page, and `url`
+/// must be written inside the quote, or be the target of a link whose
+/// anchor text sits inside the quote ("Apply here" resolves to the form
+/// behind "here"). Any URL that merely occurs somewhere on the page is not
+/// enough: the model then settles for whatever link is left (a site
+/// generator's changelog, a paper-matching service).
+pub fn grounded_link(quote: &Option<String>, url: &Option<String>, page: &str, links: &[(String, String)]) -> Option<String> {
+    let q = clean_opt(quote)?;
+    static URL: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"https?://\S+").unwrap());
+    let u = clean_opt(url).filter(|u| url::Url::parse(u).ok().is_some_and(|p| matches!(p.scheme(), "http" | "https")));
+    // The quote itself: its words minus URLs must be on the page; a quote
+    // that is only the URL must be on the page as such.
+    if !page.is_empty() {
+        let words = norm(&URL.replace_all(&q, " "));
+        let on_page = if words.len() >= 4 { page_contains(page, &q) } else { u.as_ref().is_some_and(|u| page.to_lowercase().contains(u.trim_end_matches('/').to_lowercase().as_str())) };
+        if !on_page {
+            return None;
+        }
+    }
+    // Written out in the quote: the model's URL is it.
+    if let Some(u) = &u {
+        if q.to_lowercase().contains(u.trim_end_matches('/').to_lowercase().as_str()) {
+            return Some(u.clone());
+        }
+    }
+    // Otherwise the words point to a link: the model never sees link
+    // targets (the Markdown carries anchor text only), so the target is
+    // resolved here from the anchor text that sits in the quote. The
+    // longest such anchor wins ("here" in "Apply here by July 12").
+    let qn = format!(" {} ", norm(&q));
+    links
+        .iter()
+        .filter(|(text, _)| {
+            let t = norm(text);
+            t.len() >= 3 && qn.contains(&format!(" {t} "))
+        })
+        .max_by_key(|(text, _)| norm(text).len())
+        .map(|(_, href)| href.clone())
+}
+
 /// Check dates parse and are consistent with each other and with `year`.
 pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Result<Cfp, Vec<String>> {
+    validate_cfp_links(x, year, page, track, &[])
+}
+
+/// `links` are the page's `(anchor text, URL)` pairs, for grounding a
+/// submission site given as a link rather than written out.
+pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str, links: &[(String, String)]) -> Result<Cfp, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -679,13 +733,21 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Re
         let submission_conflict = real_conflict(&conflict, &r.submission_deadline_quote, &r.label, &r.submission_deadline_as_written, page, track);
         rounds.push(ValidRound { label: r.label.trim().to_string(), submission, submission_conflict, response_start, response_end, notification });
     }
-    for w in rounds.windows(2) {
+    for (i, w) in rounds.windows(2).enumerate() {
         if w[1].submission <= w[0].submission {
             errs.push("rounds are not in chronological order".into());
         }
+        // Authors learn a round's outcome before the next round closes;
+        // a "notification" after that is a later stage (a revised-paper
+        // decision, camera-ready) read from the wrong entry.
+        if let Some(n) = w[0].notification {
+            if n > w[1].submission {
+                errs.push(format!("round {} notification {n} is after round {} submission deadline {}; the notification is the first decision of round {}, before the next round's deadline", i + 1, i + 2, w[1].submission, i + 1));
+            }
+        }
     }
     if errs.is_empty() {
-        Ok(Cfp { conference, rounds, submission_details: clean_opt(&Some(x.submission_details.clone())).unwrap_or_default(), submission_url: grounded_url(&x.submission_url, page) })
+        Ok(Cfp { conference, rounds, submission_details: clean_opt(&Some(x.submission_details.clone())).unwrap_or_default(), submission_url: grounded_link(&x.submission_site_quote, &x.submission_url, page, links) })
     } else {
         Err(errs)
     }
@@ -707,6 +769,10 @@ pub struct Volunteer {
 /// `conference_end`, when known, bounds the application deadline: volunteers
 /// are recruited before the conference, never after.
 pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, conference_end: Option<NaiveDate>) -> Result<Option<Volunteer>, Vec<String>> {
+    validate_volunteer_links(x, year, page, conference_end, &[])
+}
+
+pub fn validate_volunteer_links(x: &VolunteerExtraction, year: i32, page: &str, conference_end: Option<NaiveDate>, links: &[(String, String)]) -> Result<Option<Volunteer>, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -734,7 +800,7 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         let (quote, written) = (x.application_deadline_quote.as_deref().unwrap_or(""), x.application_deadline_as_written.as_deref().unwrap_or(""));
         let conflict = conflict_or_quote(&x.application_deadline_conflict, quote, written);
         let deadline_conflict = real_conflict(&conflict, quote, "", written, page, "");
-        Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
+        Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_link(&x.application_quote, &x.application_url, page, links) }))
     } else {
         Err(errs)
     }
@@ -771,6 +837,7 @@ mod tests {
 
             rounds: vec![round("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some("2025-11-06"))],
             submission_details: "Submit via HotCRP.".into(),
+            submission_site_quote: Some("Submit at https://popl26.hotcrp.com/".into()),
             submission_url: Some("https://popl26.hotcrp.com".into()),
         }
     }
@@ -783,6 +850,39 @@ mod tests {
         let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025", "").unwrap();
         assert_eq!(c.submission_url, None, "a URL that is not on the page is dropped");
         assert_eq!(grounded_url(&Some("javascript:void(0)".into()), "javascript:void(0)"), None);
+        // A link is grounded by its quote: the URL written in it, or the
+        // target of a link whose anchor text sits in it.
+        let links = vec![("here".to_string(), "https://tinyurl.com/splash-issta-sv26".to_string()), ("Program Committee".to_string(), "https://x.org/pc".to_string())];
+        let page = "Applications are open: Apply here by July 12. Program Committee";
+        assert_eq!(grounded_link(&Some("Apply here by July 12".into()), &Some("https://tinyurl.com/splash-issta-sv26".into()), page, &links).as_deref(), Some("https://tinyurl.com/splash-issta-sv26"));
+        assert_eq!(grounded_link(&Some("Apply here by July 12".into()), &Some("https://x.org/pc".into()), page, &links).as_deref(), Some("https://tinyurl.com/splash-issta-sv26"), "the quote's own link beats a URL the model made up");
+        assert_eq!(grounded_link(&Some("Apply here by July 12".into()), &None, page, &links).as_deref(), Some("https://tinyurl.com/splash-issta-sv26"), "the model never sees link targets; the anchor in the quote resolves it");
+        assert_eq!(grounded_link(&Some("Applications are open".into()), &None, page, &links), None, "no anchor in the quote, no link");
+        assert_eq!(grounded_link(&Some("Not on the page".into()), &Some("https://tinyurl.com/splash-issta-sv26".into()), page, &links), None);
+        assert_eq!(grounded_link(&None, &Some("https://tinyurl.com/splash-issta-sv26".into()), page, &links), None, "no quote, no link");
+        let page = "Submission Web Site: https://icfp27.hotcrp.com";
+        assert_eq!(grounded_link(&Some("Submission Web Site: https://icfp27.hotcrp.com".into()), &Some("https://icfp27.hotcrp.com/".into()), page, &[]).as_deref(), Some("https://icfp27.hotcrp.com/"));
+    }
+
+    #[test]
+    fn a_rounds_notification_precedes_the_next_round() {
+        let page = "Submission (Round 1) Wed 14 Oct 2026. Author Notification (Round 1) Fri 18 Dec 2026. Submission (Round 2) Wed 7 Apr 2027. Author Notification (Round 2) Fri 30 Jul 2027.";
+        let mut x = ok_extraction();
+        x.conference = None;
+        x.rounds = vec![round("2026-10-14", None, None, Some("2027-07-30")), round("2027-04-07", None, None, None)];
+        for r in &mut x.rounds {
+            r.submission_deadline_quote = "Submission".into();
+        }
+        x.rounds[0].submission_deadline_as_written = "Wed 14 Oct 2026".into();
+        x.rounds[1].submission_deadline_as_written = "Wed 7 Apr 2027".into();
+        x.rounds[0].notification_quote = Some("Author Notification (Round 2)".into());
+        x.rounds[0].notification_as_written = Some("Fri 30 Jul 2027".into());
+        let errs = validate_cfp(&x, 2027, page, "").unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("after round 2 submission deadline")), "{errs:?}");
+        x.rounds[0].notification = Some("2026-12-18".into());
+        x.rounds[0].notification_quote = Some("Author Notification (Round 1)".into());
+        x.rounds[0].notification_as_written = Some("Fri 18 Dec 2026".into());
+        assert!(validate_cfp(&x, 2027, page, "").is_ok());
     }
 
     #[test]
@@ -941,6 +1041,7 @@ mod tests {
             application_deadline_quote: Some("Application deadline".into()),
             application_deadline_as_written: Some("Wed 16 Sep 2026".into()),
             application_deadline_conflict: None,
+            application_quote: None,
             application_deadline: Some("2026-09-16".into()),
             how_to_apply: Some("Fill in the form.".into()),
             application_url: None,

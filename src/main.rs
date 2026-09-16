@@ -14,6 +14,11 @@ const CFP_RETRY_DAYS: i64 = 7;
 /// Days a stored record is trusted before its page is re-checked. Discovery
 /// of missing data always goes first; re-validation fills the remaining slots.
 const REVALIDATE_DAYS: i64 = 14;
+/// Once the deadlines are final (last rebuttal over), only the conference
+/// dates and venue are still open to change, and rarely: the page is
+/// re-read this often instead, which spares the biggest pages a re-read
+/// every fortnight for nothing.
+const REVALIDATE_DAYS_FINAL: i64 = 28;
 
 const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [--year YYYY] [--dry-run] [--no-volunteer]
        pl-conferences regenerate [DIR]
@@ -112,7 +117,7 @@ fn main() -> Result<()> {
             let t = std::time::Instant::now();
             let (x, raw, usage): (schema::CfpExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
             eprintln!("{raw}\n--- {usage:?} wall {:.1}s", t.elapsed().as_secs_f64());
-            match schema::validate_cfp(&x, year, &md, &cfg.track) {
+            match schema::validate_cfp_links(&x, year, &md, &cfg.track, &clean::links(&html, "https://example.org/")) {
                 Ok(c) => println!("{}", serde_json::to_string_pretty(&c)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
@@ -129,7 +134,7 @@ fn main() -> Result<()> {
             let prompt = discover::volunteer_prompt(&cfg, year, argv.get(5).map(String::as_str), "", &md);
             let (x, raw, usage): (schema::VolunteerExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
             eprintln!("{raw}\n--- {usage:?}");
-            match schema::validate_volunteer(&x, year, &md, None) {
+            match schema::validate_volunteer_links(&x, year, &md, None, &clean::links(&html, "https://example.org/")) {
                 Ok(v) => println!("{}", serde_json::to_string_pretty(&v)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
@@ -339,7 +344,8 @@ fn cfp_need(state: &State, key: &str, conf: Option<&Record<schema::Conference>>,
         return Err(Idle::Abandoned);
     }
     let missing = (conf_active && conf.is_none()) || (dl_active && dl.is_none());
-    let due = (conf_active && conf.is_some_and(|r| stale(r, now))) || (dl_active && dl.is_some_and(|r| stale(r, now)));
+    let interval = if dl.is_some() && !dl_active { REVALIDATE_DAYS_FINAL } else { REVALIDATE_DAYS };
+    let due = (conf_active && conf.is_some_and(|r| stale_after(r, now, interval))) || (dl_active && dl.is_some_and(|r| stale(r, now)));
     if missing {
         return match recent_negative(state, key, now, CFP_RETRY_DAYS) {
             Some(wait) if !due => Err(wait),
@@ -374,7 +380,11 @@ fn volunteer_need(state: &State, key: &str, vol: Option<&Record<schema::Voluntee
 /// `PLC_FORCE_REVALIDATE=1` (the workflow's `force_revalidate` input) treats
 /// every stored record as due, so a run after a fix re-reads all pages at once.
 fn stale<T>(r: &Record<T>, now: chrono::DateTime<Utc>) -> bool {
-    std::env::var("PLC_FORCE_REVALIDATE").is_ok_and(|v| v == "1" || v == "true") || now - r.last_verified.unwrap_or(r.fetched_at) >= chrono::Duration::days(REVALIDATE_DAYS)
+    stale_after(r, now, REVALIDATE_DAYS)
+}
+
+fn stale_after<T>(r: &Record<T>, now: chrono::DateTime<Utc>, days: i64) -> bool {
+    std::env::var("PLC_FORCE_REVALIDATE").is_ok_and(|v| v == "1" || v == "true") || now - r.last_verified.unwrap_or(r.fetched_at) >= chrono::Duration::days(days)
 }
 
 /// A failed search (not found, invalid, no programme) is not repeated for

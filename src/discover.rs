@@ -5,7 +5,7 @@ use crate::clean;
 use crate::config::ConferenceCfg;
 use crate::fetch;
 use crate::llm::{Llm, LlmError};
-use crate::schema::{self, Cfp, CfpExtraction, Choice, Conference, Deadlines, Extraction, Ranked, UrlGuesses, Volunteer, VolunteerExtraction};
+use crate::schema::{self, Cfp, CfpExtraction, Conference, Deadlines, Extraction, Ranked, UrlGuesses, Volunteer, VolunteerExtraction};
 use crate::search::{Hit, Searcher, merge};
 use crate::state::Code;
 use anyhow::Result;
@@ -259,12 +259,6 @@ fn numbered<'a>(items: impl Iterator<Item = (&'a str, &'a str, &'a str)>) -> Str
     s
 }
 
-/// Ask the model to pick one entry; returns the chosen index if valid.
-fn choose(ctx: &Ctx, trail: &mut Trail, question: &str, list: &str, n: usize) -> Result<Option<usize>> {
-    let Some((c, _)) = ask::<Choice>(ctx, trail, SYSTEM_PROMPT, &format!("{question}\n\n{list}"))? else { return Ok(None) };
-    Ok(c.index.map(|i| i as usize).filter(|i| *i < n))
-}
-
 /// Ask the model which entries could fit, best first; valid, deduplicated
 /// indices. One call instead of one per attempt.
 fn choose_many(ctx: &Ctx, trail: &mut Trail, question: &str, list: &str, n: usize) -> Result<Vec<usize>> {
@@ -308,61 +302,18 @@ fn grounding_text(md: &str, links: &[(String, String)]) -> String {
     s
 }
 
-/// Ask the model which of the page's links is `what`; None if it says none.
-/// Each link is shown with the words around it, so that "here" in "Apply
-/// here by July 12" is readable. A system or form the page hands over to
-/// is never the page itself, nor the bare front page of a website; with
-/// `offsite` it must also be on another host than the page (a submission
-/// system is a separate service; a link within the conference site is an
-/// information page, whatever the model thinks). A pick that breaks these
-/// rules is dropped rather than published.
-fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String, String)], page_url: &str, what: &str, offsite: bool) -> Result<Option<String>> {
-    if links.is_empty() {
-        return Ok(None);
-    }
-    // Links from another host first: a submission system or a form lives
-    // elsewhere more often than not, and this page's own navigation is noise.
-    let host = url::Url::parse(page_url).ok().and_then(|u| u.host_str().map(String::from));
-    let same_host = |u: &str| host.as_deref().is_some_and(|h| url::Url::parse(u).ok().and_then(|p| p.host_str().map(|x| x == h)).unwrap_or(false));
-    let mut ranked: Vec<&(String, String, String)> = links.iter().filter(|(_, u, _)| !trail.tried(u) && usable_link(u, page_url, offsite, false).is_ok()).collect();
-    ranked.sort_by_key(|(_, u, _)| same_host(u));
-    let shown: Vec<&(String, String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
-    // "None of these" is offered as an entry of its own: asked for an index
-    // or null, the model always gives an index (a GitHub "edit this page"
-    // link was once its submission system).
-    let mut list = numbered(shown.iter().map(|(t, u, c)| (t.as_str(), u.as_str(), c.as_str())));
-    list.push_str(&format!("{}. None of these links\n", shown.len()));
-    let q = format!("Which of these links on {page_url} is {what}? Answer with the index.");
-    let Some(i) = choose(ctx, trail, &q, &list, shown.len() + 1)? else { return Ok(None) };
-    if i == shown.len() {
-        trail.note(format!("model says none of the links is {what}"));
-        return Ok(None);
-    }
-    let u = shown[i].1.clone();
-    if let Err(why) = usable_link(&u, page_url, offsite, false) {
-        trail.note(format!("model picked link {u} as {what}, which is {why}; dropped"));
-        return Ok(None);
-    }
-    trail.note(format!("model picked link {u} as {what}"));
-    Ok(Some(u))
-}
-
 /// Whether a link the page hands over to (a submission system, an
-/// application form) can be published: never the page itself; with
-/// `offsite` never a page on the same host as the page (a submission
-/// system is a separate service; a link within the conference site is an
-/// information page); and unless `allow_root`, never the bare front page
-/// of a website. A URL the model copied from the text may be a bare host
-/// ("Submission site: https://oopsla27.hotcrp.com/"), so roots are allowed
-/// there; a pick from the link list that lands on a site root is the
-/// model settling for the platform's home page.
-fn usable_link(u: &str, page_url: &str, offsite: bool, allow_root: bool) -> Result<(), &'static str> {
+/// application form) can be published, once its evidence has checked out
+/// (`schema::grounded_link`): never the page itself, and with `offsite`
+/// never a page on the same host as the page (a submission system is a
+/// separate service; a link within the conference site is an information
+/// page). Links are never picked from the page's link list by the model:
+/// that was tried and, with the conference's own pages excluded, the model
+/// settled every time for whatever off-site link was left.
+pub fn usable_link(u: &str, page_url: &str, offsite: bool) -> Result<(), &'static str> {
     let host = |s: &str| url::Url::parse(s).ok().and_then(|p| p.host_str().map(str::to_lowercase));
     if u.trim_end_matches('/') == page_url.trim_end_matches('/') {
         return Err("this very page");
-    }
-    if !allow_root && url::Url::parse(u).ok().is_some_and(|p| p.path().trim_matches('/').is_empty() && p.query().is_none()) {
-        return Err("the front page of a website");
     }
     if offsite && host(u).is_some() && host(u) == host(page_url) {
         return Err("on the conference site itself");
@@ -508,29 +459,22 @@ fn page_line(url: &str) -> String {
 
 /// Extraction + validation + one corrective retry for a CFP page. Returns
 /// the last raw answer, the validation result and whether a retry happened.
-pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
+pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str, links: &[(String, String)]) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
     let prompt = cfp_prompt(cfg, year, "", md);
-    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md, &cfg.track))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
-}
-
-/// The link pick for a volunteer application form, for the harness (the
-/// pipeline calls `pick_link` from `try_volunteer_page`).
-pub fn pick_application_link(llm: &Llm, cfg: &ConferenceCfg, year: i32, html: &str, url: &str) -> Result<Option<String>> {
-    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
-    let mut trail = Trail::default();
-    let links = clean::links_with_context(html, url);
-    pick_link(&ctx, &mut trail, &links, url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference), false)
+    let grounding = grounding_text(md, links);
+    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp_links(x, year, &grounding, &cfg.track, links))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Extraction + validation + one corrective retry for a volunteer page, for
 /// the harness (the pipeline goes through `try_volunteer_page`).
-pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
+pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str, links: &[(String, String)]) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
     let prompt = volunteer_prompt(cfg, year, site, "", md);
-    Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x| schema::validate_volunteer(x, year, md, None))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+    let grounding = grounding_text(md, links);
+    Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x| schema::validate_volunteer_links(x, year, &grounding, None, links))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Try one page for the CFP, following at most two links. Conference dates
@@ -545,11 +489,10 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
-    let links_ctx = clean::links_with_context(&page.html, &page.url);
-    let links: Vec<(String, String)> = links_ctx.iter().map(|(t, u, _)| (t.clone(), u.clone())).collect();
+    let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
     let prompt = cfp_prompt(cfg, year, &page.url, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding, &cfg.track))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp_links(x, year, &grounding, &cfg.track, &links))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
@@ -567,15 +510,9 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
                 acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
             }
             if !cfp.rounds.is_empty() {
-                // The submission system comes from the page text only
-                // ("Submission site: https://...hotcrp.com"). Picking it
-                // from the link list was tried and never once right: with
-                // the conference's own pages excluded, the model settles
-                // for whatever off-site link is left (a paper-matching
-                // service, the site generator's changelog).
                 if let Some(u) = cfp.submission_url.clone() {
-                    if let Err(why) = usable_link(&u, &page.url, true, true) {
-                        trail.note(format!("submission link {u} from the page text is {why}; dropped"));
+                    if let Err(why) = usable_link(&u, &page.url, true) {
+                        trail.note(format!("submission link {u} is {why}; dropped"));
                         cfp.submission_url = None;
                     }
                 }
@@ -680,11 +617,10 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         trail.note(format!("{} has almost no text ({} chars); skipped", page.url, md.len()));
         return Ok(None);
     }
-    let links_ctx = clean::links_with_context(&page.html, &page.url);
-    let links: Vec<(String, String)> = links_ctx.iter().map(|(t, u, _)| (t.clone(), u.clone())).collect();
+    let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
     let prompt = volunteer_prompt(cfg, year, site, &page.url, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer(x, year, &grounding, conference_end))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer_links(x, year, &grounding, conference_end, &links))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
@@ -700,13 +636,10 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
                     trail.code(Code::E005);
                 }
                 if let Some(u) = v.application_url.clone() {
-                    if let Err(why) = usable_link(&u, &page.url, false, true) {
-                        trail.note(format!("application link {u} from the page text is {why}; dropped"));
+                    if let Err(why) = usable_link(&u, &page.url, false) {
+                        trail.note(format!("application link {u} is {why}; dropped"));
                         v.application_url = None;
                     }
-                }
-                if v.application_url.is_none() {
-                    v.application_url = pick_link(ctx, trail, &links_ctx, &page.url, &format!("the application form or sign-up page where students apply to be student volunteers at {} {year}; not a general information page", cfg.conference), false)?;
                 }
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
                 return Ok(Some(Found { value: v, raw, prov, html: page.html.clone(), md }));
@@ -805,15 +738,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn handed_over_links_are_never_the_page_its_root_or_for_submissions_its_site() {
+    fn handed_over_links_are_never_the_page_or_for_submissions_its_site() {
         let page = "https://conferences.i-cav.org/2027/";
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027", page, true, true), Err("this very page"));
-        assert_eq!(usable_link("https://conf.researchr.org/", page, false, false), Err("the front page of a website"), "a pick landing on a site root");
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027/artifacts/", page, true, true), Err("on the conference site itself"));
-        assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false, false), Ok(()), "an application form may be on the site");
-        assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true, true), Ok(()), "a submission system named in the text is usually a bare host");
-        assert_eq!(usable_link("https://cav27.hotcrp.com/paper/new", page, true, true), Ok(()));
-        assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false, false), Ok(()));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027", page, true), Err("this very page"));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/artifacts/", page, true), Err("on the conference site itself"));
+        assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false), Ok(()), "an application form may be on the site");
+        assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true), Ok(()), "a submission system named in the text is usually a bare host");
+        assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false), Ok(()));
     }
 
     #[test]

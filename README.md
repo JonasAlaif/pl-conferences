@@ -42,6 +42,11 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
    the date exactly as written there; validation checks that the two sit in
    the same entry of the page (same or adjacent line), which stops a small
    model from pairing a label with a neighbouring row's date on dense tables.
+   Links work the same way: for the submission site and the volunteer
+   sign-up form the model quotes the words that name them, and the URL is
+   kept only if it is written in that quote or is the target of a link whose
+   anchor text sits in it ("Apply here" resolves to the form behind "here").
+   The model is never asked to pick a link from the page's link list.
 3. Dates are checked for consistency (ordering, year, calendar validity); on
    failure the model gets one corrective retry. One extraction yields two
    records with separate lifecycles: `conference.json` (dates, location) and
@@ -137,6 +142,14 @@ per worker, against a 330-minute job timeout).
   the page it came from; treat the source as authoritative. If a page states
   two different dates for the same deadline, the entry quotes the other
   statement as a note.
+- A page that lists the same label twice can defeat the model: OOPSLA's
+  dates list has two "Author Notification (Round 2)" entries (the second is
+  the decision on revised papers) with the revision deadline between them,
+  and the 4B model settles on the wrong one for the last round however it is
+  asked. For earlier rounds a rule catches it (a round's notification must
+  precede the next round's deadline); for the last round the stored value is
+  whatever was read first, and a re-read that disagrees while the page still
+  states the stored date keeps the stored date rather than flip-flopping.
 - The workflow's commit favours the run's files over concurrent hand edits to
   the same files (`git pull --rebase -X theirs`); edit `state.json` or a record
   by hand only between runs.
