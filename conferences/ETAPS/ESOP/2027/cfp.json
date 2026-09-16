@@ -1,0 +1,71 @@
+{
+  "conference": "ETAPS",
+  "track": "ESOP",
+  "year": 2027,
+  "label": "ETAPS 2027 (ESOP)",
+  "fetched_at": "2026-09-16T04:52:09.156252376Z",
+  "last_verified": "2026-09-16T04:52:09.156252376Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://etaps.org/2027/cfp/",
+    "query": "ETAPS 2027 ESOP call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "Round 1",
+        "submission": "2026-05-28",
+        "response_start": "2026-07-20",
+        "response_end": "2026-08-06",
+        "notification": "2026-08-06"
+      },
+      {
+        "label": "Round 2",
+        "submission": "2026-10-15",
+        "response_start": "2026-12-07",
+        "response_end": "2026-12-09",
+        "notification": "2026-12-22"
+      }
+    ],
+    "submission_details": "The four main conferences of ETAPS 2027 solicit contributions. ESOP accepts regular research papers (max 25 pp), experience reports (max 15 pp), and fresh perspectives (max 15 pp). iFS accepts long (16pp + 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSaCS accepts regular research papers (max 18 pp). TACAS accepts regular research, case study, and tool papers (max 18 pp), plus tool demonstration papers (max 6 pp). All page limits exclude the bibliography. Submissions must be in English, original, unpublished, and not submitted elsewhere. Simultaneous submission is forbidden. Formatting must follow Springer's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is used for TACAS and iFS regular research papers; authors must omit names/institutions. Data availability statements are mandatory. Artifact evaluation is voluntary for most tracks but required for tool papers at TACAS. Authors must attend the conference to present their paper.",
+    "submission_url": "https://etaps.org/2027/esop"
+  },
+  "history": [],
+  "raw": {
+    "conference": {
+      "city": "Copenhagen",
+      "country": "Denmark",
+      "end_date": "2027-04-15",
+      "start_date": "2027-04-12"
+    },
+    "has_submission_deadline": true,
+    "page_is_about_conference": true,
+    "rounds": [
+      {
+        "author_response_end": "2026-08-06",
+        "author_response_start": "2026-07-20",
+        "label": "Round 1",
+        "notification": "2026-08-06",
+        "notification_quote": "Notification for ESOP-round 1: August 6, 2026",
+        "submission_deadline": "2026-05-28",
+        "submission_deadline_quote": "Submission deadline for ESOP-round 1: May 28, 2026"
+      },
+      {
+        "author_response_end": "2026-12-09",
+        "author_response_start": "2026-12-07",
+        "label": "Round 2",
+        "notification": "2026-12-22",
+        "notification_quote": "Paper notification and TACAS mandatory artifact notification: Tuesday, December 22, 2026",
+        "submission_deadline": "2026-10-15",
+        "submission_deadline_quote": "Submission deadline for ESOP-round 2, iFS, FoSSaCS, TACAS: Thursday, October 15, 2026"
+      }
+    ],
+    "submission_details": "The four main conferences of ETAPS 2027 solicit contributions. ESOP accepts regular research papers (max 25 pp), experience reports (max 15 pp), and fresh perspectives (max 15 pp). iFS accepts long (16pp + 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSaCS accepts regular research papers (max 18 pp). TACAS accepts regular research, case study, and tool papers (max 18 pp), plus tool demonstration papers (max 6 pp). All page limits exclude the bibliography. Submissions must be in English, original, unpublished, and not submitted elsewhere. Simultaneous submission is forbidden. Formatting must follow Springer's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is used for TACAS and iFS regular research papers; authors must omit names/institutions. Data availability statements are mandatory. Artifact evaluation is voluntary for most tracks but required for tool papers at TACAS. Authors must attend the conference to present their paper.",
+    "submission_url": "https://etaps.org/2027/esop"
+  }
+}

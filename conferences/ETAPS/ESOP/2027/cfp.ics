@@ -1,0 +1,84 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ETAPS 2027 (ESOP) cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:c699f36855efbb75502b913e6f8406b6865f38dd@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260528
+DTEND;VALUE=DATE:20260529
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Paper Submission Deadline
+DESCRIPTION:The four main conferences of ETAPS 2027 solicit contributions.
+  ESOP accepts regular research papers (max 25 pp)\, experience reports (m
+ ax 15 pp)\, and fresh perspectives (max 15 pp). iFS accepts long (16pp + 
+ 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSa
+ CS accepts regular research papers (max 18 pp). TACAS accepts regular res
+ earch\, case study\, and tool papers (max 18 pp)\, plus tool demonstratio
+ n papers (max 6 pp). All page limits exclude the bibliography. Submission
+ s must be in English\, original\, unpublished\, and not submitted elsewhe
+ re. Simultaneous submission is forbidden. Formatting must follow Springer
+ 's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is
+  used for TACAS and iFS regular research papers\; authors must omit names
+ /institutions. Data availability statements are mandatory. Artifact evalu
+ ation is voluntary for most tracks but required for tool papers at TACAS.
+  Authors must attend the conference to present their paper.\n\nSubmit at:
+  https://etaps.org/2027/esop\n\nSource: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260807
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:33c29fbcd5369b387977ba4f70c01128dd9ac277@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Notification
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261016
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Paper Submission Deadline
+DESCRIPTION:The four main conferences of ETAPS 2027 solicit contributions.
+  ESOP accepts regular research papers (max 25 pp)\, experience reports (m
+ ax 15 pp)\, and fresh perspectives (max 15 pp). iFS accepts long (16pp + 
+ 2pp refs) or short (8pp + 1pp refs) papers for specific categories. FoSSa
+ CS accepts regular research papers (max 18 pp). TACAS accepts regular res
+ earch\, case study\, and tool papers (max 18 pp)\, plus tool demonstratio
+ n papers (max 6 pp). All page limits exclude the bibliography. Submission
+ s must be in English\, original\, unpublished\, and not submitted elsewhe
+ re. Simultaneous submission is forbidden. Formatting must follow Springer
+ 's LNCS guidelines (llncs.cls) except for ESOP. Double-blind reviewing is
+  used for TACAS and iFS regular research papers\; authors must omit names
+ /institutions. Data availability statements are mandatory. Artifact evalu
+ ation is voluntary for most tracks but required for tool papers at TACAS.
+  Authors must attend the conference to present their paper.\n\nSubmit at:
+  https://etaps.org/2027/esop\n\nSource: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:ffd540b54a789f527dc800181de2719a8943ee6f@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261210
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Rebuttal
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+BEGIN:VEVENT
+UID:0d346c688c36346dde4809ec6d978e822b453840@pl-conferences
+DTSTAMP:20260916T045209Z
+DTSTART;VALUE=DATE:20261222
+DTEND;VALUE=DATE:20261223
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Notification
+DESCRIPTION:Source: https://etaps.org/2027/cfp/
+END:VEVENT
+END:VCALENDAR
