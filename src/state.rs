@@ -23,7 +23,7 @@ pub enum Outcome {
 /// Maintenance codes. Each marks a degraded-but-working path.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, Hash)]
 pub enum Code {
-    /// Primary search backend (Brave) returned nothing; a fallback backend was used.
+    /// Primary search backend (DuckDuckGo) returned nothing; a fallback backend was used.
     E001,
     /// All search backends failed; LLM URL guessing was used.
     E002,
@@ -50,14 +50,14 @@ pub enum Code {
 impl Code {
     pub fn hint(self) -> &'static str {
         match self {
-            Code::E001 => "The primary search backend (Brave HTML) returned no results; a fallback backend was used. Check `src/search.rs` selectors if this persists.",
+            Code::E001 => "The primary search backend (DuckDuckGo HTML) returned no results; a fallback backend was used. Check `src/search.rs` selectors if this persists.",
             Code::E002 => "Every search backend failed; the page was found by asking the model to guess URLs. Search parsing in `src/search.rs` probably needs updating.",
             Code::E003 => "The search hit did not contain the dates; they were found by following a link from it. Usually harmless, but check the query in `src/discover.rs` if it becomes common.",
             Code::E004 => "The page needed headless Chrome to render. Fine on GitHub runners; verify Chrome is still preinstalled if fetches start failing.",
             Code::E005 => "The model's first answer failed validation and a corrective retry was needed. Consider tuning the prompt or schema in `src/schema.rs`.",
             Code::E006 => "No page could be found for this conference-year in three or more consecutive runs. The conference may have moved, been renamed or ended; check `conferences.json`.",
             Code::E007 => "Ollama or the model was installed from a fallback source in the workflow. Update the pinned versions in `.github/workflows/scrape.yml`.",
-            Code::E008 => "The primary search backend (Brave HTML) throttled or blocked the runner (HTTP 429/202/403); a fallback backend was used. Nothing to fix unless it happens every month; then raise `PLC_SEARCH_GAP` or reorder backends in `src/search.rs`.",
+            Code::E008 => "The primary search backend (DuckDuckGo HTML) throttled or blocked the runner (HTTP 429/202/403); a fallback backend was used. Nothing to fix unless it happens every run; then raise `PLC_SEARCH_GAP` or reorder backends in `src/search.rs`.",
             Code::E009 => "The page's TLS certificate was invalid and was ignored. Check whether the conference site moved; the source URL is in the JSON next to the calendar.",
             Code::E010 => "The Ollama registry now serves a different build for the pinned model tag (manifest digest changed). Re-run the accuracy harness (`cargo test --test live -- --ignored`) and update `MODEL_DIGEST` in `.github/workflows/scrape.yml` if results are still good.",
             Code::E011 => "This conference-year errored (a panic or an unexpected failure, see the note) in two or more consecutive runs; the run continued without it. Reproduce locally with `cargo run -- --conference <name> --year <year> --dry-run`.",

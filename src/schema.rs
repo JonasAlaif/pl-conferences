@@ -146,6 +146,15 @@ pub struct Choice {
     pub index: Option<u32>,
 }
 
+/// Which entries of a numbered list could fit, best first. One answer
+/// replaces a series of "pick one, try it, pick again" calls, and an empty
+/// list says that none of them fits.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct Ranked {
+    /// 0-based indices of every entry that could be what is asked for, most likely first. Leave out entries that clearly are not it. Empty if none fits.
+    pub indices: Vec<u32>,
+}
+
 /// Plausible official URLs, used when no search engine answers.
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct UrlGuesses {
@@ -215,6 +224,24 @@ pub fn near_on_page(page: &str, quote: &str, text: &str) -> bool {
         }
     }
     false
+}
+
+/// A "conflicting statement" is kept only if it is on the page and really
+/// gives a different date: one that repeats the accepted date's numbers
+/// ("Thursay, 19 Feb 2026" next to "Thu 19 Feb 2026") is the same date.
+fn real_conflict(conflict: &Option<String>, accepted_as_written: &str, page: &str) -> Option<String> {
+    let c = clean_opt(conflict)?;
+    if !page.is_empty() && !page_contains(page, &c) {
+        return None;
+    }
+    let cn = norm(&c);
+    let accepted = norm(accepted_as_written);
+    let numbers: Vec<&str> = accepted.split(' ').filter(|t| t.chars().any(|ch| ch.is_ascii_digit())).collect();
+    let have: std::collections::HashSet<&str> = cn.split(|ch: char| ch.is_whitespace() || ch == '-' || ch == '–').collect();
+    if !numbers.is_empty() && numbers.iter().all(|n| have.contains(n)) {
+        return None;
+    }
+    Some(c)
 }
 
 /// Every token of a date as written ("Mon 8 Sep 2025 - Thu 11 Sep 2025":
@@ -542,8 +569,7 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
                 errs.push(format!("{what} dates run past the conference start {}", c.start));
             }
         }
-        // A conflicting statement is kept only when it really is on the page.
-        let submission_conflict = clean_opt(&r.submission_deadline_conflict).filter(|c| page.is_empty() || page_contains(page, c));
+        let submission_conflict = real_conflict(&r.submission_deadline_conflict, &r.submission_deadline_as_written, page);
         rounds.push(ValidRound { label: r.label.trim().to_string(), submission, submission_conflict, response_start, response_end, notification });
     }
     for w in rounds.windows(2) {
@@ -598,7 +624,7 @@ pub fn validate_volunteer(x: &VolunteerExtraction, year: i32, page: &str, confer
         None => errs.push("application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null".into()),
     }
     if errs.is_empty() {
-        let deadline_conflict = clean_opt(&x.application_deadline_conflict).filter(|c| page.is_empty() || page_contains(page, c));
+        let deadline_conflict = real_conflict(&x.application_deadline_conflict, x.application_deadline_as_written.as_deref().unwrap_or(""), page);
         Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_url(&x.application_url, page) }))
     } else {
         Err(errs)
@@ -729,6 +755,18 @@ mod tests {
         let errs = validate_cfp(&x, 2026, page).unwrap_err();
         assert!(errs.iter().any(|e| e.contains("not in the same entry")), "{errs:?}");
         assert!(validate_cfp(&ok_extraction(), 2026, page).is_ok());
+    }
+
+    #[test]
+    fn conflict_is_kept_only_for_a_different_date() {
+        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025. The deadline is Thursay, 10 July 2025 AoE. Extended to 17 July 2025.";
+        let mut x = ok_extraction();
+        x.rounds[0].submission_deadline_conflict = Some("Thursay, 10 July 2025 AoE".into());
+        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict, None, "same date restated is not a conflict");
+        x.rounds[0].submission_deadline_conflict = Some("Extended to 17 July 2025".into());
+        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict.as_deref(), Some("Extended to 17 July 2025"));
+        x.rounds[0].submission_deadline_conflict = Some("Extended to 24 July 2025".into());
+        assert_eq!(validate_cfp(&x, 2026, page).unwrap().rounds[0].submission_conflict, None, "a statement not on the page is dropped");
     }
 
     #[test]

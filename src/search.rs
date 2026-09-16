@@ -128,9 +128,11 @@ pub fn default_backends() -> Vec<Box<dyn SearchBackend>> {
     if std::env::var("PLC_NO_SEARCH").is_ok_and(|v| v == "1") {
         return vec![];
     }
-    // Brave first: DuckDuckGo soft-blocks (HTTP 202) after a handful of
-    // automated queries from one IP, Brave and Bing have not.
-    vec![Box::new(Brave), Box::new(DdgHtml), Box::new(Bing)]
+    // DuckDuckGo first: its results for conference queries are the most
+    // relevant. It soft-blocks (HTTP 202) after bursts of queries from one
+    // IP; the runner sends a few dozen per run with gaps, and Brave then
+    // Bing take over when it does (E008 records that).
+    vec![Box::new(DdgHtml), Box::new(Brave), Box::new(Bing)]
 }
 
 /// How long a backend that throttled us is left alone.
