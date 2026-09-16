@@ -174,7 +174,17 @@ fn run(args: &Args) -> Result<()> {
             let prior = prior_urls(root, cfg);
             (Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.0 }, Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.1 })
         });
-        match process_year(args, ctx, vol_ctx, cfg, year, &mut state, now, current_year) {
+        // A panic in one conference-year (a bug, an unexpected page) must not
+        // take the run and its state down with it.
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| process_year(args, ctx, vol_ctx, cfg, year, &mut state, now, current_year)));
+        let outcome = match outcome {
+            Ok(r) => r,
+            Err(p) => {
+                let msg = p.downcast_ref::<String>().cloned().or_else(|| p.downcast_ref::<&str>().map(|s| s.to_string())).unwrap_or_else(|| "unknown panic".into());
+                Err(anyhow::anyhow!("panic: {msg}"))
+            }
+        };
+        match outcome {
             Ok(()) => consecutive_errors = 0,
             Err(e) => {
                 consecutive_errors += 1;
