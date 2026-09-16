@@ -16,6 +16,8 @@ const CFP_RETRY_DAYS: i64 = 7;
 const REVALIDATE_DAYS: i64 = 14;
 
 const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [--year YYYY] [--dry-run] [--no-volunteer]
+       pl-conferences regenerate [DIR]
+       pl-conferences merge-state <into.json> <part.json>...
        pl-conferences clean <file.html>
        pl-conferences fetch <url>
        pl-conferences extract <file.html> <conference> <year> <track>
@@ -63,6 +65,25 @@ fn main() -> Result<()> {
         Some("clean") => {
             let html = std::fs::read_to_string(argv.get(1).context(USAGE)?)?;
             print!("{}", clean::html_to_markdown(&html));
+            return Ok(());
+        }
+        Some("regenerate") => {
+            // Outputs only (all.ics, MAINTENANCE.md, the site, per-record
+            // calendars): no model, no network. Used by the gather job.
+            let root = PathBuf::from(argv.get(1).map(String::as_str).unwrap_or("."));
+            let state = State::load(&root.join("state.json"))?;
+            regenerate_outputs(&root, &state)?;
+            return Ok(());
+        }
+        Some("merge-state") => {
+            // merge-state <into.json> <part.json>...: fold the states of
+            // parallel workers into one (see `State::merge`).
+            let into = PathBuf::from(argv.get(1).context(USAGE)?);
+            let mut state = State::load(&into)?;
+            let parts = argv[2..].iter().map(|p| State::load(Path::new(p))).collect::<Result<Vec<_>>>()?;
+            state.merge(&parts);
+            state.save(&into)?;
+            log::info!("merged {} state file(s) into {}", parts.len(), into.display());
             return Ok(());
         }
         Some("sections") => {

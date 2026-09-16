@@ -109,6 +109,26 @@ impl State {
         self.runs.get(key)
     }
 
+    /// Fold the states written by parallel workers (each started from the
+    /// same base and touched only its own conference) into this one: per
+    /// conference-year the most recent attempt wins, the run counter is the
+    /// highest seen, the last run is the latest, and the workflow codes are
+    /// the union.
+    pub fn merge(&mut self, parts: &[State]) {
+        for p in parts {
+            for (k, a) in &p.runs {
+                if self.runs.get(k).is_none_or(|mine| a.last_attempt > mine.last_attempt) {
+                    self.runs.insert(k.clone(), a.clone());
+                }
+            }
+            self.run_count = self.run_count.max(p.run_count);
+            self.last_run = self.last_run.max(p.last_run);
+            self.last_run_codes.extend(p.last_run_codes.iter().copied());
+        }
+        self.last_run_codes.sort();
+        self.last_run_codes.dedup();
+    }
+
     /// Record an attempt. Not-found streaks of three or more raise E006, but
     /// only once the edition is `overdue` (its year has started); a
     /// next-year call for papers that is not out yet is normal.
@@ -221,6 +241,35 @@ mod tests {
         assert!(st.get("Y/Y/2027/cfp").unwrap().codes.is_empty());
         st.record("Y/Y/2027/cfp", Outcome::Error, None, vec![], "panic: x".into(), now, true);
         assert_eq!(st.get("Y/Y/2027/cfp").unwrap().codes, vec![Code::E011]);
+    }
+
+    #[test]
+    fn merge_takes_the_newest_attempt_per_key() {
+        let t0 = Utc::now() - chrono::Duration::hours(2);
+        let t1 = Utc::now() - chrono::Duration::hours(1);
+        let t2 = Utc::now();
+        let mut base = State::default();
+        base.run_count = 4;
+        base.record("A/A/2027/cfp", Outcome::NotFound, None, vec![], "old".into(), t0, false);
+        base.record("B/B/2027/cfp", Outcome::Ok, None, vec![], "base".into(), t0, false);
+        // Worker for A: newer attempt on A, stale copy of B from the same base.
+        let mut wa = base.clone();
+        wa.record("A/A/2027/cfp", Outcome::Ok, Some("ddg-html".into()), vec![Code::E003], "new".into(), t2, false);
+        wa.run_count = 5;
+        wa.last_run = Some(t2);
+        wa.last_run_codes = vec![Code::E007];
+        // Worker for B: attempted B again.
+        let mut wb = base.clone();
+        wb.record("B/B/2027/cfp", Outcome::Ok, None, vec![], "worker b".into(), t1, false);
+        wb.run_count = 5;
+        wb.last_run = Some(t1);
+        base.merge(&[wb, wa]);
+        assert_eq!(base.get("A/A/2027/cfp").unwrap().note, "new");
+        assert_eq!(base.get("A/A/2027/cfp").unwrap().codes, vec![Code::E003]);
+        assert_eq!(base.get("B/B/2027/cfp").unwrap().note, "worker b", "a worker's stale copy of another conference never wins");
+        assert_eq!(base.run_count, 5);
+        assert_eq!(base.last_run, Some(t2));
+        assert_eq!(base.last_run_codes, vec![Code::E007]);
     }
 
     #[test]

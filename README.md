@@ -66,8 +66,8 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
    code in [MAINTENANCE.md](MAINTENANCE.md) (regenerated every run) and in the
    affected calendar entry, so the repository can be fixed before the fallback
    also breaks. Failures are retried monthly until the year is over, then
-   abandoned; nothing needs manual clean-up. Runs are weekly and bounded, so
-   a failed attempt is retried within days. A model answer that cannot be
+   abandoned; nothing needs manual clean-up. Runs are twice weekly and
+   bounded, so a failed attempt is retried within days. A model answer that cannot be
    parsed, or an error on one conference, only skips that conference-year;
    three errors in a row abort the run, and whatever was written is still
    committed.
@@ -96,16 +96,26 @@ schema `format`. Override with `PLC_MODEL` (e.g. `qwen3.5:9b`), `PLC_NUM_CTX`
 for the context size, `PLC_SEARCH_GAP` for the seconds between search-engine
 requests, `PLC_NO_SEARCH=1` to exercise the no-search-engine fallbacks (URLs
 derived from earlier editions, then model guesses, then link-following) and
-`PLC_NUM_GPU=0` to force CPU inference locally. Each run attempts at most
-`PLC_MAX_ITEMS` (the workflow sets 3) conference-years, discovery of missing
-data before re-validation of stored data and the least recently attempted
-first, stops starting new ones after `PLC_TIME_BUDGET_MIN` (default 75)
-minutes, and fetches at most six pages per attempt; the rest waits for the
-next run. This keeps every run far from the job timeout, lets a backlog (a new
-conference in `conferences.json`, a new year) drain over a few weeks, and
-means re-checking this year's conferences can never crowd out next year's
-calls for papers. The model is unloaded between conference-years: its server
-process was seen growing to 13 GB over a long run. `PLC_THINK=1`
+`PLC_NUM_GPU=0` to force CPU inference locally. Each invocation attempts at
+most `PLC_MAX_ITEMS` conference-years, discovery of missing data before
+re-validation of stored data and the least recently attempted first, stops
+starting new ones after `PLC_TIME_BUDGET_MIN` (default 75) minutes, and
+fetches at most six pages per attempt; the rest waits for the next run. This
+keeps every worker far from the job timeout, lets a backlog (a new conference
+in `conferences.json`, a new year) drain over a few weeks, and means
+re-checking this year's conferences can never crowd out next year's calls for
+papers. The model is unloaded between conference-years: its server process
+was seen growing to 13 GB over a long run.
+
+The workflow runs one worker per conference in parallel (`--conference NAME`,
+`PLC_MAX_ITEMS` 2: this year and next). Workers never touch git; each
+uploads its own `conferences/NAME/` directory and its `state.json` as an
+artifact, and a single gather job copies the (disjoint) directories together,
+merges the state files newest-attempt-wins (`pl-conferences merge-state`),
+rebuilds the outputs (`pl-conferences regenerate`) and makes the one commit.
+A workflow-level concurrency group keeps two runs from overlapping, so the
+only thing that can race the push is a person pushing during a run, which
+the gather job handles by rebasing and retrying. `PLC_THINK=1`
 enables the model's built-in reasoning; it is off by default because on CPU
 the 4B model thinks for minutes per page and the harness showed no accuracy
 gain.
@@ -117,8 +127,9 @@ not used), so it fits the 16 GB of a public-repository GitHub runner. That
 runner processes prompts at roughly 20-30 tokens/s and generates at 7
 tokens/s, so a call-for-papers page (7-9K tokens after cleaning) costs 4-7
 minutes and a whole conference-year (search, page, link choices, volunteer
-pass) 10-15 minutes; hence batches of three, twice a week (about 40 minutes
-per run, against a 150-minute job timeout).
+pass) 10-15 minutes; hence one worker per conference in parallel, twice a
+week, each attempting at most two conference-years (up to about 30 minutes
+per worker, against a 330-minute job timeout).
 
 ## Things to know
 

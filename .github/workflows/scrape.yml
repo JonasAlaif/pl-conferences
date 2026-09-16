@@ -2,8 +2,8 @@ name: Collect conference dates
 
 on:
   schedule:
-    # Weekly, in small batches (PLC_MAX_ITEMS), so every run stays short and
-    # the caches stay warm. Never on push: the run itself pushes.
+    # Twice a week. One worker per conference runs in parallel; a single
+    # gather job commits everything at once. Never on push: the run itself pushes.
     - cron: "0 3 * * 1,4"
   workflow_dispatch:
     inputs:
@@ -20,11 +20,11 @@ on:
         type: boolean
         default: false
       max_items:
-        description: "Conference-years to attempt in this run (scheduled runs use 3)"
+        description: "Conference-years each worker attempts (scheduled runs use 2: this year and next)"
         type: string
-        default: "3"
+        default: "2"
       time_budget:
-        description: "Minutes after which no new conference-year is started (scheduled runs use 75)"
+        description: "Minutes after which a worker starts no new conference-year (scheduled runs use 75)"
         type: string
         default: "75"
       force_revalidate:
@@ -39,6 +39,9 @@ permissions:
   pages: write
   id-token: write
 
+# One workflow run at a time: the gather job is the only writer of the
+# repository, and two gathers must never interleave. A run that starts while
+# another is in progress waits (GitHub keeps one pending run per group).
 concurrency:
   group: scrape
   cancel-in-progress: false
@@ -53,11 +56,37 @@ env:
   MODEL_DIGEST: "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd"
 
 jobs:
-  scrape:
+  # The list of conferences to work on, one worker each.
+  plan:
     runs-on: ubuntu-latest
-    # Scheduled runs finish in about 40 minutes; the ceiling leaves room for
-    # a manual run with max_items and time_budget raised to collect everything.
+    outputs:
+      conferences: ${{ steps.list.outputs.conferences }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: list
+        env:
+          ONLY: ${{ inputs.conference }}
+        run: |
+          if [ -n "$ONLY" ]; then
+            list=$(jq -cn --arg c "$ONLY" '[$c]')
+          else
+            list=$(jq -c '[.[].conference]' conferences.json)
+          fi
+          echo "conferences=$list" >> "$GITHUB_OUTPUT"
+          echo "workers: $list"
+
+  # One worker per conference. Workers never touch git: each uploads its own
+  # conferences/<NAME> directory and its state.json as an artifact, and the
+  # gather job below folds them together in one commit.
+  scrape:
+    needs: plan
+    runs-on: ubuntu-latest
     timeout-minutes: 330
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        conference: ${{ fromJson(needs.plan.outputs.conferences) }}
     steps:
       - uses: actions/checkout@v4
 
@@ -158,19 +187,17 @@ jobs:
           sudo apt-get install -y -q poppler-utils >/dev/null 2>&1 || echo "::warning::poppler-utils not installed; PDF pages will be skipped"
           cargo build --release --locked
 
-      - name: Collect
+      - name: Collect ${{ matrix.conference }}
         env:
           PLC_MODEL: ${{ env.MODEL }}
           PLC_TIME_BUDGET_MIN: ${{ inputs.time_budget || '75' }}
-          PLC_MAX_ITEMS: ${{ inputs.max_items || '3' }}
+          PLC_MAX_ITEMS: ${{ inputs.max_items || '2' }}
           PLC_FORCE_REVALIDATE: ${{ inputs.force_revalidate }}
           RUST_LOG: info
-          ONLY_CONFERENCE: ${{ inputs.conference }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           free -m
-          args=()
-          [ -n "$ONLY_CONFERENCE" ] && args+=(--conference "$ONLY_CONFERENCE")
+          args=(--conference "${{ matrix.conference }}")
           [ "$DRY_RUN" = "true" ] && args+=(--dry-run)
           ./target/release/pl-conferences "${args[@]}"
           echo "--- memory after run ---"
@@ -180,10 +207,69 @@ jobs:
           # Whether flash attention really was on, from the server's own log.
           grep -iE "flash|kv_cache|memory" /tmp/ollama.log | tail -8 || true
 
-      - name: Commit results
+      - name: Upload results
         # Also after a failure or timeout: whatever was written is kept.
         if: ${{ always() && inputs.dry_run != true }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: results-${{ matrix.conference }}
+          path: |
+            conferences/${{ matrix.conference }}
+            state.json
+          if-no-files-found: ignore
+          retention-days: 3
+
+  # The single writer: folds the workers' results into one commit.
+  gather:
+    needs: scrape
+    if: ${{ always() && inputs.dry_run != true && needs.scrape.result != 'cancelled' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Rust toolchain (pinned by rust-toolchain.toml)
+        run: rustup show active-toolchain || rustup toolchain install
+
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+
+      - name: Build
+        run: cargo build --release --locked
+
+      - name: Download the workers' results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: results-*
+          path: parts
+
+      - name: Merge results
         run: |
+          set -e
+          shopt -s nullglob
+          # Each worker wrote only its own conferences/<NAME> directory, so
+          # the copies are disjoint; the per-conference-year state entries
+          # are merged newest-attempt-wins by the binary.
+          for d in parts/results-*/; do
+            [ -d "$d/conferences" ] && cp -R "$d/conferences/." conferences/
+          done
+          states=(parts/results-*/state.json)
+          if [ ${#states[@]} -gt 0 ]; then
+            ./target/release/pl-conferences merge-state state.json "${states[@]}"
+          else
+            echo "::warning::no worker produced results"
+          fi
+          ./target/release/pl-conferences regenerate
+
+      - name: Commit results
+        run: |
+          set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           for p in conferences state.json all.ics README.md MAINTENANCE.md docs; do
@@ -191,22 +277,27 @@ jobs:
           done
           if git diff --staged --quiet; then
             echo "nothing changed"
-          else
-            git commit -m "Update conference dates $(date -u +%Y-%m-%d)"
-            # Someone may have pushed during the run. Under a rebase "theirs"
-            # is the run's own commit, so its files win any conflict; a
-            # rebase that still fails must not be papered over.
-            if ! git pull --rebase -X theirs origin "${GITHUB_REF_NAME}"; then
-              git rebase --abort || true
-              echo "::error::could not rebase the results onto ${GITHUB_REF_NAME}; they are in the job's workspace only"
-              exit 1
-            fi
-            git push
+            exit 0
           fi
+          git commit -m "Update conference dates $(date -u +%Y-%m-%d)"
+          # This job is the only automated writer (see the concurrency group),
+          # so the only thing that can race it is a person pushing during the
+          # run. Under a rebase "theirs" is this commit, so its files win any
+          # conflict; a rebase that still fails must not be papered over.
+          for attempt in 1 2 3; do
+            if git pull --rebase -X theirs origin "${GITHUB_REF_NAME}" && git push; then
+              exit 0
+            fi
+            git rebase --abort 2>/dev/null || true
+            echo "push attempt $attempt failed; retrying"
+            sleep 15
+          done
+          echo "::error::could not push the results onto ${GITHUB_REF_NAME}; they are in the job's workspace only"
+          exit 1
 
       - name: Upload the site
         # The page in docs/ is regenerated by every run (also after a failure).
-        if: ${{ always() && inputs.dry_run != true }}
+        if: ${{ always() }}
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
@@ -220,7 +311,7 @@ jobs:
         run: gh api -X PUT "repos/${GITHUB_REPOSITORY}/actions/workflows/scrape.yml/enable" || true
 
       - name: Report failure
-        if: ${{ failure() }}
+        if: ${{ failure() || needs.scrape.result == 'failure' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -234,10 +325,10 @@ jobs:
             gh issue create --title "$title" --label automation-failure --body "The scheduled run failed: $url"
           fi
 
-  # Publish docs/ (generated by the run above) to GitHub Pages.
+  # Publish docs/ (generated by the gather job) to GitHub Pages.
   deploy:
-    needs: scrape
-    if: ${{ always() && inputs.dry_run != true && needs.scrape.result != 'cancelled' }}
+    needs: gather
+    if: ${{ always() && inputs.dry_run != true && needs.gather.result == 'success' }}
     runs-on: ubuntu-latest
     permissions:
       pages: write
