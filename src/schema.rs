@@ -90,10 +90,10 @@ pub struct Round {
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub author_response_end: Option<String>,
-    /// The exact words on the page that state when authors are notified whether their paper is accepted, copied verbatim; null if not stated.
+    /// The exact words on the page that state when authors first learn the decision on their submission (accept, reject or revise), copied verbatim; null if not stated.
     #[schemars(required)]
     pub notification_quote: Option<String>,
-    /// Date authors are notified whether their paper is accepted (acceptance/rejection notification, not the camera-ready or revision deadline), YYYY-MM-DD, if stated.
+    /// The first date authors learn the decision on their submission to this round (the initial author notification; not later revision decisions, camera-ready or revision deadlines), YYYY-MM-DD, if stated.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub notification: Option<String>,

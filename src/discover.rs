@@ -418,8 +418,8 @@ where
 
 pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
     format!(
-        "Conference: {} {year}. Track: {} (the main research-paper track; ignore workshops, co-located events, artifact evaluation, camera-ready and revision deadlines).\n\nPAGE:\n{md}",
-        cfg.conference, cfg.track
+        "Conference: {} {year}. Track: {} (the main research-paper track; ignore workshops, co-located events, artifact evaluation, camera-ready and revision deadlines). When the page lists dates for several tracks or events, use only the entries that name the {} track and read each date from the same entry as its label.\n\nPAGE:\n{md}",
+        cfg.conference, cfg.track, cfg.track
     )
 }
 
@@ -428,7 +428,7 @@ pub fn cfp_prompt(cfg: &ConferenceCfg, year: i32, md: &str) -> String {
 pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
     let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
     let mut trail = Trail::default();
-    let prompt = cfp_prompt(cfg, year, md);
+    let prompt = cfp_prompt(cfg, year, &focused_page(&mut trail, cfg, md));
     Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp(x, year, md))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
@@ -446,7 +446,7 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     }
     let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
-    let prompt = cfp_prompt(cfg, year, &md);
+    let prompt = cfp_prompt(cfg, year, &focused_page(trail, cfg, &md));
     let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp(x, year, &grounding))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
@@ -555,6 +555,22 @@ pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&st
 pub fn volunteer_prompt(cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str) -> String {
     let site_note = site.map(|s| format!(" The conference's own website is {s}; a page elsewhere is about this conference only if it explicitly refers to this event.")).unwrap_or_default();
     format!("Conference: {} {year} (the academic conference; its {} track has paper deadlines).{site_note} Topic: the student volunteer programme (students helping at the conference), not paper submissions. Only report a deadline if the page states one.\n\nPAGE:\n{md}", cfg.conference, cfg.track)
+}
+
+/// The page as the model should see it for deadline extraction: a big
+/// multi-track dates table is narrowed to the rows naming the track (see
+/// `clean::focus_table`). Tried and rejected on the harness: letting the
+/// model copy or number the relevant rows (it drops or mixes rows).
+fn focused_page(trail: &mut Trail, cfg: &ConferenceCfg, md: &str) -> String {
+    match clean::focus_table(md, &cfg.track) {
+        Some(f) => {
+            let before = md.lines().filter(|l| l.trim_start().starts_with('|')).count();
+            let after = f.lines().filter(|l| l.trim_start().starts_with('|')).count();
+            trail.note(format!("big dates table narrowed to the {} rows: {after} of {before}", cfg.track));
+            f
+        }
+        None => md.to_string(),
+    }
 }
 
 /// `https://host` of a URL, for prompts.
