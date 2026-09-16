@@ -350,8 +350,10 @@ fn volunteer_need(state: &State, key: &str, vol: Option<&Record<schema::Voluntee
     }
 }
 
+/// `PLC_FORCE_REVALIDATE=1` (the workflow's `force_revalidate` input) treats
+/// every stored record as due, so a run after a fix re-reads all pages at once.
 fn stale<T>(r: &Record<T>, now: chrono::DateTime<Utc>) -> bool {
-    now - r.last_verified.unwrap_or(r.fetched_at) >= chrono::Duration::days(REVALIDATE_DAYS)
+    std::env::var("PLC_FORCE_REVALIDATE").is_ok_and(|v| v == "1" || v == "true") || now - r.last_verified.unwrap_or(r.fetched_at) >= chrono::Duration::days(REVALIDATE_DAYS)
 }
 
 /// A failed search (not found, invalid, no programme) is not repeated for
@@ -505,8 +507,15 @@ trait SoftUpdate {
 impl SoftUpdate for schema::Deadlines {
     fn soft_update(&mut self, from: &Self) {
         // Always take the fresh value: a wrong link must be replaceable, and
-        // a link that vanished from the page should not linger.
+        // a link that vanished from the page should not linger. Conflicting
+        // statements are notes derived by rules that improve over time, so
+        // they are refreshed too.
         self.submission_url = from.submission_url.clone();
+        if self.rounds.len() == from.rounds.len() {
+            for (mine, theirs) in self.rounds.iter_mut().zip(&from.rounds) {
+                mine.submission_conflict = theirs.submission_conflict.clone();
+            }
+        }
     }
 }
 impl SoftUpdate for schema::Conference {
@@ -519,6 +528,7 @@ impl SoftUpdate for schema::Conference {
 impl SoftUpdate for schema::Volunteer {
     fn soft_update(&mut self, from: &Self) {
         self.application_url = from.application_url.clone();
+        self.deadline_conflict = from.deadline_conflict.clone();
     }
 }
 

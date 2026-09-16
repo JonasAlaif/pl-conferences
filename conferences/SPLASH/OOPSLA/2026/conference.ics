@@ -11,11 +11,9 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261004
 DTEND;VALUE=DATE:20261010
 SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
-DESCRIPTION:Changed 2026-09-16: was 2026-10-04..2026-10-09 Oakland\, Unite
- d States (now 2026-10-04..2026-10-09 Oakland\, California\, United States
- ).\nExtracted automatically by a small language model\; please cross-chec
- k against the source before relying on it: https://2026.splashcon.org/tra
- ck/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://2026.splashcon.
+ org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Oakland\, California\, United States
 END:VEVENT
 END:VCALENDAR

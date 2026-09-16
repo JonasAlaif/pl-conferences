@@ -21,14 +21,7 @@
     "city": "Oakland",
     "country": "California, United States"
   },
-  "history": [
-    {
-      "at": "2026-09-16T13:10:08.029393963Z",
-      "field": "conference",
-      "old": "2026-10-04..2026-10-09 Oakland, United States",
-      "new": "2026-10-04..2026-10-09 Oakland, California, United States"
-    }
-  ],
+  "history": [],
   "raw": {
     "page_is_about_conference": true,
     "has_submission_deadline": true,

@@ -35,13 +35,13 @@ END:VEVENT
 BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
 DTSTAMP:20260916T131008Z
-DTSTART;VALUE=DATE:20270212
-DTEND;VALUE=DATE:20270213
+DTSTART;VALUE=DATE:20261218
+DTEND;VALUE=DATE:20261219
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
-DESCRIPTION:Changed 2026-09-16: was 2026-12-18 (now 2027-02-12).\nExtracte
- d automatically by a small language model\; please cross-check against th
- e source before relying on it: https://conf.researchr.org/track/splash-20
- 27/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c0f36c28b550a9525220f70c4170aeef5729ac7e@pl-conferences

@@ -23,7 +23,7 @@
         "submission_conflict": null,
         "response_start": "2026-12-01",
         "response_end": "2026-12-05",
-        "notification": "2027-02-12"
+        "notification": "2026-12-18"
       },
       {
         "label": "Round 2",
@@ -37,14 +37,7 @@
     "submission_details": "Please submit using HotCRP: https://oopsla27.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to a maximum of 25 pages. PACMPL uses double-blind reviewing. At least one author must be registered as a Reserve Reviewer. Papers rejected in Round 1 cannot be resubmitted in Round 2.",
     "submission_url": "https://oopsla27.hotcrp.com/"
   },
-  "history": [
-    {
-      "at": "2026-09-16T13:10:08.029393963Z",
-      "field": "round 1 notification",
-      "old": "2026-12-18",
-      "new": "2027-02-12"
-    }
-  ],
+  "history": [],
   "raw": {
     "page_is_about_conference": true,
     "has_submission_deadline": true,
@@ -66,8 +59,8 @@
         "author_response_start": "2026-12-01",
         "author_response_end": "2026-12-05",
         "notification_quote": "Author Notification (Round 1)",
-        "notification_as_written": "Fri 12 Feb 2027",
-        "notification": "2027-02-12"
+        "notification_as_written": "Fri 18 Dec 2026",
+        "notification": "2026-12-18"
       },
       {
         "label": "Round 2",

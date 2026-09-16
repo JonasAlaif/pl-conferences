@@ -27,6 +27,10 @@ on:
         description: "Minutes after which no new conference-year is started (scheduled runs use 75)"
         type: string
         default: "75"
+      force_revalidate:
+        description: "Re-read every stored record now instead of waiting for its two-weekly check (after a fix)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -159,6 +163,7 @@ jobs:
           PLC_MODEL: ${{ env.MODEL }}
           PLC_TIME_BUDGET_MIN: ${{ inputs.time_budget || '75' }}
           PLC_MAX_ITEMS: ${{ inputs.max_items || '3' }}
+          PLC_FORCE_REVALIDATE: ${{ inputs.force_revalidate }}
           RUST_LOG: info
           ONLY_CONFERENCE: ${{ inputs.conference }}
           DRY_RUN: ${{ inputs.dry_run }}
