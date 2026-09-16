@@ -135,9 +135,10 @@ wait for the next weekly run. This keeps every run far from the job timeout
 and lets a backlog (a new conference in `conferences.json`, a new year) drain
 over a few weeks.
 
-Resources: the 4B model at a 16K context takes about 4 GB of RAM on CPU
-(`ollama ps`), so it fits the 16 GB of a public-repository GitHub runner. That
-runner processes prompts at roughly 30 tokens/s and generates at 7 tokens/s,
+Resources: on the runner the model server takes about 5 GB of RAM at a 16K
+context (with `OLLAMA_FLASH_ATTENTION=1` and an 8-bit KV cache; 10 GB
+without), so it fits the 16 GB of a public-repository GitHub runner. That
+runner processes prompts at roughly 20-30 tokens/s and generates at 7 tokens/s,
 so a call-for-papers page (7-9K tokens after cleaning) costs 4-7 minutes and a
 whole conference-year (search, page, link choices, volunteer pass) 10-15
 minutes; hence batches of three, twice a week (about 40 minutes per run,
