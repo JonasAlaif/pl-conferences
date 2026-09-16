@@ -123,6 +123,76 @@ fn check(case: &Case, cfp: &schema::Cfp) -> Vec<String> {
     errs
 }
 
+struct VolunteerCase {
+    fixture: &'static str,
+    conference: &'static str,
+    track: &'static str,
+    year: i32,
+    site: &'static str,
+    /// Accepted deadlines; empty means the page must be rejected or yield no programme.
+    deadlines: &'static [&'static str],
+}
+
+fn volunteer_cases() -> Vec<VolunteerCase> {
+    vec![
+        // The page states both "Apply here by July 12" and "Sun 19 Jul 2026 Application Deadline".
+        VolunteerCase { fixture: "splash26-volunteers.html", conference: "SPLASH", track: "OOPSLA", year: 2026, site: "https://2026.splashcon.org", deadlines: &["2026-07-12", "2026-07-19"] },
+        VolunteerCase { fixture: "icfp26-volunteers.html", conference: "ICFP", track: "ICFP", year: 2026, site: "https://icfp26.sigplan.org", deadlines: &["2026-07-03"] },
+        VolunteerCase { fixture: "popl26-volunteers.html", conference: "POPL", track: "POPL", year: 2026, site: "https://popl26.sigplan.org", deadlines: &["2025-11-10"] },
+        VolunteerCase { fixture: "pldi26-volunteers.html", conference: "PLDI", track: "PLDI", year: 2026, site: "https://pldi26.sigplan.org", deadlines: &["2026-04-13"] },
+        // A namesake: Cornell's "Splash!" school outreach programme must not pass as SPLASH 2027.
+        VolunteerCase { fixture: "cornell-splash.html", conference: "SPLASH", track: "OOPSLA", year: 2027, site: "https://2027.splashcon.org", deadlines: &[] },
+    ]
+}
+
+/// Volunteer pages: deadline accuracy and rejection of namesakes.
+#[test]
+#[ignore]
+fn volunteer_accuracy() {
+    let mut llm = Llm::from_env();
+    llm.temperature = std::env::var("PLC_TEMP").ok().and_then(|s| s.parse().ok()).unwrap_or(0.0);
+    let runs: usize = std::env::var("PLC_RUNS").ok().and_then(|s| s.parse().ok()).unwrap_or(2);
+    llm.check().expect("ollama with model");
+    let only = std::env::var("PLC_CASE").ok();
+    let (mut total, mut passed) = (0, 0);
+    for case in volunteer_cases() {
+        if only.as_deref().is_some_and(|o| !case.fixture.contains(o)) {
+            continue;
+        }
+        let md = clean::html_to_markdown(&fixture(case.fixture));
+        let cfg = pl_conferences::config::ConferenceCfg { conference: case.conference.into(), track: case.track.into(), since: 0 };
+        let prompt = discover::volunteer_prompt(&cfg, case.year, Some(case.site), &md);
+        for r in 0..runs {
+            let t = Instant::now();
+            let (x, raw, _): (schema::VolunteerExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).unwrap();
+            let secs = t.elapsed().as_secs_f64();
+            total += 1;
+            let got = match schema::validate_volunteer(&x, case.year, &md, None) {
+                Ok(Some(v)) => Some(v.deadline.to_string()),
+                Ok(None) => None,
+                // "Not about this conference" is a rejection, which is the right answer for namesakes.
+                Err(_) if !x.page_is_about_conference => None,
+                Err(e) => {
+                    eprintln!("FAIL {:24} run {r} {secs:5.1}s: INVALID {}\n     raw: {}", case.fixture, e.join("; "), raw.replace('\n', " "));
+                    continue;
+                }
+            };
+            let ok = match got.as_deref() {
+                Some(d) => case.deadlines.contains(&d),
+                None => case.deadlines.is_empty(),
+            };
+            if ok {
+                passed += 1;
+                eprintln!("PASS {:24} run {r} {secs:5.1}s deadline {got:?}", case.fixture);
+            } else {
+                eprintln!("FAIL {:24} run {r} {secs:5.1}s: deadline {got:?} not in {:?}\n     raw: {}", case.fixture, case.deadlines, raw.replace('\n', " "));
+            }
+        }
+    }
+    eprintln!("=== volunteers {passed}/{total} passed, model {}", llm.model);
+    assert_eq!(passed, total);
+}
+
 #[test]
 #[ignore]
 fn extraction_accuracy() {

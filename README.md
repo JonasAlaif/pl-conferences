@@ -138,8 +138,15 @@ cargo run -- extract page.html POPL 2026 POPL      # run extraction on a saved p
 cargo run -- fetch https://example.org/cfp         # fetch (with Chrome fallback) and clean
 cargo run -- sections page.html                    # relevance scores used when a page must be cut
 cargo test                                         # offline tests on saved fixtures
-cargo test -- --ignored                            # live tests against a local Ollama
+cargo test --test live -- --ignored --nocapture    # live accuracy harnesses against a local Ollama
 ```
+
+The live harness has two parts: `extraction_accuracy` (nine saved call-for-papers
+and dates pages with known deadlines) and `volunteer_accuracy` (four volunteer
+pages with known deadlines plus a namesake page that must be rejected).
+`PLC_RUNS` repeats each case, `PLC_CASE` filters by fixture name. Run it after
+touching the schema, the prompts or the cleaning; a change is kept only if the
+pass count does not drop.
 
 ## Layout
 

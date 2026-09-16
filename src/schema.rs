@@ -598,6 +598,31 @@ mod tests {
     }
 
     #[test]
+    fn volunteer_deadline_must_precede_the_conference() {
+        let page = "Application deadline: Wed 16 Sep 2026";
+        let x = VolunteerExtraction {
+            page_is_about_conference: true,
+            has_volunteer_program: true,
+            application_deadline_quote: Some("Application deadline: Wed 16 Sep 2026".into()),
+            application_deadline: Some("2026-09-16".into()),
+            how_to_apply: Some("Fill in the form.".into()),
+            application_url: None,
+        };
+        let end = NaiveDate::from_ymd_opt(2026, 1, 16).unwrap();
+        let errs = validate_volunteer(&x, 2026, page, Some(end)).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("after the conference ends")), "{errs:?}");
+        assert!(validate_volunteer(&x, 2026, page, Some(NaiveDate::from_ymd_opt(2026, 10, 9).unwrap())).unwrap().is_some());
+        // A deadline without its quote is refused: the model must show its evidence.
+        let mut y = x.clone();
+        y.application_deadline_quote = None;
+        assert!(validate_volunteer(&y, 2026, page, None).is_err());
+        // Not about the conference: never data.
+        let mut z = x.clone();
+        z.page_is_about_conference = false;
+        assert!(validate_volunteer(&z, 2026, page, None).is_err());
+    }
+
+    #[test]
     fn conference_only_page_is_valid() {
         let mut x = ok_extraction();
         x.has_submission_deadline = false;
