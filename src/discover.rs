@@ -287,7 +287,12 @@ fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], what: &st
     if links.is_empty() {
         return Ok(None);
     }
-    let shown: Vec<&(String, String)> = links.iter().take(200).collect();
+    // Links from another host first: a submission system or a form lives
+    // elsewhere more often than not, and this page's own navigation is noise.
+    let host = links.first().and_then(|(_, u)| url::Url::parse(u).ok()).and_then(|u| u.host_str().map(String::from));
+    let mut ranked: Vec<&(String, String)> = links.iter().collect();
+    ranked.sort_by_key(|(_, u)| host.as_deref().is_some_and(|h| u.contains(h)));
+    let shown: Vec<&(String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
     let list = numbered(shown.iter().map(|(t, u)| (t.as_str(), u.as_str(), "")));
     let q = format!("Which of these links on the page is {what}? Answer with the index, or null if no link is that.");
     let pick = choose(ctx, trail, &q, &list, shown.len())?.map(|i| shown[i].1.clone());
@@ -319,7 +324,19 @@ fn candidate_links(html: &str, url: &str, keywords: &[&str]) -> Vec<(String, Str
         })
         .collect();
     scored.sort_by_key(|(s, _)| std::cmp::Reverse(*s));
-    scored.into_iter().map(|(_, l)| l).take(200).collect()
+    scored.into_iter().map(|(_, l)| l).take(MAX_LINKS).collect()
+}
+
+/// Links shown to the model per choice. On the runner every 1K prompt
+/// tokens costs about half a minute, so the list is kept short (ranked
+/// links first) and same-host links are shown as paths.
+const MAX_LINKS: usize = 80;
+
+fn shown_url(u: &str, host: Option<&str>) -> String {
+    match (url::Url::parse(u), host) {
+        (Ok(p), Some(h)) if p.host_str() == Some(h) => format!("{}{}", p.path(), p.query().map(|q| format!("?{q}")).unwrap_or_default()),
+        _ => u.to_string(),
+    }
 }
 
 const LINK_WORDS: &[&str] = &["call for papers", "cfp", "dates", "deadline", "submission", "papers", "volunteer", "student"];
@@ -331,7 +348,9 @@ fn follow_link(ctx: &Ctx, trail: &mut Trail, html: &str, url: &str, what: &str, 
     if links.is_empty() {
         return Ok(None);
     }
-    let list = numbered(links.iter().map(|(t, u)| (t.as_str(), u.as_str(), "")));
+    let host = url::Url::parse(url).ok().and_then(|u| u.host_str().map(String::from));
+    let shown: Vec<String> = links.iter().map(|(_, u)| shown_url(u, host.as_deref())).collect();
+    let list = numbered(links.iter().zip(&shown).map(|((t, _), su)| (t.as_str(), su.as_str(), "")));
     let q = format!("Which link most likely leads to {what}? Answer with the index, or null if none fits.");
     Ok(choose(ctx, trail, &q, &list, links.len())?.map(|i| links[i].1.clone()))
 }

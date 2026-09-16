@@ -17,16 +17,10 @@
     ]
   },
   "data": {
-    "rounds": [
-      {
-        "label": "",
-        "submission": "2026-02-19",
-        "response_start": "2026-04-20",
-        "response_end": "2026-04-23",
-        "notification": "2026-05-14"
-      }
-    ],
-    "submission_details": "Submissions must be in PDF format, printable in black and white on US Letter sized paper and interpretable by common PDF tools. All submissions must adhere to the \"ACM Small\" template. There is a limit of 25 pages for a full paper or Functional Pearl and 12 pages for an Experience Report; the bibliography and an optional clearly marked appendix will not be counted against these limits. Submissions that exceed the page limits or do not meet formatting requirements will be desk rejected. The conference uses a full double-blind reviewing process where author identities are omitted from submissions. Authors may submit improved versions before the deadline. Authors of conditionally accepted papers must provide revised submissions by 3 June 2026 accompanied by a cover letter mapping each mandatory revision request to specific parts of the paper."
+    "start": "2026-08-24",
+    "end": "2026-08-29",
+    "city": "Indianapolis",
+    "country": "United States"
   },
   "raw": {
     "conference": {
@@ -49,5 +43,6 @@
       }
     ],
     "submission_details": "Submissions must be in PDF format, printable in black and white on US Letter sized paper and interpretable by common PDF tools. All submissions must adhere to the \"ACM Small\" template. There is a limit of 25 pages for a full paper or Functional Pearl and 12 pages for an Experience Report; the bibliography and an optional clearly marked appendix will not be counted against these limits. Submissions that exceed the page limits or do not meet formatting requirements will be desk rejected. The conference uses a full double-blind reviewing process where author identities are omitted from submissions. Authors may submit improved versions before the deadline. Authors of conditionally accepted papers must provide revised submissions by 3 June 2026 accompanied by a cover letter mapping each mandatory revision request to specific parts of the paper."
-  }
+  },
+  "history": []
 }

@@ -17,16 +17,10 @@
     ]
   },
   "data": {
-    "rounds": [
-      {
-        "label": "",
-        "submission": "2025-07-10",
-        "response_start": "2025-09-08",
-        "response_end": "2025-09-11",
-        "notification": "2025-11-06"
-      }
-    ],
-    "submission_details": "POPL 2026 seeks contributions on all aspects of programming languages and programming systems, both theoretical and practical. Authors must omit their names and institutions from their paper submissions due to full double-blind reviewing. References to authors' own prior work should be in the third person. The submission site is https://popl26.hotcrp.com. Each paper should have no more than 25 pages of text, excluding bibliography, using the PACMPL format (specifically, the acmart LaTeX class with acmsmall option). Concurrent paper submissions to other conferences, workshops, journals, or similar forums of publication are not allowed."
+    "start": "2026-01-11",
+    "end": "2026-01-17",
+    "city": "Rennes",
+    "country": "France"
   },
   "raw": {
     "conference": {
@@ -49,5 +43,6 @@
       }
     ],
     "submission_details": "POPL 2026 seeks contributions on all aspects of programming languages and programming systems, both theoretical and practical. Authors must omit their names and institutions from their paper submissions due to full double-blind reviewing. References to authors' own prior work should be in the third person. The submission site is https://popl26.hotcrp.com. Each paper should have no more than 25 pages of text, excluding bibliography, using the PACMPL format (specifically, the acmart LaTeX class with acmsmall option). Concurrent paper submissions to other conferences, workshops, journals, or similar forums of publication are not allowed."
-  }
+  },
+  "history": []
 }

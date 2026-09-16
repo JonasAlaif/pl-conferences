@@ -15,16 +15,10 @@
     "codes": []
   },
   "data": {
-    "rounds": [
-      {
-        "label": "Round 1",
-        "submission": "2026-01-28",
-        "response_start": "2026-03-30",
-        "response_end": "2026-04-02",
-        "notification": "2026-04-17"
-      }
-    ],
-    "submission_details": "Papers can include a clearly marked appendix, however, the reviewers are not obliged to read the contents of these appendices. All page limits do not include references and appendices. Papers in all four categories must be submitted by January 28, 2026 AoE, and should be in LNCS format. Note Springer's guidelines regarding AI Authorship. Simultaneous submission to other conferences with proceedings or submission of material that has already been published elsewhere is not allowed."
+    "start": "2026-07-26",
+    "end": "2026-07-29",
+    "city": null,
+    "country": null
   },
   "raw": {
     "conference": {
@@ -47,5 +41,6 @@
       }
     ],
     "submission_details": "Papers can include a clearly marked appendix, however, the reviewers are not obliged to read the contents of these appendices. All page limits do not include references and appendices. Papers in all four categories must be submitted by January 28, 2026 AoE, and should be in LNCS format. Note Springer's guidelines regarding AI Authorship. Simultaneous submission to other conferences with proceedings or submission of material that has already been published elsewhere is not allowed."
-  }
+  },
+  "history": []
 }

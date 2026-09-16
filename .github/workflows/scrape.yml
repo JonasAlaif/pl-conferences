@@ -4,7 +4,7 @@ on:
   schedule:
     # Weekly, in small batches (PLC_MAX_ITEMS), so every run stays short and
     # the caches stay warm. Never on push: the run itself pushes.
-    - cron: "0 3 * * 1"
+    - cron: "0 3 * * 1,4"
   workflow_dispatch:
     inputs:
       conference:
@@ -134,7 +134,7 @@ jobs:
         env:
           PLC_MODEL: ${{ env.MODEL }}
           PLC_TIME_BUDGET_MIN: "75"
-          PLC_MAX_ITEMS: "5"
+          PLC_MAX_ITEMS: "4"
           RUST_LOG: info
           ONLY_CONFERENCE: ${{ inputs.conference }}
           DRY_RUN: ${{ inputs.dry_run }}
@@ -147,6 +147,7 @@ jobs:
           echo "--- memory after run ---"
           ollama ps
           free -m
+          ps -eo rss,vsz,comm --sort=-rss | head -8
 
       - name: Commit results
         # Also after a failure or timeout: whatever was written is kept.

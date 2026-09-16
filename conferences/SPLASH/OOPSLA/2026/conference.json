@@ -17,23 +17,10 @@
     ]
   },
   "data": {
-    "rounds": [
-      {
-        "label": "Round 1",
-        "submission": "2025-10-10",
-        "response_start": "2025-12-02",
-        "response_end": "2025-12-05",
-        "notification": "2025-12-17"
-      },
-      {
-        "label": "Round 2",
-        "submission": "2026-03-17",
-        "response_start": "2026-05-19",
-        "response_end": "2026-05-22",
-        "notification": "2026-06-10"
-      }
-    ],
-    "submission_details": "Papers must be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds of review. At least one senior author must register as a reserve reviewer unless exempt. Papers accepted in either round will be published in the 2026 volume of PACMPL and invited to present in-person at the SPLASH conference in 2026; remote presentations are not possible."
+    "start": "2026-10-04",
+    "end": "2026-10-09",
+    "city": "Oakland",
+    "country": "United States"
   },
   "raw": {
     "conference": {
@@ -65,5 +52,6 @@
       }
     ],
     "submission_details": "Papers must be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds of review. At least one senior author must register as a reserve reviewer unless exempt. Papers accepted in either round will be published in the 2026 volume of PACMPL and invited to present in-person at the SPLASH conference in 2026; remote presentations are not possible."
-  }
+  },
+  "history": []
 }

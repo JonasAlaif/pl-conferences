@@ -107,10 +107,12 @@ wait for the next weekly run. This keeps every run far from the job timeout
 and lets a backlog (a new conference in `conferences.json`, a new year) drain
 over a few weeks.
 
-Resources: the 4B model at a 32K context takes about 6 GB of RAM on CPU
-(`ollama ps` reports 4.7 GB for the model plus cache), so it fits the 16 GB of
-a public-repository GitHub runner with room to spare; a call-for-papers page is
-8-13K tokens after cleaning.
+Resources: the 4B model at a 16K context takes about 4 GB of RAM on CPU
+(`ollama ps`), so it fits the 16 GB of a public-repository GitHub runner. That
+runner processes prompts at roughly 30 tokens/s and generates at 7 tokens/s,
+so a call-for-papers page (7-9K tokens after cleaning) costs 4-5 minutes and a
+whole conference-year (search, page, link choices, volunteer pass) about 10
+minutes; hence the small batches.
 `PLC_THINK=1` enables the model's built-in reasoning; it is off by default
 because on CPU the 4B model thinks for minutes per page and the harness showed
 no accuracy gain on the call-for-papers pages (see `tests/live.rs`).
