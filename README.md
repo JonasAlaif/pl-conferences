@@ -108,44 +108,14 @@ installed from a fallback source, E008 primary search backend throttled the
 runner, E009 invalid TLS certificate ignored, E010 the pinned model tag now
 resolves to a different upstream build.
 
-### Vault release (optional hardening)
+### Vault release (not set up)
 
-If the Ollama release or the model ever disappear upstream, the workflow
-falls back to assets of a GitHub release tagged `vault` in this repository:
-`ollama-linux-amd64.tar.zst` and the model GGUF split into `< 2 GB` parts
-named `model.gguf.part-aa`, `model.gguf.part-ab`, ... To create it:
-
-```bash
-curl -fsSLO https://github.com/ollama/ollama/releases/download/v0.34.1/ollama-linux-amd64.tar.zst
-curl -fsSL -o model.gguf https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/main/Qwen3.5-4B-Q4_K_M.gguf
-split -b 1900m model.gguf model.gguf.part-
-gh release create vault --title "Vault: pinned Ollama + model" --notes "Fallback binaries" ollama-linux-amd64.tar.zst model.gguf.part-*
-```
-
-Model: [Qwen3.5-4B](https://huggingface.co/Qwen/Qwen3.5-4B) via
-[Ollama](https://ollama.com), CPU only, structured output through Ollama's JSON
-schema `format`. Override with `PLC_MODEL` (e.g. `qwen3.5:9b`), `PLC_NUM_CTX` for the context
-size, `PLC_SEARCH_GAP` for the seconds between search-engine requests,
-`PLC_NO_SEARCH=1` to exercise the no-search-engine fallbacks (URLs derived
-from earlier editions, then model guesses, then link-following) and
-`PLC_NUM_GPU=0` to force CPU inference locally. Each run attempts at most
-`PLC_MAX_ITEMS` (the workflow sets 3) conference-years, current year first, and stops
-starting new ones after `PLC_TIME_BUDGET_MIN` (default 75) minutes; the rest
-wait for the next weekly run. This keeps every run far from the job timeout
-and lets a backlog (a new conference in `conferences.json`, a new year) drain
-over a few weeks.
-
-Resources: on the runner the model server takes about 5 GB of RAM at a 16K
-context (with `OLLAMA_FLASH_ATTENTION=1` and an 8-bit KV cache; 10 GB
-without), so it fits the 16 GB of a public-repository GitHub runner. That
-runner processes prompts at roughly 20-30 tokens/s and generates at 7 tokens/s,
-so a call-for-papers page (7-9K tokens after cleaning) costs 4-7 minutes and a
-whole conference-year (search, page, link choices, volunteer pass) 10-15
-minutes; hence batches of three, twice a week (about 40 minutes per run,
-against a 150-minute job timeout).
-`PLC_THINK=1` enables the model's built-in reasoning; it is off by default
-because on CPU the 4B model thinks for minutes per page and the harness showed
-no accuracy gain on the call-for-papers pages (see `tests/live.rs`).
+The workflow can fall back to assets of a GitHub release tagged `vault` in
+this repository (`ollama-linux-amd64.tar.zst` and the model GGUF split into
+`model.gguf.part-aa`, `-ab`, ...) if both the Ollama release and the model
+registry ever disappear. Those assets are about 5 GB and are deliberately not
+uploaded for now; until they are, the fallback is a no-op and a missing
+upstream shows up as a failed run with an issue.
 
 ## Running locally
 
