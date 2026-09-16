@@ -67,15 +67,21 @@ pub struct ConferenceInfo {
     pub country: Option<String>,
 }
 
+/// Field order matters: the model fills the fields in schema order, so each
+/// quote comes before the value it supports (it must find the evidence
+/// before committing to a date).
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct Round {
     /// Short label such as "Round 1" or "Round 2"; empty if there is only one round.
     pub label: String,
+    /// The exact words on the page that state the deadline for submitting new papers to this track, copied verbatim (a short fragment).
+    pub submission_deadline_quote: String,
     /// Deadline for submitting new papers to this track (not abstracts, artifacts, revisions or camera-ready versions), YYYY-MM-DD.
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub submission_deadline: String,
-    /// The exact words on the page that state this submission deadline, copied verbatim (a short fragment).
-    pub submission_deadline_quote: String,
+    /// The exact words on the page that state the author response / rebuttal period, copied verbatim; null if there is none.
+    #[schemars(required)]
+    pub author_response_quote: Option<String>,
     /// First day of the author response / rebuttal period, YYYY-MM-DD, if any.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
@@ -84,13 +90,13 @@ pub struct Round {
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub author_response_end: Option<String>,
+    /// The exact words on the page that state when authors are notified whether their paper is accepted, copied verbatim; null if not stated.
+    #[schemars(required)]
+    pub notification_quote: Option<String>,
     /// Date authors are notified whether their paper is accepted (acceptance/rejection notification, not the camera-ready or revision deadline), YYYY-MM-DD, if stated.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub notification: Option<String>,
-    /// The exact words on the page that state the notification date, copied verbatim; null if not stated.
-    #[schemars(required)]
-    pub notification_quote: Option<String>,
 }
 
 /// Result of extracting a student-volunteer page.
@@ -100,13 +106,13 @@ pub struct VolunteerExtraction {
     pub page_is_about_conference: bool,
     /// True if the page explains how students can apply to be volunteers at this edition (not just a list of names).
     pub has_volunteer_program: bool,
-    /// Deadline for applying as a student volunteer, YYYY-MM-DD, if stated.
+    /// The exact words on the page that state the deadline for applying as a student volunteer, copied verbatim; null if no deadline is stated.
+    #[schemars(required)]
+    pub application_deadline_quote: Option<String>,
+    /// Deadline for applying as a student volunteer, YYYY-MM-DD; null whenever application_deadline_quote is null.
     #[schemars(required)]
     #[schemars(regex(pattern = DATE_PATTERN))]
     pub application_deadline: Option<String>,
-    /// The exact words on the page that state the application deadline, copied verbatim; null if no deadline is stated.
-    #[schemars(required)]
-    pub application_deadline_quote: Option<String>,
     /// A few sentences on who can apply, what volunteers get, and how to apply.
     #[schemars(required)]
     pub how_to_apply: Option<String>,
@@ -395,6 +401,13 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         }
         let response_start = parse_opt(&r.author_response_start, &format!("{what} author_response_start"), &mut errs);
         let response_end = parse_opt(&r.author_response_end, &format!("{what} author_response_end"), &mut errs);
+        if (response_start.is_some() || response_end.is_some()) && !page.is_empty() {
+            match clean_opt(&r.author_response_quote) {
+                Some(q) if page_contains(page, &q) => {}
+                Some(q) => errs.push(format!("{what} author_response_quote {q:?} does not appear on the page; quote the page verbatim")),
+                None => errs.push(format!("{what} author response dates are given but author_response_quote is null; quote the page or set them to null")),
+            }
+        }
         let notification = parse_opt(&r.notification, &format!("{what} notification"), &mut errs);
         if notification.is_some() && !page.is_empty() {
             match clean_opt(&r.notification_quote) {
@@ -487,6 +500,7 @@ mod tests {
             submission_deadline: sub.into(),
             submission_deadline_quote: "Thu 10 Jul 2025".into(),
             notification_quote: notif.map(|_| "Final acceptance notification Thu 6 Nov 2025".to_string()),
+            author_response_quote: rs.map(|_| "author response period Mon 8 Sep 2025 - Thu 11 Sep 2025".to_string()),
             author_response_start: rs.map(String::from),
             author_response_end: re.map(String::from),
             notification: notif.map(String::from),
@@ -506,17 +520,17 @@ mod tests {
 
     #[test]
     fn urls_are_kept_only_when_on_the_page() {
-        let page = "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025. Submit at https://popl26.hotcrp.com/";
+        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025. Submit at https://popl26.hotcrp.com/";
         let c = validate_cfp(&ok_extraction(), 2026, page).unwrap();
         assert_eq!(c.submission_url.as_deref(), Some("https://popl26.hotcrp.com"));
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
         assert_eq!(c.submission_url, None, "a URL that is not on the page is dropped");
         assert_eq!(grounded_url(&Some("javascript:void(0)".into()), "javascript:void(0)"), None);
     }
 
     #[test]
     fn accepts_consistent_dates() {
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
         assert_eq!(c.rounds[0].submission, NaiveDate::from_ymd_opt(2025, 7, 10).unwrap());
         assert_eq!(c.conference.unwrap().city.as_deref(), Some("Rennes"));
     }
@@ -547,7 +561,7 @@ mod tests {
     #[test]
     fn stages_follow_the_calendar() {
         let d = |s: &str| NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
-        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
+        let c = validate_cfp(&ok_extraction(), 2026, "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025").unwrap();
         let (conf, dl) = (c.conference.as_ref(), c.deadlines());
         assert_eq!(stage(None, None, d("2025-01-01")), Stage::Future);
         assert_eq!(stage(conf, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
@@ -575,7 +589,7 @@ mod tests {
 
     #[test]
     fn diff_reports_changed_dates_only() {
-        let page = "Submission deadline: Thu 10 Jul 2025. Final acceptance notification Thu 6 Nov 2025";
+        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
         let a = validate_cfp(&ok_extraction(), 2026, page).unwrap();
         let mut x = ok_extraction();
         x.rounds[0].submission_deadline = "2025-07-17".into();
@@ -585,6 +599,16 @@ mod tests {
         assert_eq!(d.len(), 1);
         assert_eq!((d[0].field.as_str(), d[0].old.as_str(), d[0].new.as_str()), ("round 1 submission", "2025-07-10", "2025-07-17"));
         assert!(diff_cfp(&a, &a, chrono::Utc::now()).is_empty());
+    }
+
+    #[test]
+    fn quotes_come_before_their_values_in_the_schema() {
+        let s = serde_json::to_string(&schemars::schema_for!(CfpExtraction)).unwrap();
+        assert!(s.find("submission_deadline_quote").unwrap() < s.find("\"submission_deadline\"").unwrap(), "{s}");
+        assert!(s.find("notification_quote").unwrap() < s.find("\"notification\"").unwrap());
+        let v = serde_json::to_string(&schemars::schema_for!(VolunteerExtraction)).unwrap();
+        assert!(v.find("application_deadline_quote").unwrap() < v.find("\"application_deadline\"").unwrap());
+        assert!(v.find("page_is_about_conference").unwrap() < v.find("has_volunteer_program").unwrap());
     }
 
     #[test]

@@ -16,7 +16,7 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 /// volunteer programme; they are skipped without a model call.
 pub const MIN_PAGE_CHARS: usize = 400;
 
-pub const SYSTEM_PROMPT: &str = "You extract information from conference web pages. Only use facts stated on the page; use null when something is not stated. Dates must be written as YYYY-MM-DD.";
+pub const SYSTEM_PROMPT: &str = "You extract information from conference web pages. Use only facts stated on the page you are given. Never invent, guess or infer a date: every date you report must be written on the page, and you quote the words it comes from before converting it to YYYY-MM-DD. When something is not stated, answer null.";
 
 const GUESS_PROMPT: &str = "You know the websites of academic conferences and how their URLs are usually formed from the conference name and year. Suggest plausible URLs; they will be checked.";
 
@@ -87,6 +87,14 @@ pub struct Trail {
 }
 
 impl Trail {
+    /// Already fetched (or rejected) in this attempt.
+    fn tried(&self, url: &str) -> bool {
+        self.visited.contains(url.trim_end_matches('/'))
+    }
+    /// Remember a URL as tried without fetching it (e.g. a pick that failed).
+    fn mark_tried(&mut self, url: &str) {
+        self.visited.insert(url.trim_end_matches('/').to_string());
+    }
     fn code(&mut self, c: Code) {
         if !self.codes.contains(&c) {
             self.codes.push(c);
@@ -256,6 +264,7 @@ fn choose(ctx: &Ctx, trail: &mut Trail, question: &str, list: &str, n: usize) ->
 
 /// Candidate hits in the order to try: the model's pick first, then the rest.
 fn ordered_hits(ctx: &Ctx, trail: &mut Trail, hits: Vec<Hit>, what: &str) -> Result<Vec<Hit>> {
+    let hits: Vec<Hit> = hits.into_iter().filter(|h| !trail.tried(&h.url)).collect();
     if hits.len() <= 1 {
         return Ok(hits);
     }
@@ -290,7 +299,7 @@ fn pick_link(ctx: &Ctx, trail: &mut Trail, links: &[(String, String)], what: &st
     // Links from another host first: a submission system or a form lives
     // elsewhere more often than not, and this page's own navigation is noise.
     let host = links.first().and_then(|(_, u)| url::Url::parse(u).ok()).and_then(|u| u.host_str().map(String::from));
-    let mut ranked: Vec<&(String, String)> = links.iter().collect();
+    let mut ranked: Vec<&(String, String)> = links.iter().filter(|(_, u)| !trail.tried(u)).collect();
     ranked.sort_by_key(|(_, u)| host.as_deref().is_some_and(|h| u.contains(h)));
     let shown: Vec<&(String, String)> = ranked.into_iter().take(MAX_LINKS).collect();
     let list = numbered(shown.iter().map(|(t, u)| (t.as_str(), u.as_str(), "")));
@@ -344,7 +353,9 @@ const LINK_WORDS: &[&str] = &["call for papers", "cfp", "dates", "deadline", "su
 fn follow_link(ctx: &Ctx, trail: &mut Trail, html: &str, url: &str, what: &str, names: &[&str]) -> Result<Option<String>> {
     let mut kws: Vec<&str> = names.to_vec();
     kws.extend_from_slice(LINK_WORDS);
-    let links = candidate_links(html, url, &kws);
+    // Links already tried in this attempt are not offered again: the model
+    // would otherwise keep picking the same one.
+    let links: Vec<(String, String)> = candidate_links(html, url, &kws).into_iter().filter(|(_, u)| !trail.tried(u)).collect();
     if links.is_empty() {
         return Ok(None);
     }
@@ -472,13 +483,20 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
         return Ok(None);
     }
     let what = format!("the call for papers or important dates of the {} track of {} {year}", cfg.track, cfg.conference);
-    match follow_link(ctx, trail, &page.html, &page.url, &what, &[&cfg.track, &cfg.conference])? {
-        Some(next) if next != page.url => {
-            trail.note(format!("following link {next}"));
-            try_cfp_page(ctx, cfg, year, trail, &next, hops + 1, saw_invalid, acc)
+    // Up to two picks per page: a failed pick is excluded from the second.
+    for _ in 0..2 {
+        match follow_link(ctx, trail, &page.html, &page.url, &what, &[&cfg.track, &cfg.conference])? {
+            Some(next) if !trail.tried(&next) => {
+                trail.note(format!("following link {next}"));
+                if let Some(found) = try_cfp_page(ctx, cfg, year, trail, &next, hops + 1, saw_invalid, acc)? {
+                    return Ok(Some(found));
+                }
+                trail.mark_tried(&next);
+            }
+            _ => break,
         }
-        _ => Ok(None),
     }
+    Ok(None)
 }
 
 /// Find (or re-validate) the call for papers: conference dates and paper
@@ -581,13 +599,19 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         return Ok(None);
     }
     let what = format!("the page explaining how students apply to be student volunteers at {} {year}", cfg.conference);
-    match follow_link(ctx, trail, &page.html, &page.url, &what, &["volunteer"])? {
-        Some(next) if next != page.url => {
-            trail.note(format!("following link {next}"));
-            try_volunteer_page(ctx, cfg, year, trail, &next, hops + 1, saw, conference_end)
+    for _ in 0..2 {
+        match follow_link(ctx, trail, &page.html, &page.url, &what, &["volunteer"])? {
+            Some(next) if !trail.tried(&next) => {
+                trail.note(format!("following link {next}"));
+                if let Some(found) = try_volunteer_page(ctx, cfg, year, trail, &next, hops + 1, saw, conference_end)? {
+                    return Ok(Some(found));
+                }
+                trail.mark_tried(&next);
+            }
+            _ => break,
         }
-        _ => Ok(None),
     }
+    Ok(None)
 }
 
 /// `known_url` is the volunteers page the stored data came from (tried
@@ -609,7 +633,11 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
         trail.query = format!("links of {h}");
         if let Some(page) = fetch_page(&mut trail, h) {
             let what = format!("the page explaining how students apply to be student volunteers at {} {year}", cfg.conference);
-            if let Some(next) = follow_link(ctx, &mut trail, &page.html, &page.url, &what, &["volunteer"])? {
+            for _ in 0..2 {
+                let Some(next) = follow_link(ctx, &mut trail, &page.html, &page.url, &what, &["volunteer"])? else { break };
+                if trail.tried(&next) {
+                    break;
+                }
                 trail.note(format!("trying volunteer link {next} from the conference page"));
                 if let Some(found) = try_volunteer_page(ctx, cfg, year, &mut trail, &next, 0, &mut saw, conference_end)? {
                     return Ok(Attempted { result: Ok(found), trail });
@@ -618,6 +646,7 @@ pub fn find_volunteer(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Opti
                     let miss = if saw.1 { Miss::Invalid } else { Miss::NoProgram };
                     return Ok(Attempted { result: Err(miss), trail });
                 }
+                trail.mark_tried(&next);
             }
         }
     }
