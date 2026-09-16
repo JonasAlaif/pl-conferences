@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T16:26:54.983052648Z",
-  "run_count": 11,
+  "last_run": "2026-09-16T17:32:29.241905410Z",
+  "run_count": 12,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -22,15 +22,15 @@
       "note": "trying volunteer link https://submissions.floc26.org/cav/ from the conference page; fetch https://submissions.floc26.org/cav/ failed: GET https://submissions.floc26.org/cav/: HTTP 403 Forbidden; https://taoscav.org/volunteer is not about CAV 2026; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
     },
     "CAV/CAV/2027/cfp": {
-      "last_attempt": "2026-09-16T15:50:05.532168501Z",
-      "attempts": 3,
+      "last_attempt": "2026-09-16T17:32:24.194007163Z",
+      "attempts": 4,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [
         "E005"
       ],
-      "note": "re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; model says none of the links is the submission system where authors upload their papers for CAV 2027 (CAV track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; round 1 notification is given but notification_quote is null; quote the page or set notification to null"
     },
     "CAV/CAV/2027/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",
@@ -51,13 +51,13 @@
       "note": ""
     },
     "ETAPS/ESOP/2027/cfp": {
-      "last_attempt": "2026-09-16T15:50:16.506999857Z",
-      "attempts": 2,
+      "last_attempt": "2026-09-16T17:32:13.461269179Z",
+      "attempts": 3,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://etaps.org/2027/cfp/; submission link https://etaps.org/2027/esop from the page text is on the conference site itself; dropped; model says none of the links is the submission system where authors upload their papers for ETAPS 2027 (ESOP track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://etaps.org/2027/cfp/"
     },
     "ETAPS/ESOP/2027/volunteer": {
       "last_attempt": "2026-09-16T06:40:38.988415449Z",
@@ -89,13 +89,13 @@
       "note": "trying volunteer link https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers from the conference page"
     },
     "ICFP/ICFP/2027/cfp": {
-      "last_attempt": "2026-09-16T15:49:49.020031372Z",
-      "attempts": 2,
+      "last_attempt": "2026-09-16T17:31:53.335539012Z",
+      "attempts": 3,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://icfp27.sigplan.org/; submission link https://icfp27.sigplan.org/ from the page text is this very page; dropped; model picked link http://yellowgrass.org/roadmap/conf.researchr.org as the submission system where authors upload their papers for ICFP 2027 (ICFP track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://icfp27.sigplan.org/"
     },
     "ICFP/ICFP/2027/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",
@@ -143,13 +143,13 @@
       "note": "trying volunteer link https://pldi26.sigplan.org/track/pldi-2026-student-volunteering from the conference page"
     },
     "PLDI/PLDI/2027/cfp": {
-      "last_attempt": "2026-09-16T15:49:51.354594228Z",
-      "attempts": 3,
+      "last_attempt": "2026-09-16T17:32:29.241905410Z",
+      "attempts": 4,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://pldi27.sigplan.org/; submission link https://pldi27.sigplan.org/ from the page text is this very page; dropped; model picked link http://yellowgrass.org/roadmap/conf.researchr.org as the submission system where authors upload their papers for PLDI 2027 (PLDI track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://pldi27.sigplan.org/"
     },
     "PLDI/PLDI/2027/volunteer": {
       "last_attempt": "2026-09-16T02:37:10.270527567Z",
@@ -181,13 +181,13 @@
       "note": "trying volunteer link https://popl26.sigplan.org/track/POPL-2026-student-volunteers from the conference page"
     },
     "POPL/POPL/2027/cfp": {
-      "last_attempt": "2026-09-16T15:49:49.608577029Z",
-      "attempts": 2,
+      "last_attempt": "2026-09-16T17:32:26.336655067Z",
+      "attempts": 3,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://popl27.sigplan.org/dates; model says none of the links is the submission system where authors upload their papers for POPL 2027 (POPL track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://popl27.sigplan.org/dates"
     },
     "POPL/POPL/2027/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",
@@ -199,13 +199,13 @@
       "note": "trying volunteer link https://popl27.sigplan.org/committee/POPL-2027-student-volunteers from the conference page; following link https://conf.researchr.org/signin/POPL-2027/https%3A%5Es%5Espopl27.sigplan.org%5Escommittee%5EsPOPL-2027-student-volunteers; following link https://popl27.sigplan.org/signup; following link https://popl27.sigplan.org/track/POPL-2027-student-research-competition; following link https://popl27.sigplan.org/support; https://popl27.sigplan.org/support is not about POPL 2027; trying volunteer link https://popl27.sigplan.org/home/PLMW-POPL-2027 from the conference page; page budget of 6 used up; not fetching https://popl27.sigplan.org/home/PLMW-POPL-2027; page budget of 6 used up; not fetching https://popl26.sigplan.org/track/POPL-2026-student-volunteers; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; page budget of 6 used up; not fetching https://popl27.sigplan.org/people-index"
     },
     "SPLASH/OOPSLA/2026/cfp": {
-      "last_attempt": "2026-09-16T15:49:49.675937057Z",
-      "attempts": 4,
+      "last_attempt": "2026-09-16T17:31:52.560838284Z",
+      "attempts": 5,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://2026.splashcon.org/track/oopsla-2026; submission link https://oopsla26.hotcrp.com/ from the page text is the front page of a website; dropped; model picked link https://conf.researchr.org/signin/splash-2026/https%3A%5Es%5Es2026.splashcon.org%5Estrack%5Esoopsla-2026 as the submission system where authors upload their papers for SPLASH 2026 (OOPSLA track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://2026.splashcon.org/track/oopsla-2026"
     },
     "SPLASH/OOPSLA/2026/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",
@@ -217,13 +217,13 @@
       "note": "trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page; model picked link https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee as the application form or sign-up page where students apply to be student volunteers at SPLASH 2026; not a general information page"
     },
     "SPLASH/OOPSLA/2027/cfp": {
-      "last_attempt": "2026-09-16T15:49:49.675937057Z",
-      "attempts": 3,
+      "last_attempt": "2026-09-16T17:31:52.560838284Z",
+      "attempts": 4,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027; submission link https://oopsla27.hotcrp.com/ from the page text is the front page of a website; dropped; model picked link https://torontopapermatching.org/webapp/profileBrowser/about_us/ as the submission system where authors upload their papers for SPLASH 2027 (OOPSLA track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027"
     },
     "SPLASH/OOPSLA/2027/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",
