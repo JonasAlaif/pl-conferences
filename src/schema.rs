@@ -42,7 +42,7 @@ pub struct CfpExtraction {
     /// The conference itself: when and where it takes place.
     #[schemars(required)]
     pub conference: Option<ConferenceInfo>,
-    /// One entry per deadline for submitting NEW papers to this track. Most conferences have exactly one. A multi-stage review process (reviews, author response, revision, final decision) is still one round, not several.
+    /// One entry per deadline for submitting NEW papers to this track, earliest first. Most conferences have exactly one; some have "Round 1", "Round 2", ... and then every round is listed. A multi-stage review process (reviews, author response, revision, final decision) is still one round, not several.
     pub rounds: Vec<Round>,
     /// A few sentences for authors: how and where to submit, page limit, review process, anonymisation, anything an author must know before submitting.
     pub submission_details: String,
@@ -384,6 +384,15 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str) -> Result<Cfp, Vec
         }
         Some(Conference { start, end, city: clean_opt(&c.city), country: clean_opt(&c.country) })
     });
+    // A single round labelled as the first of several is a contradiction:
+    // either the other rounds are on the page too, or the label is wrong.
+    if has_rounds && x.rounds.len() == 1 {
+        let label = x.rounds[0].label.to_lowercase();
+        let looks_first = ["round 1", "round one", "r1", "first round", "1st round"].iter().any(|p| label.contains(p));
+        if looks_first && !page.is_empty() {
+            errs.push(format!("the only round is labelled {:?}: if the page also states a Round 2 (or later) submission deadline for this track, add every round; if there is only one submission deadline, leave the label empty", x.rounds[0].label));
+        }
+    }
     let mut rounds = vec![];
     for (i, r) in x.rounds.iter().enumerate().take(if has_rounds { usize::MAX } else { 0 }) {
         let what = format!("round {}", i + 1);
@@ -512,6 +521,7 @@ mod tests {
             page_is_about_conference: true,
             has_submission_deadline: true,
             conference: Some(ConferenceInfo { start_date: "2026-01-11".into(), end_date: "2026-01-17".into(), city: Some("Rennes".into()), country: Some("France".into()) }),
+
             rounds: vec![round("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some("2025-11-06"))],
             submission_details: "Submit via HotCRP.".into(),
             submission_url: Some("https://popl26.hotcrp.com".into()),
@@ -574,6 +584,17 @@ mod tests {
         assert!(deadlines_active(dl.as_ref(), d("2025-09-11")) && !deadlines_active(dl.as_ref(), d("2025-09-12")));
         assert!(conference_active(conf, d("2026-01-17")) && !conference_active(conf, d("2026-01-18")));
         assert!(conference_active(None, d("2030-01-01")) && deadlines_active(None, d("2030-01-01")));
+    }
+
+    #[test]
+    fn lone_round_labelled_first_is_rejected() {
+        let page = "Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
+        let mut x = ok_extraction();
+        x.rounds[0].label = "Round 1".into();
+        let errs = validate_cfp(&x, 2026, page).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("the only round is labelled")), "{errs:?}");
+        x.rounds[0].label = String::new();
+        assert!(validate_cfp(&x, 2026, page).is_ok());
     }
 
     #[test]
