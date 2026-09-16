@@ -124,7 +124,7 @@ size, `PLC_SEARCH_GAP` for the seconds between search-engine requests,
 `PLC_NO_SEARCH=1` to exercise the no-search-engine fallbacks (URLs derived
 from earlier editions, then model guesses, then link-following) and
 `PLC_NUM_GPU=0` to force CPU inference locally. Each run attempts at most
-`PLC_MAX_ITEMS` (default 5) conference-years, current year first, and stops
+`PLC_MAX_ITEMS` (the workflow sets 3) conference-years, current year first, and stops
 starting new ones after `PLC_TIME_BUDGET_MIN` (default 75) minutes; the rest
 wait for the next weekly run. This keeps every run far from the job timeout
 and lets a backlog (a new conference in `conferences.json`, a new year) drain
@@ -133,9 +133,10 @@ over a few weeks.
 Resources: the 4B model at a 16K context takes about 4 GB of RAM on CPU
 (`ollama ps`), so it fits the 16 GB of a public-repository GitHub runner. That
 runner processes prompts at roughly 30 tokens/s and generates at 7 tokens/s,
-so a call-for-papers page (7-9K tokens after cleaning) costs 4-5 minutes and a
-whole conference-year (search, page, link choices, volunteer pass) about 10
-minutes; hence the small batches.
+so a call-for-papers page (7-9K tokens after cleaning) costs 4-7 minutes and a
+whole conference-year (search, page, link choices, volunteer pass) 10-15
+minutes; hence batches of three, twice a week (about 40 minutes per run,
+against a 150-minute job timeout).
 `PLC_THINK=1` enables the model's built-in reasoning; it is off by default
 because on CPU the 4B model thinks for minutes per page and the harness showed
 no accuracy gain on the call-for-papers pages (see `tests/live.rs`).

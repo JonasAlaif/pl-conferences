@@ -92,6 +92,9 @@ jobs:
       - name: Start Ollama and pull model
         run: |
           set -e
+          # Flash attention + 8-bit KV cache: the CPU runner showed the
+          # llama-server process at ~10 GB RSS for a 3.6 GB model at 16K context.
+          export OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           for i in $(seq 1 60); do curl -fs http://localhost:11434/api/tags >/dev/null && break; sleep 1; done
           curl -fs http://localhost:11434/api/tags >/dev/null || { cat /tmp/ollama.log; exit 1; }
@@ -134,7 +137,7 @@ jobs:
         env:
           PLC_MODEL: ${{ env.MODEL }}
           PLC_TIME_BUDGET_MIN: "75"
-          PLC_MAX_ITEMS: "4"
+          PLC_MAX_ITEMS: "3"
           RUST_LOG: info
           ONLY_CONFERENCE: ${{ inputs.conference }}
           DRY_RUN: ${{ inputs.dry_run }}
