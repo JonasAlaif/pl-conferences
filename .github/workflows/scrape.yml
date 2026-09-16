@@ -94,9 +94,11 @@ jobs:
       - name: Start Ollama and pull model
         run: |
           set -e
-          # Flash attention + 8-bit KV cache: the CPU runner showed the
-          # llama-server process at ~10 GB RSS for a 3.6 GB model at 16K context.
-          export OLLAMA_FLASH_ATTENTION=1 OLLAMA_KV_CACHE_TYPE=q8_0
+          # Flash attention (exact): the CPU runner showed the llama-server
+          # process at ~10 GB RSS for a 3.6 GB model at 16K context without it.
+          # The 8-bit KV cache was tried too and cost one harness page (9/10
+          # vs 10/10), so the cache stays at full precision.
+          export OLLAMA_FLASH_ATTENTION=1
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           for i in $(seq 1 60); do curl -fs http://localhost:11434/api/tags >/dev/null && break; sleep 1; done
           curl -fs http://localhost:11434/api/tags >/dev/null || { cat /tmp/ollama.log; exit 1; }
