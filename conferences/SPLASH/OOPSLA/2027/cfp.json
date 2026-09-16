@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "SPLASH 2027 (OOPSLA)",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T15:49:49.675937057Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://conf.researchr.org/track/splash-2027/splashoopsla2027",
@@ -35,7 +35,7 @@
       }
     ],
     "submission_details": "Please submit using HotCRP: https://oopsla27.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to a maximum of 25 pages. PACMPL uses double-blind reviewing. At least one author must be registered as a Reserve Reviewer. Papers rejected in Round 1 cannot be resubmitted in Round 2.",
-    "submission_url": "https://oopsla27.hotcrp.com/"
+    "submission_url": "https://torontopapermatching.org/webapp/profileBrowser/about_us/"
   },
   "history": [],
   "raw": {

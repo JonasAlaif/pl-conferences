@@ -450,11 +450,10 @@ DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
  t might identify them. If authors do not obey the double-blind submission
   policy or do not specify their conflicts of interest in the submission s
  ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
- d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://etaps.
- org/2027/esop\n\nNote: the page also states "ESOP–round 1 May 28".\n\nE
- xtracted automatically by a small language model\; please cross-check aga
- inst the source before relying on it: https://etaps.org/2027/cfp/\nhttps:
- //github.com/JonasAlaif/pl-conferences
+ d FoSSaCS will use an author rebuttal phase.\n\nExtracted automatically b
+ y a small language model\; please cross-check against the source before r
+ elying on it: https://etaps.org/2027/cfp/\nhttps://github.com/JonasAlaif/
+ pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
@@ -628,11 +627,11 @@ DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
  ial submissions must be at most 23 pages\; revisions can go up to a maxim
  um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
  ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
- t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
- \nExtracted automatically by a small language model\; please cross-check 
- against the source before relying on it: https://conf.researchr.org/track
- /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
- es
+ t be resubmitted in Round 2.\n\nSubmit at: https://torontopapermatching.o
+ rg/webapp/profileBrowser/about_us/\n\nExtracted automatically by a small 
+ language model\; please cross-check against the source before relying on 
+ it: https://conf.researchr.org/track/splash-2027/splashoopsla2027\nhttps:
+ //github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
@@ -660,11 +659,10 @@ DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
  t might identify them. If authors do not obey the double-blind submission
   policy or do not specify their conflicts of interest in the submission s
  ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
- d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://etaps.
- org/2027/esop\n\nNote: the page also states "ESOP–round 2 Oct 15".\n\nE
- xtracted automatically by a small language model\; please cross-check aga
- inst the source before relying on it: https://etaps.org/2027/cfp/\nhttps:
- //github.com/JonasAlaif/pl-conferences
+ d FoSSaCS will use an author rebuttal phase.\n\nExtracted automatically b
+ y a small language model\; please cross-check against the source before r
+ elying on it: https://etaps.org/2027/cfp/\nhttps://github.com/JonasAlaif/
+ pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
@@ -672,9 +670,10 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
 SUMMARY:[PLDI 2027] Paper Submission Deadline
-DESCRIPTION:null\n\nExtracted automatically by a small language model\; pl
- ease cross-check against the source before relying on it: https://pldi27.
- sigplan.org/\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:null\n\nSubmit at: http://yellowgrass.org/roadmap/conf.researc
+ hr.org\n\nExtracted automatically by a small language model\; please cros
+ s-check against the source before relying on it: https://pldi27.sigplan.o
+ rg/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:15238fe288a9d767157a685f0ff6e69de0fa097e@pl-conferences
@@ -756,11 +755,12 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270225
 DTEND;VALUE=DATE:20270226
 SUMMARY:[ICFP 2027] Paper Submission Deadline
-DESCRIPTION:ICFP Papers\n\nNote: the page also states "up till Thu 1 Jul 2
- 027".\n\nExtracted automatically by a small language model\; please cross
- -check against the source before relying on it: https://icfp27.sigplan.or
- g/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conferences/
- blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:ICFP Papers\n\nSubmit at: http://yellowgrass.org/roadmap/conf.
+ researchr.org\n\nExtracted automatically by a small language model\; plea
+ se cross-check against the source before relying on it: https://icfp27.si
+ gplan.org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conf
+ erences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confer
+ ences
 END:VEVENT
 BEGIN:VEVENT
 UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences
@@ -793,11 +793,11 @@ DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
  ial submissions must be at most 23 pages\; revisions can go up to a maxim
  um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
  ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
- t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
- \nExtracted automatically by a small language model\; please cross-check 
- against the source before relying on it: https://conf.researchr.org/track
- /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
- es
+ t be resubmitted in Round 2.\n\nSubmit at: https://torontopapermatching.o
+ rg/webapp/profileBrowser/about_us/\n\nExtracted automatically by a small 
+ language model\; please cross-check against the source before relying on 
+ it: https://conf.researchr.org/track/splash-2027/splashoopsla2027\nhttps:
+ //github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:2eb8703604c0f51c968c5e4ddbc86dd46ee2c6f1@pl-conferences
@@ -851,7 +851,7 @@ SUMMARY:[PLDI 2027] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
  org/\nhttps://github.com/JonasAlaif/pl-conferences
-LOCATION:Atlanta\, United States
+LOCATION:Atlanta\, Georgia\, United States
 END:VEVENT
 BEGIN:VEVENT
 UID:28dccef44623a30c949cc8c27e64162a99e8ad71@pl-conferences
@@ -863,6 +863,19 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
  org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
  conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
+DTSTAMP:20260916T155005Z
+DTSTART;VALUE=DATE:20270719
+DTEND;VALUE=DATE:20270724
+SUMMARY:[CAV 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nMaintenance: E005 - see https://github.com/JonasAlaif/pl-co
+ nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
+ erences
+LOCATION:Amsterdam\, The Netherlands
 END:VEVENT
 BEGIN:VEVENT
 UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences

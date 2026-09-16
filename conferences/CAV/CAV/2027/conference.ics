@@ -1,0 +1,21 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CAV 2027 conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
+DTSTAMP:20260916T155005Z
+DTSTART;VALUE=DATE:20270719
+DTEND;VALUE=DATE:20270724
+SUMMARY:[CAV 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nMaintenance: E005 - see https://github.com/JonasAlaif/pl-co
+ nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
+ erences
+LOCATION:Amsterdam\, The Netherlands
+END:VEVENT
+END:VCALENDAR

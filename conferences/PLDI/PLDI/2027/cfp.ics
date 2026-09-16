@@ -11,9 +11,10 @@ DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
 SUMMARY:[PLDI 2027] Paper Submission Deadline
-DESCRIPTION:null\n\nExtracted automatically by a small language model\; pl
- ease cross-check against the source before relying on it: https://pldi27.
- sigplan.org/\nhttps://github.com/JonasAlaif/pl-conferences
+DESCRIPTION:null\n\nSubmit at: http://yellowgrass.org/roadmap/conf.researc
+ hr.org\n\nExtracted automatically by a small language model\; please cros
+ s-check against the source before relying on it: https://pldi27.sigplan.o
+ rg/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences

@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "ICFP 2027",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T15:49:49.020031372Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://icfp27.sigplan.org/",
@@ -22,14 +22,14 @@
       {
         "label": "",
         "submission": "2027-02-25",
-        "submission_conflict": "up till Thu 1 Jul 2027",
+        "submission_conflict": null,
         "response_start": "2027-04-19",
         "response_end": "2027-04-22",
         "notification": "2027-05-07"
       }
     ],
     "submission_details": "ICFP Papers",
-    "submission_url": null
+    "submission_url": "http://yellowgrass.org/roadmap/conf.researchr.org"
   },
   "history": [],
   "raw": {

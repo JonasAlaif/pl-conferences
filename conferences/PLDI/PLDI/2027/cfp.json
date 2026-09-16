@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "PLDI 2027",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T15:49:51.354594228Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://pldi27.sigplan.org/",
@@ -27,7 +27,7 @@
       }
     ],
     "submission_details": "null",
-    "submission_url": null
+    "submission_url": "http://yellowgrass.org/roadmap/conf.researchr.org"
   },
   "history": [
     {
