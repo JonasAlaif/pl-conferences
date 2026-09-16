@@ -3,7 +3,7 @@
 //! run into `docs/`; no JavaScript, no external assets.
 
 use crate::schema::{Conference, Deadlines, Stage, Volunteer};
-use chrono::{DateTime, NaiveDate, Utc};
+use chrono::{DateTime, Datelike, NaiveDate, Utc};
 
 pub const PAGES_URL: &str = "https://jonasalaif.github.io/pl-conferences";
 pub const REPO_URL: &str = "https://github.com/JonasAlaif/pl-conferences";
@@ -43,6 +43,40 @@ fn stage_class(s: Stage) -> &'static str {
         Stage::DeadlinesAvailable => "open",
         Stage::PostRebuttal => "closed",
         Stage::Happened => "past",
+    }
+}
+
+/// Every dated event of an edition.
+fn all_dates(y: &YearView) -> Vec<NaiveDate> {
+    let mut v = vec![];
+    if let Some((d, _)) = &y.deadlines {
+        for r in &d.rounds {
+            v.push(r.submission);
+            v.extend(r.response_start);
+            v.extend(r.notification);
+        }
+    }
+    if let Some((c, _)) = &y.conference {
+        v.push(c.start);
+        v.push(c.end);
+    }
+    if let Some((vol, _)) = &y.volunteer {
+        v.push(vol.deadline);
+    }
+    v
+}
+
+/// Reading order: editions with something coming up, soonest first; then
+/// editions announced without dates yet; then past editions, most recent
+/// first. Ties break on the label.
+fn sort_key(y: &YearView, today: NaiveDate) -> (u8, i64, String) {
+    let dates = all_dates(y);
+    let next = dates.iter().filter(|d| **d >= today).min();
+    let last = dates.iter().max();
+    match (next, last) {
+        (Some(n), _) => (0, n.num_days_from_ce() as i64, y.label.clone()),
+        (None, None) => (1, 0, y.label.clone()),
+        (None, Some(l)) => (2, -(l.num_days_from_ce() as i64), y.label.clone()),
     }
 }
 
@@ -100,9 +134,9 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
 
     // Conferences
     h.push_str("<h2>Conferences</h2>\n<div class=\"wrap\"><table>\n<tr><th>Conference</th><th>Status</th><th>Paper deadlines</th><th>Conference</th><th>Volunteers</th><th>Links</th></tr>\n");
+    let today = generated.date_naive();
     let mut sorted: Vec<&YearView> = years.iter().collect();
-    // Active editions first, then by label.
-    sorted.sort_by_key(|y| (!y.stage.active(), y.label.clone()));
+    sorted.sort_by_key(|y| sort_key(y, today));
     for y in sorted {
         let deadlines = match &y.deadlines {
             Some((d, _)) => d.rounds.iter().enumerate().map(|(i, r)| {
@@ -197,5 +231,29 @@ mod tests {
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
         assert!(html.contains("all.ics") && html.contains("deadlines available"));
+    }
+
+    #[test]
+    fn editions_are_ordered_by_next_date_then_unknown_then_past() {
+        let d = |y, m, dd| NaiveDate::from_ymd_opt(y, m, dd).unwrap();
+        let today = d(2026, 9, 16);
+        let mk = |label: &str, conf: Option<(NaiveDate, NaiveDate)>| YearView {
+            key: label.into(),
+            label: label.into(),
+            stage: Stage::Future,
+            conference: conf.map(|(s, e)| (Conference { start: s, end: e, city: None, country: None }, String::new())),
+            deadlines: None,
+            volunteer: None,
+            last_verified: None,
+        };
+        let later = mk("B later", Some((d(2027, 6, 1), d(2027, 6, 5))));
+        let soon = mk("C soon", Some((d(2026, 10, 4), d(2026, 10, 9))));
+        let unknown = mk("A unknown", None);
+        let past_old = mk("D old", Some((d(2026, 1, 11), d(2026, 1, 17))));
+        let past_recent = mk("E recent", Some((d(2026, 7, 26), d(2026, 7, 29))));
+        let mut v = vec![&later, &past_old, &unknown, &soon, &past_recent];
+        v.sort_by_key(|y| sort_key(y, today));
+        let order: Vec<&str> = v.iter().map(|y| y.label.as_str()).collect();
+        assert_eq!(order, vec!["C soon", "B later", "A unknown", "E recent", "D old"]);
     }
 }
