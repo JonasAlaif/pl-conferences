@@ -800,8 +800,15 @@ pub fn validate_volunteer_links(x: &VolunteerExtraction, year: i32, page: &str, 
     }
     if errs.is_empty() {
         let (quote, written) = (x.application_deadline_quote.as_deref().unwrap_or(""), x.application_deadline_as_written.as_deref().unwrap_or(""));
+        // The words pointing to the form ("Apply here by July 12") are a
+        // conflicting statement too when they give a different day than
+        // the deadline read from a sidebar ("Sun 19 Jul 2026").
         let conflict = conflict_or_quote(&x.application_deadline_conflict, quote, written);
-        let deadline_conflict = real_conflict(&conflict, quote, "", written, page, "");
+        let deadline_conflict = real_conflict(&conflict, quote, "", written, page, "").or_else(|| {
+            let form_words = x.application_quote.as_deref().unwrap_or("");
+            let c = conflict_or_quote(&None, form_words, written);
+            real_conflict(&c, form_words, "", written, page, "")
+        });
         Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_link(&x.application_quote, &x.application_url, page, links) }))
     } else {
         Err(errs)
@@ -1062,6 +1069,16 @@ mod tests {
         let mut z = x.clone();
         z.page_is_about_conference = false;
         assert!(validate_volunteer(&z, 2026, page, None).is_err());
+        // The words pointing to the form give another day than the sidebar
+        // deadline: they are the conflicting statement, and the form is
+        // resolved from the anchor inside them.
+        let page = "Applications are open: Apply here by September 9.\n\nImportant Dates\nWed 16 Sep 2026\nApplication deadline";
+        let mut w = x.clone();
+        w.application_quote = Some("Apply here by September 9".into());
+        let links = vec![("here".to_string(), "https://forms.example.org/sv".to_string())];
+        let v = validate_volunteer_links(&w, 2026, page, None, &links).unwrap().unwrap();
+        assert_eq!(v.deadline_conflict.as_deref(), Some("Apply here by September 9"));
+        assert_eq!(v.application_url.as_deref(), Some("https://forms.example.org/sv"));
     }
 
     #[test]

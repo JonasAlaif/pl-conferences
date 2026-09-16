@@ -274,6 +274,160 @@ fn volunteer_accuracy() {
     assert_eq!(passed, total);
 }
 
+/// One recorded multi-page situation per finding of the full verification
+/// of the stored data (September 2026), run through the production
+/// discovery code (`find_cfp` / `find_volunteer`) with fetching served from
+/// tests/fixtures/pages/map.json and no search engine: what the runner does
+/// on re-validation, offline.
+struct Scenario {
+    name: &'static str,
+    conference: &'static str,
+    track: &'static str,
+    year: i32,
+    /// The page the run starts from (the stored source URL).
+    known_url: &'static str,
+    /// Expected submission site (None: there must be none).
+    submission_url: Option<&'static str>,
+    /// Expected first-round submission deadline (None: no deadlines expected).
+    submission: Option<&'static str>,
+    /// Expected first-round notification, when it matters.
+    notification: Option<&'static str>,
+    /// Expected conference dates and city.
+    dates: Option<(&'static str, &'static str, &'static str)>,
+}
+
+fn scenarios() -> Vec<Scenario> {
+    vec![
+        // The home page's sidebar states the deadlines but not the submission
+        // site; the track page one link away names it. The site must be
+        // borrowed, the deadlines kept.
+        Scenario { name: "icfp27: site from the track page", conference: "ICFP", track: "ICFP", year: 2027, known_url: "https://icfp27.sigplan.org/", submission_url: Some("https://icfp27.hotcrp.com"), submission: Some("2027-02-25"), notification: Some("2027-05-07"), dates: Some(("2027-09-26", "2027-10-01", "Nijmegen")) },
+        // A dates table with rows for every co-located event; the workshops
+        // row is not the POPL deadline nor a conflict; the site is on the
+        // track page; the notification is the first decision (5 Oct), not the
+        // final acceptance (9 Nov).
+        Scenario { name: "popl27: dates table, site from the track page", conference: "POPL", track: "POPL", year: 2027, known_url: "https://popl27.sigplan.org/dates", submission_url: Some("https://popl27.hotcrp.com"), submission: Some("2026-07-09"), notification: Some("2026-10-05"), dates: Some(("2027-01-10", "2027-01-16", "Mexico City")) },
+        // The joint call states ESOP's two rounds and no site; the ESOP page
+        // says "The papers can be submitted here" with the site behind "here",
+        // which it also links as a "Submit paper" button: both anchors count.
+        Scenario { name: "etaps27: site behind 'here' on the ESOP page", conference: "ETAPS", track: "ESOP", year: 2027, known_url: "https://etaps.org/2027/cfp/", submission_url: Some("https://esop27.hotcrp.com"), submission: Some("2026-05-28"), notification: Some("2026-08-06"), dates: Some(("2027-04-12", "2027-04-15", "Copenhagen")) },
+        // The series home page is not LICS 2027's page but says "LICS 2027
+        // will be held in Montreal" and links to it: its links must be tried.
+        Scenario { name: "lics27: reached through the series home page", conference: "LICS", track: "LICS", year: 2027, known_url: "https://lics.siglog.org/", submission_url: None, submission: None, notification: None, dates: Some(("2027-06-21", "2027-06-24", "Montreal")) },
+        // Deadlines and dates on the home page, "Full call coming soon" on the
+        // call page: no submission site may be invented.
+        Scenario { name: "cav27: no site published", conference: "CAV", track: "CAV", year: 2027, known_url: "https://conferences.i-cav.org/2027/", submission_url: None, submission: Some("2027-01-20"), notification: Some("2027-04-23"), dates: Some(("2027-07-19", "2027-07-23", "Amsterdam")) },
+        // Site written in the text; two "Author Notification (Round 1)"
+        // entries, the first being the notification.
+        Scenario { name: "splash27: site in the text", conference: "SPLASH", track: "OOPSLA", year: 2027, known_url: "https://conf.researchr.org/track/splash-2027/splashoopsla2027", submission_url: Some("https://oopsla27.hotcrp.com"), submission: Some("2026-10-14"), notification: Some("2026-12-18"), dates: Some(("2027-10-10", "2027-10-15", "Prague")) },
+    ]
+}
+
+#[test]
+#[ignore]
+fn discovery_scenarios() {
+    let map = format!("{}/tests/fixtures/pages/map.json", env!("CARGO_MANIFEST_DIR"));
+    // SAFETY: the live tests are the only code in this process; the
+    // variables are read by the fetcher and the searcher on every call.
+    unsafe {
+        std::env::set_var("PLC_FIXTURE_MAP", &map);
+        std::env::set_var("PLC_NO_SEARCH", "1");
+    }
+    let llm = Llm::from_env();
+    llm.check().expect("ollama with model");
+    let searcher = pl_conferences::search::Searcher::new(vec![]);
+    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![] };
+    let only = std::env::var("PLC_CASE").ok();
+    let (mut total, mut passed) = (0, 0);
+    let d = |s: &str| chrono::NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
+    for s in scenarios() {
+        if only.as_deref().is_some_and(|o| !s.name.contains(o)) {
+            continue;
+        }
+        total += 1;
+        let t = Instant::now();
+        let cfg = pl_conferences::config::ConferenceCfg { conference: s.conference.into(), track: s.track.into(), since: 0 };
+        let att = discover::find_cfp(&ctx, &cfg, s.year, Some(s.known_url)).unwrap();
+        let mut errs = vec![];
+        match &att.result {
+            Ok(found) => {
+                let dl = found.deadlines.as_ref().map(|f| &f.value);
+                match (s.submission, dl) {
+                    (Some(want), Some(dl)) => {
+                        if dl.rounds.first().map(|r| r.submission) != Some(d(want)) {
+                            errs.push(format!("first submission {:?} != {want}", dl.rounds.first().map(|r| r.submission)));
+                        }
+                        if let Some(n) = s.notification {
+                            if dl.rounds.first().and_then(|r| r.notification) != Some(d(n)) {
+                                errs.push(format!("first notification {:?} != {n}", dl.rounds.first().and_then(|r| r.notification)));
+                            }
+                        }
+                        if !same_url(dl.submission_url.as_deref(), s.submission_url) {
+                            errs.push(format!("submission_url {:?} != {:?}", dl.submission_url, s.submission_url));
+                        }
+                    }
+                    (Some(want), None) => errs.push(format!("no deadlines found (expected submission {want})")),
+                    (None, Some(dl)) => errs.push(format!("unexpected deadlines {:?}", dl.rounds.first().map(|r| r.submission))),
+                    (None, None) => {}
+                }
+                let conf = found.conference.as_ref().map(|f| &f.value);
+                match (s.dates, conf) {
+                    (Some((a, b, city)), Some(c)) => {
+                        if (c.start, c.end) != (d(a), d(b)) || !c.city.as_deref().is_some_and(|x| x.contains(city)) {
+                            errs.push(format!("conference {:?} {:?} != {a}..{b} {city}", (c.start, c.end), c.city));
+                        }
+                    }
+                    (Some((a, b, _)), None) => errs.push(format!("no conference dates found (expected {a}..{b})")),
+                    (None, Some(c)) => errs.push(format!("unexpected conference dates {:?}", (c.start, c.end))),
+                    (None, None) => {}
+                }
+            }
+            Err(miss) => errs.push(format!("nothing found: {miss:?}")),
+        }
+        let secs = t.elapsed().as_secs_f64();
+        if errs.is_empty() {
+            passed += 1;
+            eprintln!("PASS {:48} {secs:6.1}s ({} pages, {} llm calls)", s.name, att.trail.pages, att.trail.llm_calls);
+        } else {
+            eprintln!("FAIL {:48} {secs:6.1}s: {}\n     trail: {}", s.name, errs.join("; "), att.trail.note_text());
+        }
+    }
+    // The volunteer finding: the SPLASH 2026 page states "Apply here by
+    // July 12" (form behind "here") and a sidebar deadline of 19 July; the
+    // form must be found and the other date kept as a conflict note.
+    if only.as_deref().is_none_or(|o| "splash26 volunteers".contains(o)) {
+        total += 1;
+        let t = Instant::now();
+        let cfg = pl_conferences::config::ConferenceCfg { conference: "SPLASH".into(), track: "OOPSLA".into(), since: 0 };
+        let att = discover::find_volunteer(&ctx, &cfg, 2026, Some("https://2026.splashcon.org/track/splash-issta-2026-student-volunteers"), None, None, Some("https://2026.splashcon.org")).unwrap();
+        let mut errs = vec![];
+        match &att.result {
+            Ok(found) => {
+                let v = &found.value;
+                if !["2026-07-12", "2026-07-19"].contains(&v.deadline.to_string().as_str()) {
+                    errs.push(format!("deadline {}", v.deadline));
+                }
+                if !same_url(v.application_url.as_deref(), Some("https://tinyurl.com/splash-issta-sv26")) {
+                    errs.push(format!("application_url {:?}", v.application_url));
+                }
+                if v.deadline_conflict.is_none() {
+                    errs.push("no conflict note although the page states two dates".into());
+                }
+            }
+            Err(miss) => errs.push(format!("nothing found: {miss:?}")),
+        }
+        let secs = t.elapsed().as_secs_f64();
+        if errs.is_empty() {
+            passed += 1;
+            eprintln!("PASS {:48} {secs:6.1}s", "splash26 volunteers: form behind 'here', conflict");
+        } else {
+            eprintln!("FAIL {:48} {secs:6.1}s: {}\n     trail: {}", "splash26 volunteers", errs.join("; "), att.trail.note_text());
+        }
+    }
+    eprintln!("=== discovery {passed}/{total} passed, model {}", llm.model);
+    assert_eq!(passed, total);
+}
+
 #[test]
 #[ignore]
 fn extraction_accuracy() {

@@ -28,6 +28,28 @@ static INSECURE_CLIENT: LazyLock<reqwest::blocking::Client> = LazyLock::new(|| {
         .expect("http client")
 });
 
+/// `PLC_FIXTURE_MAP=<json file>`: a map from URL to a recorded HTML file
+/// (paths relative to the map file). With it set, every fetch is served
+/// from the map and any other URL fails, so the discovery code (link
+/// following, borrowing a submission site from a neighbouring page) can be
+/// exercised offline on recorded pages with the real model. See the
+/// discovery scenarios in tests/live.rs.
+static FIXTURES: LazyLock<Option<std::collections::HashMap<String, std::path::PathBuf>>> = LazyLock::new(|| {
+    let path = std::path::PathBuf::from(std::env::var("PLC_FIXTURE_MAP").ok()?);
+    let text = std::fs::read_to_string(&path).ok()?;
+    let map: std::collections::HashMap<String, String> = serde_json::from_str(&text).ok()?;
+    let dir = path.parent().map(std::path::Path::to_path_buf).unwrap_or_default();
+    Some(map.into_iter().map(|(u, f)| (u.trim_end_matches('/').to_string(), dir.join(f))).collect())
+});
+
+fn fixture_page(url: &str) -> Option<Result<Page>> {
+    let map = FIXTURES.as_ref()?;
+    Some(match map.get(url.trim_end_matches('/')) {
+        Some(file) => std::fs::read_to_string(file).map(|html| Page { url: url.to_string(), html, via_chrome: false, insecure_tls: false }).with_context(|| format!("fixture {}", file.display())),
+        None => Err(anyhow!("{url} is not in the fixture map (offline mode)")),
+    })
+}
+
 #[derive(Debug, Clone)]
 pub struct Page {
     /// Final URL after redirects.
@@ -152,6 +174,9 @@ pub fn meta_refresh(html: &str, base: &str) -> Option<String> {
 /// GET a page and, if it looks like an empty JavaScript shell, render it with
 /// headless Chrome when one is installed.
 pub fn get_rendered(url: &str) -> Result<Page> {
+    if let Some(fixture) = fixture_page(url) {
+        return fixture;
+    }
     let page = get(url)?;
     let force = std::env::var("PLC_FORCE_CHROME").is_ok_and(|v| v == "1");
     if !force && !looks_js_only(&page.html) {

@@ -185,9 +185,15 @@ cargo test                                         # offline tests on saved fixt
 cargo test --test live -- --ignored --nocapture    # live accuracy harnesses against a local Ollama
 ```
 
-The live harness has two parts: `extraction_accuracy` (nine saved call-for-papers
-and dates pages with known deadlines) and `volunteer_accuracy` (four volunteer
-pages with known deadlines plus a namesake page that must be rejected).
+The live harness has three parts: `extraction_accuracy` (eleven saved
+call-for-papers and dates pages with known deadlines, submission sites and
+conference dates), `volunteer_accuracy` (four volunteer pages with known
+deadlines and sign-up forms plus a namesake page that must be rejected) and
+`discovery_scenarios` (recorded multi-page situations from a full
+verification of the stored data, run through the production discovery code
+with fetching served from `tests/fixtures/pages/map.json` and no search
+engine: a site named only on a neighbouring page, a rejected page that links
+to the right one, a page that names no site).
 `PLC_RUNS` repeats each case, `PLC_CASE` filters by fixture name. Run it after
 touching the schema, the prompts or the cleaning; a change is kept only if the
 pass count does not drop.

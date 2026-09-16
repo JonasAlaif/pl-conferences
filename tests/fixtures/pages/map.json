@@ -1,0 +1,15 @@
+{
+  "https://icfp27.sigplan.org/": "icfp27-home.html",
+  "https://icfp27.sigplan.org/track/icfp-2027-icfp-papers": "icfp27-track.html",
+  "https://popl27.sigplan.org/dates": "popl27-dates.html",
+  "https://popl27.sigplan.org/track/POPL-2027-popl-research-papers": "popl27-track.html",
+  "https://etaps.org/2027/cfp/": "etaps27-cfp.html",
+  "https://etaps.org/2027/esop": "etaps27-esop.html",
+  "https://etaps.org/2027/conferences/esop/": "etaps27-esop.html",
+  "https://lics.siglog.org/": "lics-home.html",
+  "https://lics.siglog.org/lics27/": "lics27.html",
+  "https://conferences.i-cav.org/2027/": "cav27-home.html",
+  "https://conferences.i-cav.org/2027/cfp/": "cav27-cfp.html",
+  "https://conf.researchr.org/track/splash-2027/splashoopsla2027": "../splash27-oopsla.html",
+  "https://2026.splashcon.org/track/splash-issta-2026-student-volunteers": "../splash26-volunteers.html"
+}
