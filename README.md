@@ -87,6 +87,32 @@ registry ever disappear. Those assets are about 5 GB and are deliberately not
 uploaded for now; until they are, the fallback is a no-op and a missing
 upstream shows up as a failed run with an issue.
 
+Model: [Qwen3.5-4B](https://huggingface.co/Qwen/Qwen3.5-4B) via
+[Ollama](https://ollama.com), CPU only, structured output through Ollama's JSON
+schema `format`. Override with `PLC_MODEL` (e.g. `qwen3.5:9b`), `PLC_NUM_CTX`
+for the context size, `PLC_SEARCH_GAP` for the seconds between search-engine
+requests, `PLC_NO_SEARCH=1` to exercise the no-search-engine fallbacks (URLs
+derived from earlier editions, then model guesses, then link-following) and
+`PLC_NUM_GPU=0` to force CPU inference locally. Each run attempts at most
+`PLC_MAX_ITEMS` (the workflow sets 3) conference-years, current year first,
+stops starting new ones after `PLC_TIME_BUDGET_MIN` (default 75) minutes, and
+fetches at most six pages per attempt; the rest waits for the next run. This
+keeps every run far from the job timeout and lets a backlog (a new conference
+in `conferences.json`, a new year) drain over a few weeks. `PLC_THINK=1`
+enables the model's built-in reasoning; it is off by default because on CPU
+the 4B model thinks for minutes per page and the harness showed no accuracy
+gain.
+
+Resources: on the runner the model server takes about 5 GB of RAM at a 16K
+context with `OLLAMA_FLASH_ATTENTION=1` (10 GB without; an 8-bit KV cache
+saves a little more but measurably changed answers on the harness, so it is
+not used), so it fits the 16 GB of a public-repository GitHub runner. That
+runner processes prompts at roughly 20-30 tokens/s and generates at 7
+tokens/s, so a call-for-papers page (7-9K tokens after cleaning) costs 4-7
+minutes and a whole conference-year (search, page, link choices, volunteer
+pass) 10-15 minutes; hence batches of three, twice a week (about 40 minutes
+per run, against a 150-minute job timeout).
+
 ## Things to know
 
 - Every calendar entry says it was extracted by a language model and links
