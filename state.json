@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T15:01:07.468079Z",
-  "run_count": 7,
+  "last_run": "2026-09-16T15:20:47.584436878Z",
+  "run_count": 8,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -22,13 +22,13 @@
       "note": "trying volunteer link https://submissions.floc26.org/cav/ from the conference page; fetch https://submissions.floc26.org/cav/ failed: GET https://submissions.floc26.org/cav/: HTTP 403 Forbidden; https://taoscav.org/volunteer is not about CAV 2026; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
     },
     "CAV/CAV/2027/cfp": {
-      "last_attempt": "2026-09-16T13:10:08.029393963Z",
-      "attempts": 1,
+      "last_attempt": "2026-09-16T15:20:47.584436878Z",
+      "attempts": 2,
       "outcome": "ok",
       "consecutive_failures": 0,
-      "backend": "brave",
+      "backend": null,
       "codes": [],
-      "note": "model picked link https://conferences.i-cav.org/2027/artifacts/ as the submission system where authors upload their papers for CAV 2027 (CAV track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
+      "note": "re-checking stored page https://conferences.i-cav.org/2027/; submission link https://conferences.i-cav.org/2027/ from the page text is this very page; dropped; model says none of the links is the submission system where authors upload their papers for CAV 2027 (CAV track); not a call-for-papers or information page, and not a sign-in or account page of the conference website"
     },
     "CAV/CAV/2027/volunteer": {
       "last_attempt": "2026-09-16T13:10:08.029393963Z",

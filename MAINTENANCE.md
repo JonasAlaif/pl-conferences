@@ -2,7 +2,7 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-09-16 15:01 UTC
+Last run: 2026-09-16 15:20 UTC
 
 ## E003
 
@@ -17,7 +17,7 @@ The search hit did not contain the dates; they were found by following a link fr
 
 | Conference-year | Outcome | Attempts | Last attempt | Note |
 |---|---|---|---|---|
-| `CAV/CAV/2027/cfp` | ok | 1 | 2026-09-16 | model picked link https://conferences.i-cav.org/2027/artifacts/ as the submission system where authors upload their papers for CAV 2027 (CAV track); not a call-for-papers or information page, and not a sign-in or account page of the conference website |
+| `CAV/CAV/2027/cfp` | ok | 2 | 2026-09-16 | re-checking stored page https://conferences.i-cav.org/2027/; submission link https://conferences.i-cav.org/2027/ from the page text is this very page; dropped; model says none of the links is the submission system where authors upload their papers for CAV 2027 (CAV track); not a call-for-papers or information page, and not a sign-in or account page of the conference website |
 | `CAV/CAV/2027/volunteer` | notfound | 1 | 2026-09-16 | trying volunteer link https://conferences.i-cav.org/2027/registration/ from the conference page; following link https://github.com/i-cav/2027/edit/master/pages/registration.md; https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fi-cav%2F2027%2Fedit%2Fmaster%2Fpages%2Fregistration.md is not about CAV 2027; following link https://conferences.i-cav.org/2027/contact/; following link https://github.com/i-cav/2027/edit/master/pages/contact.md; https://github.com/login?return_to=https%3A%2F%2Fgithub.com%2Fi-cav%2F2027%2Fedit%2Fmaster%2Fpages%2Fcontact.md is not about CAV 2027; following link https://conferences.i-cav.org/2027/organization/; trying volunteer link https://github.com/i-cav/2027/edit/master/index.md from the conference page; page budget of 6 used up; not fetching https://github.com/i-cav/2027/edit/master/index.md; page budget of 6 used up; not fetching https://taoscav.org/volunteer; page budget of 6 used up; not fetching https://i-cav.org/cavlinks/who-are-we/; page budget of 6 used up; not fetching https://www.cavscare.org/champions-of-the-community |
 | `ETAPS/ESOP/2027/cfp` | ok | 1 | 2026-09-16 | re-checking stored page https://etaps.org/2027/cfp/ |
 | `ICFP/ICFP/2027/cfp` | ok | 1 | 2026-09-16 | https://icfpconference.org/ is not about ICFP 2027; http://www.wikicfp.com/cfp/program?id=1369 is not about ICFP 2027; https://icfp24.sigplan.org/series/icfp has the conference dates but no deadlines yet; following link https://icfp27.sigplan.org/; model picked link https://conf.researchr.org/ as the submission system where authors upload their papers for ICFP 2027 (ICFP track); not a call-for-papers or information page, and not a sign-in or account page of the conference website |
