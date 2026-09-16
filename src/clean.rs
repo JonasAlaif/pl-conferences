@@ -383,8 +383,9 @@ mod tests {
     fn links_are_absolute_and_deduped() {
         let l = links(&fixture("icfp26-volunteers.html"), "https://icfp26.sigplan.org/track/x");
         assert!(l.iter().all(|(_, u)| u.starts_with("http")));
-        let urls: HashSet<_> = l.iter().map(|(_, u)| u).collect();
-        assert_eq!(urls.len(), l.len());
+        // Deduplicated by (anchor text, URL): no pair twice.
+        let pairs: HashSet<_> = l.iter().collect();
+        assert_eq!(pairs.len(), l.len());
     }
 
     #[test]
