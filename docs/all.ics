@@ -425,6 +425,38 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  f/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:c699f36855efbb75502b913e6f8406b6865f38dd@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260528
+DTEND;VALUE=DATE:20260529
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Paper Submission Deadline
+DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
+ s of max 15 pp\, and fresh perspectives providing new insights on program
+ ming languages and systems of max 15 pp. There is no page limit at the su
+ bmission time. Please refer to https://etaps.org/2027/esop for more detai
+ ls. Submitted papers must be in English\, presenting original research. T
+ hey must be unpublished and not submitted for publication elsewhere. In p
+ articular\, simultaneous submission of the same contribution to multiple 
+ ETAPS conferences is forbidden. Submissions must follow the formatting gu
+ idelines of Springer's LNCS (use the llncs.cls class) - except for ESOP\,
+  see above - and be submitted electronically in pdf through the Easychair
+  author interface of the respective conference. Data availability stateme
+ nt in proceedings papers is mandatory for all ETAPS conference papers. It
+  is to be placed just before the references and does not count into the p
+ age limit. ETAPS conferences will use double-blind reviewing (in the case
+  of TACAS and iFS\, only for regular research papers). Authors are asked 
+ to omit their names and institutions\; refer to prior work in the third p
+ erson\, just as prior work by others\; not to include acknowledgments tha
+ t might identify them. If authors do not obey the double-blind submission
+  policy or do not specify their conflicts of interest in the submission s
+ ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
+ d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://etaps.
+ org/2027/esop\n\nNote: the page also states "ESOP–round 1 May 28".\n\nE
+ xtracted automatically by a small language model\; please cross-check aga
+ inst the source before relying on it: https://etaps.org/2027/cfp/\nhttps:
+ //github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260610
@@ -465,6 +497,51 @@ DESCRIPTION:Students and Programming Languages researchers from around the
  nces
 END:VEVENT
 BEGIN:VEVENT
+UID:989f7d942d26fb85e2975f901c2ad3b4e1a18398@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260709
+DTEND;VALUE=DATE:20260710
+SUMMARY:[POPL 2027] Paper Submission Deadline
+DESCRIPTION:Submit at: https://popl27.sigplan.org/committee/POPL-2027-popl
+ -research-papers-program-committee\n\nNote: the page also states "Fri 24 
+ Jul 2026 | Workshops and Co-located Events | Submission Deadline".\n\nExt
+ racted automatically by a small language model\; please cross-check again
+ st the source before relying on it: https://popl27.sigplan.org/dates\nMai
+ ntenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/ma
+ in/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:47577bcf91d716d36265c4fc1a778ce186710f86@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260719
+DTEND;VALUE=DATE:20260720
+SUMMARY:[SPLASH 2026 (OOPSLA)] Volunteer Application Deadline
+DESCRIPTION:The page states that everyone is welcome to apply\, with prior
+ ity given to junior members of the community (full- or part-time students
+  of computer science and related fields). Volunteers receive a compliment
+ ary conference registration covering all open sessions and proceedings\, 
+ free lunches/refreshments during breaks\, a volunteer shirt\, and free ad
+ mission to social events. They are responsible for their own travel and a
+ ccommodation. To apply\, one must send an email to thalakottur.m@northeas
+ tern.edu\, robert.zhang@utexas.edu\, or hnzhu@ucdavis.edu if they have qu
+ estions\, though the page also provides a direct link to apply.\n\nApply 
+ at: https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2
+ 026-student-volunteers-student-volunteer-committee\n\nExtracted automatic
+ ally by a small language model\; please cross-check against the source be
+ fore relying on it: https://2026.splashcon.org/track/splash-issta-2026-st
+ udent-volunteers\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260720
+DTEND;VALUE=DATE:20260723
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:e29f494db58b69ca29138e0d6ff169cfeafce382@pl-conferences
 DTSTAMP:20260916T125407Z
 DTSTART;VALUE=DATE:20260720
@@ -486,6 +563,16 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:33c29fbcd5369b387977ba4f70c01128dd9ac277@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260806
+DTEND;VALUE=DATE:20260807
+SUMMARY:[ETAPS 2027 (ESOP)] R1 Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260824
@@ -499,51 +586,104 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
 LOCATION:Indianapolis\, United States
 END:VEVENT
 BEGIN:VEVENT
+UID:ff4b1584b5053da477cff7c2cf72a1e8b15b1ffb@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260907
+DTEND;VALUE=DATE:20260911
+SUMMARY:[POPL 2027] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
+ rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
+ nces
+END:VEVENT
+BEGIN:VEVENT
 UID:6e484dbff11c7141852b8b558827e134c89b0461@pl-conferences
-DTSTAMP:20260915T225322Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261004
 DTEND;VALUE=DATE:20261010
 SUMMARY:[SPLASH 2026 (OOPSLA)] Conference
+DESCRIPTION:Changed 2026-09-16: was 2026-10-04..2026-10-09 Oakland\, Unite
+ d States (now 2026-10-04..2026-10-09 Oakland\, California\, United States
+ ).\nExtracted automatically by a small language model\; please cross-chec
+ k against the source before relying on it: https://2026.splashcon.org/tra
+ ck/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Oakland\, California\, United States
+END:VEVENT
+BEGIN:VEVENT
+UID:30897a12c3f1cdd255353017ee26345e4514e224@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261006
+SUMMARY:[POPL 2027] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\nMaintenance: E003 - see https://github.com/JonasAl
- aif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlai
- f/pl-conferences
-LOCATION:Oakland\, United States
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
+ rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
+ nces
 END:VEVENT
 BEGIN:VEVENT
 UID:1ef9f75a696b74ec57ee5e3a2d8b58b69834a7ea@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261014
 DTEND;VALUE=DATE:20261015
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Paper Submission Deadline
-DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
- t be at most 23 pages\; revisions and camera-ready papers can go up to 25
-  pages plus references and data-availability/funding/acknowledgments sect
- ions. At least one senior author must register as a reserve reviewer unle
- ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
- but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
- nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
- tcrp.com/\n\nExtracted automatically by a small language model\; please c
- ross-check against the source before relying on it: https://conf.research
- r.org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/p
- l-conferences
+DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
+ ial submissions must be at most 23 pages\; revisions can go up to a maxim
+ um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
+ ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
+ t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
+ \nExtracted automatically by a small language model\; please cross-check 
+ against the source before relying on it: https://conf.researchr.org/track
+ /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
+ es
+END:VEVENT
+BEGIN:VEVENT
+UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261016
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Paper Submission Deadline
+DESCRIPTION:ESOP: regular research papers of max 25 pp\, experience report
+ s of max 15 pp\, and fresh perspectives providing new insights on program
+ ming languages and systems of max 15 pp. There is no page limit at the su
+ bmission time. Please refer to https://etaps.org/2027/esop for more detai
+ ls. Submitted papers must be in English\, presenting original research. T
+ hey must be unpublished and not submitted for publication elsewhere. In p
+ articular\, simultaneous submission of the same contribution to multiple 
+ ETAPS conferences is forbidden. Submissions must follow the formatting gu
+ idelines of Springer's LNCS (use the llncs.cls class) - except for ESOP\,
+  see above - and be submitted electronically in pdf through the Easychair
+  author interface of the respective conference. Data availability stateme
+ nt in proceedings papers is mandatory for all ETAPS conference papers. It
+  is to be placed just before the references and does not count into the p
+ age limit. ETAPS conferences will use double-blind reviewing (in the case
+  of TACAS and iFS\, only for regular research papers). Authors are asked 
+ to omit their names and institutions\; refer to prior work in the third p
+ erson\, just as prior work by others\; not to include acknowledgments tha
+ t might identify them. If authors do not obey the double-blind submission
+  policy or do not specify their conflicts of interest in the submission s
+ ystem\, this may result in a desk rejection of the paper. ESOP\, TACAS an
+ d FoSSaCS will use an author rebuttal phase.\n\nSubmit at: https://etaps.
+ org/2027/esop\n\nNote: the page also states "ESOP–round 2 Oct 15".\n\nE
+ xtracted automatically by a small language model\; please cross-check aga
+ inst the source before relying on it: https://etaps.org/2027/cfp/\nhttps:
+ //github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
 SUMMARY:[PLDI 2027] Paper Submission Deadline
-DESCRIPTION:Submit at: https://conf.researchr.org/signin/pldi-2027/https%3
- A%5Es%5Espldi27.sigplan.org%5Es\n\nExtracted automatically by a small lan
- guage model\; please cross-check against the source before relying on it:
-  https://pldi27.sigplan.org/\nhttps://github.com/JonasAlaif/pl-conference
- s
+DESCRIPTION:null\n\nSubmit at: https://conf.researchr.org/\n\nExtracted au
+ tomatically by a small language model\; please cross-check against the so
+ urce before relying on it: https://pldi27.sigplan.org/\nhttps://github.co
+ m/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:15238fe288a9d767157a685f0ff6e69de0fa097e@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261201
 DTEND;VALUE=DATE:20261206
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Rebuttal
@@ -553,19 +693,62 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  conferences
 END:VEVENT
 BEGIN:VEVENT
-UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
-DTSTAMP:20260916T023710Z
-DTSTART;VALUE=DATE:20261218
-DTEND;VALUE=DATE:20261219
-SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
+UID:ffd540b54a789f527dc800181de2719a8943ee6f@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261210
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
- conferences
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:0d346c688c36346dde4809ec6d978e822b453840@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20261222
+DTEND;VALUE=DATE:20261223
+SUMMARY:[ETAPS 2027 (ESOP)] R2 Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:f3883fe1926248a147c0c790c01ba3a954b4acb1@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270110
+DTEND;VALUE=DATE:20270117
+SUMMARY:[POPL 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Mexico City\, Mexico
+END:VEVENT
+BEGIN:VEVENT
+UID:9e3b71d437b65277cf50fcbc2f819dd93986276d@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+SUMMARY:[CAV 2027] Paper Submission Deadline
+DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nSubmit at: https
+ ://conferences.i-cav.org/2027/artifacts/\n\nExtracted automatically by a 
+ small language model\; please cross-check against the source before relyi
+ ng on it: https://conferences.i-cav.org/2027/\nhttps://github.com/JonasAl
+ aif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270212
+DTEND;VALUE=DATE:20270213
+SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
+DESCRIPTION:Changed 2026-09-16: was 2026-12-18 (now 2027-02-12).\nExtracte
+ d automatically by a small language model\; please cross-check against th
+ e source before relying on it: https://conf.researchr.org/track/splash-20
+ 27/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270216
 DTEND;VALUE=DATE:20270219
 SUMMARY:[PLDI 2027] Rebuttal
@@ -574,32 +757,54 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  org/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:a651a6733120c254077be47e8a550e75323ba1a8@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270225
+DTEND;VALUE=DATE:20270226
+SUMMARY:[ICFP 2027] Paper Submission Deadline
+DESCRIPTION:ICFP Papers\n\nSubmit at: https://conf.researchr.org/\n\nNote:
+  the page also states "up till Thu 1 Jul 2027".\n\nExtracted automaticall
+ y by a small language model\; please cross-check against the source befor
+ e relying on it: https://icfp27.sigplan.org/\nMaintenance: E003 - see htt
+ ps://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps
+ ://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences
-DTSTAMP:20260916T023710Z
-DTSTART;VALUE=DATE:20270401
-DTEND;VALUE=DATE:20270402
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270304
+DTEND;VALUE=DATE:20270305
 SUMMARY:[PLDI 2027] Notification
+DESCRIPTION:Changed 2026-09-16: was 2027-04-01 (now 2027-03-04).\nExtracte
+ d automatically by a small language model\; please cross-check against th
+ e source before relying on it: https://pldi27.sigplan.org/\nhttps://githu
+ b.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:411008c30d19ded2dc7cc642eae4f52e9e41efa4@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270405
+DTEND;VALUE=DATE:20270409
+SUMMARY:[CAV 2027] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
- ss-check against the source before relying on it: https://pldi27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c0f36c28b550a9525220f70c4170aeef5729ac7e@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270407
 DTEND;VALUE=DATE:20270408
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Paper Submission Deadline
-DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
- t be at most 23 pages\; revisions and camera-ready papers can go up to 25
-  pages plus references and data-availability/funding/acknowledgments sect
- ions. At least one senior author must register as a reserve reviewer unle
- ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
- but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
- nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
- tcrp.com/\n\nExtracted automatically by a small language model\; please c
- ross-check against the source before relying on it: https://conf.research
- r.org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/p
- l-conferences
+DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
+ ial submissions must be at most 23 pages\; revisions can go up to a maxim
+ um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
+ ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
+ t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
+ \nExtracted automatically by a small language model\; please cross-check 
+ against the source before relying on it: https://conf.researchr.org/track
+ /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
+ es
 END:VEVENT
 BEGIN:VEVENT
 UID:2eb8703604c0f51c968c5e4ddbc86dd46ee2c6f1@pl-conferences
@@ -611,6 +816,38 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
  cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
+END:VEVENT
+BEGIN:VEVENT
+UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270419
+DTEND;VALUE=DATE:20270423
+SUMMARY:[ICFP 2027] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp27.sigplan.
+ org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
+ s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:795a9f7c5dec63e2bce243dedabf29930c5701af@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270423
+DTEND;VALUE=DATE:20270424
+SUMMARY:[CAV 2027] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:e0dd1a4fe495fb401a7cdac11f9221d466063713@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270507
+DTEND;VALUE=DATE:20270508
+SUMMARY:[ICFP 2027] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp27.sigplan.
+ org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
+ s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:0da66b4b12afc687655d84631e5cc2fa1d182e1d@pl-conferences
@@ -625,7 +862,7 @@ LOCATION:Atlanta\, United States
 END:VEVENT
 BEGIN:VEVENT
 UID:28dccef44623a30c949cc8c27e64162a99e8ad71@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270615
 DTEND;VALUE=DATE:20270620
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Rebuttal
@@ -636,7 +873,7 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
 END:VEVENT
 BEGIN:VEVENT
 UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270813
 DTEND;VALUE=DATE:20270814
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
@@ -644,6 +881,28 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
  org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
  conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270815
+DTEND;VALUE=DATE:20270820
+SUMMARY:[CAV 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Amsterdam\, Netherlands
+END:VEVENT
+BEGIN:VEVENT
+UID:f8f31a9f890ec346e86377ee7370716b1453c603@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270926
+DTEND;VALUE=DATE:20271002
+SUMMARY:[ICFP 2027] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp24.sigplan.
+ org/series/icfp\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Nijmegen\, Netherlands
 END:VEVENT
 BEGIN:VEVENT
 UID:b1fa4b6c541ad88875018778b9f0ea05f478b8e0@pl-conferences

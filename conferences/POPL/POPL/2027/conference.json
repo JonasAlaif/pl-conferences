@@ -1,0 +1,38 @@
+{
+  "conference": "POPL",
+  "track": "POPL",
+  "year": 2027,
+  "label": "POPL 2027",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://popl27.sigplan.org/",
+    "query": "POPL 2027 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "start": "2027-01-10",
+    "end": "2027-01-16",
+    "city": "Mexico City",
+    "country": "Mexico"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": false,
+    "conference": {
+      "start_date": "2027-01-10",
+      "end_date": "2027-01-16",
+      "city": "Mexico City",
+      "country": "Mexico"
+    },
+    "rounds": [],
+    "submission_details": "The paper deadline has passed, but you can still view the call for papers here. But the deadline for the call for workshops is coming up very soon.",
+    "submission_url": "https://www.usenix.org/conference/popl-2027"
+  }
+}

@@ -163,10 +163,10 @@ Authors from institutions not participating in ACM Open will need to pay an APC 
 
 To support a smooth transition and encourage broader ACM Open participation, ACM has introduced a temporary subsidy on APC pricing for 2026, funded directly by ACM. This pricing applies to all articles published in ACM and SIG sponsored conferences taking place in 2026. The subsidized conference pricing for 2026 is as follows:
 
-| Authors                                  | No ACM or SIG members | At least 1 ACM or SIG member |
-| ---------------------------------------- | --------------------- | ---------------------------- |
-| ACM and SIG Sponsored Conference Article | $350                  | $250                         |
-| From a lower-middle-income country       | $175                  | $125                         |
+| Authors | No ACM or SIG members | At least 1 ACM or SIG member |
+| --- | --- | --- |
+| ACM and SIG Sponsored Conference Article | $350 | $250 |
+| From a lower-middle-income country | $175 | $125 |
 
 This represents a 65% discount, funded directly by ACM. Authors are encouraged to help advocate for their institutions to join ACM Open during this transition period.
 
@@ -226,14 +226,14 @@ Things you should ***not*** do:
 
 # Important Dates
 
-|                     | R1                      | R2                      |
-| ------------------- | ----------------------- | ----------------------- |
-| Submission          | Fri 10 October **2025** | Tue 17 March **2026**   |
-| Author Response     | Tue 2 Dec - Fri 5 Dec   | Tue 19 May - Fri 22 May |
-| Author Notification | Wed 17 Dec              | Wed 10 June             |
-| Revision submission | Tue 3 Feb **2026**      | Tue 21 July             |
-| Author Notification | Tue 17 Feb              | Fri 7 Aug               |
-| Camera Ready        | Fri 27 Feb              | Fri 14 Aug              |
+|  | R1 | R2 |
+| --- | --- | --- |
+| Submission | Fri 10 October **2025** | Tue 17 March **2026** |
+| Author Response | Tue 2 Dec - Fri 5 Dec | Tue 19 May - Fri 22 May |
+| Author Notification | Wed 17 Dec | Wed 10 June |
+| Revision submission | Tue 3 Feb **2026** | Tue 21 July |
+| Author Notification | Tue 17 Feb | Fri 7 Aug |
+| Camera Ready | Fri 27 Feb | Fri 14 Aug |
 
 Publication links
 
@@ -965,4 +965,4 @@ OOPSLA Review Committee
 
 
 
-x*Wed 16 Sep 04:43*
+x*Wed 16 Sep 15:10*

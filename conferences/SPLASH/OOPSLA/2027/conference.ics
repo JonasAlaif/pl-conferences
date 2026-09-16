@@ -11,8 +11,10 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20271010
 DTEND;VALUE=DATE:20271016
 SUMMARY:[SPLASH 2027 (OOPSLA)] Conference
-DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
- sla2027
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
 LOCATION:Prague\, Czechia
 END:VEVENT
 END:VCALENDAR

@@ -1,0 +1,63 @@
+{
+  "conference": "POPL",
+  "track": "POPL",
+  "year": 2027,
+  "label": "POPL 2027",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://popl27.sigplan.org/dates",
+    "query": "POPL 2027 call for papers",
+    "backend": "brave",
+    "hops": 1,
+    "via_chrome": false,
+    "retried": false,
+    "codes": [
+      "E003"
+    ]
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "",
+        "submission": "2026-07-09",
+        "submission_conflict": "Fri 24 Jul 2026 | Workshops and Co-located Events | Submission Deadline",
+        "response_start": "2026-09-07",
+        "response_end": "2026-09-10",
+        "notification": "2026-10-05"
+      }
+    ],
+    "submission_details": "",
+    "submission_url": "https://popl27.sigplan.org/committee/POPL-2027-popl-research-papers-program-committee"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2027-01-10",
+      "end_date": "2027-01-16",
+      "city": "Mexico City",
+      "country": "Mexico"
+    },
+    "rounds": [
+      {
+        "label": "",
+        "submission_deadline_quote": "Paper submission deadline",
+        "submission_deadline_as_written": "Thu 9 Jul 2026",
+        "submission_deadline": "2026-07-09",
+        "submission_deadline_conflict": "Fri 24 Jul 2026 | Workshops and Co-located Events | Submission Deadline",
+        "author_response_quote": "Author response period",
+        "author_response_as_written": "Mon 7 - Thu 10 Sep 2026",
+        "author_response_start": "2026-09-07",
+        "author_response_end": "2026-09-10",
+        "notification_quote": "Author notification",
+        "notification_as_written": "Mon 5 Oct 2026",
+        "notification": "2026-10-05"
+      }
+    ],
+    "submission_details": "",
+    "submission_url": ""
+  }
+}

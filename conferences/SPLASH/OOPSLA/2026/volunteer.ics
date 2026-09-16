@@ -1,0 +1,29 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:SPLASH 2026 (OOPSLA) volunteers
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:47577bcf91d716d36265c4fc1a778ce186710f86@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260719
+DTEND;VALUE=DATE:20260720
+SUMMARY:[SPLASH 2026 (OOPSLA)] Volunteer Application Deadline
+DESCRIPTION:The page states that everyone is welcome to apply\, with prior
+ ity given to junior members of the community (full- or part-time students
+  of computer science and related fields). Volunteers receive a compliment
+ ary conference registration covering all open sessions and proceedings\, 
+ free lunches/refreshments during breaks\, a volunteer shirt\, and free ad
+ mission to social events. They are responsible for their own travel and a
+ ccommodation. To apply\, one must send an email to thalakottur.m@northeas
+ tern.edu\, robert.zhang@utexas.edu\, or hnzhu@ucdavis.edu if they have qu
+ estions\, though the page also provides a direct link to apply.\n\nApply 
+ at: https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2
+ 026-student-volunteers-student-volunteer-committee\n\nExtracted automatic
+ ally by a small language model\; please cross-check against the source be
+ fore relying on it: https://2026.splashcon.org/track/splash-issta-2026-st
+ udent-volunteers\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+END:VCALENDAR

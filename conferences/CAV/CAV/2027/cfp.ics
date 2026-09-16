@@ -1,0 +1,40 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:CAV 2027 cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:9e3b71d437b65277cf50fcbc2f819dd93986276d@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270120
+DTEND;VALUE=DATE:20270121
+SUMMARY:[CAV 2027] Paper Submission Deadline
+DESCRIPTION:All deadlines are AoE (Anywhere on Earth).\n\nSubmit at: https
+ ://conferences.i-cav.org/2027/artifacts/\n\nExtracted automatically by a 
+ small language model\; please cross-check against the source before relyi
+ ng on it: https://conferences.i-cav.org/2027/\nhttps://github.com/JonasAl
+ aif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:411008c30d19ded2dc7cc642eae4f52e9e41efa4@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270405
+DTEND;VALUE=DATE:20270409
+SUMMARY:[CAV 2027] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:795a9f7c5dec63e2bce243dedabf29930c5701af@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270423
+DTEND;VALUE=DATE:20270424
+SUMMARY:[CAV 2027] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conferences.i-c
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+END:VCALENDAR

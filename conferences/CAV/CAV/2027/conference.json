@@ -1,0 +1,53 @@
+{
+  "conference": "CAV",
+  "track": "CAV",
+  "year": 2027,
+  "label": "CAV 2027",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://conferences.i-cav.org/2027/",
+    "query": "CAV 2027 call for papers",
+    "backend": "brave",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "start": "2027-08-15",
+    "end": "2027-08-19",
+    "city": "Amsterdam",
+    "country": "Netherlands"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2027-08-15",
+      "end_date": "2027-08-19",
+      "city": "Amsterdam",
+      "country": "Netherlands"
+    },
+    "rounds": [
+      {
+        "label": "",
+        "submission_deadline_quote": "Submission deadline Wednesday, 20 January 2027",
+        "submission_deadline_as_written": "Wednesday, 20 January 2027",
+        "submission_deadline": "2027-01-20",
+        "submission_deadline_conflict": "null",
+        "author_response_quote": "Response period Monday, 5 April 2027 – Thursday, 8 April 2027",
+        "author_response_as_written": "Monday, 5 April 2027 – Thursday, 8 April 2027",
+        "author_response_start": "2027-04-05",
+        "author_response_end": "2027-04-08",
+        "notification_quote": "Notification Friday, 23 April 2027",
+        "notification_as_written": "Friday, 23 April 2027",
+        "notification": "2027-04-23"
+      }
+    ],
+    "submission_details": "All deadlines are AoE (Anywhere on Earth).",
+    "submission_url": "null"
+  }
+}

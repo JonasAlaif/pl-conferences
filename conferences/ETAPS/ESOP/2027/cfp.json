@@ -1,0 +1,83 @@
+{
+  "conference": "ETAPS",
+  "track": "ESOP",
+  "year": 2027,
+  "label": "ETAPS 2027 (ESOP)",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://etaps.org/2027/cfp/",
+    "query": "stored URL https://etaps.org/2027/cfp/",
+    "backend": null,
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "ESOP–round 1",
+        "submission": "2026-05-28",
+        "submission_conflict": "ESOP–round 1 May 28",
+        "response_start": "2026-07-20",
+        "response_end": "2026-07-22",
+        "notification": "2026-08-06"
+      },
+      {
+        "label": "ESOP–round 2",
+        "submission": "2026-10-15",
+        "submission_conflict": "ESOP–round 2 Oct 15",
+        "response_start": "2026-12-07",
+        "response_end": "2026-12-09",
+        "notification": "2026-12-22"
+      }
+    ],
+    "submission_details": "ESOP: regular research papers of max 25 pp, experience reports of max 15 pp, and fresh perspectives providing new insights on programming languages and systems of max 15 pp. There is no page limit at the submission time. Please refer to https://etaps.org/2027/esop for more details. Submitted papers must be in English, presenting original research. They must be unpublished and not submitted for publication elsewhere. In particular, simultaneous submission of the same contribution to multiple ETAPS conferences is forbidden. Submissions must follow the formatting guidelines of Springer's LNCS (use the llncs.cls class) - except for ESOP, see above - and be submitted electronically in pdf through the Easychair author interface of the respective conference. Data availability statement in proceedings papers is mandatory for all ETAPS conference papers. It is to be placed just before the references and does not count into the page limit. ETAPS conferences will use double-blind reviewing (in the case of TACAS and iFS, only for regular research papers). Authors are asked to omit their names and institutions; refer to prior work in the third person, just as prior work by others; not to include acknowledgments that might identify them. If authors do not obey the double-blind submission policy or do not specify their conflicts of interest in the submission system, this may result in a desk rejection of the paper. ESOP, TACAS and FoSSaCS will use an author rebuttal phase.",
+    "submission_url": "https://etaps.org/2027/esop"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2027-04-12",
+      "end_date": "2027-04-15",
+      "city": "Copenhagen",
+      "country": "Denmark"
+    },
+    "rounds": [
+      {
+        "label": "ESOP–round 1",
+        "submission_deadline_quote": "Submission deadline for ESOP-round 1: May 28, 2026",
+        "submission_deadline_as_written": "May 28, 2026",
+        "submission_deadline": "2026-05-28",
+        "submission_deadline_conflict": "ESOP–round 1 May 28",
+        "author_response_quote": "Rebuttal for ESOP-round 1: July 20-22, 2026",
+        "author_response_as_written": "July 20-22, 2026",
+        "author_response_start": "2026-07-20",
+        "author_response_end": "2026-07-22",
+        "notification_quote": "Notification for ESOP-round 1: August 6, 2026",
+        "notification_as_written": "August 6, 2026",
+        "notification": "2026-08-06"
+      },
+      {
+        "label": "ESOP–round 2",
+        "submission_deadline_quote": "Submission deadline for ESOP-round 2, iFS, FoSSaCS, TACAS: Thursday, October 15, 2026",
+        "submission_deadline_as_written": "Thursday, October 15, 2026",
+        "submission_deadline": "2026-10-15",
+        "submission_deadline_conflict": "ESOP–round 2 Oct 15",
+        "author_response_quote": "Rebuttal (ESOP-round 2, FoSSaCS, TACAS): December 7-9, 2026",
+        "author_response_as_written": "December 7-9, 2026",
+        "author_response_start": "2026-12-07",
+        "author_response_end": "2026-12-09",
+        "notification_quote": "Paper notification and TACAS mandatory artifact notification: Tuesday, December 22, 2026",
+        "notification_as_written": "Tuesday, December 22, 2026",
+        "notification": "2026-12-22"
+      }
+    ],
+    "submission_details": "ESOP: regular research papers of max 25 pp, experience reports of max 15 pp, and fresh perspectives providing new insights on programming languages and systems of max 15 pp. There is no page limit at the submission time. Please refer to https://etaps.org/2027/esop for more details. Submitted papers must be in English, presenting original research. They must be unpublished and not submitted for publication elsewhere. In particular, simultaneous submission of the same contribution to multiple ETAPS conferences is forbidden. Submissions must follow the formatting guidelines of Springer's LNCS (use the llncs.cls class) - except for ESOP, see above - and be submitted electronically in pdf through the Easychair author interface of the respective conference. Data availability statement in proceedings papers is mandatory for all ETAPS conference papers. It is to be placed just before the references and does not count into the page limit. ETAPS conferences will use double-blind reviewing (in the case of TACAS and iFS, only for regular research papers). Authors are asked to omit their names and institutions; refer to prior work in the third person, just as prior work by others; not to include acknowledgments that might identify them. If authors do not obey the double-blind submission policy or do not specify their conflicts of interest in the submission system, this may result in a desk rejection of the paper. ESOP, TACAS and FoSSaCS will use an author rebuttal phase.",
+    "submission_url": "https://etaps.org/2027/esop"
+  }
+}

@@ -1,0 +1,43 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ICFP 2027 cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:a651a6733120c254077be47e8a550e75323ba1a8@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270225
+DTEND;VALUE=DATE:20270226
+SUMMARY:[ICFP 2027] Paper Submission Deadline
+DESCRIPTION:ICFP Papers\n\nSubmit at: https://conf.researchr.org/\n\nNote:
+  the page also states "up till Thu 1 Jul 2027".\n\nExtracted automaticall
+ y by a small language model\; please cross-check against the source befor
+ e relying on it: https://icfp27.sigplan.org/\nMaintenance: E003 - see htt
+ ps://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps
+ ://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270419
+DTEND;VALUE=DATE:20270423
+SUMMARY:[ICFP 2027] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp27.sigplan.
+ org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
+ s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:e0dd1a4fe495fb401a7cdac11f9221d466063713@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270507
+DTEND;VALUE=DATE:20270508
+SUMMARY:[ICFP 2027] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp27.sigplan.
+ org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
+ s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+END:VCALENDAR

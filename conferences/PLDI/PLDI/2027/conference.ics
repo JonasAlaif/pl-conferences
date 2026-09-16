@@ -11,7 +11,9 @@ DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20270605
 DTEND;VALUE=DATE:20270612
 SUMMARY:[PLDI 2027] Conference
-DESCRIPTION:Source: https://pldi27.sigplan.org/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://pldi27.sigplan.
+ org/\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Atlanta\, United States
 END:VEVENT
 END:VCALENDAR

@@ -11,7 +11,9 @@ DTSTAMP:20260916T045209Z
 DTSTART;VALUE=DATE:20270412
 DTEND;VALUE=DATE:20270416
 SUMMARY:[ETAPS 2027 (ESOP)] Conference
-DESCRIPTION:Source: https://etaps.org/2027/cfp/
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
 END:VEVENT
 END:VCALENDAR

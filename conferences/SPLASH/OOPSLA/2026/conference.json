@@ -3,56 +3,72 @@
   "track": "OOPSLA",
   "year": 2026,
   "label": "SPLASH 2026 (OOPSLA)",
-  "fetched_at": "2026-09-15T22:53:22.297148035Z",
-  "last_verified": "2026-09-16T02:37:10.270527567Z",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://2026.splashcon.org/track/oopsla-2026",
-    "query": "SPLASH 2026 OOPSLA call for papers",
-    "backend": "brave",
-    "hops": 1,
+    "query": "stored URL https://2026.splashcon.org/track/oopsla-2026",
+    "backend": null,
+    "hops": 0,
     "via_chrome": false,
     "retried": false,
-    "codes": [
-      "E003"
-    ]
+    "codes": []
   },
   "data": {
     "start": "2026-10-04",
     "end": "2026-10-09",
     "city": "Oakland",
-    "country": "United States"
+    "country": "California, United States"
   },
-  "history": [],
+  "history": [
+    {
+      "at": "2026-09-16T13:10:08.029393963Z",
+      "field": "conference",
+      "old": "2026-10-04..2026-10-09 Oakland, United States",
+      "new": "2026-10-04..2026-10-09 Oakland, California, United States"
+    }
+  ],
   "raw": {
-    "conference": {
-      "city": "Oakland",
-      "country": "United States",
-      "end_date": "2026-10-09",
-      "start_date": "2026-10-04"
-    },
-    "has_submission_deadline": true,
     "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2026-10-04",
+      "end_date": "2026-10-09",
+      "city": "Oakland",
+      "country": "California, United States"
+    },
     "rounds": [
       {
-        "author_response_end": "2025-12-05",
-        "author_response_start": "2025-12-02",
         "label": "Round 1",
-        "notification": "2025-12-17",
-        "notification_quote": "Author Notification",
+        "submission_deadline_quote": "Round 1 submission deadline October 10, 2025",
+        "submission_deadline_as_written": "October 10, 2025",
         "submission_deadline": "2025-10-10",
-        "submission_deadline_quote": "October 10, 2025"
+        "submission_deadline_conflict": "Fri 10 October **2025** Submission (Round 1)",
+        "author_response_quote": "Author Response",
+        "author_response_as_written": "Tue 2 Dec - Fri 5 Dec",
+        "author_response_start": "2025-12-02",
+        "author_response_end": "2025-12-05",
+        "notification_quote": "Author Notification",
+        "notification_as_written": "Wed 17 Dec",
+        "notification": "2025-12-17"
       },
       {
-        "author_response_end": "2026-05-22",
-        "author_response_start": "2026-05-19",
         "label": "Round 2",
-        "notification": "2026-06-10",
-        "notification_quote": "Author Notification",
+        "submission_deadline_quote": "Round 2 submission deadline March 17, 2026 (AoE)",
+        "submission_deadline_as_written": "March 17, 2026",
         "submission_deadline": "2026-03-17",
-        "submission_deadline_quote": "March 17, 2026 (AoE)"
+        "submission_deadline_conflict": "Tue 17 Mar **2026** Submission (Round 2)",
+        "author_response_quote": "Author Response",
+        "author_response_as_written": "Tue 19 May - Fri 22 May",
+        "author_response_start": "2026-05-19",
+        "author_response_end": "2026-05-22",
+        "notification_quote": "Author Notification",
+        "notification_as_written": "Wed 10 June",
+        "notification": "2026-06-10"
       }
     ],
-    "submission_details": "Papers must be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submissions must be at most 23 pages; revisions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing with two rounds of review. At least one senior author must register as a reserve reviewer unless exempt. Papers accepted in either round will be published in the 2026 volume of PACMPL and invited to present in-person at the SPLASH conference in 2026; remote presentations are not possible."
+    "submission_details": "Papers may target any stage of software development. OOPSLA 2026 will have two rounds of reviewing. New papers may be submitted to either round. Papers accepted in either round will be published in the 2026 volume of PACMPL(OOPSLA) and invited to present in-person at the SPLASH conference in 2026. (Remote presentations will not be possible.) At least one author of a paper submission must be registered as a Reserve Reviewer. Unlike OOPSLA'25, the decisions \"Conditional Accept\" and \"Minor Revision\" have been merged into a single \"Minor Revision\" outcome.",
+    "submission_url": "https://oopsla26.hotcrp.com/"
   }
 }

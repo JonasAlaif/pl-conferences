@@ -3,13 +3,13 @@
   "track": "PLDI",
   "year": 2027,
   "label": "PLDI 2027",
-  "fetched_at": "2026-09-16T02:37:10.270527567Z",
-  "last_verified": "2026-09-16T02:37:10.270527567Z",
+  "fetched_at": "2026-09-16T13:10:08.029393963Z",
+  "last_verified": "2026-09-16T13:10:08.029393963Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://pldi27.sigplan.org/",
-    "query": "PLDI 2027 call for papers",
-    "backend": "brave",
+    "query": "stored URL https://pldi27.sigplan.org/",
+    "backend": null,
     "hops": 0,
     "via_chrome": false,
     "retried": false,
@@ -20,36 +20,49 @@
       {
         "label": "",
         "submission": "2026-11-12",
+        "submission_conflict": null,
         "response_start": "2027-02-16",
         "response_end": "2027-02-18",
-        "notification": "2027-04-01"
+        "notification": "2027-03-04"
       }
     ],
-    "submission_details": "",
-    "submission_url": "https://conf.researchr.org/signin/pldi-2027/https%3A%5Es%5Espldi27.sigplan.org%5Es"
+    "submission_details": "null",
+    "submission_url": "https://conf.researchr.org/"
   },
-  "history": [],
+  "history": [
+    {
+      "at": "2026-09-16T13:10:08.029393963Z",
+      "field": "round 1 notification",
+      "old": "2027-04-01",
+      "new": "2027-03-04"
+    }
+  ],
   "raw": {
-    "conference": {
-      "city": "Atlanta",
-      "country": "United States",
-      "end_date": "2027-06-11",
-      "start_date": "2027-06-05"
-    },
-    "has_submission_deadline": true,
     "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "start_date": "2027-06-05",
+      "end_date": "2027-06-11",
+      "city": "Atlanta",
+      "country": "United States"
+    },
     "rounds": [
       {
-        "author_response_end": "2027-02-18",
-        "author_response_start": "2027-02-16",
         "label": "",
-        "notification": "2027-04-01",
-        "notification_quote": "Thu 1 Apr 2027\n*PLDI Research Papers* Final acceptance notification",
+        "submission_deadline_quote": "Submission deadline",
+        "submission_deadline_as_written": "Thu 12 Nov 2026",
         "submission_deadline": "2026-11-12",
-        "submission_deadline_quote": "Thu 12 Nov 2026\n*PLDI Research Papers* Submission deadline"
+        "submission_deadline_conflict": "null",
+        "author_response_quote": "Author response period",
+        "author_response_as_written": "Tue 16 - Thu 18 Feb 2027",
+        "author_response_start": "2027-02-16",
+        "author_response_end": "2027-02-18",
+        "notification_quote": "Author notification",
+        "notification_as_written": "Thu 4 Mar 2027",
+        "notification": "2027-03-04"
       }
     ],
-    "submission_details": "",
-    "submission_url": ""
+    "submission_details": "null",
+    "submission_url": "null"
   }
 }

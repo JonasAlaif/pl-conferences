@@ -1,0 +1,46 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:POPL 2027 cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:989f7d942d26fb85e2975f901c2ad3b4e1a18398@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260709
+DTEND;VALUE=DATE:20260710
+SUMMARY:[POPL 2027] Paper Submission Deadline
+DESCRIPTION:Submit at: https://popl27.sigplan.org/committee/POPL-2027-popl
+ -research-papers-program-committee\n\nNote: the page also states "Fri 24 
+ Jul 2026 | Workshops and Co-located Events | Submission Deadline".\n\nExt
+ racted automatically by a small language model\; please cross-check again
+ st the source before relying on it: https://popl27.sigplan.org/dates\nMai
+ ntenance: E003 - see https://github.com/JonasAlaif/pl-conferences/blob/ma
+ in/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:ff4b1584b5053da477cff7c2cf72a1e8b15b1ffb@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20260907
+DTEND;VALUE=DATE:20260911
+SUMMARY:[POPL 2027] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
+ rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
+ nces
+END:VEVENT
+BEGIN:VEVENT
+UID:30897a12c3f1cdd255353017ee26345e4514e224@pl-conferences
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261006
+SUMMARY:[POPL 2027] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
+ rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
+ nces
+END:VEVENT
+END:VCALENDAR

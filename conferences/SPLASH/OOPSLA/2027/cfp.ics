@@ -7,70 +7,78 @@ X-WR-CALNAME:SPLASH 2027 (OOPSLA) cfp
 URL:https://github.com/JonasAlaif/pl-conferences
 BEGIN:VEVENT
 UID:1ef9f75a696b74ec57ee5e3a2d8b58b69834a7ea@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261014
 DTEND;VALUE=DATE:20261015
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Paper Submission Deadline
-DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
- t be at most 23 pages\; revisions and camera-ready papers can go up to 25
-  pages plus references and data-availability/funding/acknowledgments sect
- ions. At least one senior author must register as a reserve reviewer unle
- ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
- but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
- nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
- tcrp.com/\n\nSource: https://conf.researchr.org/track/splash-2027/splasho
- opsla2027
+DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
+ ial submissions must be at most 23 pages\; revisions can go up to a maxim
+ um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
+ ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
+ t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
+ \nExtracted automatically by a small language model\; please cross-check 
+ against the source before relying on it: https://conf.researchr.org/track
+ /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
+ es
 END:VEVENT
 BEGIN:VEVENT
 UID:15238fe288a9d767157a685f0ff6e69de0fa097e@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261201
 DTEND;VALUE=DATE:20261206
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Rebuttal
-DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
- sla2027
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
-DTSTAMP:20260916T023710Z
-DTSTART;VALUE=DATE:20261218
-DTEND;VALUE=DATE:20261219
+DTSTAMP:20260916T131008Z
+DTSTART;VALUE=DATE:20270212
+DTEND;VALUE=DATE:20270213
 SUMMARY:[SPLASH 2027 (OOPSLA)] R1 Notification
-DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
- sla2027
+DESCRIPTION:Changed 2026-09-16: was 2026-12-18 (now 2027-02-12).\nExtracte
+ d automatically by a small language model\; please cross-check against th
+ e source before relying on it: https://conf.researchr.org/track/splash-20
+ 27/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c0f36c28b550a9525220f70c4170aeef5729ac7e@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270407
 DTEND;VALUE=DATE:20270408
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Paper Submission Deadline
-DESCRIPTION:Papers must be submitted using HotCRP. Initial submissions mus
- t be at most 23 pages\; revisions and camera-ready papers can go up to 25
-  pages plus references and data-availability/funding/acknowledgments sect
- ions. At least one senior author must register as a reserve reviewer unle
- ss exempt. Papers rejected in Round 1 cannot be resubmitted in Round 2\, 
- but papers rejected from OOPSLA 2026 are welcome. Authors must maintain a
- nonymity until acceptance or rejection.\n\nSubmit at: https://oopsla27.ho
- tcrp.com/\n\nSource: https://conf.researchr.org/track/splash-2027/splasho
- opsla2027
+DESCRIPTION:Please submit using HotCRP: https://oopsla27.hotcrp.com/. Init
+ ial submissions must be at most 23 pages\; revisions can go up to a maxim
+ um of 25 pages. PACMPL uses double-blind reviewing. At least one author m
+ ust be registered as a Reserve Reviewer. Papers rejected in Round 1 canno
+ t be resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n
+ \nExtracted automatically by a small language model\; please cross-check 
+ against the source before relying on it: https://conf.researchr.org/track
+ /splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-conferenc
+ es
 END:VEVENT
 BEGIN:VEVENT
 UID:28dccef44623a30c949cc8c27e64162a99e8ad71@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270615
 DTEND;VALUE=DATE:20270620
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Rebuttal
-DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
- sla2027
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:3d1b94753021876262fd61bec8cfc71afbd3e5ab@pl-conferences
-DTSTAMP:20260916T023710Z
+DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270813
 DTEND;VALUE=DATE:20270814
 SUMMARY:[SPLASH 2027 (OOPSLA)] R2 Notification
-DESCRIPTION:Source: https://conf.researchr.org/track/splash-2027/splashoop
- sla2027
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/splash-2027/splashoopsla2027\nhttps://github.com/JonasAlaif/pl-
+ conferences
 END:VEVENT
 END:VCALENDAR
