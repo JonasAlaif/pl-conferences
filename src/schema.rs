@@ -397,7 +397,7 @@ pub enum Stage {
     ConferenceAvailable,
     /// Deadlines known and still ahead (or rebuttal still running).
     DeadlinesAvailable,
-    /// The last round's rebuttal (or notification, or submission) has passed: deadlines are final.
+    /// The last round's notification (or rebuttal, or submission) has passed: deadlines are final.
     PostRebuttal,
     /// The conference is over.
     Happened,
@@ -436,10 +436,12 @@ impl Cfp {
     }
 }
 
-/// Date after which the stored deadlines can no longer change.
+/// Date after which the stored deadlines can no longer change: the last
+/// round's notification (decisions slip, and the call page gains its
+/// submission site late), else the end of its rebuttal, else its deadline.
 pub fn deadlines_final_after(d: &Deadlines) -> Option<NaiveDate> {
     let last = d.rounds.last()?;
-    Some(last.response_end.or(last.response_start).or(last.notification).unwrap_or(last.submission))
+    Some([last.notification, last.response_end, last.response_start].into_iter().flatten().fold(last.submission, NaiveDate::max))
 }
 
 /// Conference dates keep being (re)collected until the conference is over.
@@ -447,7 +449,7 @@ pub fn conference_active(c: Option<&Conference>, today: NaiveDate) -> bool {
     c.is_none_or(|c| today <= c.end)
 }
 
-/// Deadlines keep being (re)collected until the last rebuttal has ended.
+/// Deadlines keep being (re)collected until the last round's notification.
 pub fn deadlines_active(d: Option<&Deadlines>, today: NaiveDate) -> bool {
     d.is_none_or(|d| deadlines_final_after(d).is_none_or(|cut| today <= cut))
 }
@@ -946,12 +948,14 @@ mod tests {
         assert_eq!(stage(None, None, d("2025-01-01")), Stage::Future);
         assert_eq!(stage(conf, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
         assert_eq!(stage(conf, dl.as_ref(), d("2025-09-11")), Stage::DeadlinesAvailable);
-        assert_eq!(stage(conf, dl.as_ref(), d("2025-09-12")), Stage::PostRebuttal);
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-09-12")), Stage::DeadlinesAvailable, "rebuttal over, decision still ahead");
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-11-06")), Stage::DeadlinesAvailable);
+        assert_eq!(stage(conf, dl.as_ref(), d("2025-11-07")), Stage::PostRebuttal);
         assert_eq!(stage(conf, dl.as_ref(), d("2026-01-18")), Stage::Happened);
         assert_eq!(stage(conf, None, d("2025-08-01")), Stage::ConferenceAvailable);
         assert_eq!(stage(None, dl.as_ref(), d("2025-08-01")), Stage::DeadlinesAvailable);
         assert!(Stage::ConferenceAvailable.active() && !Stage::PostRebuttal.active());
-        assert!(deadlines_active(dl.as_ref(), d("2025-09-11")) && !deadlines_active(dl.as_ref(), d("2025-09-12")));
+        assert!(deadlines_active(dl.as_ref(), d("2025-11-06")) && !deadlines_active(dl.as_ref(), d("2025-11-07")));
         assert!(conference_active(conf, d("2026-01-17")) && !conference_active(conf, d("2026-01-18")));
         assert!(conference_active(None, d("2030-01-01")) && deadlines_active(None, d("2030-01-01")));
     }

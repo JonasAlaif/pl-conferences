@@ -14,7 +14,7 @@ const CFP_RETRY_DAYS: i64 = 7;
 /// Days a stored record is trusted before its page is re-checked. Discovery
 /// of missing data always goes first; re-validation fills the remaining slots.
 const REVALIDATE_DAYS: i64 = 14;
-/// Once the deadlines are final (last rebuttal over), only the conference
+/// Once the deadlines are final (last notification past), only the conference
 /// dates and venue are still open to change, and rarely: the page is
 /// re-read this often instead, which spares the biggest pages a re-read
 /// every fortnight for nothing.
@@ -331,7 +331,7 @@ fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceC
 /// Conference dates and deadlines: discovery while a part is missing (not
 /// retried within `CFP_RETRY_DAYS` of a failed search), re-validation once a
 /// stored part is older than `REVALIDATE_DAYS`; archived when the conference
-/// is over (dates) or the last rebuttal has ended (deadlines).
+/// is over (dates) or the last round's notification has passed (deadlines).
 fn cfp_need(state: &State, key: &str, conf: Option<&Record<schema::Conference>>, dl: Option<&Record<schema::Deadlines>>, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Result<Need, Idle> {
     let today = now.date_naive();
     let stage = schema::stage(conf.map(|r| &r.data), dl.map(|r| &r.data), today);

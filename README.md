@@ -57,9 +57,9 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
 4. Every conference-year has a stage derived from its data and the date:
    *future* (nothing known), *conference available* (dates and location, no
    deadlines yet), *deadlines available*, *post-rebuttal* (the last round's
-   rebuttal has ended, so the deadlines are final) and *happened*. Conference
-   dates stay active until the conference is over, deadlines until the last
-   rebuttal has ended. Missing parts are looked for first (a search that
+   notification has passed, so the deadlines are final) and *happened*.
+   Conference dates stay active until the conference is over, deadlines
+   until the last round's notification. Missing parts are looked for first (a search that
    found nothing is repeated after a week); stored parts are re-checked
    every two weeks, each starting from its stored source page: if a value
    changed, the JSON keeps a history entry and the calendar event says
