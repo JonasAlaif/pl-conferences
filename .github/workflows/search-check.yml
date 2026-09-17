@@ -1,0 +1,49 @@
+name: Search check
+
+# Manual diagnostic for maintenance codes E001/E008: asks the search engines
+# from fresh runners with the pipeline's own code and prints which engine
+# answered and what the ones before it said. Changes nothing.
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "Search query"
+        type: string
+        default: "POPL 2027 call for papers"
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Rust toolchain (pinned by rust-toolchain.toml)
+        run: rustup show active-toolchain || rustup toolchain install
+      - name: Cache cargo
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'rust-toolchain.toml') }}
+      - name: Build
+        run: cargo build --release --locked 2>&1 | tail -1
+      - name: Search
+        env:
+          QUERY: ${{ inputs.query }}
+          RUST_LOG: info
+        run: |
+          curl --version | head -1
+          for q in "$QUERY" "$QUERY student volunteers" "$QUERY important dates"; do
+            echo "::group::$q"
+            ./target/release/pl-conferences search "$q"
+            echo "::endgroup::"
+          done
