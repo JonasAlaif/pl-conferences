@@ -13,9 +13,8 @@ DTEND;VALUE=DATE:20260710
 SUMMARY:[POPL 2027] Paper Submission Deadline
 DESCRIPTION:Submit at: https://popl27.hotcrp.com\n\nExtracted automaticall
  y by a small language model\; please cross-check against the source befor
- e relying on it: https://popl27.sigplan.org/dates\nMaintenance: E003 - se
- e https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\n
- https://github.com/JonasAlaif/pl-conferences
+ e relying on it: https://popl27.sigplan.org/dates\nhttps://github.com/Jon
+ asAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ff4b1584b5053da477cff7c2cf72a1e8b15b1ffb@pl-conferences
@@ -25,9 +24,7 @@ DTEND;VALUE=DATE:20260911
 SUMMARY:[POPL 2027] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://popl27.sigplan.
- org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
- rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/dates\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:30897a12c3f1cdd255353017ee26345e4514e224@pl-conferences
@@ -37,8 +34,6 @@ DTEND;VALUE=DATE:20261006
 SUMMARY:[POPL 2027] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://popl27.sigplan.
- org/dates\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-confe
- rences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/dates\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

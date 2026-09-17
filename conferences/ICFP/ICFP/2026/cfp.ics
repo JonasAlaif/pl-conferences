@@ -25,9 +25,8 @@ DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
  ch mandatory revision request to specific parts of the paper.\n\nSubmit a
  t: https://icfp26.hotcrp.com\n\nExtracted automatically by a small langua
  ge model\; please cross-check against the source before relying on it: ht
- tps://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nMaintenance: E003 -
-  see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.m
- d\nhttps://github.com/JonasAlaif/pl-conferences
+ tps://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nhttps://github.com/
+ JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e3bab0d4fdd4cfab74edfd7de78cd63bc56e75cf@pl-conferences
@@ -37,9 +36,8 @@ DTEND;VALUE=DATE:20260424
 SUMMARY:[ICFP 2026] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
- om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
- /JonasAlaif/pl-conferences
+ org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
+ nces
 END:VEVENT
 BEGIN:VEVENT
 UID:ffacaacbd94884e5deee4e58f907dfe067dbb6f0@pl-conferences
@@ -49,8 +47,7 @@ DTEND;VALUE=DATE:20260515
 SUMMARY:[ICFP 2026] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
- om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
- /JonasAlaif/pl-conferences
+ org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
+ nces
 END:VEVENT
 END:VCALENDAR

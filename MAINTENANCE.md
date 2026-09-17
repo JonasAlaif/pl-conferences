@@ -2,59 +2,29 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-09-17 08:36 UTC
+Last run: 2026-09-17 11:32 UTC
 
-## E001
-
-The primary search backend (DuckDuckGo HTML) returned no results; a fallback backend was used. Check `src/search.rs` selectors if this persists.
-
-- `CAV/CAV/2027/volunteer` (last seen 2026-09-16)
-- `ETAPS/ESOP/2027/volunteer` (last seen 2026-09-16)
-- `ICFP/ICFP/2027/volunteer` (last seen 2026-09-16)
-- `LICS/LICS/2027/cfp` (last seen 2026-09-17)
-- `LICS/LICS/2027/volunteer` (last seen 2026-09-17)
-- `PLDI/PLDI/2027/volunteer` (last seen 2026-09-16)
-- `POPL/POPL/2027/volunteer` (last seen 2026-09-16)
-- `SPLASH/OOPSLA/2027/volunteer` (last seen 2026-09-16)
-
-## E003
-
-The search hit did not contain the dates; they were found by following a link from it. Usually harmless, but check the query in `src/discover.rs` if it becomes common.
-
-- `ICFP/ICFP/2026/cfp` (last seen 2026-09-15)
-- `POPL/POPL/2026/cfp` (last seen 2026-09-15)
-
-## E004
-
-The page needed headless Chrome to render. Fine on GitHub runners; verify Chrome is still preinstalled if fetches start failing.
-
-- `POPL/POPL/2027/volunteer` (last seen 2026-09-16)
-
-## E005
-
-The model's first answer failed validation and a corrective retry was needed. Consider tuning the prompt or schema in `src/schema.rs`.
-
-- `CAV/CAV/2027/cfp` (last seen 2026-09-16)
+No active maintenance codes.
 
 ## Recent outcomes
 
 | Conference-year | Outcome | Attempts | Last attempt | Note |
 |---|---|---|---|---|
-| `LICS/LICS/2027/cfp` | ok | 4 | 2026-09-17 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; only conference dates found so far |
-| `LICS/LICS/2027/volunteer` | notfound | 1 | 2026-09-17 | model found no plausible search hit; trying them in the engine's order; https://lics.siglog.org/ is not about LICS 2027; http://www.wikicfp.com/cfp/program?id=1959 is not about LICS 2027; https://licsf.org/about-us/ is not about LICS 2027 |
-| `POPL/POPL/2027/cfp` | ok | 6 | 2026-09-16 | re-checking stored page https://popl27.sigplan.org/dates; 7 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers |
-| `POPL/POPL/2027/volunteer` | notfound | 3 | 2026-09-16 | 11 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; trying volunteer link https://popl27.sigplan.org/committee/POPL-2027-student-volunteers from the conference page; 2 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/signup; 5 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/track/POPL-2027-student-research-competition; following link https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; following link https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; model found no plausible search hit; trying them in the engine's order; page budget of 6 used up; not fetching https://conf.researchr.org/home/POPL-2027 |
-| `ICFP/ICFP/2027/cfp` | ok | 5 | 2026-09-16 | re-checking stored page https://icfp27.sigplan.org/; 2 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers |
-| `ICFP/ICFP/2027/volunteer` | invalid | 2 | 2026-09-16 | model found no plausible search hit; trying them in the engine's order; https://icfp17.sigplan.org/attending/student-volunteers is not about ICFP 2027; validation failed: application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null; validation failed again: application_deadline is given but application_deadline_quote is null; quote the page or set the deadline to null; https://conf.researchr.org/attending/icfp-2016/Student+Volunteers is not about ICFP 2027 |
-| `PLDI/PLDI/2027/cfp` | ok | 6 | 2026-09-16 | re-checking stored page https://pldi27.sigplan.org/; 2 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers |
-| `PLDI/PLDI/2027/volunteer` | notfound | 2 | 2026-09-16 | model found no plausible search hit; trying them in the engine's order; validation failed: application deadline 2016-04-07 is not in 2026 or 2027; validation failed again: page_is_about_conference is false; application deadline 2016-04-07 is not in 2026 or 2027; https://conf.researchr.org/attending/pldi-2016/Student+Volunteers is not about PLDI 2027; https://pldi26.sigplan.org/track/pldi-2026-student-volunteering is not about PLDI 2027 |
-| `SPLASH/OOPSLA/2026/cfp` | ok | 7 | 2026-09-16 | re-checking stored page https://2026.splashcon.org/track/oopsla-2026 |
-| `SPLASH/OOPSLA/2027/cfp` | ok | 6 | 2026-09-16 | re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027 |
-| `SPLASH/OOPSLA/2027/volunteer` | notfound | 2 | 2026-09-16 | model found no plausible search hit; trying them in the engine's order; https://cornell.learningu.org/volunteer.html is not about SPLASH 2027 (OOPSLA); https://2022.splashcon.org/track/splash-2022-Student-Volunteers is not about SPLASH 2027 (OOPSLA); https://stanfordesp.org/getinvolved/index.html is not about SPLASH 2027 (OOPSLA) |
-| `ETAPS/ESOP/2027/cfp` | ok | 5 | 2026-09-16 | re-checking stored page https://etaps.org/2027/cfp/; submission link https://etaps.org/about/esop is on the conference site itself; dropped; 3 candidate link(s) for the call for papers of the ESOP track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/esop; submission site https://esop27.hotcrp.com/ taken from https://etaps.org/2027/esop |
-| `ETAPS/ESOP/2027/volunteer` | notfound | 2 | 2026-09-16 | model found no plausible search hit; trying them in the engine's order; https://etaps.org/2022/student-scholarships.html is not about ETAPS 2027 (ESOP) |
-| `CAV/CAV/2027/cfp` | ok | 6 | 2026-09-16 | re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; round 1 notification is given but notification_quote is null; quote the page or set notification to null; 2 candidate link(s) for the call for papers of the CAV track of CAV 2027; looking for the submission site on https://conferences.i-cav.org/2027/cfp/; validation failed: round 1 notification_as_written "Tuesday, 18 May 2027" is not in the same entry as "Notification"; the date belongs to a different line of the page. Use the date written next to "Notification"; validation failed again: round 1 notification_as_written "Tuesday, 18 May 2027" is not in the same entry as "Notification"; the date belongs to a different line of the page. Use the date written next to "Notification" |
-| `CAV/CAV/2027/volunteer` | notfound | 2 | 2026-09-16 | model found no plausible search hit; trying them in the engine's order; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found |
+| `ICFP/ICFP/2027/cfp` | ok | 6 | 2026-09-17 | re-checking stored page https://icfp27.sigplan.org/; 2 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers |
+| `ICFP/ICFP/2027/volunteer` | notfound | 3 | 2026-09-17 | model found no plausible search hit; trying them in the engine's order; https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers is not about ICFP 2027; https://icfp26.sigplan.org/ is not about ICFP 2027 |
+| `SPLASH/OOPSLA/2026/cfp` | ok | 8 | 2026-09-17 | re-checking stored page https://2026.splashcon.org/track/oopsla-2026 |
+| `SPLASH/OOPSLA/2027/cfp` | ok | 7 | 2026-09-17 | re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027 |
+| `SPLASH/OOPSLA/2027/volunteer` | ok | 3 | 2026-09-17 | model found no plausible search hit; trying them in the engine's order; https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee is not about SPLASH 2027 (OOPSLA) |
+| `CAV/CAV/2027/cfp` | ok | 7 | 2026-09-17 | re-checking stored page https://conferences.i-cav.org/2027/; validation failed: round 1 author response dates are given but author_response_quote is null; quote the page or set them to null; round 1 notification is given but notification_quote is null; quote the page or set notification to null; 2 candidate link(s) for the call for papers of the CAV track of CAV 2027; looking for the submission site on https://conferences.i-cav.org/2027/cfp/; validation failed: round 1 notification 2027-03-04 is before an earlier date 2027-04-23; validation failed again: round 1 notification 2027-03-04 is before an earlier date 2027-04-23 |
+| `CAV/CAV/2027/volunteer` | notfound | 3 | 2026-09-17 |  |
+| `ETAPS/ESOP/2027/cfp` | ok | 6 | 2026-09-17 | re-checking stored page https://etaps.org/2027/cfp/; 3 candidate link(s) for the call for papers of the ESOP track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/esop; submission site https://esop27.hotcrp.com/ taken from https://etaps.org/2027/esop |
+| `ETAPS/ESOP/2027/volunteer` | notfound | 3 | 2026-09-17 | model found no plausible search hit; trying them in the engine's order; fetch https://www.facebook.com/ETAPSconf/posts/are-you-undergraduate-master-or-phd-student-of-computer-science-apply-to-become-/514692589024076/ failed: GET https://www.facebook.com/ETAPSconf/posts/are-you-undergraduate-master-or-phd-student-of-computer-science-apply-to-become-/514692589024076/: HTTP 400 Bad Request; https://www.etaps.community/ is not about ETAPS 2027 (ESOP) |
+| `POPL/POPL/2027/cfp` | ok | 7 | 2026-09-17 | re-checking stored page https://popl27.sigplan.org/dates; 7 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers |
+| `POPL/POPL/2027/volunteer` | notfound | 4 | 2026-09-17 | 11 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; trying volunteer link https://popl27.sigplan.org/committee/POPL-2027-student-volunteers from the conference page; 2 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/signup; 5 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/track/POPL-2027-student-research-competition; following link https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-artifact-evaluation; following link https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; page budget of 6 used up; not fetching https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; model found no plausible search hit; trying them in the engine's order; 2 candidate link(s) for the page explaining how students apply to be student volunteers at POPL 2027; following link https://popl27.sigplan.org/profile/celestebarnaby; page budget of 6 used up; not fetching https://popl27.sigplan.org/profile/celestebarnaby; following link https://popl27.sigplan.org/profile/aurelebarriere; page budget of 6 used up; not fetching https://popl27.sigplan.org/profile/aurelebarriere; page budget of 6 used up; not fetching https://conf.researchr.org/home/POPL-2027 |
+| `LICS/LICS/2027/cfp` | ok | 5 | 2026-09-17 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; only conference dates found so far |
+| `LICS/LICS/2027/volunteer` | notfound | 2 | 2026-09-17 | https://lics.siglog.org/ is not about LICS 2027 |
+| `PLDI/PLDI/2027/cfp` | ok | 7 | 2026-09-17 | re-checking stored page https://pldi27.sigplan.org/; 2 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers |
+| `PLDI/PLDI/2027/volunteer` | notfound | 3 | 2026-09-17 | model found no plausible search hit; trying them in the engine's order; https://pldi26.sigplan.org/track/pldi-2026-student-volunteering is not about PLDI 2027; https://pldi26.sigplan.org/ is not about PLDI 2027 |
 | `SPLASH/OOPSLA/2026/volunteer` | ok | 1 | 2026-09-16 | trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page; model picked link https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee as the application form or sign-up page where students apply to be student volunteers at SPLASH 2026; not a general information page |
 | `LICS/LICS/2026/cfp` | ok | 1 | 2026-09-16 | https://lics.siglog.org/ is not about LICS 2026 |
 | `ETAPS/ESOP/2026/cfp` | ok | 1 | 2026-09-16 |  |

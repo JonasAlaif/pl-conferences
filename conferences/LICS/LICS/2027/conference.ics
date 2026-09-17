@@ -13,9 +13,9 @@ DTEND;VALUE=DATE:20270625
 SUMMARY:[LICS 2027] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://lics.siglog.org
- /lics27/\nMaintenance: E001\, E003 - see https://github.com/JonasAlaif/pl
- -conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-c
- onferences
+ /lics27/\nMaintenance: E001 - see https://github.com/JonasAlaif/pl-confer
+ ences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 LOCATION:Montreal\, Canada
 END:VEVENT
 END:VCALENDAR

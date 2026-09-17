@@ -13,9 +13,8 @@ DTEND;VALUE=DATE:20260118
 SUMMARY:[POPL 2026] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
- ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
- nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/POPL-2026/POPL-2026-popl-research-papers\nhttps://github.com/Jo
+ nasAlaif/pl-conferences
 LOCATION:Rennes\, France
 END:VEVENT
 END:VCALENDAR

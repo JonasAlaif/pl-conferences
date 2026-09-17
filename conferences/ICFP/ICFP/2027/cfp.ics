@@ -13,9 +13,8 @@ DTEND;VALUE=DATE:20270226
 SUMMARY:[ICFP 2027] Paper Submission Deadline
 DESCRIPTION:ICFP Papers\n\nSubmit at: https://icfp27.hotcrp.com\n\nExtract
  ed automatically by a small language model\; please cross-check against t
- he source before relying on it: https://icfp27.sigplan.org/\nMaintenance:
-  E003 - see https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTE
- NANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+ he source before relying on it: https://icfp27.sigplan.org/\nhttps://gith
+ ub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences
@@ -25,8 +24,7 @@ DTEND;VALUE=DATE:20270423
 SUMMARY:[ICFP 2027] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp27.sigplan.
- org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
- s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e0dd1a4fe495fb401a7cdac11f9221d466063713@pl-conferences
@@ -36,7 +34,6 @@ DTEND;VALUE=DATE:20270508
 SUMMARY:[ICFP 2027] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp27.sigplan.
- org/\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-conference
- s/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

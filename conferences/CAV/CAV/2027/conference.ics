@@ -13,9 +13,7 @@ DTEND;VALUE=DATE:20270724
 SUMMARY:[CAV 2027] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conferences.i-c
- av.org/2027/\nMaintenance: E005 - see https://github.com/JonasAlaif/pl-co
- nferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conf
- erences
+ av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Amsterdam\, The Netherlands
 END:VEVENT
 END:VCALENDAR

@@ -23,9 +23,7 @@ DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
  ed.\n\nSubmit at: https://popl26.hotcrp.com\n\nExtracted automatically by
   a small language model\; please cross-check against the source before re
  lying on it: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-re
- search-papers\nMaintenance: E003 - see https://github.com/JonasAlaif/pl-c
- onferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-con
- ferences
+ search-papers\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
@@ -35,9 +33,8 @@ DTEND;VALUE=DATE:20250912
 SUMMARY:[POPL 2026] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
- ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
- nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/POPL-2026/POPL-2026-popl-research-papers\nhttps://github.com/Jo
+ nasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
@@ -47,8 +44,7 @@ DTEND;VALUE=DATE:20251003
 SUMMARY:[POPL 2026] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nMaintenance: E003 - s
- ee https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\
- nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/POPL-2026/POPL-2026-popl-research-papers\nhttps://github.com/Jo
+ nasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

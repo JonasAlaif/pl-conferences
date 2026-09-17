@@ -13,9 +13,8 @@ DTEND;VALUE=DATE:20260830
 SUMMARY:[ICFP 2026] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nMaintenance: E003 - see https://github.c
- om/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com
- /JonasAlaif/pl-conferences
+ org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
+ nces
 LOCATION:Indianapolis\, United States
 END:VEVENT
 END:VCALENDAR

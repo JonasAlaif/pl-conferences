@@ -20,9 +20,8 @@ DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
  erence in 2026\; remote presentations are not possible.\n\nSubmit at: htt
  ps://oopsla26.hotcrp.com/\n\nExtracted automatically by a small language 
  model\; please cross-check against the source before relying on it: https
- ://2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://
- github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://gi
- thub.com/JonasAlaif/pl-conferences
+ ://2026.splashcon.org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl
+ -conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:367a8753d7cc3e5e84a482932b3c2948ca831967@pl-conferences
@@ -32,9 +31,7 @@ DTEND;VALUE=DATE:20251206
 SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\nMaintenance: E003 - see https://github.com/JonasAl
- aif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlai
- f/pl-conferences
+ org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:32ea03af1aa124423498fe701b74cd08a31c94a3@pl-conferences
@@ -44,9 +41,7 @@ DTEND;VALUE=DATE:20251218
 SUMMARY:[SPLASH 2026 (OOPSLA)] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\nMaintenance: E003 - see https://github.com/JonasAl
- aif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlai
- f/pl-conferences
+ org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:0dc03a575f76744e7d402752662739567d9f3e7c@pl-conferences
@@ -63,9 +58,8 @@ DESCRIPTION:Papers must be submitted via HotCRP at https://oopsla26.hotcrp
  erence in 2026\; remote presentations are not possible.\n\nSubmit at: htt
  ps://oopsla26.hotcrp.com/\n\nExtracted automatically by a small language 
  model\; please cross-check against the source before relying on it: https
- ://2026.splashcon.org/track/oopsla-2026\nMaintenance: E003 - see https://
- github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://gi
- thub.com/JonasAlaif/pl-conferences
+ ://2026.splashcon.org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl
+ -conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:616a14649af3b70000b72b9d1d9b10594badbbfd@pl-conferences
@@ -75,9 +69,7 @@ DTEND;VALUE=DATE:20260523
 SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\nMaintenance: E003 - see https://github.com/JonasAl
- aif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlai
- f/pl-conferences
+ org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
@@ -87,8 +79,6 @@ DTEND;VALUE=DATE:20260611
 SUMMARY:[SPLASH 2026 (OOPSLA)] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\nMaintenance: E003 - see https://github.com/JonasAl
- aif/pl-conferences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlai
- f/pl-conferences
+ org/track/oopsla-2026\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

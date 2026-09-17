@@ -1,0 +1,36 @@
+{
+  "conference": "SPLASH",
+  "track": "OOPSLA",
+  "year": 2027,
+  "label": "SPLASH 2027 (OOPSLA)",
+  "fetched_at": "2026-09-17T11:32:12.952276964Z",
+  "last_verified": "2026-09-17T11:32:12.952276964Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://2026.splashcon.org/track/splash-issta-2026-student-volunteers",
+    "query": "SPLASH 2027 student volunteers",
+    "backend": "ddg-html",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "deadline": "2026-07-19",
+    "deadline_conflict": "Apply here by July 12",
+    "how_to_apply": "The page states that everyone is welcome to apply, with priority given to junior members such as full- or part-time students of computer science and related fields. Volunteers receive a complimentary conference registration (including access to all sessions and proceedings), free lunches/refreshments, a volunteer shirt, and free admission to social events, though they must arrange their own travel and accommodation. To apply, one should follow the instruction in the Applications section.",
+    "application_url": "https://tinyurl.com/splash-issta-sv26"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_volunteer_program": true,
+    "application_deadline_quote": "Apply here by July 12",
+    "application_deadline_as_written": "Sun 19 Jul 2026",
+    "application_deadline": "2026-07-19",
+    "application_deadline_conflict": "null",
+    "how_to_apply": "The page states that everyone is welcome to apply, with priority given to junior members such as full- or part-time students of computer science and related fields. Volunteers receive a complimentary conference registration (including access to all sessions and proceedings), free lunches/refreshments, a volunteer shirt, and free admission to social events, though they must arrange their own travel and accommodation. To apply, one should follow the instruction in the Applications section.",
+    "application_quote": "Apply here by July 12",
+    "application_url": "https://2026.splashcon.org/track/splash-issta-2026-student-volunteers"
+  }
+}

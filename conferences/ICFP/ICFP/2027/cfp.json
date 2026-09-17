@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "ICFP 2027",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T18:15:27.542432243Z",
+  "last_verified": "2026-09-17T11:32:36.280511707Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://icfp27.sigplan.org/",

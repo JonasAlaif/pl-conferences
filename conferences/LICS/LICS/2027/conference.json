@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "LICS 2027",
   "fetched_at": "2026-09-16T18:14:57.005752294Z",
-  "last_verified": "2026-09-17T08:35:23.632570063Z",
+  "last_verified": "2026-09-17T11:31:37.593540067Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://lics.siglog.org/lics27/",

@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "ETAPS 2027 (ESOP)",
   "fetched_at": "2026-09-16T13:10:08.029393963Z",
-  "last_verified": "2026-09-16T18:15:06.850460633Z",
+  "last_verified": "2026-09-17T11:32:04.645959898Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://etaps.org/2027/cfp/",
