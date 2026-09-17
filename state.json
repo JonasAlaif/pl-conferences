@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-16T18:50:43.019787142Z",
-  "run_count": 15,
+  "last_run": "2026-09-17T08:36:00.613119674Z",
+  "run_count": 16,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -122,16 +122,26 @@
       "note": "https://lics.siglog.org/ is not about LICS 2026"
     },
     "LICS/LICS/2027/cfp": {
-      "last_attempt": "2026-09-16T18:14:57.005752294Z",
-      "attempts": 3,
+      "last_attempt": "2026-09-17T08:35:23.632570063Z",
+      "attempts": 4,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": "brave",
       "codes": [
-        "E001",
-        "E003"
+        "E001"
       ],
-      "note": "https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; 3 candidate link(s) for the call for papers or important dates of the LICS track of LICS 2027; following link https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; following link https://lics.siglog.org/lics26/; https://lics.siglog.org/lics26/ is not about LICS 2027; following link https://lics.siglog.org/lics24/toc.html; https://lics.siglog.org/lics24/toc.html is not about LICS 2027; only conference dates found so far"
+      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; only conference dates found so far"
+    },
+    "LICS/LICS/2027/volunteer": {
+      "last_attempt": "2026-09-17T08:35:23.632570063Z",
+      "attempts": 1,
+      "outcome": "not_found",
+      "consecutive_failures": 1,
+      "backend": "brave",
+      "codes": [
+        "E001"
+      ],
+      "note": "model found no plausible search hit; trying them in the engine's order; https://lics.siglog.org/ is not about LICS 2027; http://www.wikicfp.com/cfp/program?id=1959 is not about LICS 2027; https://licsf.org/about-us/ is not about LICS 2027"
     },
     "PLDI/PLDI/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",
