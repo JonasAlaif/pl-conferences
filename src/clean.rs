@@ -56,6 +56,24 @@ pub fn html_to_markdown(html: &str) -> String {
     budget(&html_to_markdown_unbudgeted(html), max_chars())
 }
 
+/// A `<th>` in a table body is a row's label ("Submission", "Rebuttal" at
+/// the start of each row of ETAPS's dates table). The Markdown converter
+/// drops header cells outside `<thead>`, and with them the one word that
+/// says what the row's dates are; as plain cells they survive.
+fn body_row_headers_to_cells(html: &str) -> String {
+    static THEAD: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?is)<thead\b.*?</thead>").unwrap());
+    static TH: LazyLock<Regex> = LazyLock::new(|| Regex::new(r"(?i)<(/?)th\b").unwrap());
+    let mut out = String::with_capacity(html.len());
+    let mut last = 0;
+    for m in THEAD.find_iter(html) {
+        out.push_str(&TH.replace_all(&html[last..m.start()], "<${1}td"));
+        out.push_str(m.as_str());
+        last = m.end();
+    }
+    out.push_str(&TH.replace_all(&html[last..], "<${1}td"));
+    out
+}
+
 /// `MAX_CHARS`, overridable with `PLC_MAX_CHARS` for experiments.
 fn max_chars() -> usize {
     std::env::var("PLC_MAX_CHARS").ok().and_then(|s| s.parse().ok()).unwrap_or(MAX_CHARS)
@@ -73,6 +91,7 @@ pub fn html_to_markdown_unbudgeted(html: &str) -> String {
             .build();
         tidy(&converter.convert(html).unwrap_or_default())
     };
+    let html = &body_row_headers_to_cells(html);
     let stripped = convert(&strip_elements(html));
     // Safety net: if stripping boilerplate by selector left almost nothing,
     // the selectors hit real content (a site that puts its body in a
@@ -360,6 +379,16 @@ mod tests {
         let out = budget(&md, 6_000);
         assert!(out.contains("Submission (Round 1)") && out.contains("Author Notification (Round 1)") && out.contains("May I post on arXiv"), "{out}");
         assert!(!out.contains("Person Number 250"), "the committee is filler and goes first");
+    }
+
+    #[test]
+    fn a_rows_header_cell_keeps_its_label() {
+        // ETAPS 2027's dates table: <th> in the body names the row.
+        let html = r#"<table><thead><tr><th>Event / Date</th><th>ESOP–round 1</th><th>TACAS</th></tr></thead><tbody><tr><th>Submission</th><td>May 28</td><td>Oct 15</td></tr><tr><th>Mandatory Artifact Submission</th><td>—</td><td>Oct 29</td></tr></tbody></table>"#;
+        let md = html_to_markdown(html);
+        assert!(md.contains("| Submission | May 28 | Oct 15 |"), "{md}");
+        assert!(md.contains("| Mandatory Artifact Submission | — | Oct 29 |"), "{md}");
+        assert!(md.contains("Event / Date"), "the header row is still the header: {md}");
     }
 
     #[test]

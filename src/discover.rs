@@ -25,6 +25,9 @@ pub struct Ctx<'a> {
     pub searcher: &'a Searcher,
     /// Source URLs of earlier editions already in the repository, as (year, url).
     pub prior_urls: Vec<(i32, String)>,
+    /// The conference's other tracks (ESOP for TACAS), whose entries on a
+    /// joint call for papers are not this track's.
+    pub siblings: Vec<String>,
 }
 
 /// How a page was found and processed.
@@ -541,8 +544,25 @@ fn verify_dates(ctx: &Ctx, trail: &mut Trail, cfg: &ConferenceCfg, year: i32, x:
         // decision-like entries is the first is settled by their dates
         // (`schema::entry_between`), and asked about labels the model
         // refused "Conditional Accept Decisions Announced" as a decision.
+
+        // A "conflicting statement" must be another statement of the paper
+        // deadline. Sharing its words is not enough: ETAPS's "TACAS
+        // mandatory artifact submission deadline" is a different deadline.
+        // Asked what the date is, the model drops such a note.
+        let conflict = cfp.rounds.get(i).and_then(|c| c.submission_conflict.clone());
+        if let Some(conflict) = conflict {
+            if let Some(excerpt) = schema::excerpt_around(md, &conflict, &conflict) {
+                let q = format!("An excerpt from the web page of {} {year}:\n\n{excerpt}\n\nLook at \"{conflict}\" in this excerpt. Which words of the excerpt label that date, and what kind of date is it?", cfg.conference);
+                if let Some((c, _)) = ask::<schema::DateCheck>(ctx, trail, SYSTEM, &q)? {
+                    if !matches!(c.kind, PaperSubmission | Unclear) {
+                        trail.note(format!("dropped the conflicting statement {conflict:?}: it is a {} date, not the paper deadline", serde_json::to_value(c.kind).map(|v| v.to_string()).unwrap_or_default()));
+                        cfp.rounds[i].submission_conflict = None;
+                    }
+                }
+            }
+        }
     }
-    let _ = (cfp, final_pass);
+    let _ = final_pass;
     Ok(problems)
 }
 
@@ -562,18 +582,18 @@ fn page_line(url: &str) -> String {
 
 /// Extraction + validation + one corrective retry for a CFP page. Returns
 /// the last raw answer, the validation result and whether a retry happened.
-pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str, links: &[(String, String)]) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
-    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
+pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, siblings: &[String], md: &str, links: &[(String, String)]) -> Result<Option<(CfpExtraction, serde_json::Value, Result<Cfp, Vec<String>>, bool, Trail)>> {
+    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![], siblings: siblings.to_vec() };
     let mut trail = Trail::default();
     let prompt = cfp_prompt(cfg, year, "", md);
     let grounding = grounding_text(md, links);
-    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x, last| schema::validate_cfp_links(x, year, &grounding, &cfg.track, links, last), |ctx, trail, x, cfp, last| verify_dates(ctx, trail, cfg, year, x, cfp, md, last))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x, last| schema::validate_cfp_tracks(x, year, &grounding, &cfg.track, &ctx.siblings, links, last), |ctx, trail, x, cfp, last| verify_dates(ctx, trail, cfg, year, x, cfp, md, last))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Extraction + validation + one corrective retry for a volunteer page, for
 /// the harness (the pipeline goes through `try_volunteer_page`).
 pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option<&str>, md: &str, links: &[(String, String)]) -> Result<Option<(VolunteerExtraction, serde_json::Value, Result<Option<Volunteer>, Vec<String>>, bool, Trail)>> {
-    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![] };
+    let ctx = Ctx { llm, searcher: &crate::search::Searcher::new(vec![]), prior_urls: vec![], siblings: vec![] };
     let mut trail = Trail::default();
     let prompt = volunteer_prompt(cfg, year, site, "", md);
     let grounding = grounding_text(md, links);

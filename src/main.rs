@@ -126,11 +126,16 @@ fn main() -> Result<()> {
             let md = clean::html_to_markdown(&html);
             let llm = llm::Llm::from_env();
             llm.check()?;
-            let prompt = discover::cfp_prompt(&cfg, year, "", &md);
+            // The production path (validation, corrective retry, verifier),
+            // with the conference's other tracks from conferences.json.
+            let siblings: Vec<String> = config::load(Path::new("conferences.json")).map(|all| config::tracks_of(&all, &cfg.conference).into_iter().filter(|t| !t.eq_ignore_ascii_case(&cfg.track)).collect()).unwrap_or_default();
             let t = std::time::Instant::now();
-            let (x, raw, usage): (schema::CfpExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
-            eprintln!("{raw}\n--- {usage:?} wall {:.1}s", t.elapsed().as_secs_f64());
-            match schema::validate_cfp_links(&x, year, &md, &cfg.track, &clean::links(&html, "https://example.org/"), true) {
+            let Some((_x, raw, validated, retried, trail)) = discover::extract_cfp(&llm, &cfg, year, &siblings, &md, &clean::links(&html, "https://example.org/"))? else {
+                println!("model output unusable");
+                return Ok(());
+            };
+            eprintln!("{raw}\n--- retried: {retried}, wall {:.1}s\n--- trail: {}", t.elapsed().as_secs_f64(), trail.note_text());
+            match validated {
                 Ok(c) => println!("{}", serde_json::to_string_pretty(&c)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
@@ -236,7 +241,8 @@ fn run(args: &Args) -> Result<()> {
         }
         let (ctx, vol_ctx) = ctxs.entry(cfg.key(0)).or_insert_with(|| {
             let prior = prior_urls(root, cfg);
-            (Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.0 }, Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.1 })
+            let siblings = config::tracks_of(&cfgs, &cfg.conference).into_iter().filter(|t| !t.eq_ignore_ascii_case(&cfg.track)).collect();
+            (Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.0, siblings }, Ctx { llm: &llm, searcher: &searcher, prior_urls: prior.1, siblings: vec![] })
         });
         // A panic in one conference-year (a bug, an unexpected page) must not
         // take the run and its state down with it.

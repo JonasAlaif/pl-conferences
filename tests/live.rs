@@ -47,6 +47,13 @@ fn cases() -> Vec<Case> {
             ],
             conference_dates: Some(&[("2026-10-04", "2026-10-09")]), city: Some("Oakland"),
         },
+        // ETAPS's joint call, asked for TACAS: one round (ESOP's first
+        // round is not TACAS's), and the artifact deadline is no conflict.
+        Case {
+            fixture: "pages/etaps27-cfp.html", conference: "ETAPS", track: "TACAS", year: 2027,
+            rounds: vec![("2026-10-15", Some("2026-12-07"), Some("2026-12-09"), Some(&["2026-12-22"]))],
+            conference_dates: None, city: None,
+        },
         Case {
             fixture: "pldi26-cfp.html", conference: "PLDI", track: "PLDI", year: 2026,
             rounds: vec![("2025-11-13", Some("2026-02-17"), Some("2026-02-22"), Some(&["2026-03-05"]))],
@@ -101,6 +108,13 @@ fn cases() -> Vec<Case> {
             conference_dates: Some(&[("2025-10-12", "2025-10-18")]), city: Some("Singapore"),
         },
     ]
+}
+
+/// The conference's other tracks, from the repository's conferences.json:
+/// what production passes to validation.
+fn siblings_of(cfg: &pl_conferences::config::ConferenceCfg) -> Vec<String> {
+    let all = pl_conferences::config::load(std::path::Path::new(concat!(env!("CARGO_MANIFEST_DIR"), "/conferences.json"))).unwrap();
+    pl_conferences::config::tracks_of(&all, &cfg.conference).into_iter().filter(|t| !t.eq_ignore_ascii_case(&cfg.track)).collect()
 }
 
 fn fixture(name: &str) -> String {
@@ -294,8 +308,8 @@ struct Scenario {
     submission: Option<&'static str>,
     /// Expected first-round notification, when it matters.
     notification: Option<&'static str>,
-    /// Expected conference dates and city.
-    dates: Option<(&'static str, &'static str, &'static str)>,
+    /// Accepted (start, end, city) triples (None: no conference dates expected).
+    dates: Option<&'static [(&'static str, &'static str, &'static str)]>,
 }
 
 fn scenarios() -> Vec<Scenario> {
@@ -303,33 +317,35 @@ fn scenarios() -> Vec<Scenario> {
         // The home page's sidebar states the deadlines but not the submission
         // site; the track page one link away names it. The site must be
         // borrowed, the deadlines kept.
-        Scenario { name: "icfp27: site from the track page", conference: "ICFP", track: "ICFP", year: 2027, known_url: "https://icfp27.sigplan.org/", submission_url: Some("https://icfp27.hotcrp.com"), submission: Some("2027-02-25"), notification: Some("2027-05-07"), dates: Some(("2027-09-26", "2027-10-01", "Nijmegen")) },
+        Scenario { name: "icfp27: site from the track page", conference: "ICFP", track: "ICFP", year: 2027, known_url: "https://icfp27.sigplan.org/", submission_url: Some("https://icfp27.hotcrp.com"), submission: Some("2027-02-25"), notification: Some("2027-05-07"), dates: Some(&[("2027-09-26", "2027-10-01", "Nijmegen")]) },
         // A dates table with rows for every co-located event; the workshops
         // row is not the POPL deadline nor a conflict; the site is on the
         // track page; the notification is the first decision (5 Oct), not the
         // final acceptance (9 Nov).
-        Scenario { name: "popl27: dates table, site from the track page", conference: "POPL", track: "POPL", year: 2027, known_url: "https://popl27.sigplan.org/dates", submission_url: Some("https://popl27.hotcrp.com"), submission: Some("2026-07-09"), notification: Some("2026-10-05"), dates: Some(("2027-01-10", "2027-01-16", "Mexico City")) },
+        Scenario { name: "popl27: dates table, site from the track page", conference: "POPL", track: "POPL", year: 2027, known_url: "https://popl27.sigplan.org/dates", submission_url: Some("https://popl27.hotcrp.com"), submission: Some("2026-07-09"), notification: Some("2026-10-05"), dates: Some(&[("2027-01-10", "2027-01-16", "Mexico City")]) },
         // The joint call states ESOP's two rounds and no site; the ESOP page
         // says "The papers can be submitted here" with the site behind "here",
         // which it also links as a "Submit paper" button: both anchors count.
-        Scenario { name: "etaps27: site behind 'here' on the ESOP page", conference: "ETAPS", track: "ESOP", year: 2027, known_url: "https://etaps.org/2027/cfp/", submission_url: Some("https://esop27.hotcrp.com"), submission: Some("2026-05-28"), notification: Some("2026-08-06"), dates: Some(("2027-04-12", "2027-04-15", "Copenhagen")) },
+        // The page states both "April 10–15" (ETAPS with its workshop
+        // weekend) and 12–15 (the main conferences); either is right.
+        Scenario { name: "etaps27: site behind 'here' on the ESOP page", conference: "ETAPS", track: "ESOP", year: 2027, known_url: "https://etaps.org/2027/cfp/", submission_url: Some("https://esop27.hotcrp.com"), submission: Some("2026-05-28"), notification: Some("2026-08-06"), dates: Some(&[("2027-04-12", "2027-04-15", "Copenhagen"), ("2027-04-10", "2027-04-15", "Copenhagen")]) },
         // The series home page is not LICS 2027's page but says "LICS 2027
         // will be held in Montreal" and links to it: its links must be tried.
-        Scenario { name: "lics27: reached through the series home page", conference: "LICS", track: "LICS", year: 2027, known_url: "https://lics.siglog.org/", submission_url: None, submission: None, notification: None, dates: Some(("2027-06-21", "2027-06-24", "Montreal")) },
+        Scenario { name: "lics27: reached through the series home page", conference: "LICS", track: "LICS", year: 2027, known_url: "https://lics.siglog.org/", submission_url: None, submission: None, notification: None, dates: Some(&[("2027-06-21", "2027-06-24", "Montreal")]) },
         // Deadlines and dates on the home page, "Full call coming soon" on the
         // call page: no submission site may be invented.
-        Scenario { name: "cav27: no site published", conference: "CAV", track: "CAV", year: 2027, known_url: "https://conferences.i-cav.org/2027/", submission_url: None, submission: Some("2027-01-20"), notification: Some("2027-04-23"), dates: Some(("2027-07-19", "2027-07-23", "Amsterdam")) },
+        Scenario { name: "cav27: no site published", conference: "CAV", track: "CAV", year: 2027, known_url: "https://conferences.i-cav.org/2027/", submission_url: None, submission: Some("2027-01-20"), notification: Some("2027-04-23"), dates: Some(&[("2027-07-19", "2027-07-23", "Amsterdam")]) },
         // The call page gives the conference dates ("Main Conference: July
         // 26-29, 2026") but no city; the edition's home page, its parent
         // directory, says "in Lisbon, Portugal" with the same dates.
-        Scenario { name: "cav26: location from the home page", conference: "CAV", track: "CAV", year: 2026, known_url: "https://conferences.i-cav.org/2026/cfp/", submission_url: Some("https://submissions.floc26.org/cav"), submission: Some("2026-01-28"), notification: Some("2026-04-17"), dates: Some(("2026-07-26", "2026-07-29", "Lisbon")) },
+        Scenario { name: "cav26: location from the home page", conference: "CAV", track: "CAV", year: 2026, known_url: "https://conferences.i-cav.org/2026/cfp/", submission_url: Some("https://submissions.floc26.org/cav"), submission: Some("2026-01-28"), notification: Some("2026-04-17"), dates: Some(&[("2026-07-26", "2026-07-29", "Lisbon")]) },
         // The call page says "Lisbon" without the country; the home page
         // adds "Lisbon, Portugal". (The scenario checks the city; the log
         // line "location ... taken from" shows the country.)
-        Scenario { name: "lics26: country from the home page", conference: "LICS", track: "LICS", year: 2026, known_url: "https://lics.siglog.org/lics26/cfp.php", submission_url: Some("https://submissions.floc26.org/lics"), submission: Some("2026-01-22"), notification: Some("2026-04-16"), dates: Some(("2026-07-20", "2026-07-23", "Lisbon")) },
+        Scenario { name: "lics26: country from the home page", conference: "LICS", track: "LICS", year: 2026, known_url: "https://lics.siglog.org/lics26/cfp.php", submission_url: Some("https://submissions.floc26.org/lics"), submission: Some("2026-01-22"), notification: Some("2026-04-16"), dates: Some(&[("2026-07-20", "2026-07-23", "Lisbon")]) },
         // Site written in the text; two "Author Notification (Round 1)"
         // entries, the first being the notification.
-        Scenario { name: "splash27: site in the text", conference: "SPLASH", track: "OOPSLA", year: 2027, known_url: "https://conf.researchr.org/track/splash-2027/splashoopsla2027", submission_url: Some("https://oopsla27.hotcrp.com"), submission: Some("2026-10-14"), notification: Some("2026-12-18"), dates: Some(("2027-10-10", "2027-10-15", "Prague")) },
+        Scenario { name: "splash27: site in the text", conference: "SPLASH", track: "OOPSLA", year: 2027, known_url: "https://conf.researchr.org/track/splash-2027/splashoopsla2027", submission_url: Some("https://oopsla27.hotcrp.com"), submission: Some("2026-10-14"), notification: Some("2026-12-18"), dates: Some(&[("2027-10-10", "2027-10-15", "Prague")]) },
     ]
 }
 
@@ -346,7 +362,7 @@ fn discovery_scenarios() {
     let llm = Llm::from_env();
     llm.check().expect("ollama with model");
     let searcher = pl_conferences::search::Searcher::new(vec![]);
-    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![] };
+    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![], siblings: vec![] };
     let only = std::env::var("PLC_CASE").ok();
     let (mut total, mut passed) = (0, 0);
     let d = |s: &str| chrono::NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
@@ -382,12 +398,12 @@ fn discovery_scenarios() {
                 }
                 let conf = found.conference.as_ref().map(|f| &f.value);
                 match (s.dates, conf) {
-                    (Some((a, b, city)), Some(c)) => {
-                        if (c.start, c.end) != (d(a), d(b)) || !c.city.as_deref().is_some_and(|x| x.contains(city)) {
-                            errs.push(format!("conference {:?} {:?} != {a}..{b} {city}", (c.start, c.end), c.city));
+                    (Some(accepted), Some(c)) => {
+                        if !accepted.iter().any(|(a, b, city)| (c.start, c.end) == (d(a), d(b)) && c.city.as_deref().is_some_and(|x| x.contains(city))) {
+                            errs.push(format!("conference {:?} {:?} != {}", (c.start, c.end), c.city, accepted.iter().map(|(a, b, city)| format!("{a}..{b} {city}")).collect::<Vec<_>>().join(" or ")));
                         }
                     }
-                    (Some((a, b, _)), None) => errs.push(format!("no conference dates found (expected {a}..{b})")),
+                    (Some(accepted), None) => errs.push(format!("no conference dates found (expected {}..{})", accepted[0].0, accepted[0].1)),
                     (None, Some(c)) => errs.push(format!("unexpected conference dates {:?}", (c.start, c.end))),
                     (None, None) => {}
                 }
@@ -469,7 +485,7 @@ fn hit_ranking() {
     let llm = Llm::from_env();
     llm.check().expect("ollama with model");
     let searcher = pl_conferences::search::Searcher::new(vec![]);
-    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![] };
+    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![], siblings: vec![] };
     let hit = |title: &str, url: &str| Hit { title: title.into(), url: url.into(), snippet: String::new() };
     let hit_s = |title: &str, url: &str, snippet: &str| Hit { title: title.into(), url: url.into(), snippet: snippet.into() };
     let (mut total, mut passed) = (0, 0);
@@ -559,7 +575,7 @@ fn extraction_accuracy() {
         let cfg = pl_conferences::config::ConferenceCfg { conference: case.conference.into(), track: case.track.into(), since: 0 };
         for r in 0..runs {
             let t = Instant::now();
-            let Some((_x, raw, validated, retried, trail)) = discover::extract_cfp(&llm, &cfg, case.year, &md, &links).unwrap() else {
+            let Some((_x, raw, validated, retried, trail)) = discover::extract_cfp(&llm, &cfg, case.year, &siblings_of(&cfg), &md, &links).unwrap() else {
                 total += 1;
                 eprintln!("FAIL {:24} run {r}: model output unusable", case.fixture);
                 continue;

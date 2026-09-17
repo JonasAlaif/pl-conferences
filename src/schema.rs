@@ -827,6 +827,38 @@ pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Re
 /// correct; on the final pass it is dropped, since a missing notification
 /// is better than a wrong one.
 pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str, links: &[(String, String)], final_pass: bool) -> Result<Cfp, Vec<String>> {
+    validate_cfp_tracks(x, year, page, track, &[], links, final_pass)
+}
+
+/// The words of `text`, normalised, contain `name` as a whole word
+/// ("ESOP-round 1" names ESOP; "ESOPs" does not).
+fn names(text: &str, name: &str) -> bool {
+    let n = norm(name);
+    !n.is_empty() && format!(" {} ", norm(text)).contains(&format!(" {n} "))
+}
+
+/// The line of the page the quote sits on (the quote itself when the page
+/// is not given).
+fn line_of<'a>(page: &'a str, quote: &'a str) -> &'a str {
+    let q = norm(quote);
+    page.lines().find(|l| !q.is_empty() && norm(l).contains(&q)).unwrap_or(quote)
+}
+
+/// A quoted entry that names another of the conference's tracks and not
+/// this one is that track's entry: on ETAPS's joint call "Submission
+/// deadline for ESOP-round 1" is no TACAS deadline. Returns the track named.
+fn other_tracks_entry<'a>(page: &str, quote: &str, track: &str, siblings: &'a [String]) -> Option<&'a str> {
+    let line = line_of(page, quote);
+    if names(line, track) {
+        return None;
+    }
+    siblings.iter().map(String::as_str).find(|s| names(line, s))
+}
+
+/// `siblings`: the conference's other tracks (from `conferences.json`),
+/// whose entries on a joint call for papers must not be taken for this
+/// track's.
+pub fn validate_cfp_tracks(x: &CfpExtraction, year: i32, page: &str, track: &str, siblings: &[String], links: &[(String, String)], final_pass: bool) -> Result<Cfp, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -880,6 +912,13 @@ pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str,
     let mut rounds = vec![];
     for (i, r) in x.rounds.iter().enumerate().take(if has_rounds { usize::MAX } else { 0 }) {
         let what = format!("round {}", i + 1);
+        for (field, q) in [("submission_deadline", Some(&r.submission_deadline_quote)), ("author_response", r.author_response_quote.as_ref()), ("notification", r.notification_quote.as_ref())] {
+            if let Some(q) = q {
+                if let Some(other) = other_tracks_entry(page, q, track, siblings) {
+                    errs.push(format!("{what} {field}_quote {q:?} is an entry for the {other} track, not for {track}; use only entries that name {track} or that apply to every track, and leave this round out if {track} has no such entry"));
+                }
+            }
+        }
         let Ok(submission) = parse_date(&r.submission_deadline).map_err(|e| errs.push(format!("{what} submission_deadline: {e}"))) else {
             continue;
         };
@@ -939,7 +978,10 @@ pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str,
         }
         if let Some(c) = &conference {
             if last > c.start {
-                errs.push(format!("{what} dates run past the conference start {}", c.start));
+                // A dates table often writes no year; the model then takes
+                // the conference's, which is wrong for a deadline that
+                // falls in the autumn before a spring conference.
+                errs.push(format!("{what} dates run past the conference start {}: deadlines, rebuttal and notification all come before the conference; a date the page writes without a year belongs to the year in which it precedes the conference ({} for a month later than the conference's)", c.start, c.start.year() - 1));
             }
         }
         // The model's own candidate first; if the rules reject it (a page
@@ -1161,6 +1203,32 @@ mod tests {
         assert_eq!((c.city, c.country), (None, None), "not on the page: not taken from the model's memory");
         let c = validate_cfp(&x, 2026, &format!("{page} in Lisbon, Portugal"), "").unwrap().conference.unwrap();
         assert_eq!((c.city.as_deref(), c.country.as_deref()), (Some("Lisbon"), Some("Portugal")));
+    }
+
+    #[test]
+    fn another_tracks_entry_on_a_joint_call_is_refused() {
+        // ETAPS 2027's joint call, asked for TACAS: the model made a round
+        // 1 out of ESOP's first round.
+        let page = "*   Submission deadline for ESOP-round 1: May 28, 2026\n*   Submission deadline for ESOP-round 2, iFS, FoSSaCS, TACAS: Thursday, October 15, 2026\n*   Rebuttal for ESOP-round 1: July 20-22, 2026\n*   Notification for ESOP-round 1: August 6, 2026\n*   Paper notification and TACAS mandatory artifact notification: Tuesday, December 22, 2026";
+        let siblings = vec!["ESOP".to_string()];
+        assert_eq!(other_tracks_entry(page, "Submission deadline for ESOP-round 1", "TACAS", &siblings), Some("ESOP"));
+        assert_eq!(other_tracks_entry(page, "Submission deadline for ESOP-round 2, iFS, FoSSaCS, TACAS", "TACAS", &siblings), None, "names this track too");
+        assert_eq!(other_tracks_entry(page, "Paper notification and TACAS mandatory artifact notification", "TACAS", &siblings), None);
+        assert_eq!(other_tracks_entry("Paper submission: Oct 15", "Paper submission", "TACAS", &siblings), None, "an entry naming no track applies to all");
+        assert_eq!(other_tracks_entry(page, "Submission deadline for ESOP-round 1", "ESOP", &["TACAS".to_string()]), None, "asked for ESOP it is ESOP's");
+        let mut x = ok_extraction();
+        x.rounds[0].submission_deadline_quote = "Submission deadline for ESOP-round 1".into();
+        x.rounds[0].submission_deadline_as_written = "May 28, 2026".into();
+        x.rounds[0].submission_deadline = "2026-05-28".into();
+        x.rounds[0].author_response_quote = None;
+        x.rounds[0].author_response_start = None;
+        x.rounds[0].author_response_end = None;
+        x.rounds[0].notification = None;
+        x.rounds[0].notification_quote = None;
+        x.conference = None;
+        let errs = validate_cfp_tracks(&x, 2027, page, "TACAS", &siblings, &[], true).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("entry for the ESOP track, not for TACAS")), "{errs:?}");
+        assert!(validate_cfp_tracks(&x, 2027, page, "ESOP", &["TACAS".to_string()], &[], true).is_ok(), "the same entry is fine for ESOP");
     }
 
     #[test]
