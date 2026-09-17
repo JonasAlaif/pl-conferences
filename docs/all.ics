@@ -516,25 +516,6 @@ DESCRIPTION:The page states that everyone is welcome to apply\, with prior
  ithub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
-UID:1b0fd54afa441842fabfe50214d35acceeade5da@pl-conferences
-DTSTAMP:20260917T113212Z
-DTSTART;VALUE=DATE:20260719
-DTEND;VALUE=DATE:20260720
-SUMMARY:[SPLASH 2027 (OOPSLA)] Volunteer Application Deadline
-DESCRIPTION:The page states that everyone is welcome to apply\, with prior
- ity given to junior members such as full- or part-time students of comput
- er science and related fields. Volunteers receive a complimentary confere
- nce registration (including access to all sessions and proceedings)\, fre
- e lunches/refreshments\, a volunteer shirt\, and free admission to social
-  events\, though they must arrange their own travel and accommodation. To
-  apply\, one should follow the instruction in the Applications section.\n
- \nApply at: https://tinyurl.com/splash-issta-sv26\n\nNote: the page also 
- states "Apply here by July 12".\n\nExtracted automatically by a small lan
- guage model\; please cross-check against the source before relying on it:
-  https://2026.splashcon.org/track/splash-issta-2026-student-volunteers\nh
- ttps://github.com/JonasAlaif/pl-conferences
-END:VEVENT
-BEGIN:VEVENT
 UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20260720

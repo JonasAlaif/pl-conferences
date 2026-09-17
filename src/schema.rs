@@ -967,6 +967,12 @@ pub fn validate_volunteer_links(x: &VolunteerExtraction, year: i32, page: &str, 
         if deadline > end {
             errs.push(format!("application deadline {deadline} is after the conference ends ({end}); volunteers are recruited before the conference"));
         }
+        // Searching for next year's volunteers finds this year's page, and
+        // the model takes it for the edition asked about; its deadline
+        // gives it away.
+        if deadline < end - chrono::Duration::days(365) {
+            errs.push(format!("application deadline {deadline} is more than a year before the conference ({end}): this is the volunteer page of an earlier edition, not of {year}; set page_is_about_conference to false"));
+        }
     }
     match clean_opt(&x.application_deadline_quote) {
         Some(q) if page.is_empty() || page_contains(page, &q) => check_written("volunteer", "application_deadline", page, &q, &x.application_deadline_as_written, &mut errs),
@@ -1306,6 +1312,12 @@ mod tests {
         let errs = validate_volunteer(&x, 2026, page, Some(end)).unwrap_err();
         assert!(errs.iter().any(|e| e.contains("after the conference ends")), "{errs:?}");
         assert!(validate_volunteer(&x, 2026, page, Some(NaiveDate::from_ymd_opt(2026, 10, 9).unwrap())).unwrap().is_some());
+        // Asked about the 2027 edition (October 2027), the search finds the
+        // 2026 edition's page: its deadline is over a year early.
+        let errs = validate_volunteer(&x, 2027, page, Some(NaiveDate::from_ymd_opt(2027, 10, 15).unwrap())).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("earlier edition")), "{errs:?}");
+        // A January conference recruits in the autumn before: still fine.
+        assert!(validate_volunteer(&x, 2027, page, Some(NaiveDate::from_ymd_opt(2027, 1, 23).unwrap())).unwrap().is_some());
         // A deadline without its quote is refused: the model must show its evidence.
         let mut y = x.clone();
         y.application_deadline_quote = None;

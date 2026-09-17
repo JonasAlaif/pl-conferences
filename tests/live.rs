@@ -434,6 +434,24 @@ fn discovery_scenarios() {
             eprintln!("FAIL {:48} {secs:6.1}s: {}\n     trail: {}", "splash26 volunteers", errs.join("; "), att.trail.note_text());
         }
     }
+    // Seen in production on 17 September 2026: the search for "SPLASH 2027
+    // student volunteers" leads with the 2026 edition's page, and the model
+    // took it for 2027's (deadline July 2026, conference October 2027).
+    // Nothing must be found.
+    if only.as_deref().is_none_or(|o| "splash27 volunteers".contains(o)) {
+        total += 1;
+        let t = Instant::now();
+        let cfg = pl_conferences::config::ConferenceCfg { conference: "SPLASH".into(), track: "OOPSLA".into(), since: 0 };
+        let att = discover::find_volunteer(&ctx, &cfg, 2027, Some("https://2026.splashcon.org/track/splash-issta-2026-student-volunteers"), None, Some(d("2027-10-15")), Some("https://2027.splashcon.org")).unwrap();
+        let secs = t.elapsed().as_secs_f64();
+        match &att.result {
+            Err(_) => {
+                passed += 1;
+                eprintln!("PASS {:48} {secs:6.1}s", "splash27 volunteers: last year's page is refused");
+            }
+            Ok(found) => eprintln!("FAIL {:48} {secs:6.1}s: took {} (deadline {}) for the 2027 edition\n     trail: {}", "splash27 volunteers", found.prov.source_url, found.value.deadline, att.trail.note_text()),
+        }
+    }
     eprintln!("=== discovery {passed}/{total} passed, model {}", llm.model);
     assert_eq!(passed, total);
 }

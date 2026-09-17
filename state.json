@@ -235,11 +235,11 @@
     "SPLASH/OOPSLA/2027/volunteer": {
       "last_attempt": "2026-09-17T11:32:12.952276964Z",
       "attempts": 3,
-      "outcome": "ok",
-      "consecutive_failures": 0,
+      "outcome": "not_found",
+      "consecutive_failures": 1,
       "backend": "ddg-html",
       "codes": [],
-      "note": "model found no plausible search hit; trying them in the engine's order; https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee is not about SPLASH 2027 (OOPSLA)"
+      "note": "record removed by hand: the 2026 edition's volunteer page had been taken for 2027's (now refused by the deadline-within-a-year rule)"
     }
   }
 }
