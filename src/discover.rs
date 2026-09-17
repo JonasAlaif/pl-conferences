@@ -302,6 +302,18 @@ fn grounding_text(md: &str, links: &[(String, String)]) -> String {
     s
 }
 
+/// The directory above a page ("https://x.org/2026/cfp/" and
+/// "https://x.org/2026/cfp.php" both give "https://x.org/2026/"): where an
+/// edition's home page usually is. None at a site root.
+fn parent_page(url: &str) -> Option<String> {
+    let u = url::Url::parse(url).ok()?;
+    let parent = u.join(if u.path().ends_with('/') { "../" } else { "./" }).ok()?;
+    let mut parent = parent;
+    parent.set_query(None);
+    parent.set_fragment(None);
+    (parent.path() != u.path() && parent.as_str().trim_end_matches('/') != url.trim_end_matches('/')).then(|| parent.to_string())
+}
+
 /// Whether a link the page hands over to (a submission system, an
 /// application form) can be published, once its evidence has checked out
 /// (`schema::grounded_link`): never the page itself, and with `offsite`
@@ -401,8 +413,11 @@ fn fetch_page(trail: &mut Trail, url: &str) -> Option<fetch::Page> {
             trail.pages += 1;
             // The page may have redirected: its final URL counts as tried too.
             trail.mark_tried(&p.url);
-            if p.via_chrome {
+            // Rendering with Chrome is normal operation. Only a page that
+            // needed Chrome and did not get it is worth a maintenance code.
+            if p.chrome_failed {
                 trail.code(Code::E004);
+                trail.note(format!("{url} needed headless Chrome, which was missing or failed"));
             }
             if p.insecure_tls {
                 trail.code(Code::E009);
@@ -418,29 +433,94 @@ fn fetch_page(trail: &mut Trail, url: &str) -> Option<fetch::Page> {
 
 /// Run the extraction; on validation failure retry once with the errors.
 /// `None` means the model produced nothing usable for this page.
-fn extract_validated<X, T>(ctx: &Ctx, trail: &mut Trail, prompt: &str, validate: impl Fn(&X) -> Result<T, Vec<String>>) -> Result<Option<(X, serde_json::Value, Result<T, Vec<String>>, bool)>>
+/// `validate` is told whether this is the final pass: the first pass may
+/// raise errors that are worth one corrective retry, the final pass settles
+/// them (see `schema::validate_cfp_links`).
+///
+/// `verify` is a second look at an answer that passed validation (narrow
+/// questions to the model about single entries, see `verify_dates`): the
+/// problems it returns are treated like validation errors, and on the
+/// final pass it may amend the validated value instead (drop a date).
+fn extract_validated<X, T>(
+    ctx: &Ctx,
+    trail: &mut Trail,
+    prompt: &str,
+    validate: impl Fn(&X, bool) -> Result<T, Vec<String>>,
+    verify: impl Fn(&Ctx, &mut Trail, &X, &mut T, bool) -> Result<Vec<String>>,
+) -> Result<Option<(X, serde_json::Value, Result<T, Vec<String>>, bool)>>
 where
     X: DeserializeOwned + JsonSchema + Serialize + Extraction,
 {
     let Some((x, raw)) = ask::<X>(ctx, trail, SYSTEM_PROMPT, prompt)? else { return Ok(None) };
-    match validate(&x) {
-        Ok(v) => Ok(Some((x, serde_json::from_str(&raw)?, Ok(v), false))),
-        // A retry can only help when the page is the right one and claims
-        // to have the data; otherwise report and move on.
-        Err(errs) if !(x.is_about() && x.claims_data()) => Ok(Some((x, serde_json::from_str(&raw)?, Err(errs), false))),
-        Err(errs) => {
-            trail.note(format!("validation failed: {}", errs.join("; ")));
-            let retry = format!("{prompt}\n\nYour previous answer was:\n{raw}\n\nIt had these problems:\n- {}\n\nAnswer again, fixing these problems. Copy dates exactly as stated on the page.", errs.join("\n- "));
-            let Some((x2, raw2)) = ask::<X>(ctx, trail, SYSTEM_PROMPT, &retry)? else {
-                return Ok(Some((x, serde_json::from_str(&raw)?, Err(errs), true)));
-            };
-            let v2 = validate(&x2);
-            if let Err(e) = &v2 {
-                trail.note(format!("validation failed again: {}", e.join("; ")));
+    let errs = match validate(&x, false) {
+        Ok(mut v) => {
+            let problems = verify(ctx, trail, &x, &mut v, false)?;
+            if problems.is_empty() {
+                return Ok(Some((x, serde_json::from_str(&raw)?, Ok(v), false)));
             }
-            Ok(Some((x2, serde_json::from_str(&raw2)?, v2, true)))
+            problems
+        }
+        Err(errs) => errs,
+    };
+    // A retry can only help when the page is the right one and claims to
+    // have the data; otherwise report and move on.
+    if !(x.is_about() && x.claims_data()) {
+        return Ok(Some((x, serde_json::from_str(&raw)?, Err(errs), false)));
+    }
+    trail.note(format!("validation failed: {}", errs.join("; ")));
+    let retry = format!("{prompt}\n\nYour previous answer was:\n{raw}\n\nIt had these problems:\n- {}\n\nAnswer again, fixing these problems. Copy dates exactly as stated on the page.", errs.join("\n- "));
+    let Some((x2, raw2)) = ask::<X>(ctx, trail, SYSTEM_PROMPT, &retry)? else {
+        return Ok(Some((x, serde_json::from_str(&raw)?, Err(errs), true)));
+    };
+    let mut v2 = validate(&x2, true);
+    if let Ok(v) = v2.as_mut() {
+        let problems = verify(ctx, trail, &x2, v, true)?;
+        if !problems.is_empty() {
+            v2 = Err(problems);
         }
     }
+    if let Err(e) = &v2 {
+        trail.note(format!("validation failed again: {}", e.join("; ")));
+    }
+    Ok(Some((x2, serde_json::from_str(&raw2)?, v2, true)))
+}
+
+/// A second, narrow look at the dates a call-for-papers record rests on.
+/// Reading a whole page, a small model will take "Titles and Short
+/// Abstracts Due" for the paper deadline or "Revision submission" for the
+/// notification; shown ten lines around that one date and asked what
+/// labels it and whether that is the full-paper deadline (or the first
+/// decision), it answers reliably. A "no" on a submission deadline is an
+/// error: corrected on the retry, or no record rather than a wrong one.
+fn verify_dates(ctx: &Ctx, trail: &mut Trail, cfg: &ConferenceCfg, year: i32, x: &CfpExtraction, cfp: &mut Cfp, md: &str, final_pass: bool) -> Result<Vec<String>> {
+    const SYSTEM: &str = "You answer a question about a short excerpt of a conference web page. Use only the excerpt.";
+    let mut problems = vec![];
+    if x.rounds.len() != cfp.rounds.len() {
+        return Ok(problems);
+    }
+    for (i, r) in x.rounds.iter().enumerate() {
+        let what = format!("round {}", i + 1);
+        let Some(excerpt) = schema::excerpt_around(md, &r.submission_deadline_as_written, &r.submission_deadline_quote) else { continue };
+        let q = format!("An excerpt from the web page of {} {year}:\n\n{excerpt}\n\nLook at the date \"{}\" in this excerpt. Which words of the excerpt label that date, and what kind of date is it?", cfg.conference, r.submission_deadline_as_written);
+        let Some((c, _)) = ask::<schema::DateCheck>(ctx, trail, SYSTEM, &q)? else { continue };
+        // Only a positive identification of a wrong kind counts; asked a
+        // yes/no question instead, the model said "no" to correct
+        // deadlines whose label it could not make out.
+        // "Revision" is an answer the model may give but not one that is
+        // acted on: from an excerpt it cannot tell a second round from a
+        // revision (it called "Round 2: Submission deadline" one), and
+        // what separates the two is settled by the date rules instead.
+        use schema::DateKind::*;
+        if matches!(c.kind, AbstractOrTitleRegistration | CameraReady | Notification) {
+            problems.push(format!("{what} submission_deadline {}: on the page that date is labelled {:?}, which is a {} date, not the deadline for submitting the full paper to the {} track; use the entry that is", r.submission_deadline, c.label, serde_json::to_string(&c.kind).unwrap_or_default().trim_matches('"').replace('_', " "), cfg.track));
+        }
+        // Notifications are not put to the verifier: which of several
+        // decision-like entries is the first is settled by their dates
+        // (`schema::entry_between`), and asked about labels the model
+        // refused "Conditional Accept Decisions Announced" as a decision.
+    }
+    let _ = (cfp, final_pass);
+    Ok(problems)
 }
 
 /// `url` is where the page came from (empty when unknown, as for a saved
@@ -464,7 +544,7 @@ pub fn extract_cfp(llm: &Llm, cfg: &ConferenceCfg, year: i32, md: &str, links: &
     let mut trail = Trail::default();
     let prompt = cfp_prompt(cfg, year, "", md);
     let grounding = grounding_text(md, links);
-    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x| schema::validate_cfp_links(x, year, &grounding, &cfg.track, links))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+    Ok(extract_validated::<CfpExtraction, Cfp>(&ctx, &mut trail, &prompt, |x, last| schema::validate_cfp_links(x, year, &grounding, &cfg.track, links, last), |ctx, trail, x, cfp, last| verify_dates(ctx, trail, cfg, year, x, cfp, md, last))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Extraction + validation + one corrective retry for a volunteer page, for
@@ -474,7 +554,7 @@ pub fn extract_volunteer(llm: &Llm, cfg: &ConferenceCfg, year: i32, site: Option
     let mut trail = Trail::default();
     let prompt = volunteer_prompt(cfg, year, site, "", md);
     let grounding = grounding_text(md, links);
-    Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x| schema::validate_volunteer_links(x, year, &grounding, None, links))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
+    Ok(extract_validated::<VolunteerExtraction, Option<Volunteer>>(&ctx, &mut trail, &prompt, |x, _| schema::validate_volunteer_links(x, year, &grounding, None, links), |_, _, _, _, _| Ok(vec![]))?.map(|(x, raw, v, r)| (x, raw, v, r, trail)))
 }
 
 /// Try one page for the CFP, following at most two links. Conference dates
@@ -492,7 +572,7 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
     let prompt = cfp_prompt(cfg, year, &page.url, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x| schema::validate_cfp_links(x, year, &grounding, &cfg.track, &links))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<CfpExtraction, Cfp>(ctx, trail, &prompt, |x, last| schema::validate_cfp_links(x, year, &grounding, &cfg.track, &links, last), |ctx, trail, x, cfp, last| verify_dates(ctx, trail, cfg, year, x, cfp, &md, last))? else { return Ok(None) };
     if !x.page_is_about_conference {
         // A page that is not this edition's but talks about it (a series
         // home page saying "LICS 2027 will be held in Montreal") usually
@@ -507,13 +587,36 @@ fn try_cfp_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Trail, ur
     } else {
         match validated {
             Ok(mut cfp) => {
-                if hops > 0 {
-                    trail.code(Code::E003);
-                }
-                if retried {
-                    trail.code(Code::E005);
-                }
+                // Following a link and needing the corrective retry are both
+                // normal operation (recorded in the provenance as `hops`
+                // and `retried`), not maintenance signals: E003 and E005,
+                // which they used to raise, are retired.
                 let prov = Provenance { source_url: page.url.clone(), query: trail.query.clone(), backend: trail.backend.clone(), hops, via_chrome: page.via_chrome, retried, codes: trail.codes.clone() };
+                // The page states the conference dates but not (all of)
+                // the location: a call for papers often says "July 26-29"
+                // and leaves "Lisbon, Portugal" to the edition's home
+                // page, which is the page's parent directory. One more
+                // page is read, and its city and country are taken only
+                // if it states the same dates.
+                if hops == 0 && acc.conference.is_none() {
+                    if let Some(c) = cfp.conference.as_mut().filter(|c| c.city.is_none() || c.country.is_none()) {
+                        if let Some(parent) = parent_page(&page.url).filter(|p| !trail.tried(p)) {
+                            trail.note(format!("looking for the location on {parent}"));
+                            let codes_before = trail.codes.clone();
+                            let (mut scratch, mut ignored) = (CfpFound::default(), false);
+                            try_cfp_page(ctx, cfg, year, trail, &parent, 2, &mut ignored, &mut scratch)?;
+                            if let Some(home) = scratch.conference.map(|f| f.value).filter(|h| (h.start, h.end) == (c.start, c.end)) {
+                                if c.city.is_none() && home.city.is_some() || c.country.is_none() && home.country.is_some() {
+                                    trail.note(format!("location {:?}, {:?} taken from {parent}", home.city, home.country));
+                                }
+                                c.city = c.city.take().or(home.city);
+                                c.country = c.country.take().or(home.country);
+                            }
+                            trail.codes = codes_before;
+                            trail.mark_tried(&parent);
+                        }
+                    }
+                }
                 if let (Some(c), None) = (&cfp.conference, &acc.conference) {
                     acc.conference = Some(Found { value: c.clone(), raw: raw.clone(), prov: prov.clone(), html: page.html.clone(), md: md.clone() });
                 }
@@ -656,7 +759,7 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
     let links = clean::links(&page.html, &page.url);
     let grounding = grounding_text(&md, &links);
     let prompt = volunteer_prompt(cfg, year, site, &page.url, &md);
-    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x| schema::validate_volunteer_links(x, year, &grounding, conference_end, &links))? else { return Ok(None) };
+    let Some((x, raw, validated, retried)) = extract_validated::<VolunteerExtraction, Option<Volunteer>>(ctx, trail, &prompt, |x, _| schema::validate_volunteer_links(x, year, &grounding, conference_end, &links), |_, _, _, _, _| Ok(vec![]))? else { return Ok(None) };
     if !x.page_is_about_conference {
         trail.note(format!("{} is not about {}", page.url, cfg.label(year)));
         return Ok(None);
@@ -665,12 +768,10 @@ fn try_volunteer_page(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, trail: &mut Tra
         saw.0 = true;
         match validated {
             Ok(Some(mut v)) => {
-                if hops > 0 {
-                    trail.code(Code::E003);
-                }
-                if retried {
-                    trail.code(Code::E005);
-                }
+                // Following a link and needing the corrective retry are both
+                // normal operation (recorded in the provenance as `hops`
+                // and `retried`), not maintenance signals: E003 and E005,
+                // which they used to raise, are retired.
                 if let Some(u) = v.application_url.clone() {
                     if let Err(why) = usable_link(&u, &page.url, false) {
                         trail.note(format!("application link {u} is {why}; dropped"));
@@ -781,6 +882,15 @@ mod tests {
         assert_eq!(usable_link("https://conferences.i-cav.org/2027/apply/", page, false), Ok(()), "an application form may be on the site");
         assert_eq!(usable_link("https://cav27.hotcrp.com/", page, true), Ok(()), "a submission system named in the text is usually a bare host");
         assert_eq!(usable_link("https://tinyurl.com/splash-issta-sv26", page, false), Ok(()));
+    }
+
+    #[test]
+    fn an_editions_home_page_is_the_parent_directory() {
+        assert_eq!(parent_page("https://conferences.i-cav.org/2026/cfp/").as_deref(), Some("https://conferences.i-cav.org/2026/"));
+        assert_eq!(parent_page("https://lics.siglog.org/lics26/cfp.php").as_deref(), Some("https://lics.siglog.org/lics26/"));
+        assert_eq!(parent_page("https://popl27.sigplan.org/dates").as_deref(), Some("https://popl27.sigplan.org/"));
+        assert_eq!(parent_page("https://popl27.sigplan.org/"), None);
+        assert_eq!(parent_page("https://popl27.sigplan.org"), None);
     }
 
     #[test]

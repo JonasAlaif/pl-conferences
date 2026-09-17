@@ -46,7 +46,7 @@ pub struct CfpExtraction {
     pub rounds: Vec<Round>,
     /// A few sentences for authors: how and where to submit, page limit, review process, anonymisation, anything an author must know before submitting.
     pub submission_details: String,
-    /// The exact words on the page that name the paper submission site or system (where authors upload their paper), copied verbatim with the URL if one is written there, e.g. "Submission Web Site: https://icfp27.hotcrp.com"; null if the page names none.
+    /// The exact words on the page that name the paper submission site or system (where authors upload their paper), copied verbatim from the page, including the URL if it is written out there; null if the page names none.
     #[schemars(required)]
     pub submission_site_quote: Option<String>,
     /// Full URL of that submission site: the URL written in those words, or the link those words point to; null otherwise.
@@ -138,7 +138,7 @@ pub struct VolunteerExtraction {
     /// A few sentences on who can apply, what volunteers get, and how to apply.
     #[schemars(required)]
     pub how_to_apply: Option<String>,
-    /// The exact words on the page that point students to the application form or sign-up page, copied verbatim with the URL if one is written there, e.g. "Apply here by July 12" or "Application form: https://forms.gle/..."; null if the page has none.
+    /// The exact words on the page that point students to the application form or sign-up page, copied verbatim from the page, including the URL if it is written out there; null if the page has none.
     #[schemars(required)]
     pub application_quote: Option<String>,
     /// Full URL of that application form or sign-up page: the URL written in those words, or the link those words point to; null otherwise.
@@ -291,6 +291,149 @@ pub fn evidence_still_on_page(raw: &serde_json::Value, page: &str) -> bool {
     walk(raw, page, &norm(page), &mut checked) && checked > 0
 }
 
+/// The URL is written in the page text, and at least half of the longer
+/// words of `words` (already normalised) occur within two lines of it.
+fn words_next_to_url(page: &str, url: &str, words: &str) -> bool {
+    let key = url.trim_end_matches('/').to_lowercase();
+    let lines: Vec<String> = page.lines().filter(|l| !norm(l).is_empty()).map(|l| l.to_lowercase()).collect();
+    let long: Vec<&str> = words.split(' ').filter(|w| w.len() >= 4).collect();
+    if long.is_empty() {
+        return false;
+    }
+    lines.iter().enumerate().filter(|(_, l)| l.contains(&key)).any(|(i, _)| {
+        let window = norm(&lines[i.saturating_sub(2)..(i + 3).min(lines.len())].join(" "));
+        let have: std::collections::HashSet<&str> = window.split(' ').collect();
+        long.iter().filter(|w| have.contains(**w)).count() * 2 >= long.len()
+    })
+}
+
+/// Every word of `value` is a word of the page ("The Netherlands" on a
+/// page saying "Nijmegen, The Netherlands").
+fn words_on_page(page: &str, value: &str) -> bool {
+    let p = norm(page);
+    let have: std::collections::HashSet<&str> = p.split(' ').collect();
+    let v = norm(value);
+    !v.is_empty() && v.split(' ').all(|w| have.contains(w))
+}
+
+/// A month name next to a day number: a line that states a date. English,
+/// like the cleaner's relevance signals; on a page in another language the
+/// check below simply never fires.
+static MONTH_DAY: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+    regex::Regex::new(r"(?i)\b(?P<m1>jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(?P<d1>\d{1,2})\b|\b(?P<d2>\d{1,2})(?:st|nd|rd|th)?\s+(?P<m2>jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b").unwrap()
+});
+
+/// The date a line states, if it lies strictly between `after` and
+/// `before`. The year is the one written on the line, else whichever of
+/// the two bounds' years puts the date between them.
+fn line_date_between(line: &str, after: NaiveDate, before: NaiveDate) -> Option<NaiveDate> {
+    static YEAR: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"\b(20\d\d)\b").unwrap());
+    const MONTHS: [&str; 12] = ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
+    let c = MONTH_DAY.captures(line)?;
+    let (m, d) = match (c.name("m1"), c.name("d1"), c.name("m2"), c.name("d2")) {
+        (Some(m), Some(d), _, _) | (_, _, Some(m), Some(d)) => (m.as_str().to_lowercase(), d.as_str().parse::<u32>().ok()?),
+        _ => return None,
+    };
+    let month = MONTHS.iter().position(|x| *x == m)? as u32 + 1;
+    let years: Vec<i32> = match YEAR.captures(line).and_then(|y| y[1].parse().ok()) {
+        Some(y) => vec![y],
+        None => vec![after.year(), before.year()],
+    };
+    years.into_iter().filter_map(|y| NaiveDate::from_ymd_opt(y, month, d)).find(|x| *x > after && *x < before)
+}
+
+/// Lines of the page (blank ones dropped) on which a date as written
+/// occurs; a period given as two entries ("Beginning of ..." / "End of
+/// ...") is located by its end.
+fn locate_written(lines: &[&str], written: &str) -> Vec<usize> {
+    let find = |w: &str| -> Vec<usize> {
+        let w = norm(w);
+        if w.is_empty() { vec![] } else { lines.iter().enumerate().filter(|(_, l)| date_tokens_in(&norm(l), &w)).map(|(i, _)| i).collect() }
+    };
+    let whole = find(written);
+    if !whole.is_empty() {
+        return whole;
+    }
+    written.rsplit(['-', '–']).next().map(find).unwrap_or_default()
+}
+
+/// The earliest dated entry of the same list whose date lies strictly
+/// between the end of the author response and the chosen notification, or
+/// None. By date, not by position: a dates table may list upcoming entries
+/// first and past ones after. "The same list" is the lines around the two
+/// entries; in a table whose response row has a cell naming the track,
+/// only rows with that same cell ("POPL", not "PLMW @ POPL").
+fn entry_between(page: &str, response_written: &str, response_end: NaiveDate, notification_written: &str, notification: NaiveDate, track: &str) -> Option<String> {
+    let lines: Vec<&str> = page.lines().filter(|l| !norm(l).is_empty()).collect();
+    let (rs, ns) = (locate_written(&lines, response_written), locate_written(&lines, notification_written));
+    let (i, j) = rs.iter().flat_map(|i| ns.iter().map(move |j| (*i, *j))).filter(|(i, j)| i != j).min_by_key(|(i, j)| i.abs_diff(*j))?;
+    let is_row = |l: &str| l.trim_start().starts_with('|');
+    let cells = |l: &str| -> Vec<String> { l.split('|').map(norm).filter(|c| !c.is_empty()).collect() };
+    let track_n = norm(track);
+    let track_cell = if is_row(lines[i]) && !track_n.is_empty() { cells(lines[i]).into_iter().find(|c| format!(" {c} ").contains(&format!(" {track_n} "))) } else { None };
+    let (lo, hi) = (i.min(j).saturating_sub(40), (i.max(j) + 40).min(lines.len() - 1));
+    let (_, k) = (lo..=hi)
+        .filter(|k| *k != i && *k != j && is_row(lines[*k]) == is_row(lines[i]))
+        .filter(|k| track_cell.as_ref().is_none_or(|tc| cells(lines[*k]).contains(tc)))
+        .filter_map(|k| line_date_between(lines[k], response_end, notification).map(|d| (d, k)))
+        .min()?;
+    // The entry's words: the row itself, or the dated line with the label
+    // line next to it (after it in a sidebar, before it in some lists).
+    let mut entry = lines[k].trim().replace("**", "");
+    if !is_row(lines[k]) && MONTH_DAY.replace_all(&norm(&entry), "").split(' ').filter(|w| w.len() >= 4 && !w.chars().any(|c| c.is_ascii_digit())).count() == 0 {
+        let label = [k + 1, k.wrapping_sub(1)].into_iter().filter(|n| *n < lines.len() && *n != i && *n != j).map(|n| lines[n]).find(|l| !MONTH_DAY.is_match(l));
+        if let Some(l) = label {
+            entry = format!("{entry} / {}", l.trim().replace("**", ""));
+        }
+    }
+    Some(entry.chars().take(160).collect())
+}
+
+/// The lines of the page around a date as written, for asking the model a
+/// narrow question about that one entry (see `discover::verify_dates`).
+pub fn excerpt_around(page: &str, as_written: &str, quote: &str) -> Option<String> {
+    let lines: Vec<&str> = page.lines().filter(|l| !norm(l).is_empty()).collect();
+    let at = locate_written(&lines, as_written);
+    // Several occurrences (sidebar and prose): the one next to the quote.
+    let q = norm(quote);
+    let i = at.iter().copied().find(|i| !q.is_empty() && (i.saturating_sub(2)..(*i + 3).min(lines.len())).any(|n| norm(lines[n]).contains(&q))).or(at.first().copied())?;
+    let (lo, hi) = (i.saturating_sub(4), (i + 5).min(lines.len()));
+    Some(lines[lo..hi].iter().map(|l| l.trim().chars().take(200).collect::<String>()).collect::<Vec<_>>().join("\n"))
+}
+
+/// Answer to a narrow question about one dated entry of a page.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct DateCheck {
+    /// The words in the excerpt that label the date asked about, copied verbatim.
+    pub label: String,
+    /// What kind of date that label makes it.
+    pub kind: DateKind,
+}
+
+/// Kinds of dated entries on a call for papers. Only a positive
+/// identification of a wrong kind counts against a date: `Unclear` and
+/// `Other` pass, so an excerpt the model cannot read costs nothing.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum DateKind {
+    /// Deadline for submitting the (full) paper.
+    PaperSubmission,
+    /// Deadline for registering a title or submitting an abstract, ahead of the paper itself.
+    AbstractOrTitleRegistration,
+    /// Deadline for submitting a revised version after the reviews.
+    Revision,
+    /// Deadline for the camera-ready or final version.
+    CameraReady,
+    /// Date on which authors are told a decision.
+    Notification,
+    /// Author response or rebuttal period.
+    AuthorResponse,
+    /// Something else (another event, registration, the conference itself).
+    Other,
+    /// The excerpt does not make it clear.
+    Unclear,
+}
+
 /// The day numbers of `start` and `end` occur in `quote` ("Sun 4 - Fri 9
 /// October 2026", "October 4–9, 2026", "4th-9th October").
 fn days_in_quote(quote: &str, start: NaiveDate, end: NaiveDate) -> bool {
@@ -312,10 +455,7 @@ fn same_numbers(quote: &str, as_written: &str) -> bool {
 /// here by July 12" next to a sidebar saying "Sun 19 Jul 2026"), that
 /// quote: the page states both, and the calendar should say so. Asking the
 /// model to re-align the two instead was tried; it repeats itself.
-fn conflict_or_quote(conflict: &Option<String>, quote: &str, as_written: &str) -> Option<String> {
-    if clean_opt(conflict).is_some() {
-        return conflict.clone();
-    }
+fn quote_disagrees(quote: &str, as_written: &str) -> Option<String> {
     (shares_month(quote, as_written) && !same_numbers(quote, as_written)).then(|| quote.to_string())
 }
 
@@ -411,9 +551,9 @@ impl Stage {
     pub fn label(self) -> &'static str {
         match self {
             Stage::Future => "future",
-            Stage::ConferenceAvailable => "conference available",
+            Stage::ConferenceAvailable => "conference announced",
             Stage::DeadlinesAvailable => "deadlines available",
-            Stage::PostRebuttal => "post-rebuttal",
+            Stage::PostRebuttal => "conference upcoming",
             Stage::Happened => "happened",
         }
     }
@@ -600,12 +740,15 @@ pub fn grounded_link(quote: &Option<String>, url: &Option<String>, page: &str, l
     static URL: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| regex::Regex::new(r"https?://\S+").unwrap());
     let u = clean_opt(url).filter(|u| url::Url::parse(u).ok().is_some_and(|p| matches!(p.scheme(), "http" | "https")));
     // The quote itself: its words minus URLs must be on the page; a quote
-    // that is only the URL must be on the page as such.
+    // that is only the URL must be on the page as such. A URL written out
+    // in the page text is also accepted when the quote's words stand next
+    // to it there, even if the model reworded them ("Submission Web Site:"
+    // for a heading reading "SUBMISSION SITE" above the URL).
     if !page.is_empty() {
         let words = norm(&URL.replace_all(&q, " "));
         let on_page = if words.len() >= 4 { page_contains(page, &q) } else { u.as_ref().is_some_and(|u| page.to_lowercase().contains(u.trim_end_matches('/').to_lowercase().as_str())) };
         if !on_page {
-            return None;
+            return u.filter(|u| q.to_lowercase().contains(u.trim_end_matches('/').to_lowercase().as_str()) && words_next_to_url(page, u, &words));
         }
     }
     // Written out in the quote: the model's URL is it.
@@ -619,24 +762,32 @@ pub fn grounded_link(quote: &Option<String>, url: &Option<String>, page: &str, l
     // resolved here from the anchor text that sits in the quote. The
     // longest such anchor wins ("here" in "Apply here by July 12").
     let qn = format!(" {} ", norm(&q));
-    links
+    let anchored = links
         .iter()
         .filter(|(text, _)| {
             let t = norm(text);
             t.len() >= 3 && qn.contains(&format!(" {t} "))
         })
         .max_by_key(|(text, _)| norm(text).len())
-        .map(|(_, href)| href.clone())
+        .map(|(_, href)| href.clone());
+    // Last, a quote that stops short of the URL it labels ("Submission Web
+    // Site:" with the address after the colon): the model's URL counts when
+    // the page writes it out right next to the quoted words.
+    anchored.or_else(|| u.filter(|u| words_next_to_url(page, u, &norm(&q))))
 }
 
 /// Check dates parse and are consistent with each other and with `year`.
 pub fn validate_cfp(x: &CfpExtraction, year: i32, page: &str, track: &str) -> Result<Cfp, Vec<String>> {
-    validate_cfp_links(x, year, page, track, &[])
+    validate_cfp_links(x, year, page, track, &[], true)
 }
 
 /// `links` are the page's `(anchor text, URL)` pairs, for grounding a
-/// submission site given as a link rather than written out.
-pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str, links: &[(String, String)]) -> Result<Cfp, Vec<String>> {
+/// submission site given as a link rather than written out. `final_pass`
+/// is false on the first of the two validation passes: a notification
+/// read from the wrong entry is then an error the model gets one chance to
+/// correct; on the final pass it is dropped, since a missing notification
+/// is better than a wrong one.
+pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str, links: &[(String, String)], final_pass: bool) -> Result<Cfp, Vec<String>> {
     let mut errs = vec![];
     if !x.page_is_about_conference {
         errs.push("page_is_about_conference is false".into());
@@ -670,7 +821,11 @@ pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str,
             }
             return None;
         }
-        Some(Conference { start, end, city: clean_opt(&c.city), country: clean_opt(&c.country) })
+        // City and country must be words of the page: a location the page
+        // does not state is left empty (and looked up on the edition's home
+        // page by the caller) rather than taken from the model's memory.
+        let stated = |v: &Option<String>| clean_opt(v).filter(|s| page.is_empty() || words_on_page(page, s));
+        Some(Conference { start, end, city: stated(&c.city), country: stated(&c.country) })
     });
     // A single round labelled as the first of several is a contradiction:
     // either the other rounds are on the page too, or the label is wrong.
@@ -709,12 +864,29 @@ pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str,
                 None => errs.push(format!("{what} author response dates are given but author_response_quote is null; quote the page or set them to null")),
             }
         }
-        let notification = parse_opt(&r.notification, &format!("{what} notification"), &mut errs);
+        let mut notification = parse_opt(&r.notification, &format!("{what} notification"), &mut errs);
         if notification.is_some() && !page.is_empty() {
             match clean_opt(&r.notification_quote) {
                 Some(q) if page_contains(page, &q) => check_written(&what, "notification", page, &q, &r.notification_as_written, &mut errs),
                 Some(q) => errs.push(format!("{what} notification_quote {q:?} does not appear on the page; quote the page verbatim")),
                 None => errs.push(format!("{what} notification is given but notification_quote is null; quote the page or set notification to null")),
+            }
+        }
+        // The notification is the first decision after the author
+        // response. Dates lists are chronological (in either direction),
+        // so no other dated entry of this track may lie between the
+        // response entry and the notification entry: a small model skips
+        // to "Final acceptance notification" past "Conditional Accept
+        // Decisions Announced", or to the second of two "Author
+        // Notification (Round 2)" entries past the first.
+        if let (Some(n), Some(after), Some(rw), Some(nw)) = (notification, response_end.or(response_start), clean_opt(&r.author_response_as_written), clean_opt(&r.notification_as_written)) {
+            if let Some(entry) = entry_between(page, &rw, after, &nw, n, track) {
+                if final_pass {
+                    log::warn!("{what} notification {n} dropped: the page lists {entry:?} between the author response and it");
+                    notification = None;
+                } else {
+                    errs.push(format!("{what} notification {n} is not the first decision after the author response: between the author response and that date the page lists {entry:?}. Use that entry's date as the notification (quote it), unless it is not a decision sent to authors"));
+                }
             }
         }
         let mut last = submission;
@@ -731,8 +903,11 @@ pub fn validate_cfp_links(x: &CfpExtraction, year: i32, page: &str, track: &str,
                 errs.push(format!("{what} dates run past the conference start {}", c.start));
             }
         }
-        let conflict = conflict_or_quote(&r.submission_deadline_conflict, &r.submission_deadline_quote, &r.submission_deadline_as_written);
-        let submission_conflict = real_conflict(&conflict, &r.submission_deadline_quote, &r.label, &r.submission_deadline_as_written, page, track);
+        // The model's own candidate first; if the rules reject it (a page
+        // timestamp, another track's row), the deadline's quote when it
+        // names another day than the date chosen.
+        let (q, w) = (r.submission_deadline_quote.as_str(), r.submission_deadline_as_written.as_str());
+        let submission_conflict = real_conflict(&r.submission_deadline_conflict, q, &r.label, w, page, track).or_else(|| real_conflict(&quote_disagrees(q, w), q, &r.label, w, page, track));
         rounds.push(ValidRound { label: r.label.trim().to_string(), submission, submission_conflict, response_start, response_end, notification });
     }
     for (i, w) in rounds.windows(2).enumerate() {
@@ -803,12 +978,12 @@ pub fn validate_volunteer_links(x: &VolunteerExtraction, year: i32, page: &str, 
         // The words pointing to the form ("Apply here by July 12") are a
         // conflicting statement too when they give a different day than
         // the deadline read from a sidebar ("Sun 19 Jul 2026").
-        let conflict = conflict_or_quote(&x.application_deadline_conflict, quote, written);
-        let deadline_conflict = real_conflict(&conflict, quote, "", written, page, "").or_else(|| {
-            let form_words = x.application_quote.as_deref().unwrap_or("");
-            let c = conflict_or_quote(&None, form_words, written);
-            real_conflict(&c, form_words, "", written, page, "")
-        });
+        // Candidates in turn, the first that survives the rules: the
+        // model's own, the deadline's quote, the words pointing to the form.
+        let form_words = x.application_quote.as_deref().unwrap_or("");
+        let deadline_conflict = real_conflict(&x.application_deadline_conflict, quote, "", written, page, "")
+            .or_else(|| real_conflict(&quote_disagrees(quote, written), quote, "", written, page, ""))
+            .or_else(|| real_conflict(&quote_disagrees(form_words, written), form_words, "", written, page, ""));
         Ok(Some(Volunteer { deadline, deadline_conflict, how_to_apply: clean_opt(&x.how_to_apply).unwrap_or_default(), application_url: grounded_link(&x.application_quote, &x.application_url, page, links) }))
     } else {
         Err(errs)
@@ -871,6 +1046,76 @@ mod tests {
         assert_eq!(grounded_link(&None, &Some("https://tinyurl.com/splash-issta-sv26".into()), page, &links), None, "no quote, no link");
         let page = "Submission Web Site: https://icfp27.hotcrp.com";
         assert_eq!(grounded_link(&Some("Submission Web Site: https://icfp27.hotcrp.com".into()), &Some("https://icfp27.hotcrp.com/".into()), page, &[]).as_deref(), Some("https://icfp27.hotcrp.com/"));
+        // Reworded label, but the URL is written on the page right under
+        // a heading with the same words: accepted. The same rewording
+        // around a URL that stands elsewhere is not.
+        let page = "#### SUBMISSION SITE\n\nhttps://submissions.floc26.org/cav/\n\nlong text\nmore text\nand more\n\nPolicies: https://www.acm.org/publications/policies";
+        let q = Some("Submission Web Site: https://submissions.floc26.org/cav/".to_string());
+        assert_eq!(grounded_link(&q, &Some("https://submissions.floc26.org/cav/".into()), page, &[]).as_deref(), Some("https://submissions.floc26.org/cav/"));
+        let q = Some("Submission Web Site: https://www.acm.org/publications/policies".to_string());
+        assert_eq!(grounded_link(&q, &Some("https://www.acm.org/publications/policies".into()), page, &[]), None);
+        // The quote stops at the colon; the URL follows it on the page.
+        let page = "*   **Submission Web Site:** https://icfp27.hotcrp.com\n*   **Submission Deadline:** Thu. 25 February 2027\n\nlong text\nmore text\nand more\n\nPolicies: https://www.acm.org/publications/policies";
+        let q = Some("Submission Web Site:".to_string());
+        assert_eq!(grounded_link(&q, &Some("https://icfp27.hotcrp.com".into()), page, &[]).as_deref(), Some("https://icfp27.hotcrp.com"));
+        assert_eq!(grounded_link(&q, &Some("https://www.acm.org/publications/policies".into()), page, &[]), None, "a URL from elsewhere on the page is not the one the quote labels");
+        assert_eq!(grounded_link(&q, &Some("https://icfp27.hotcrp.org".into()), page, &[]), None, "a URL the page does not write is not accepted");
+    }
+
+    #[test]
+    fn the_notification_is_the_first_dated_entry_after_the_response() {
+        // A sidebar with two identically labelled notifications and the
+        // revision deadline between them (OOPSLA).
+        let sidebar = "Wed 7 Apr 2027\nSubmission (Round 2)\n\nTue 15 - Sat 19 Jun 2027\nAuthor Response (Round 2)\n\nFri 2 Jul 2027\nAuthor Notification (Round 2)\n\nFri 30 Jul 2027\nRevision submission (Round 2)\n\nFri 13 Aug 2027\nAuthor Notification (Round 2)";
+        let response = "Tue 15 - Sat 19 Jun 2027";
+        let d = |s: &str| NaiveDate::parse_from_str(s, "%Y-%m-%d").unwrap();
+        assert_eq!(entry_between(sidebar, response, d("2027-06-19"), "Fri 2 Jul 2027", d("2027-07-02"), "OOPSLA"), None, "the first entry after the response is fine");
+        assert!(entry_between(sidebar, response, d("2027-06-19"), "Fri 30 Jul 2027", d("2027-07-30"), "OOPSLA").unwrap().starts_with("Fri 2 Jul 2027 / Author Notification"));
+        assert!(entry_between(sidebar, response, d("2027-06-19"), "Fri 13 Aug 2027", d("2027-08-13"), "OOPSLA").unwrap().starts_with("Fri 2 Jul 2027"));
+        // A list that runs backwards, the response given as two entries (POPL 2026).
+        let reverse = "Thu 6 Nov 2025\nFinal acceptance notification\n\nThu 2 Oct 2025\nConditional Accept Decisions Announced\n\nThu 11 Sep 2025\nEnd of author response period\n\nMon 8 Sep 2025\nBeginning of author response period";
+        let e = entry_between(reverse, "Mon 8 Sep 2025 - Thu 11 Sep 2025", d("2025-09-11"), "Thu 6 Nov 2025", d("2025-11-06"), "POPL").unwrap();
+        assert!(e.starts_with("Thu 2 Oct 2025 / Conditional Accept"), "{e}");
+        assert_eq!(entry_between(reverse, "Mon 8 Sep 2025 - Thu 11 Sep 2025", d("2025-09-11"), "Thu 2 Oct 2025", d("2025-10-02"), "POPL"), None);
+        // A table shared with co-located events, upcoming rows first and
+        // past rows after (POPL 2027): judged by date, not position; other
+        // tracks' rows do not count, nor does "PLMW @ POPL" for "POPL".
+        let table = "| Wed 23 Sep 2026 | VMCAI | Paper Registration |\n| Mon 5 Oct 2026 | POPL | Author notification |\n| Mon 26 Oct 2026 | POPL | Revision deadline |\n| Mon 9 Nov 2026 | POPL | Final acceptance notification |\n| Mon 7 Dec 2026 | PLMW @ POPL | Final Acceptance Decisions |\n| Mon 7 - Thu 10 Sep 2026 | POPL | Author response period |\n| Mon 14 Sep 2026 | PLMW @ POPL | Application deadline |\n| Thu 9 Jul 2026 | POPL | Paper submission deadline |";
+        assert_eq!(entry_between(table, "Mon 7 - Thu 10 Sep 2026", d("2026-09-10"), "Mon 5 Oct 2026", d("2026-10-05"), "POPL"), None);
+        assert!(entry_between(table, "Mon 7 - Thu 10 Sep 2026", d("2026-09-10"), "Mon 9 Nov 2026", d("2026-11-09"), "POPL").unwrap().contains("Mon 5 Oct 2026"));
+        // A date without its year takes the year that puts it in between.
+        assert_eq!(line_date_between("Notification: Dec 22", d("2026-12-09"), d("2027-01-15")), Some(d("2026-12-22")));
+        assert_eq!(line_date_between("Camera ready: January 5", d("2026-12-09"), d("2027-01-15")), Some(d("2027-01-05")));
+        assert_eq!(line_date_between("Author Notification (Round 2)", d("2026-12-09"), d("2027-01-15")), None);
+        // Through validation: an error with the entry on the first pass,
+        // the notification dropped on the final pass.
+        let mut x = ok_extraction();
+        x.conference = None;
+        x.rounds = vec![round("2027-04-07", Some("2027-06-15"), Some("2027-06-19"), Some("2027-08-13"))];
+        let r = &mut x.rounds[0];
+        r.submission_deadline_quote = "Submission (Round 2)".into();
+        r.submission_deadline_as_written = "Wed 7 Apr 2027".into();
+        r.author_response_quote = Some("Author Response (Round 2)".into());
+        r.author_response_as_written = Some(response.into());
+        r.notification_quote = Some("Author Notification (Round 2)".into());
+        r.notification_as_written = Some("Fri 13 Aug 2027".into());
+        let errs = validate_cfp_links(&x, 2027, sidebar, "OOPSLA", &[], false).unwrap_err();
+        assert!(errs.iter().any(|e| e.contains("Fri 2 Jul 2027")), "{errs:?}");
+        assert_eq!(validate_cfp_links(&x, 2027, sidebar, "OOPSLA", &[], true).unwrap().rounds[0].notification, None);
+        x.rounds[0].notification = Some("2027-07-02".into());
+        x.rounds[0].notification_as_written = Some("Fri 2 Jul 2027".into());
+        assert_eq!(validate_cfp_links(&x, 2027, sidebar, "OOPSLA", &[], false).unwrap().rounds[0].notification.map(|d| d.to_string()).as_deref(), Some("2027-07-02"));
+    }
+
+    #[test]
+    fn a_location_the_page_does_not_state_is_left_empty() {
+        let page = "CAV 2026. Main Conference: July 26-29, 2026. Submission deadline: Thu 10 Jul 2025. author response period Mon 8 Sep 2025 - Thu 11 Sep 2025. Final acceptance notification Thu 6 Nov 2025";
+        let mut x = ok_extraction();
+        x.conference = Some(ConferenceInfo { dates_quote: "July 26-29, 2026".into(), start_date: "2026-07-26".into(), end_date: "2026-07-29".into(), city: Some("Lisbon".into()), country: Some("Portugal".into()) });
+        let c = validate_cfp(&x, 2026, page, "").unwrap().conference.unwrap();
+        assert_eq!((c.city, c.country), (None, None), "not on the page: not taken from the model's memory");
+        let c = validate_cfp(&x, 2026, &format!("{page} in Lisbon, Portugal"), "").unwrap().conference.unwrap();
+        assert_eq!((c.city.as_deref(), c.country.as_deref()), (Some("Lisbon"), Some("Portugal")));
     }
 
     #[test]

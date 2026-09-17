@@ -22,7 +22,7 @@ const SKIP_TAGS: &[&str] = &[
 
 /// Elements removed before conversion. Bootstrap-era class names are common
 /// enough to be worth stripping generically; anything unmatched is harmless.
-const STRIP_SELECTORS: &str = "[role=navigation], [role=banner], [role=contentinfo], [role=dialog], \
+const STRIP_SELECTORS: &str = "[role=navigation], [role=banner], [role=contentinfo], [role=dialog], [role=status], [role=alert], \
     .navbar, .navigationbar, #navigationbar, .nav-menu, .menu-bar, .dropdown-menu, .breadcrumb, \
     .footer, .footer-box, .site-footer, .modal, .cookie, .cookie-banner, .cookie-consent, .skip-link, \
     .sr-only, .visually-hidden, [hidden], [aria-hidden=true]";

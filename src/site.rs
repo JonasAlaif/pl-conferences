@@ -36,13 +36,27 @@ fn range(a: NaiveDate, b: NaiveDate) -> String {
     if a == b { date(a) } else { format!("{} – {}", date(a), date(b)) }
 }
 
-fn stage_class(s: Stage) -> &'static str {
-    match s {
-        Stage::Future => "future",
-        Stage::ConferenceAvailable => "conference",
-        Stage::DeadlinesAvailable => "open",
-        Stage::PostRebuttal => "closed",
-        Stage::Happened => "past",
+/// A date that has passed is grayed out, so the eye lands on what is still
+/// ahead. `last_day` is the last day the entry matters.
+fn gone(html: String, last_day: NaiveDate, today: NaiveDate) -> String {
+    if last_day < today { format!("<span class=\"gone\">{html}</span>") } else { html }
+}
+
+/// What a reader wants to know about an edition today, as (label, row
+/// class). With several rounds the last one decides: an edition whose
+/// second round is still open has its submission upcoming.
+fn status(y: &YearView, today: NaiveDate) -> (&'static str, &'static str) {
+    if y.conference.as_ref().is_some_and(|(c, _)| today > c.end) {
+        return ("happened", "past");
+    }
+    match (&y.deadlines, &y.conference) {
+        (Some((d, _)), _) => match d.rounds.last() {
+            Some(last) if today <= last.submission => ("submission upcoming", "open"),
+            _ if crate::schema::deadlines_active(Some(d), today) => ("under review", "review"),
+            _ => ("conference upcoming", "closed"),
+        },
+        (None, Some(_)) => ("conference announced", "conference"),
+        (None, None) => ("not announced", "future"),
     }
 }
 
@@ -66,17 +80,24 @@ fn all_dates(y: &YearView) -> Vec<NaiveDate> {
     v
 }
 
-/// Reading order: editions with something coming up, soonest first; then
+/// Reading order: editions one can still submit to, soonest deadline
+/// first; then editions with something else coming up, soonest first; then
 /// editions announced without dates yet; then past editions, most recent
 /// first. Ties break on the label.
 fn sort_key(y: &YearView, today: NaiveDate) -> (u8, i64, String) {
+    if status(y, today).0 == "submission upcoming" {
+        let next_deadline = y.deadlines.iter().flat_map(|(d, _)| d.rounds.iter().map(|r| r.submission)).filter(|s| *s >= today).min();
+        if let Some(n) = next_deadline {
+            return (0, n.num_days_from_ce() as i64, y.label.clone());
+        }
+    }
     let dates = all_dates(y);
     let next = dates.iter().filter(|d| **d >= today).min();
     let last = dates.iter().max();
     match (next, last) {
-        (Some(n), _) => (0, n.num_days_from_ce() as i64, y.label.clone()),
-        (None, None) => (1, 0, y.label.clone()),
-        (None, Some(l)) => (2, -(l.num_days_from_ce() as i64), y.label.clone()),
+        (Some(n), _) => (1, n.num_days_from_ce() as i64, y.label.clone()),
+        (None, None) => (2, 0, y.label.clone()),
+        (None, Some(l)) => (3, -(l.num_days_from_ce() as i64), y.label.clone()),
     }
 }
 
@@ -91,8 +112,8 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>PL conference deadlines</title>
 <style>
-  :root {{ color-scheme: light dark; --fg: #1a1a1a; --bg: #fff; --muted: #666; --line: #ddd; --accent: #0b57d0; --open: #e8f5e9; --closed: #fff3e0; --past: #f5f5f5; --future: #e3f2fd; --conference: #ede7f6; }}
-  @media (prefers-color-scheme: dark) {{ :root {{ --fg: #e6e6e6; --bg: #121212; --muted: #9a9a9a; --line: #333; --accent: #8ab4f8; --open: #1b3a22; --closed: #3d2e14; --past: #1e1e1e; --future: #14283a; --conference: #2a2340; }} }}
+  :root {{ color-scheme: light dark; --fg: #1a1a1a; --bg: #fff; --muted: #666; --line: #ddd; --accent: #0b57d0; --open: #e8f5e9; --review: #fffde7; --closed: #fff3e0; --past: #f5f5f5; --future: #e3f2fd; --conference: #ede7f6; }}
+  @media (prefers-color-scheme: dark) {{ :root {{ --fg: #e6e6e6; --bg: #121212; --muted: #9a9a9a; --line: #333; --accent: #8ab4f8; --open: #1b3a22; --review: #33301a; --closed: #3d2e14; --past: #1e1e1e; --future: #14283a; --conference: #2a2340; }} }}
   body {{ font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--fg); background: var(--bg); margin: 0; padding: 0 16px 48px; }}
   main {{ max-width: 1100px; margin: 0 auto; }}
   h1 {{ font-size: 1.6rem; margin: 32px 0 4px; }}
@@ -103,7 +124,8 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
   table {{ border-collapse: collapse; width: 100%; font-size: .93rem; }}
   th, td {{ text-align: left; vertical-align: top; padding: 8px 10px; border-bottom: 1px solid var(--line); }}
   th {{ font-weight: 600; color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .03em; }}
-  tr.open {{ background: var(--open); }} tr.closed {{ background: var(--closed); }} tr.past {{ background: var(--past); color: var(--muted); }} tr.future {{ background: var(--future); }} tr.conference {{ background: var(--conference); }}
+  .gone {{ color: var(--muted); opacity: .55; }} .gone strong {{ font-weight: normal; }}
+  tr.open {{ background: var(--open); }} tr.review {{ background: var(--review); }} tr.closed {{ background: var(--closed); }} tr.past {{ background: var(--past); color: var(--muted); }} tr.future {{ background: var(--future); }} tr.conference {{ background: var(--conference); }}
   .stage {{ font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); white-space: nowrap; }}
   .small {{ font-size: .85rem; color: var(--muted); }}
   ul.upcoming {{ list-style: none; padding: 0; margin: 0; }}
@@ -141,12 +163,12 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
         let deadlines = match &y.deadlines {
             Some((d, _)) => d.rounds.iter().enumerate().map(|(i, r)| {
                 let prefix = if d.rounds.len() > 1 { format!("R{} ", i + 1) } else { String::new() };
-                let mut s = format!("{prefix}<strong>{}</strong>", date(r.submission));
+                let mut s = gone(format!("{prefix}<strong>{}</strong>", date(r.submission)), r.submission, today);
                 if let (Some(a), Some(b)) = (r.response_start, r.response_end.or(r.response_start)) {
-                    s.push_str(&format!("<br><span class=\"small\">rebuttal {}</span>", range(a, b)));
+                    s.push_str(&format!("<br>{}", gone(format!("<span class=\"small\">rebuttal {}</span>", range(a, b)), b, today)));
                 }
                 if let Some(n) = r.notification {
-                    s.push_str(&format!("<br><span class=\"small\">notification {}</span>", date(n)));
+                    s.push_str(&format!("<br>{}", gone(format!("<span class=\"small\">notification {}</span>", date(n)), n, today)));
                 }
                 if let Some(c) = &r.submission_conflict {
                     s.push_str(&format!("<br><span class=\"small\">page also states “{}”</span>", esc(c)));
@@ -158,13 +180,13 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
         let conference = match &y.conference {
             Some((c, _)) => {
                 let loc = [c.city.clone(), c.country.clone()].into_iter().flatten().collect::<Vec<_>>().join(", ");
-                format!("{}{}", range(c.start, c.end), if loc.is_empty() { String::new() } else { format!("<br><span class=\"small\">{}</span>", esc(&loc)) })
+                gone(format!("{}{}", range(c.start, c.end), if loc.is_empty() { String::new() } else { format!("<br><span class=\"small\">{}</span>", esc(&loc)) }), c.end, today)
             }
             None => "<span class=\"small\">not announced yet</span>".into(),
         };
         let volunteer = match &y.volunteer {
             Some((v, _)) => {
-                let mut s = format!("apply by <strong>{}</strong>", date(v.deadline));
+                let mut s = gone(format!("apply by <strong>{}</strong>", date(v.deadline)), v.deadline, today);
                 if let Some(u) = &v.application_url {
                     s.push_str(&format!("<br>{}", link(u, "sign-up page")));
                 }
@@ -193,7 +215,7 @@ pub fn render(years: &[YearView], upcoming: &[(NaiveDate, String, String)], main
         let verified = y.last_verified.map(|t| format!("<br><span class=\"small\">checked {}</span>", t.format("%-d %b %Y"))).unwrap_or_default();
         h.push_str(&format!(
             "<tr class=\"{}\"><td><strong>{}</strong>{}</td><td class=\"stage\">{}</td><td>{}</td><td>{}</td><td>{}</td><td class=\"small\">{}</td></tr>\n",
-            stage_class(y.stage), esc(&y.label), verified, esc(y.stage.label()), deadlines, conference, volunteer, links.join("<br>")
+            status(y, today).1, esc(&y.label), verified, status(y, today).0, deadlines, conference, volunteer, links.join("<br>")
         ));
     }
     h.push_str("</table></div>\n");
@@ -230,7 +252,46 @@ mod tests {
         assert!(html.contains("10 Jul 2025") && html.contains("rebuttal 8 Sep 2025 – 11 Sep 2025") && html.contains("notification 6 Nov 2025"));
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
-        assert!(html.contains("all.ics") && html.contains("deadlines available"));
+        assert!(html.contains("all.ics"));
+    }
+
+    #[test]
+    fn the_status_follows_the_last_round_and_open_submissions_come_first() {
+        let d = |y, m, dd| NaiveDate::from_ymd_opt(y, m, dd).unwrap();
+        let round = |sub: NaiveDate, notif: NaiveDate| ValidRound { label: String::new(), submission: sub, submission_conflict: None, response_start: None, response_end: None, notification: Some(notif) };
+        let mk = |label: &str, rounds: Vec<ValidRound>, conf: Option<(NaiveDate, NaiveDate)>| YearView {
+            key: label.into(),
+            label: label.into(),
+            stage: Stage::Future,
+            conference: conf.map(|(s, e)| (Conference { start: s, end: e, city: None, country: None }, String::new())),
+            deadlines: (!rounds.is_empty()).then(|| (Deadlines { rounds, submission_details: String::new(), submission_url: None }, String::new())),
+            volunteer: None,
+            last_verified: None,
+        };
+        let today = d(2026, 9, 17);
+        // Round 1 notified, round 2 still open: the last round decides.
+        let two_rounds = mk("two rounds", vec![round(d(2026, 5, 28), d(2026, 8, 6)), round(d(2026, 10, 15), d(2026, 12, 22))], Some((d(2027, 4, 12), d(2027, 4, 15))));
+        let review = mk("under review", vec![round(d(2026, 7, 9), d(2026, 10, 5))], Some((d(2027, 1, 10), d(2027, 1, 16))));
+        let decided = mk("decided", vec![round(d(2026, 3, 17), d(2026, 6, 10))], Some((d(2026, 10, 4), d(2026, 10, 9))));
+        let announced = mk("announced", vec![], Some((d(2027, 6, 21), d(2027, 6, 24))));
+        let unknown = mk("unknown", vec![], None);
+        let over = mk("over", vec![round(d(2025, 7, 10), d(2025, 10, 2))], Some((d(2026, 1, 11), d(2026, 1, 17))));
+        let later_open = mk("later open", vec![round(d(2027, 1, 20), d(2027, 4, 23))], None);
+        // Past dates are grayed out, upcoming ones are not.
+        let html = render(&[mk("two rounds", vec![round(d(2020, 5, 28), d(2020, 8, 6)), round(d(2999, 10, 15), d(2999, 12, 22))], None)], &[], "", Utc::now());
+        assert!(html.contains("<span class=\"gone\">R1 <strong>28 May 2020</strong></span>") && html.contains("R2 <strong>15 Oct 2999</strong>") && !html.contains("<span class=\"gone\">R2"), "{html}");
+        assert_eq!(status(&two_rounds, today).0, "submission upcoming");
+        assert_eq!(status(&review, today).0, "under review");
+        assert_eq!(status(&decided, today).0, "conference upcoming");
+        assert_eq!(status(&announced, today).0, "conference announced");
+        assert_eq!(status(&unknown, today).0, "not announced");
+        assert_eq!(status(&over, today).0, "happened");
+        // Open submissions first (soonest deadline first), though the
+        // edition under review has an earlier next date (5 Oct).
+        let mut v = vec![&over, &unknown, &announced, &decided, &review, &later_open, &two_rounds];
+        v.sort_by_key(|y| sort_key(y, today));
+        let order: Vec<&str> = v.iter().map(|y| y.label.as_str()).collect();
+        assert_eq!(order, vec!["two rounds", "later open", "decided", "under review", "announced", "unknown", "over"]);
     }
 
     #[test]

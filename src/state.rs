@@ -48,16 +48,23 @@ pub enum Code {
 }
 
 impl Code {
+    /// Codes no longer raised: what they marked turned out to be normal
+    /// operation. They stay in the enum so older state files and records
+    /// still parse, and are left out of every report.
+    pub fn retired(self) -> bool {
+        matches!(self, Code::E003 | Code::E005)
+    }
+
     pub fn hint(self) -> &'static str {
         match self {
-            Code::E001 => "The primary search backend (DuckDuckGo HTML) returned no results; a fallback backend was used. Check `src/search.rs` selectors if this persists.",
+            Code::E001 => "The primary search backend (DuckDuckGo) returned no results; a fallback backend was used. Check `src/search.rs` selectors if this persists.",
             Code::E002 => "Every search backend failed; the page was found by asking the model to guess URLs. Search parsing in `src/search.rs` probably needs updating.",
-            Code::E003 => "The search hit did not contain the dates; they were found by following a link from it. Usually harmless, but check the query in `src/discover.rs` if it becomes common.",
-            Code::E004 => "The page needed headless Chrome to render. Fine on GitHub runners; verify Chrome is still preinstalled if fetches start failing.",
-            Code::E005 => "The model's first answer failed validation and a corrective retry was needed. Consider tuning the prompt or schema in `src/schema.rs`.",
+            Code::E003 => "Retired: the page was found by following a link, which is normal operation.",
+            Code::E004 => "A page needed headless Chrome to render and Chrome was missing or failed, so the page was read unrendered. Check that Chrome is still preinstalled on the runner (`google-chrome --version`) and the flags in `src/fetch.rs`.",
+            Code::E005 => "Retired: the corrective retry was needed, which is normal operation.",
             Code::E006 => "No page could be found for this conference-year in three or more consecutive runs. The conference may have moved, been renamed or ended; check `conferences.json`.",
             Code::E007 => "Ollama or the model was installed from a fallback source in the workflow. Update the pinned versions in `.github/workflows/scrape.yml`.",
-            Code::E008 => "The primary search backend (DuckDuckGo HTML) throttled or blocked the runner (HTTP 429/202/403); a fallback backend was used. Nothing to fix unless it happens every run; then raise `PLC_SEARCH_GAP` or reorder backends in `src/search.rs`.",
+            Code::E008 => "The primary search backend (DuckDuckGo) throttled or blocked the runner (HTTP 429/202/403); a fallback backend was used. Nothing to fix unless it happens every run; then run `pl-conferences search \"<query>\"` on a runner to see what the engine answers, check that `curl` is still installed there (the engine challenges the built-in client), and raise `PLC_SEARCH_GAP`.",
             Code::E009 => "The page's TLS certificate was invalid and was ignored. Check whether the conference site moved; the source URL is in the JSON next to the calendar.",
             Code::E010 => "The Ollama registry now serves a different build for the pinned model tag (manifest digest changed). Re-run the accuracy harness (`cargo test --test live -- --ignored`) and update `MODEL_DIGEST` in `.github/workflows/scrape.yml` if results are still good.",
             Code::E011 => "This conference-year errored (a panic or an unexpected failure, see the note) in two or more consecutive runs; the run continued without it. Reproduce locally with `cargo run -- --conference <name> --year <year> --dry-run`.",
@@ -152,11 +159,11 @@ impl State {
     pub fn active_codes(&self) -> BTreeMap<Code, Vec<(String, DateTime<Utc>)>> {
         let mut m: BTreeMap<Code, Vec<(String, DateTime<Utc>)>> = BTreeMap::new();
         for (k, a) in &self.runs {
-            for c in &a.codes {
+            for c in a.codes.iter().filter(|c| !c.retired()) {
                 m.entry(*c).or_default().push((k.clone(), a.last_attempt));
             }
         }
-        for c in &self.last_run_codes {
+        for c in self.last_run_codes.iter().filter(|c| !c.retired()) {
             m.entry(*c).or_default().push(("(workflow)".into(), self.last_run.unwrap_or_else(Utc::now)));
         }
         m
@@ -171,7 +178,7 @@ impl State {
         }
         let active = self.active_codes();
         if active.is_empty() {
-            s.push_str("No active maintenance codes.\n");
+            s.push_str("No active maintenance codes.\n\n");
         } else {
             for (code, keys) in &active {
                 s.push_str(&format!("## {code:?}\n\n{}\n\n", code.hint()));
@@ -230,12 +237,14 @@ mod tests {
         assert!(st.get("X/X/2027/cfp").unwrap().codes.is_empty(), "not overdue: no E006");
         st.record("X/X/2027/cfp", Outcome::NotFound, None, vec![], String::new(), now, true);
         assert_eq!(st.get("X/X/2027/cfp").unwrap().codes, vec![Code::E006]);
-        st.record("X/X/2027/cfp", Outcome::Ok, Some("ddg-html".into()), vec![Code::E003], String::new(), now, true);
+        st.record("X/X/2027/cfp", Outcome::Ok, Some("brave".into()), vec![Code::E003, Code::E009], String::new(), now, true);
         let a = st.get("X/X/2027/cfp").unwrap();
         assert_eq!(a.consecutive_failures, 0);
-        assert_eq!(a.codes, vec![Code::E003]);
-        assert!(st.render_maintenance().contains("## E003"));
-        assert!(st.summary_line().contains("E003"));
+        assert_eq!(a.codes, vec![Code::E003, Code::E009]);
+        assert!(st.render_maintenance().contains("## E009"));
+        assert!(st.summary_line().contains("E009"));
+        // Retired codes in older state are never reported.
+        assert!(!st.render_maintenance().contains("## E003") && !st.summary_line().contains("E003"));
         // Repeated errors on one conference-year surface as E011.
         st.record("Y/Y/2027/cfp", Outcome::Error, None, vec![], "panic: x".into(), now, true);
         assert!(st.get("Y/Y/2027/cfp").unwrap().codes.is_empty());

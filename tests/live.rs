@@ -18,14 +18,17 @@ struct Case {
 
 fn cases() -> Vec<Case> {
     vec![
+        // The notification is the first decision ("Conditional Accept
+        // Decisions Announced", 2 Oct), not the "Final acceptance
+        // notification" (6 Nov) that follows the revision.
         Case {
             fixture: "popl26-dates.html", conference: "POPL", track: "POPL", year: 2026,
-            rounds: vec![("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some(&["2025-10-02", "2025-11-06"]))],
+            rounds: vec![("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some(&["2025-10-02"]))],
             conference_dates: Some(&[("2026-01-11", "2026-01-17"), ("2026-01-13", "2026-01-17")]), city: Some("Rennes"),
         },
         Case {
             fixture: "popl26-cfp.html", conference: "POPL", track: "POPL", year: 2026,
-            rounds: vec![("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some(&["2025-10-02", "2025-11-06"]))],
+            rounds: vec![("2025-07-10", Some("2025-09-08"), Some("2025-09-11"), Some(&["2025-10-02"]))],
             conference_dates: Some(&[("2026-01-11", "2026-01-17"), ("2026-01-13", "2026-01-17")]), city: Some("Rennes"),
         },
         Case {
@@ -51,7 +54,7 @@ fn cases() -> Vec<Case> {
         },
         Case {
             fixture: "icfp26-cfp.html", conference: "ICFP", track: "ICFP", year: 2026,
-            rounds: vec![("2026-02-19", Some("2026-04-20"), Some("2026-04-23"), Some(&["2026-05-14", "2026-06-10"]))],
+            rounds: vec![("2026-02-19", Some("2026-04-20"), Some("2026-04-23"), Some(&["2026-05-14"]))],
             conference_dates: Some(&[("2026-08-24", "2026-08-29")]), city: Some("Indianapolis"),
         },
         Case {
@@ -74,19 +77,18 @@ fn cases() -> Vec<Case> {
             rounds: vec![("2026-01-22", Some("2026-03-26"), Some("2026-03-29"), Some(&["2026-04-16"]))],
             conference_dates: Some(&[("2026-07-20", "2026-07-23")]), city: Some("Lisbon"),
         },
-        // Lists "Author Notification (Round 1)" twice (the second after a
-        // revision phase) and likewise for round 2. Round 1 is read right
-        // (the cross-round rule rejects anything after the round-2
-        // deadline). For round 2 the model settles on the revision
-        // deadline "Fri 30 Jul 2027" and keeps it when retried, told the
-        // entry's label, or given the first-notification description: a
-        // known limitation, so any round-2 notification is accepted here
-        // and the case guards the rest of the page.
+        // Lists "Author Notification (Round N)" twice per round (the second
+        // after a revision phase), with the revision deadline between them.
+        // The notification is the first one. The model on its own settles
+        // on a later entry for round 2; the first-entry-after-the-response
+        // rule hands it the right entry, and drops the notification if it
+        // still does not take it (an absent notification fails this case,
+        // on purpose: it should be found).
         Case {
             fixture: "splash27-oopsla.html", conference: "SPLASH", track: "OOPSLA", year: 2027,
             rounds: vec![
                 ("2026-10-14", Some("2026-12-01"), Some("2026-12-05"), Some(&["2026-12-18"])),
-                ("2027-04-07", Some("2027-06-15"), Some("2027-06-19"), None),
+                ("2027-04-07", Some("2027-06-15"), Some("2027-06-19"), Some(&["2027-07-02"])),
             ],
             conference_dates: Some(&[("2027-10-10", "2027-10-15")]), city: Some("Prague"),
         },
@@ -317,6 +319,14 @@ fn scenarios() -> Vec<Scenario> {
         // Deadlines and dates on the home page, "Full call coming soon" on the
         // call page: no submission site may be invented.
         Scenario { name: "cav27: no site published", conference: "CAV", track: "CAV", year: 2027, known_url: "https://conferences.i-cav.org/2027/", submission_url: None, submission: Some("2027-01-20"), notification: Some("2027-04-23"), dates: Some(("2027-07-19", "2027-07-23", "Amsterdam")) },
+        // The call page gives the conference dates ("Main Conference: July
+        // 26-29, 2026") but no city; the edition's home page, its parent
+        // directory, says "in Lisbon, Portugal" with the same dates.
+        Scenario { name: "cav26: location from the home page", conference: "CAV", track: "CAV", year: 2026, known_url: "https://conferences.i-cav.org/2026/cfp/", submission_url: Some("https://submissions.floc26.org/cav"), submission: Some("2026-01-28"), notification: Some("2026-04-17"), dates: Some(("2026-07-26", "2026-07-29", "Lisbon")) },
+        // The call page says "Lisbon" without the country; the home page
+        // adds "Lisbon, Portugal". (The scenario checks the city; the log
+        // line "location ... taken from" shows the country.)
+        Scenario { name: "lics26: country from the home page", conference: "LICS", track: "LICS", year: 2026, known_url: "https://lics.siglog.org/lics26/cfp.php", submission_url: Some("https://submissions.floc26.org/lics"), submission: Some("2026-01-22"), notification: Some("2026-04-16"), dates: Some(("2026-07-20", "2026-07-23", "Lisbon")) },
         // Site written in the text; two "Author Notification (Round 1)"
         // entries, the first being the notification.
         Scenario { name: "splash27: site in the text", conference: "SPLASH", track: "OOPSLA", year: 2027, known_url: "https://conf.researchr.org/track/splash-2027/splashoopsla2027", submission_url: Some("https://oopsla27.hotcrp.com"), submission: Some("2026-10-14"), notification: Some("2026-12-18"), dates: Some(("2027-10-10", "2027-10-15", "Prague")) },

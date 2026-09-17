@@ -5,11 +5,23 @@ use std::process::{Command, Stdio};
 use std::sync::LazyLock;
 use std::time::{Duration, Instant};
 
-pub const USER_AGENT: &str = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 pl-conferences/1.0 (+https://github.com/JonasAlaif/pl-conferences)";
+/// A current desktop Chrome user agent. Sites and search engines treat an
+/// old browser version as a bot or serve it "your browser is outdated"
+/// pages, and a version fixed in the source would be years stale soon; so
+/// the major version is derived from the date (Chrome 128 shipped on 20
+/// August 2024 and a new major follows every four weeks).
+pub fn user_agent() -> &'static str {
+    static UA: LazyLock<String> = LazyLock::new(|| {
+        let epoch = chrono::NaiveDate::from_ymd_opt(2024, 8, 20).expect("date");
+        let major = 128 + (chrono::Utc::now().date_naive() - epoch).num_days().max(0) / 28;
+        format!("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{major}.0.0.0 Safari/537.36")
+    });
+    &UA
+}
 
 static CLIENT: LazyLock<reqwest::blocking::Client> = LazyLock::new(|| {
     reqwest::blocking::Client::builder()
-        .user_agent(USER_AGENT)
+        .user_agent(user_agent())
         .timeout(Duration::from_secs(40))
         .redirect(reqwest::redirect::Policy::limited(10))
         .build()
@@ -20,7 +32,7 @@ static CLIENT: LazyLock<reqwest::blocking::Client> = LazyLock::new(|| {
 /// self-signed certificates are common, and we only read public pages.
 static INSECURE_CLIENT: LazyLock<reqwest::blocking::Client> = LazyLock::new(|| {
     reqwest::blocking::Client::builder()
-        .user_agent(USER_AGENT)
+        .user_agent(user_agent())
         .timeout(Duration::from_secs(40))
         .redirect(reqwest::redirect::Policy::limited(10))
         .danger_accept_invalid_certs(true)
@@ -45,7 +57,7 @@ static FIXTURES: LazyLock<Option<std::collections::HashMap<String, std::path::Pa
 fn fixture_page(url: &str) -> Option<Result<Page>> {
     let map = FIXTURES.as_ref()?;
     Some(match map.get(url.trim_end_matches('/')) {
-        Some(file) => std::fs::read_to_string(file).map(|html| Page { url: url.to_string(), html, via_chrome: false, insecure_tls: false }).with_context(|| format!("fixture {}", file.display())),
+        Some(file) => std::fs::read_to_string(file).map(|html| Page { url: url.to_string(), html, via_chrome: false, chrome_failed: false, insecure_tls: false }).with_context(|| format!("fixture {}", file.display())),
         None => Err(anyhow!("{url} is not in the fixture map (offline mode)")),
     })
 }
@@ -57,6 +69,9 @@ pub struct Page {
     pub html: String,
     /// True when headless Chrome had to render the page.
     pub via_chrome: bool,
+    /// True when the page needed headless Chrome and Chrome was missing or
+    /// failed: the page is then the unrendered shell (maintenance code E004).
+    pub chrome_failed: bool,
     /// True when the page could only be fetched by ignoring a bad TLS certificate.
     pub insecure_tls: bool,
 }
@@ -93,7 +108,7 @@ fn get_inner(url: &str, depth: u32) -> Result<Page> {
         // minimal HTML page so the rest of the pipeline is unchanged.
         let text = pdf_text(&bytes).with_context(|| format!("{final_url}: PDF without pdftotext available"))?;
         let html = format!("<html><body><pre>{}</pre></body></html>", text.replace('&', "&amp;").replace('<', "&lt;"));
-        return Ok(Page { url: final_url, html, via_chrome: false, insecure_tls: insecure });
+        return Ok(Page { url: final_url, html, via_chrome: false, chrome_failed: false, insecure_tls: insecure });
     }
     let html = String::from_utf8_lossy(&bytes).into_owned();
     if depth < 2 {
@@ -106,7 +121,7 @@ fn get_inner(url: &str, depth: u32) -> Result<Page> {
             }
         }
     }
-    Ok(Page { url: final_url, html, via_chrome: false, insecure_tls: insecure })
+    Ok(Page { url: final_url, html, via_chrome: false, chrome_failed: false, insecure_tls: insecure })
 }
 
 /// Text of a PDF via `pdftotext -layout` (poppler), which the workflow installs.
@@ -184,11 +199,11 @@ pub fn get_rendered(url: &str) -> Result<Page> {
     }
     log::info!("{url} looks JavaScript-rendered; trying headless Chrome");
     match chrome_dump(&page.url) {
-        Ok(html) if !html.trim().is_empty() => Ok(Page { url: page.url, html, via_chrome: true, insecure_tls: page.insecure_tls }),
-        Ok(_) => Ok(page),
+        Ok(html) if !html.trim().is_empty() => Ok(Page { url: page.url, html, via_chrome: true, chrome_failed: false, insecure_tls: page.insecure_tls }),
+        Ok(_) => Ok(Page { chrome_failed: true, ..page }),
         Err(e) => {
             log::warn!("headless Chrome unavailable: {e:#}");
-            Ok(page)
+            Ok(Page { chrome_failed: true, ..page })
         }
     }
 }
@@ -239,7 +254,7 @@ pub fn chrome_dump(url: &str) -> Result<String> {
             &format!("--user-data-dir={}", profile.display()),
             "--virtual-time-budget=8000",
             "--timeout=30000",
-            &format!("--user-agent={USER_AGENT}"),
+            &format!("--user-agent={}", user_agent()),
             "--dump-dom",
             url,
         ])

@@ -25,6 +25,7 @@ const USAGE: &str = "usage: pl-conferences [--root DIR] [--conference NAME]... [
        pl-conferences merge-state <into.json> <part.json>...
        pl-conferences clean <file.html>
        pl-conferences fetch <url>
+       pl-conferences search <query>
        pl-conferences extract <file.html> <conference> <year> <track>
        pl-conferences extract-volunteer <file.html> <conference> <year> <track> [site]
        pl-conferences sections <file.html>";
@@ -106,6 +107,18 @@ fn main() -> Result<()> {
             print!("{}", clean::html_to_markdown(&page.html));
             return Ok(());
         }
+        Some("search") => {
+            // Which engine answers, and what the ones before it said.
+            let out = search::Searcher::new(search::default_backends()).search(argv.get(1).context(USAGE)?, &|_| true);
+            for f in &out.failures {
+                println!("{} failed: {}", f.backend, f.reason);
+            }
+            println!("answered by: {}", out.backend.unwrap_or("none"));
+            for h in &out.hits {
+                println!("- {} | {}", h.title, h.url);
+            }
+            return Ok(());
+        }
         Some("extract") => {
             let html = std::fs::read_to_string(argv.get(1).context(USAGE)?)?;
             let cfg = config::ConferenceCfg { conference: argv.get(2).context(USAGE)?.clone(), track: argv.get(4).context(USAGE)?.clone(), since: 0 };
@@ -117,7 +130,7 @@ fn main() -> Result<()> {
             let t = std::time::Instant::now();
             let (x, raw, usage): (schema::CfpExtraction, _, _) = llm.extract(discover::SYSTEM_PROMPT, &prompt).map_err(anyhow::Error::new)?;
             eprintln!("{raw}\n--- {usage:?} wall {:.1}s", t.elapsed().as_secs_f64());
-            match schema::validate_cfp_links(&x, year, &md, &cfg.track, &clean::links(&html, "https://example.org/")) {
+            match schema::validate_cfp_links(&x, year, &md, &cfg.track, &clean::links(&html, "https://example.org/"), true) {
                 Ok(c) => println!("{}", serde_json::to_string_pretty(&c)?),
                 Err(errs) => println!("INVALID: {errs:?}"),
             }
@@ -693,7 +706,7 @@ fn write_json<T: Serialize>(path: &Path, v: &T) -> Result<()> {
 }
 
 fn provenance_of(p: &discover::Provenance, history: &[schema::Change]) -> ics::Provenance {
-    ics::Provenance { source_url: p.source_url.clone(), codes: p.codes.iter().map(|c| format!("{c:?}")).collect(), history: history.to_vec() }
+    ics::Provenance { source_url: p.source_url.clone(), codes: p.codes.iter().filter(|c| !c.retired()).map(|c| format!("{c:?}")).collect(), history: history.to_vec() }
 }
 
 /// Write one record (`conference` or `cfp`), its calendar and (when the

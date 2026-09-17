@@ -55,8 +55,10 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
    (`*.md`), and committed. A page with only the conference dates still
    produces the conference record; deadlines keep being looked for.
 4. Every conference-year has a stage derived from its data and the date:
-   *future* (nothing known), *conference available* (dates and location, no
-   deadlines yet), *deadlines available*, *post-rebuttal* (the last round's
+   *future* (nothing known), *conference announced* (dates and location, no
+   deadlines yet), *deadlines available* (shown on the site as *submission
+   upcoming* while the last round's deadline is ahead, then *under
+   review*), *conference upcoming* (the last round's
    notification has passed, so the deadlines are final) and *happened*.
    Conference dates stay active until the conference is over, deadlines
    until the last round's notification. Missing parts are looked for first (a search that
@@ -79,8 +81,8 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
 
 Maintenance codes: E001 fallback search backend used (primary parsed
 nothing), E002 no search backend answered (URLs derived from earlier
-editions or guessed by the model), E003 page found by link-following, E004
-headless Chrome needed, E005 corrective retry needed, E006 conference-year
+editions or guessed by the model), E004 a page needed headless Chrome and
+Chrome was missing or failed, E006 conference-year
 not found three runs in a row after its year began, E007 Ollama or model
 installed from a fallback source, E008 primary search backend throttled the
 runner, E009 invalid TLS certificate ignored, E010 the pinned model tag now
@@ -146,11 +148,22 @@ per worker, against a 330-minute job timeout).
 - A page that lists the same label twice can defeat the model: OOPSLA's
   dates list has two "Author Notification (Round 2)" entries (the second is
   the decision on revised papers) with the revision deadline between them,
-  and the 4B model settles on the wrong one for the last round however it is
-  asked. For earlier rounds a rule catches it (a round's notification must
-  precede the next round's deadline); for the last round the stored value is
-  whatever was read first, and a re-read that disagrees while the page still
-  states the stored date keeps the stored date rather than flip-flopping.
+  and the 4B model settles on the wrong one however it is asked. Two rules
+  on the dates settle it instead: a round's notification must precede the
+  next round's deadline, and the notification is the first dated entry after
+  the author response in the same list (an entry of the same track dated
+  between the two means a later decision was chosen). A re-read that
+  disagrees while the page still states the stored date keeps the stored
+  date rather than flip-flopping.
+- Search result pages are fetched with the system's `curl` and a User-Agent
+  that names this repository, not with the program's own HTTP client.
+  Measured from GitHub's runners (one client per fresh runner), DuckDuckGo
+  answered the program's client with its "bots use DuckDuckGo too" challenge
+  36 times out of 36, whatever the TLS library, HTTP version or User-Agent,
+  and served curl 36 times out of 36. A challenge or a throttling status is
+  never worked around: the engine is left alone for a while and the next one
+  is asked (E008, E001). `pl-conferences search "<query>"` shows which engine
+  answers.
 - The workflow's commit favours the run's files over concurrent hand edits to
   the same files (`git pull --rebase -X theirs`); edit `state.json` or a record
   by hand only between runs.
@@ -180,6 +193,7 @@ Debugging helpers:
 cargo run -- clean page.html                       # the Markdown the model sees
 cargo run -- extract page.html POPL 2026 POPL      # run extraction on a saved page
 cargo run -- fetch https://example.org/cfp         # fetch (with Chrome fallback) and clean
+cargo run -- search "POPL 2027 call for papers"    # which search engine answers, and its hits
 cargo run -- sections page.html                    # relevance scores used when a page must be cut
 cargo test                                         # offline tests on saved fixtures
 cargo test --test live -- --ignored --nocapture    # live accuracy harnesses against a local Ollama

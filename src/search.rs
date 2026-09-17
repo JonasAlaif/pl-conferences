@@ -129,10 +129,60 @@ pub fn default_backends() -> Vec<Box<dyn SearchBackend>> {
         return vec![];
     }
     // DuckDuckGo first: its results for conference queries are the most
-    // relevant. It soft-blocks (HTTP 202) after bursts of queries from one
-    // IP; the runner sends a few dozen per run with gaps, and Brave then
-    // Bing take over when it does (E008 records that).
+    // relevant. Brave then Bing take over when it does not answer.
     vec![Box::new(DdgHtml), Box::new(Brave), Box::new(Bing)]
+}
+
+/// Search engines are asked as what this is: a script, named, with the
+/// address of its repository. All three engines answer that.
+fn search_user_agent() -> String {
+    format!("pl-conferences/{} (+{})", env!("CARGO_PKG_VERSION"), crate::ics::REPO_URL)
+}
+
+/// curl writes the status code on a line of its own after the body.
+fn split_status(out: &str) -> Option<(u16, String)> {
+    let (body, code) = out.trim_end().rsplit_once('\n').unwrap_or(("", out.trim_end()));
+    Some((code.trim().parse().ok()?, body.to_string()))
+}
+
+/// `Ok(None)` when there is no curl to run.
+fn curl_get(url: &str) -> Result<Option<(u16, String)>> {
+    let out = std::process::Command::new("curl")
+        .args(["-sS", "--compressed", "-L", "--max-time", "40", "-A", &search_user_agent(), "-H", "Accept: text/html", "-H", "Accept-Language: en-US,en;q=0.9", "-w", "\n%{http_code}", url])
+        .stdin(std::process::Stdio::null())
+        .output();
+    let out = match out {
+        Ok(out) => out,
+        Err(e) => {
+            log::warn!("curl could not be run ({e}); searching with the built-in client");
+            return Ok(None);
+        }
+    };
+    if !out.status.success() {
+        return Err(anyhow!("curl exited with {}: {}", out.status, String::from_utf8_lossy(&out.stderr).trim()));
+    }
+    split_status(&String::from_utf8_lossy(&out.stdout)).map(Some).ok_or_else(|| anyhow!("curl printed no status code"))
+}
+
+/// GET a results page: status and body. Through the system's curl, because
+/// of who DuckDuckGo answers: measured from GitHub's runners (one client per
+/// fresh runner, September 2026) it met this program's own HTTP client with
+/// its "bots use DuckDuckGo too" challenge 36 times out of 36, whatever the
+/// TLS library, HTTP version or User-Agent, and served curl 36 times out of
+/// 36, including with the User-Agent above. A failed connection is tried
+/// once more with curl; the program's own client is only for a machine
+/// without curl.
+fn get_page(url: &str) -> Result<(u16, String)> {
+    let first = curl_get(url).or_else(|e| {
+        log::warn!("{e:#}; trying once more");
+        std::thread::sleep(Duration::from_secs(3));
+        curl_get(url)
+    })?;
+    if let Some(r) = first {
+        return Ok(r);
+    }
+    let resp = fetch::client().get(url).header("User-Agent", search_user_agent()).header("Accept", "text/html").header("Accept-Language", "en-US,en;q=0.9").send()?;
+    Ok((resp.status().as_u16(), resp.text()?))
 }
 
 /// How long a backend that throttled us is left alone.
@@ -201,10 +251,10 @@ impl Searcher {
         let mut delay = Duration::from_secs(20);
         for attempt in 0..3 {
             self.pace();
-            let resp = fetch::client().get(&url).header("Accept", "text/html").header("Accept-Language", "en-US,en;q=0.9").send()?;
-            let status = resp.status();
-            if status.is_success() {
-                let html = resp.text()?;
+            let (status, html) = get_page(&url)?;
+            // Exactly 200: DuckDuckGo's challenge page comes as 202, which
+            // is a "success" status too.
+            if status == 200 {
                 let hits = b.parse(&html);
                 if hits.is_empty() {
                     let title = crate::clean::title(&html).unwrap_or_default();
@@ -219,9 +269,10 @@ impl Searcher {
                 }
                 return Ok(hits);
             }
-            // 202 (DuckDuckGo soft block), 429 and 403 are throttling; back
-            // off once, then leave this backend alone for a while.
-            if matches!(status.as_u16(), 202 | 403 | 429 | 503) {
+            // 202 (DuckDuckGo's challenge), 429 and 403 are the engine
+            // saying no; back off once, then leave this backend alone for a
+            // while. A challenge is never answered or worked around.
+            if matches!(status, 202 | 403 | 429 | 503) {
                 if attempt < 1 {
                     log::warn!("{} returned HTTP {status}; backing off {delay:?}", b.name());
                     std::thread::sleep(delay);
@@ -296,6 +347,15 @@ mod tests {
 
     fn fixture(name: &str) -> String {
         std::fs::read_to_string(format!("{}/tests/fixtures/search/{name}.html", env!("CARGO_MANIFEST_DIR"))).unwrap()
+    }
+
+    #[test]
+    fn curl_output_splits_into_status_and_body() {
+        assert_eq!(split_status("<html>\nresults\n</html>\n200"), Some((200, "<html>\nresults\n</html>".to_string())));
+        assert_eq!(split_status("challenge\n202\n"), Some((202, "challenge".to_string())));
+        assert_eq!(split_status("\n429"), Some((429, String::new())), "an empty body still carries its status");
+        assert_eq!(split_status("<html>no status</html>"), None);
+        assert!(search_user_agent().starts_with("pl-conferences/") && search_user_agent().contains("github.com"), "the engines are told who is asking");
     }
 
     #[test]
