@@ -21,8 +21,11 @@ pub struct YearView {
 }
 
 /// Google Calendar's "add calendar from URL" prompt for an `.ics` feed.
+/// The `cid` must be a `webcal://` URL, written out: with `https://` (or
+/// percent-encoded) Google answers "Could not add. Check the URL".
 pub fn google_calendar_link(ics_url: &str) -> String {
-    format!("https://calendar.google.com/calendar/r?cid={}", urlencoding::encode(ics_url))
+    let feed = ics_url.trim_start_matches("https://").trim_start_matches("http://");
+    format!("https://calendar.google.com/calendar/r?cid=webcal://{feed}")
 }
 
 fn esc(s: &str) -> String {
@@ -414,7 +417,7 @@ mod tests {
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
         assert!(html.contains("all.ics"));
-        assert!(html.contains("https://calendar.google.com/calendar/r?cid=https%3A%2F%2Fjonasalaif.github.io%2Fpl-conferences%2Fall.ics"), "Google Calendar link with the feed URL encoded");
+        assert!(html.contains("\"https://calendar.google.com/calendar/r?cid=webcal://jonasalaif.github.io/pl-conferences/all.ics\""), "Google Calendar link with the feed as a webcal URL");
     }
 
     #[test]
