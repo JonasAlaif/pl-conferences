@@ -44,8 +44,13 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
    deadline), and only the primary track searches for the volunteer page.
 2. For every conference and every year up to next year that has no result yet
    (a bounded batch per run), the pipeline searches the web (DuckDuckGo, Brave and Bing HTML result pages,
-   no API keys), lets the model pick the official page, fetches it, converts it
+   no API keys), asks the model what each hit is (the page looked for, another
+   page of the conference site, a mailing-list copy, a listing site, an upload
+   system, another year, unrelated: a classification, since ranking a list
+   is beyond a small model), tries the hits in that order, converts the page
    to Markdown and asks the model for the dates as schema-constrained JSON.
+   A track with a name of its own (TACAS at ETAPS) is looked for by its own
+   page, not the conference's joint call.
    If the chosen page has no deadline, the model picks a link to follow.
    For every date the model must first quote the words on the page and copy
    the date exactly as written there; validation checks that the two sit in
