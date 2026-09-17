@@ -20,6 +20,11 @@ pub struct YearView {
     pub last_verified: Option<DateTime<Utc>>,
 }
 
+/// Google Calendar's "add calendar from URL" prompt for an `.ics` feed.
+pub fn google_calendar_link(ics_url: &str) -> String {
+    format!("https://calendar.google.com/calendar/r?cid={}", urlencoding::encode(ics_url))
+}
+
 fn esc(s: &str) -> String {
     s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;").replace('"', "&quot;")
 }
@@ -302,8 +307,8 @@ pub fn render(years: &[YearView], maintenance: &str, generated: DateTime<Utc>) -
 <main>
 <h1>PL conference deadlines</h1>
 <p class="lead">Submission deadlines, rebuttals, notifications, conference dates and student-volunteer deadlines for programming-languages conferences, collected automatically twice a week by a small language model.</p>
-<p>Subscribe in your calendar app: <code>{pages}/all.ics</code> (or <a href="webcal://jonasalaif.github.io/pl-conferences/all.ics">webcal link</a>). Every entry says which page it was extracted from; the source is authoritative, the calendar is a convenience.</p>
-"#, pages = PAGES_URL));
+<p>Subscribe in your calendar app: <code>{pages}/all.ics</code>, or <a href="{google}">add to Google Calendar</a>, or the <a href="webcal://jonasalaif.github.io/pl-conferences/all.ics">webcal link</a> for Apple Calendar and others. Every entry says which page it was extracted from; the source is authoritative, the calendar is a convenience.</p>
+"#, pages = PAGES_URL, google = google_calendar_link(&format!("{PAGES_URL}/all.ics"))));
 
     let today = generated.date_naive();
 
@@ -409,6 +414,7 @@ mod tests {
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
         assert!(html.contains("all.ics"));
+        assert!(html.contains("https://calendar.google.com/calendar/r?cid=https%3A%2F%2Fjonasalaif.github.io%2Fpl-conferences%2Fall.ics"), "Google Calendar link with the feed URL encoded");
     }
 
     #[test]

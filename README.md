@@ -10,6 +10,11 @@ and published as calendar files.
 https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/all.ics
 ```
 
+Or in one click: [add to Google Calendar](https://calendar.google.com/calendar/r?cid=https%3A%2F%2Fjonasalaif.github.io%2Fpl-conferences%2Fall.ics)
+(Google fetches the feed from the site, which is republished on every run) ·
+[webcal link](webcal://jonasalaif.github.io/pl-conferences/all.ics) for Apple
+Calendar and others.
+
 Per-conference calendars live under `conferences/<CONF>/<TRACK>/<YEAR>/` as
 `conference.ics` (conference dates and location), `cfp.ics` (submission
 deadline, rebuttal, notification per round, with the submission site linked)
