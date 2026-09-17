@@ -10,44 +10,44 @@ UID:5bff4e3ebc2b466f5238784a2134a9d4c381d86d@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260219
 DTEND;VALUE=DATE:20260220
-SUMMARY:[ICFP 2026] Paper Submission Deadline
-DESCRIPTION:Submissions must be in PDF format\, printable in black and whi
- te on US Letter sized paper and interpretable by common PDF tools. All su
- bmissions must adhere to the "ACM Small" template. There is a limit of 25
-  pages for a full paper or Functional Pearl and 12 pages for an Experienc
- e Report\; the bibliography and an optional clearly marked appendix will 
- not be counted against these limits. Submissions that exceed the page lim
- its or do not meet formatting requirements will be desk rejected. The con
- ference uses a full double-blind reviewing process where author identitie
- s are omitted from submissions. Authors may submit improved versions befo
- re the deadline. Authors of conditionally accepted papers must provide re
- vised submissions by 3 June 2026 accompanied by a cover letter mapping ea
- ch mandatory revision request to specific parts of the paper.\n\nSubmit a
- t: https://icfp26.hotcrp.com\n\nExtracted automatically by a small langua
- ge model\; please cross-check against the source before relying on it: ht
- tps://icfp26.sigplan.org/track/icfp-2026-icfp-papers\nhttps://github.com/
- JonasAlaif/pl-conferences
+SUMMARY:[ICFP 26] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp26.sigplan.
+ org/track/icfp-2026-icfp-papers\n\nSubmissions must be in PDF format\, pr
+ intable in black and white on US Letter sized paper and interpretable by 
+ common PDF tools. All submissions must adhere to the "ACM Small" template
+ . There is a limit of 25 pages for a full paper or Functional Pearl and 1
+ 2 pages for an Experience Report\; the bibliography and an optional clear
+ ly marked appendix will not be counted against these limits. Submissions 
+ that exceed the page limits or do not meet formatting requirements will b
+ e desk rejected. The conference uses a full double-blind reviewing proces
+ s where author identities are omitted from submissions. Authors may submi
+ t improved versions before the deadline. Authors of conditionally accepte
+ d papers must provide revised submissions by 3 June 2026 accompanied by a
+  cover letter mapping each mandatory revision request to specific parts o
+ f the paper.\n\nSubmit at: https://icfp26.hotcrp.com\n\nhttps://github.co
+ m/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e3bab0d4fdd4cfab74edfd7de78cd63bc56e75cf@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260420
 DTEND;VALUE=DATE:20260424
-SUMMARY:[ICFP 2026] Rebuttal
+SUMMARY:[ICFP 26] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/track/icfp-2026-icfp-papers\n\nhttps://github.com/JonasAlaif/pl-confe
+ rences
 END:VEVENT
 BEGIN:VEVENT
 UID:ffacaacbd94884e5deee4e58f907dfe067dbb6f0@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260514
 DTEND;VALUE=DATE:20260515
-SUMMARY:[ICFP 2026] Notification
+SUMMARY:[ICFP 26] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/track/icfp-2026-icfp-papers\n\nhttps://github.com/JonasAlaif/pl-confe
+ rences
 END:VEVENT
 END:VCALENDAR

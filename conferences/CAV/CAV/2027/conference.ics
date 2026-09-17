@@ -10,10 +10,10 @@ UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
 DTSTAMP:20260916T155005Z
 DTSTART;VALUE=DATE:20270719
 DTEND;VALUE=DATE:20270724
-SUMMARY:[CAV 2027] Conference
+SUMMARY:[CAV 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conferences.i-c
- av.org/2027/\nhttps://github.com/JonasAlaif/pl-conferences
+ av.org/2027/\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Amsterdam\, The Netherlands
 END:VEVENT
 END:VCALENDAR

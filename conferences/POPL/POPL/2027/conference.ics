@@ -10,10 +10,10 @@ UID:f3883fe1926248a147c0c790c01ba3a954b4acb1@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270110
 DTEND;VALUE=DATE:20270117
-SUMMARY:[POPL 2027] Conference
+SUMMARY:[POPL 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://popl27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Mexico City\, Mexico
 END:VEVENT
 END:VCALENDAR

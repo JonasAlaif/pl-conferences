@@ -10,16 +10,16 @@ UID:74b8df24773551c667cd32913d619377da0749d1@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260703
 DTEND;VALUE=DATE:20260704
-SUMMARY:[ICFP 2026] Volunteer Application Deadline
-DESCRIPTION:Students and Programming Languages researchers from around the
-  world are welcome to apply. Priority is given to junior members\, such a
- s full- or part-time computer science students. Volunteers receive a comp
- limentary conference registration\, free lunches and refreshments\, a vol
- unteer shirt\, and free admission to social events\, though they must arr
- ange their own travel and accommodation. To apply\, visit the provided li
- nk.\n\nApply at: https://forms.gle/wdogVw3P25pizryk6\n\nExtracted automat
- ically by a small language model\; please cross-check against the source 
- before relying on it: https://icfp26.sigplan.org/track/icfp-2026-icfp-vol
- unteers\nhttps://github.com/JonasAlaif/pl-conferences
+SUMMARY:[ICFP 26] Volunteer Application Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp26.sigplan.
+ org/track/icfp-2026-icfp-volunteers\n\nStudents and Programming Languages
+  researchers from around the world are welcome to apply. Priority is give
+ n to junior members\, such as full- or part-time computer science student
+ s. Volunteers receive a complimentary conference registration\, free lunc
+ hes and refreshments\, a volunteer shirt\, and free admission to social e
+ vents\, though they must arrange their own travel and accommodation. To a
+ pply\, visit the provided link.\n\nApply at: https://forms.gle/wdogVw3P25
+ pizryk6\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

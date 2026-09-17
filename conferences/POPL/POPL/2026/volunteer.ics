@@ -10,16 +10,16 @@ UID:ec304eaa792b4399bad21d55cb0973e91f7deab3@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20251110
 DTEND;VALUE=DATE:20251111
-SUMMARY:[POPL 2026] Volunteer Application Deadline
-DESCRIPTION:Applicants can be undergraduate\, Master's\, Ph.D. full- or pa
- rt-time students from computer science or related fields. They receive a 
- complimentary conference registration\, free lunches/refreshments\, and v
- olunteer garments in exchange for approximately 18 hours of work covering
-  four days at the conference. To apply\, fill out the provided form befor
- e November 10th\, 2025.\n\nApply at: https://forms.gle/YiMy1PXVF6QWggsb8\
- n\nExtracted automatically by a small language model\; please cross-check
-  against the source before relying on it: https://popl26.sigplan.org/trac
- k/POPL-2026-student-volunteers\nhttps://github.com/JonasAlaif/pl-conferen
- ces
+SUMMARY:[POPL 26] Volunteer Application Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl26.sigplan.
+ org/track/POPL-2026-student-volunteers\n\nApplicants can be undergraduate
+ \, Master's\, Ph.D. full- or part-time students from computer science or 
+ related fields. They receive a complimentary conference registration\, fr
+ ee lunches/refreshments\, and volunteer garments in exchange for approxim
+ ately 18 hours of work covering four days at the conference. To apply\, f
+ ill out the provided form before November 10th\, 2025.\n\nApply at: https
+ ://forms.gle/YiMy1PXVF6QWggsb8\n\nhttps://github.com/JonasAlaif/pl-confer
+ ences
 END:VEVENT
 END:VCALENDAR

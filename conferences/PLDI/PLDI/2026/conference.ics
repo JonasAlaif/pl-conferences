@@ -10,10 +10,11 @@ UID:2769659299d36061cad3c30c9c4910a8170bac8f@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260615
 DTEND;VALUE=DATE:20260620
-SUMMARY:[PLDI 2026] Conference
+SUMMARY:[PLDI 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi26.sigplan.
- org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/pldi-2026-papers\n\nhttps://github.com/JonasAlaif/pl-conference
+ s
 LOCATION:Boulder\, United States
 END:VEVENT
 END:VCALENDAR

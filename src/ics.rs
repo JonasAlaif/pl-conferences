@@ -19,7 +19,8 @@ pub struct Event {
     pub stamp: DateTime<Utc>,
 }
 
-/// Provenance appended to descriptions.
+/// Provenance in descriptions: the disclaimer with the source first, the
+/// recorded changes and maintenance codes last.
 #[derive(Debug, Clone, Default)]
 pub struct Provenance {
     pub source_url: String,
@@ -29,17 +30,29 @@ pub struct Provenance {
 }
 
 impl Provenance {
-    fn note(&self, field: &str) -> String {
+    fn disclaimer(&self) -> String {
+        format!("Extracted automatically by a small language model; please cross-check against the source before relying on it: {}", self.source_url)
+    }
+
+    fn tail(&self, field: &str) -> String {
         let mut s = String::new();
         for c in self.history.iter().filter(|c| c.field == field || c.field == "rounds") {
             s.push_str(&format!("Changed {}: was {} (now {}).\n", c.at.format("%Y-%m-%d"), c.old, c.new));
         }
-        s.push_str(&format!("Extracted automatically by a small language model; please cross-check against the source before relying on it: {}", self.source_url));
         if !self.codes.is_empty() {
-            s.push_str(&format!("\nMaintenance: {} - see {MAINTENANCE_URL}", self.codes.join(", ")));
+            s.push_str(&format!("Maintenance: {} - see {MAINTENANCE_URL}\n", self.codes.join(", ")));
         }
-        s.push_str(&format!("\n{REPO_URL}"));
+        s.push_str(REPO_URL);
         s
+    }
+
+    /// A description: disclaimer, then `middle` (details, links, notes),
+    /// then changes, codes and the repository.
+    fn describe(&self, field: &str, middle: Vec<String>) -> String {
+        let mut parts = vec![self.disclaimer()];
+        parts.extend(middle);
+        parts.push(self.tail(field));
+        parts.join("\n\n")
     }
 }
 
@@ -50,25 +63,41 @@ fn uid(key: &str, event: &str) -> String {
     format!("{hex}@pl-conferences")
 }
 
-fn event(label: &str, key: &str, stamp: DateTime<Utc>, name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate) -> Event {
-    Event { uid: uid(key, name), summary: format!("[{label}] {name}"), description: desc, location: loc.to_string(), start, end, stamp }
+/// The tags events are filed under, from the key "SPLASH/OOPSLA/2027":
+/// "SPLASH 27" for the conference and its volunteers, "OOPSLA 27" for the
+/// deadlines, since the track is what one submits to.
+fn tags(key: &str) -> (String, String) {
+    let mut parts = key.split('/');
+    let conf = parts.next().unwrap_or(key);
+    let track = parts.next().unwrap_or(conf);
+    let year = parts.next().unwrap_or("");
+    let yy = year.get(2..).unwrap_or(year);
+    (format!("{conf} {yy}"), format!("{track} {yy}"))
+}
+
+/// `uid_name` is the event's name when it was first published; UIDs must
+/// not change with a rename, or subscribers see every event twice.
+#[allow(clippy::too_many_arguments)]
+fn event(tag: &str, key: &str, stamp: DateTime<Utc>, uid_name: &str, name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate) -> Event {
+    Event { uid: uid(key, uid_name), summary: format!("[{tag}] {name}"), description: desc, location: loc.to_string(), start, end, stamp }
 }
 
 /// The single conference event (dates and location).
-pub fn conference_events(label: &str, key: &str, c: &Conference, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+pub fn conference_events(key: &str, c: &Conference, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
     let loc = match (&c.city, &c.country) {
         (Some(ci), Some(co)) => format!("{ci}, {co}"),
         (Some(x), None) | (None, Some(x)) => x.clone(),
         (None, None) => String::new(),
     };
-    vec![event(label, key, stamp, "Conference", prov.note("conference"), &loc, c.start, c.end)]
+    vec![event(&tags(key).0, key, stamp, "Conference", "Conference", prov.describe("conference", vec![]), &loc, c.start, c.end)]
 }
 
 /// Deadline events: submission, rebuttal and notification per round.
-pub fn deadline_events(label: &str, key: &str, d: &Deadlines, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+pub fn deadline_events(key: &str, d: &Deadlines, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
     let mut events = vec![];
     let two = d.rounds.len() > 1;
-    let mk = |name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate| event(label, key, stamp, name, desc, loc, start, end);
+    let tag = tags(key).1;
+    let mk = |uid_name: &str, name: &str, desc: String, start: NaiveDate, end: NaiveDate| event(&tag, key, stamp, uid_name, name, desc, "", start, end);
     for (i, r) in d.rounds.iter().enumerate() {
         let prefix = if two { format!("R{} ", i + 1) } else { String::new() };
         let n = i + 1;
@@ -82,32 +111,33 @@ pub fn deadline_events(label: &str, key: &str, d: &Deadlines, prov: &Provenance,
         if let Some(c) = &r.submission_conflict {
             parts.push(format!("Note: the page also states \"{c}\"."));
         }
-        parts.push(prov.note(&format!("round {n} submission")));
-        let desc = parts.join("\n\n");
-        events.push(mk(&format!("{prefix}Paper Submission Deadline"), desc, "", r.submission, r.submission));
+        let desc = prov.describe(&format!("round {n} submission"), parts);
+        events.push(mk(&format!("{prefix}Paper Submission Deadline"), &format!("{prefix}Submission Deadline"), desc, r.submission, r.submission));
         if let (Some(s), Some(e)) = (r.response_start, r.response_end.or(r.response_start)) {
-            events.push(mk(&format!("{prefix}Rebuttal"), prov.note(&format!("round {n} response")), "", s, e));
+            let name = format!("{prefix}Rebuttal");
+            events.push(mk(&name, &name, prov.describe(&format!("round {n} response"), vec![]), s, e));
         }
         if let Some(nd) = r.notification {
-            events.push(mk(&format!("{prefix}Notification"), prov.note(&format!("round {n} notification")), "", nd, nd));
+            let name = format!("{prefix}Notification");
+            events.push(mk(&name, &name, prov.describe(&format!("round {n} notification"), vec![]), nd, nd));
         }
     }
     events
 }
 
 /// Both parts of a call for papers, for tests and the aggregate view.
-pub fn cfp_events(label: &str, key: &str, cfp: &Cfp, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+pub fn cfp_events(key: &str, cfp: &Cfp, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
     let mut events = vec![];
     if let Some(d) = cfp.deadlines() {
-        events.extend(deadline_events(label, key, &d, prov, stamp));
+        events.extend(deadline_events(key, &d, prov, stamp));
     }
     if let Some(c) = &cfp.conference {
-        events.extend(conference_events(label, key, c, prov, stamp));
+        events.extend(conference_events(key, c, prov, stamp));
     }
     events
 }
 
-pub fn volunteer_events(label: &str, key: &str, v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+pub fn volunteer_events(key: &str, v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
     let mut parts = vec![];
     if !v.how_to_apply.is_empty() {
         parts.push(v.how_to_apply.clone());
@@ -118,17 +148,8 @@ pub fn volunteer_events(label: &str, key: &str, v: &Volunteer, prov: &Provenance
     if let Some(c) = &v.deadline_conflict {
         parts.push(format!("Note: the page also states \"{c}\"."));
     }
-    parts.push(prov.note("volunteer deadline"));
-    let desc = parts.join("\n\n");
-    vec![Event {
-        uid: uid(key, "Volunteer Application Deadline"),
-        summary: format!("[{label}] Volunteer Application Deadline"),
-        description: desc,
-        location: String::new(),
-        start: v.deadline,
-        end: v.deadline,
-        stamp,
-    }]
+    let name = "Volunteer Application Deadline";
+    vec![event(&tags(key).0, key, stamp, name, name, prov.describe("volunteer deadline", parts), "", v.deadline, v.deadline)]
 }
 
 fn escape(s: &str) -> String {
@@ -220,12 +241,30 @@ mod tests {
             history: vec![Change { at: DateTime::parse_from_rfc3339("2026-09-20T00:00:00Z").unwrap().with_timezone(&Utc), field: "round 1 submission".into(), old: "2025-07-03".into(), new: "2025-07-10".into() }],
         };
         let stamp = DateTime::parse_from_rfc3339("2026-09-15T00:00:00Z").unwrap().with_timezone(&Utc);
-        let ev = cfp_events("POPL 2026", "POPL/POPL/2026", &cfp, &prov, stamp);
+        let ev = cfp_events("POPL/POPL/2026", &cfp, &prov, stamp);
         let ics = calendar("POPL 2026", &ev);
         let unfolded = ics.replace("\r\n ", "");
-        assert!(ics.contains("SUMMARY:[POPL 2026] Paper Submission Deadline"));
+        assert!(ics.contains("SUMMARY:[POPL 26] Submission Deadline"));
         assert!(ics.contains("DTSTART;VALUE=DATE:20250710\r\nDTEND;VALUE=DATE:20250711"));
-        assert!(ics.contains("SUMMARY:[POPL 2026] Rebuttal"));
+        assert!(ics.contains("SUMMARY:[POPL 26] Rebuttal"));
+        assert!(ics.contains("SUMMARY:[POPL 26] Conference"));
+        // The disclaimer with the source opens every description; the
+        // details, links and notes follow; changes and codes close it.
+        for e in &ev {
+            assert!(e.description.starts_with("Extracted automatically by a small language model; please cross-check against the source before relying on it: https://popl26.sigplan.org/dates"), "{}", e.description);
+        }
+        let sub = &ev[0].description;
+        let pos = |s: &str| sub.find(s).unwrap_or_else(|| panic!("{s} missing from {sub}"));
+        assert!(pos("cross-check") < pos("Submit via HotCRP") && pos("Submit via HotCRP") < pos("Submit at:") && pos("Submit at:") < pos("Note: the page") && pos("Note: the page") < pos("Changed 2026-09-20") && pos("Changed 2026-09-20") < pos("Maintenance: E003") && pos("Maintenance: E003") < pos(REPO_URL));
+        // Tags: the track for deadlines, the conference for its dates and volunteers.
+        let splash = cfp_events("SPLASH/OOPSLA/2027", &cfp, &prov, stamp);
+        assert_eq!(splash[0].summary, "[OOPSLA 27] Submission Deadline");
+        assert_eq!(splash[3].summary, "[SPLASH 27] Conference");
+        let vol = volunteer_events("SPLASH/OOPSLA/2027", &Volunteer { deadline: NaiveDate::from_ymd_opt(2027, 7, 1).unwrap(), deadline_conflict: None, how_to_apply: String::new(), application_url: None }, &prov, stamp);
+        assert_eq!(vol[0].summary, "[SPLASH 27] Volunteer Application Deadline");
+        // Renaming did not change the UIDs.
+        assert_eq!(ev[0].uid, uid("POPL/POPL/2026", "Paper Submission Deadline"));
+        assert_eq!(ev[3].uid, uid("POPL/POPL/2026", "Conference"));
         assert!(ics.contains("DTEND;VALUE=DATE:20250912"));
         assert!(ics.contains("LOCATION:Rennes\\, France"));
         assert!(unfolded.contains("Maintenance: E003"));
@@ -237,7 +276,7 @@ mod tests {
         assert_eq!(unfolded.matches("Changed 2026-09-20").count(), 1, "only the submission event carries the change");
         assert_eq!(ev.len(), 4);
         // Stable UIDs.
-        let ev2 = cfp_events("POPL 2026", "POPL/POPL/2026", &cfp, &prov, Utc::now());
+        let ev2 = cfp_events("POPL/POPL/2026", &cfp, &prov, Utc::now());
         assert_eq!(ev[0].uid, ev2[0].uid);
         for line in ics.lines() {
             assert!(line.len() <= 75, "line too long: {line}");

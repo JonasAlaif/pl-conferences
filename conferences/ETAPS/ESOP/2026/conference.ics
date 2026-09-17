@@ -10,10 +10,10 @@ UID:2cf087f24b6e6c71416ce7c2565c0991b726c03d@pl-conferences
 DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20260413
 DTEND;VALUE=DATE:20260417
-SUMMARY:[ETAPS 2026 (ESOP)] Conference
+SUMMARY:[ETAPS 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Turin\, Italy
 END:VEVENT
 END:VCALENDAR

@@ -10,37 +10,37 @@ UID:bea709e9b429af695848aaa42297f609576509eb@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260128
 DTEND;VALUE=DATE:20260129
-SUMMARY:[CAV 2026] Paper Submission Deadline
-DESCRIPTION:Papers can include a clearly marked appendix\, however\, the r
- eviewers are not obliged to read the contents of these appendices. All pa
- ge limits do not include references and appendices. Papers in all four ca
- tegories must be submitted by January 28\, 2026 AoE\, and should be in LN
- CS format. Note Springer's guidelines regarding AI Authorship. Simultaneo
- us submission to other conferences with proceedings or submission of mate
- rial that has already been published elsewhere is not allowed.\n\nSubmit 
- at: https://submissions.floc26.org/cav/\n\nExtracted automatically by a s
- mall language model\; please cross-check against the source before relyin
- g on it: http://conferences.i-cav.org/2026/cfp/\nhttps://github.com/Jonas
- Alaif/pl-conferences
+SUMMARY:[CAV 26] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: http://conferences.i-ca
+ v.org/2026/cfp/\n\nPapers can include a clearly marked appendix\, however
+ \, the reviewers are not obliged to read the contents of these appendices
+ . All page limits do not include references and appendices. Papers in all
+  four categories must be submitted by January 28\, 2026 AoE\, and should 
+ be in LNCS format. Note Springer's guidelines regarding AI Authorship. Si
+ multaneous submission to other conferences with proceedings or submission
+  of material that has already been published elsewhere is not allowed.\n\
+ nSubmit at: https://submissions.floc26.org/cav/\n\nhttps://github.com/Jon
+ asAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:94ca848027d55ef7f3c1e1ef61acb89ba7b425c5@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260330
 DTEND;VALUE=DATE:20260403
-SUMMARY:[CAV 2026] Rebuttal
+SUMMARY:[CAV 26] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: http://conferences.i-ca
- v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+ v.org/2026/cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:69639bcd3996f2d5b135cdf2c5c229f602252b01@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260417
 DTEND;VALUE=DATE:20260418
-SUMMARY:[CAV 2026] Notification
+SUMMARY:[CAV 26] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: http://conferences.i-ca
- v.org/2026/cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+ v.org/2026/cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

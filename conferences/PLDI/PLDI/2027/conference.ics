@@ -10,10 +10,10 @@ UID:0da66b4b12afc687655d84631e5cc2fa1d182e1d@pl-conferences
 DTSTAMP:20260916T023710Z
 DTSTART;VALUE=DATE:20270605
 DTEND;VALUE=DATE:20270612
-SUMMARY:[PLDI 2027] Conference
+SUMMARY:[PLDI 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Atlanta\, Georgia\, United States
 END:VEVENT
 END:VCALENDAR

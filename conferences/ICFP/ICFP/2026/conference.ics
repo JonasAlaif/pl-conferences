@@ -10,11 +10,11 @@ UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260824
 DTEND;VALUE=DATE:20260830
-SUMMARY:[ICFP 2026] Conference
+SUMMARY:[ICFP 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp26.sigplan.
- org/track/icfp-2026-icfp-papers\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/track/icfp-2026-icfp-papers\n\nhttps://github.com/JonasAlaif/pl-confe
+ rences
 LOCATION:Indianapolis\, United States
 END:VEVENT
 END:VCALENDAR

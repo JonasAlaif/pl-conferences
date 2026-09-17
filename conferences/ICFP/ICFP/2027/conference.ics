@@ -10,10 +10,10 @@ UID:f8f31a9f890ec346e86377ee7370716b1453c603@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270926
 DTEND;VALUE=DATE:20271002
-SUMMARY:[ICFP 2027] Conference
+SUMMARY:[ICFP 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp24.sigplan.
- org/series/icfp\nhttps://github.com/JonasAlaif/pl-conferences
+ org/series/icfp\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Nijmegen\, The Netherlands
 END:VEVENT
 END:VCALENDAR

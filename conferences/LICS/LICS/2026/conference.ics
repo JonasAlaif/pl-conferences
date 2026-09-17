@@ -10,10 +10,10 @@ UID:e29f494db58b69ca29138e0d6ff169cfeafce382@pl-conferences
 DTSTAMP:20260916T125407Z
 DTSTART;VALUE=DATE:20260720
 DTEND;VALUE=DATE:20260724
-SUMMARY:[LICS 2026] Conference
+SUMMARY:[LICS 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://lics.siglog.org
- /lics26/cfp.php\nhttps://github.com/JonasAlaif/pl-conferences
+ /lics26/cfp.php\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Lisbon\, Portugal
 END:VEVENT
 END:VCALENDAR

@@ -10,12 +10,12 @@ UID:e24e3ca0c9eec42006227d4ac9efbebf0f18dc77@pl-conferences
 DTSTAMP:20260916T181457Z
 DTSTART;VALUE=DATE:20270621
 DTEND;VALUE=DATE:20270625
-SUMMARY:[LICS 2027] Conference
+SUMMARY:[LICS 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://lics.siglog.org
- /lics27/\nMaintenance: E001 - see https://github.com/JonasAlaif/pl-confer
- ences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-conferen
- ces
+ /lics27/\n\nMaintenance: E001 - see https://github.com/JonasAlaif/pl-conf
+ erences/blob/main/MAINTENANCE.md\nhttps://github.com/JonasAlaif/pl-confer
+ ences
 LOCATION:Montreal\, Canada
 END:VEVENT
 END:VCALENDAR

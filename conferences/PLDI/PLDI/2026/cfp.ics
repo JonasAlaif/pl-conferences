@@ -10,37 +10,39 @@ UID:9c6402aeba43992e443b00b6e2a7c7b91815cafc@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20251113
 DTEND;VALUE=DATE:20251114
-SUMMARY:[PLDI 2026] Paper Submission Deadline
-DESCRIPTION:PACMPL Issue PLDI 2026 seeks contributions on all aspects of p
- rogramming languages research. The selection of papers will be made in tw
- o rounds of reviewing with an author response period. Author names and af
- filiations must be omitted from submissions (double-blind reviewing). Aut
- hors can submit multiple times prior to the deadline\, but only the last 
- submission will be reviewed. There is no deadline for submitting abstract
- s. The submission site is https://pldi2026.hotcrp.com.\n\nSubmit at: http
- s://pldi2026.hotcrp.com\n\nExtracted automatically by a small language mo
- del\; please cross-check against the source before relying on it: https:/
- /pldi26.sigplan.org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif
- /pl-conferences
+SUMMARY:[PLDI 26] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://pldi26.sigplan.
+ org/track/pldi-2026-papers\n\nPACMPL Issue PLDI 2026 seeks contributions 
+ on all aspects of programming languages research. The selection of papers
+  will be made in two rounds of reviewing with an author response period. 
+ Author names and affiliations must be omitted from submissions (double-bl
+ ind reviewing). Authors can submit multiple times prior to the deadline\,
+  but only the last submission will be reviewed. There is no deadline for 
+ submitting abstracts. The submission site is https://pldi2026.hotcrp.com.
+ \n\nSubmit at: https://pldi2026.hotcrp.com\n\nhttps://github.com/JonasAla
+ if/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260217
 DTEND;VALUE=DATE:20260223
-SUMMARY:[PLDI 2026] Rebuttal
+SUMMARY:[PLDI 26] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi26.sigplan.
- org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/pldi-2026-papers\n\nhttps://github.com/JonasAlaif/pl-conference
+ s
 END:VEVENT
 BEGIN:VEVENT
 UID:b9a54c1f48a05c1e412879ecca278771aee02f3e@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260305
 DTEND;VALUE=DATE:20260306
-SUMMARY:[PLDI 2026] Notification
+SUMMARY:[PLDI 26] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi26.sigplan.
- org/track/pldi-2026-papers\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/pldi-2026-papers\n\nhttps://github.com/JonasAlaif/pl-conference
+ s
 END:VEVENT
 END:VCALENDAR

@@ -10,30 +10,30 @@ UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
-SUMMARY:[PLDI 2027] Paper Submission Deadline
+SUMMARY:[PLDI 27] Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270216
 DTEND;VALUE=DATE:20270219
-SUMMARY:[PLDI 2027] Rebuttal
+SUMMARY:[PLDI 27] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:50cc7882e8b0a5c0c4941eeea9818c4161dbd4a1@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270304
 DTEND;VALUE=DATE:20270305
-SUMMARY:[PLDI 2027] Notification
-DESCRIPTION:Changed 2026-09-16: was 2027-04-01 (now 2027-03-04).\nExtracte
- d automatically by a small language model\; please cross-check against th
- e source before relying on it: https://pldi27.sigplan.org/\nhttps://githu
- b.com/JonasAlaif/pl-conferences
+SUMMARY:[PLDI 27] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://pldi27.sigplan.
+ org/\n\nChanged 2026-09-16: was 2027-04-01 (now 2027-03-04).\nhttps://git
+ hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

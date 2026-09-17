@@ -460,7 +460,7 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
                     log::info!("{cfp_key}: conference {}", serde_json::to_string(&f.value)?);
                     let rec = merge_record(conf_rec.clone(), cfg, year, f, model, now, |o, n| schema::diff_conference(Some(o), Some(n), now));
                     if !args.dry_run {
-                        write_part(&dir, "conference", &rec, f, conf_rec.is_none() || rec.fetched_at == now, |r, p| ics::conference_events(&r.label, &cfg.key(year), &r.data, p, r.fetched_at))?;
+                        write_part(&dir, "conference", &rec, f, conf_rec.is_none() || rec.fetched_at == now, |r, p| ics::conference_events(&cfg.key(year), &r.data, p, r.fetched_at))?;
                     }
                     got_something = true;
                 }
@@ -469,7 +469,7 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
                     let rec = merge_record(dl_rec.clone(), cfg, year, f, model, now, |o, n| schema::diff_deadlines(o, n, now));
                     cfp_url = Some(rec.provenance.source_url.clone());
                     if !args.dry_run {
-                        write_part(&dir, "cfp", &rec, f, dl_rec.is_none() || rec.fetched_at == now, |r, p| ics::deadline_events(&r.label, &cfg.key(year), &r.data, p, r.fetched_at))?;
+                        write_part(&dir, "cfp", &rec, f, dl_rec.is_none() || rec.fetched_at == now, |r, p| ics::deadline_events(&cfg.key(year), &r.data, p, r.fetched_at))?;
                     }
                     got_something = true;
                 }
@@ -731,7 +731,7 @@ fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Rec
         std::fs::write(dir.join("volunteer.html"), &found.html)?;
         std::fs::write(dir.join("volunteer.md"), &found.md)?;
     }
-    let events = ics::volunteer_events(&rec.label, &cfg.key(year), &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
+    let events = ics::volunteer_events(&cfg.key(year), &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
     std::fs::write(dir.join("volunteer.ics"), ics::calendar(&format!("{} volunteers", rec.label), &events))?;
     log::info!("wrote {}", dir.join("volunteer.ics").display());
     Ok(())
@@ -752,7 +752,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
             if name == "conference.json" {
                 let Some(r) = read_or_skip::<schema::Conference>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::conference_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+                let ev = ics::conference_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 // The calendar next to the JSON is derived from it, so it is
                 // rebuilt here too and never drifts from an edited record.
                 std::fs::write(entry.with_file_name("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
@@ -762,7 +762,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
             } else if name == "cfp.json" {
                 let Some(r) = read_or_skip::<schema::Deadlines>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::deadline_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+                let ev = ics::deadline_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 std::fs::write(entry.with_file_name("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
@@ -770,7 +770,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
             } else if name == "volunteer.json" {
                 let Some(r) = read_or_skip::<schema::Volunteer>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::volunteer_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+                let ev = ics::volunteer_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
                 std::fs::write(entry.with_file_name("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();

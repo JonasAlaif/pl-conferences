@@ -10,10 +10,10 @@ UID:2eb8703604c0f51c968c5e4ddbc86dd46ee2c6f1@pl-conferences
 DTSTAMP:20260916T045209Z
 DTSTART;VALUE=DATE:20270412
 DTEND;VALUE=DATE:20270416
-SUMMARY:[ETAPS 2027 (ESOP)] Conference
+SUMMARY:[ETAPS 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
 END:VEVENT
 END:VCALENDAR

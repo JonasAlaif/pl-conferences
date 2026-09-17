@@ -10,16 +10,16 @@ UID:3129cc8e718c2631abbbc448e9df62c8ccc0cac1@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20260413
 DTEND;VALUE=DATE:20260414
-SUMMARY:[PLDI 2026] Volunteer Application Deadline
-DESCRIPTION:Undergraduate\, Master's\, Ph.D.\, full- or part-time students
-  (current or prospective) of computer science and related fields can appl
- y. Volunteers receive complimentary registration to PLDI but do not get t
- ravel expenses covered. Spots are limited\, and selection involves coordi
- nation with Video Chairs for video volunteers and a lottery-based system 
- for general volunteers. Applications should be submitted via the provided
-  form.\n\nApply at: https://forms.gle/QzqHZhXCj87SGeq67\n\nExtracted auto
- matically by a small language model\; please cross-check against the sour
- ce before relying on it: https://pldi26.sigplan.org/track/pldi-2026-stude
- nt-volunteering\nhttps://github.com/JonasAlaif/pl-conferences
+SUMMARY:[PLDI 26] Volunteer Application Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://pldi26.sigplan.
+ org/track/pldi-2026-student-volunteering\n\nUndergraduate\, Master's\, Ph
+ .D.\, full- or part-time students (current or prospective) of computer sc
+ ience and related fields can apply. Volunteers receive complimentary regi
+ stration to PLDI but do not get travel expenses covered. Spots are limite
+ d\, and selection involves coordination with Video Chairs for video volun
+ teers and a lottery-based system for general volunteers. Applications sho
+ uld be submitted via the provided form.\n\nApply at: https://forms.gle/Qz
+ qHZhXCj87SGeq67\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

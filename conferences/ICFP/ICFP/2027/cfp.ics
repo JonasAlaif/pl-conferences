@@ -10,30 +10,30 @@ UID:a651a6733120c254077be47e8a550e75323ba1a8@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270225
 DTEND;VALUE=DATE:20270226
-SUMMARY:[ICFP 2027] Paper Submission Deadline
-DESCRIPTION:ICFP Papers\n\nSubmit at: https://icfp27.hotcrp.com\n\nExtract
- ed automatically by a small language model\; please cross-check against t
- he source before relying on it: https://icfp27.sigplan.org/\nhttps://gith
- ub.com/JonasAlaif/pl-conferences
+SUMMARY:[ICFP 27] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://icfp27.sigplan.
+ org/\n\nICFP Papers\n\nSubmit at: https://icfp27.hotcrp.com\n\nhttps://gi
+ thub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270419
 DTEND;VALUE=DATE:20270423
-SUMMARY:[ICFP 2027] Rebuttal
+SUMMARY:[ICFP 27] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e0dd1a4fe495fb401a7cdac11f9221d466063713@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20270507
 DTEND;VALUE=DATE:20270508
-SUMMARY:[ICFP 2027] Notification
+SUMMARY:[ICFP 27] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://icfp27.sigplan.
- org/\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR

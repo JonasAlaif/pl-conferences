@@ -10,41 +10,41 @@ UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20250710
 DTEND;VALUE=DATE:20250711
-SUMMARY:[POPL 2026] Paper Submission Deadline
-DESCRIPTION:POPL 2026 seeks contributions on all aspects of programming la
- nguages and programming systems\, both theoretical and practical. Authors
-  must omit their names and institutions from their paper submissions due 
- to full double-blind reviewing. References to authors' own prior work sho
- uld be in the third person. The submission site is https://popl26.hotcrp.
- com. Each paper should have no more than 25 pages of text\, excluding bib
- liography\, using the PACMPL format (specifically\, the acmart LaTeX clas
- s with acmsmall option). Concurrent paper submissions to other conference
- s\, workshops\, journals\, or similar forums of publication are not allow
- ed.\n\nSubmit at: https://popl26.hotcrp.com\n\nExtracted automatically by
-  a small language model\; please cross-check against the source before re
- lying on it: https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-re
- search-papers\nhttps://github.com/JonasAlaif/pl-conferences
+SUMMARY:[POPL 26] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://conf.researchr.
+ org/track/POPL-2026/POPL-2026-popl-research-papers\n\nPOPL 2026 seeks con
+ tributions on all aspects of programming languages and programming system
+ s\, both theoretical and practical. Authors must omit their names and ins
+ titutions from their paper submissions due to full double-blind reviewing
+ . References to authors' own prior work should be in the third person. Th
+ e submission site is https://popl26.hotcrp.com. Each paper should have no
+  more than 25 pages of text\, excluding bibliography\, using the PACMPL f
+ ormat (specifically\, the acmart LaTeX class with acmsmall option). Concu
+ rrent paper submissions to other conferences\, workshops\, journals\, or 
+ similar forums of publication are not allowed.\n\nSubmit at: https://popl
+ 26.hotcrp.com\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20250908
 DTEND;VALUE=DATE:20250912
-SUMMARY:[POPL 2026] Rebuttal
+SUMMARY:[POPL 26] Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nhttps://github.com/Jo
- nasAlaif/pl-conferences
+ org/track/POPL-2026/POPL-2026-popl-research-papers\n\nhttps://github.com/
+ JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:6cd4e63b3c270d6ec64845c9139ecfa08fa58bf8@pl-conferences
 DTSTAMP:20260915T225322Z
 DTSTART;VALUE=DATE:20251002
 DTEND;VALUE=DATE:20251003
-SUMMARY:[POPL 2026] Notification
+SUMMARY:[POPL 26] Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/POPL-2026/POPL-2026-popl-research-papers\nhttps://github.com/Jo
- nasAlaif/pl-conferences
+ org/track/POPL-2026/POPL-2026-popl-research-papers\n\nhttps://github.com/
+ JonasAlaif/pl-conferences
 END:VEVENT
 END:VCALENDAR
