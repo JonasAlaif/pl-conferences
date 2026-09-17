@@ -1,0 +1,55 @@
+{
+  "conference": "ETAPS",
+  "track": "TACAS",
+  "year": 2026,
+  "label": "ETAPS 2026 (TACAS)",
+  "fetched_at": "2026-09-17T15:48:53.050302598Z",
+  "last_verified": "2026-09-17T15:48:53.050302598Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://etaps.org/2026/cfp/",
+    "query": "ETAPS 2026 TACAS call for papers",
+    "backend": "ddg-html",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "start": "2026-04-13",
+    "end": "2026-04-16",
+    "city": "Turin",
+    "country": "Italy"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "dates_quote": "April 13–16, 2026",
+      "start_date": "2026-04-13",
+      "end_date": "2026-04-16",
+      "city": "Turin",
+      "country": "Italy"
+    },
+    "rounds": [
+      {
+        "label": "",
+        "submission_deadline_quote": "Submission deadline for TACAS, FoSSaCS, FASE:",
+        "submission_deadline_as_written": "October 16, 2025",
+        "submission_deadline": "2025-10-16",
+        "submission_deadline_conflict": "TACAS mandatory artifact submission deadline: October 30, 2025",
+        "author_response_quote": "Rebuttal (ESOP, FoSSaCS, TACAS):",
+        "author_response_as_written": "December 8–10, 2025",
+        "author_response_start": "2025-12-08",
+        "author_response_end": "2025-12-10",
+        "notification_quote": "Paper notification and TACAS mandatory artifact notification:",
+        "notification_as_written": "December 22, 2025",
+        "notification": "2025-12-22"
+      }
+    ],
+    "submission_details": "Submitted papers must be in English, presenting original research. They must be unpublished and not submitted for publication elsewhere. In particular, simultaneous submission of the same contribution to multiple ETAPS conferences is forbidden. Submissions must follow the formatting guidelines of Springer's LNCS (use the llncs.cls class) - except for ESOP, see above - and be submitted electronically in pdf through the Easychair author interface of the respective conference. Submissions not adhering to the specified format and length may be rejected immediately. ETAPS conferences will use double-blind reviewing (in the case of TACAS, only for regular research papers). Authors are asked to omit their names and institutions; refer to prior work in the third person, just as prior work by others; not to include acknowledgments that might identify them. ESOP, TACAS and FoSSaCS will use an author rebuttal phase.",
+    "submission_site_quote": "Easychair author interface of the respective conference",
+    "submission_url": "https://etaps.org/2026/tacas"
+  }
+}

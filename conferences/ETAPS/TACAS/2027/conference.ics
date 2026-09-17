@@ -1,0 +1,20 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ETAPS 2027 (TACAS) conference
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:6be3caa251630968ffea7a71cc43ca07f606e1d5@pl-conferences
+DTSTAMP:20260917T154853Z
+DTSTART;VALUE=DATE:20270410
+DTEND;VALUE=DATE:20270416
+SUMMARY:[ETAPS 27] Conference
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 27]
+  and [TACAS 27].\n\nhttps://github.com/JonasAlaif/pl-conferences
+LOCATION:Copenhagen\, Denmark
+END:VEVENT
+END:VCALENDAR

@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-17T15:41:55.965069953Z",
-  "run_count": 23,
+  "last_run": "2026-09-17T15:48:53.050302598Z",
+  "run_count": 24,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -65,6 +65,24 @@
       "backend": "ddg-html",
       "codes": [],
       "note": "model found no plausible search hit; trying them in the engine's order; fetch https://www.facebook.com/ETAPSconf/posts/are-you-undergraduate-master-or-phd-student-of-computer-science-apply-to-become-/514692589024076/ failed: GET https://www.facebook.com/ETAPSconf/posts/are-you-undergraduate-master-or-phd-student-of-computer-science-apply-to-become-/514692589024076/: HTTP 400 Bad Request; https://www.etaps.community/ is not about ETAPS 2027 (ESOP)"
+    },
+    "ETAPS/TACAS/2026/cfp": {
+      "last_attempt": "2026-09-17T15:48:53.050302598Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "ddg-html",
+      "codes": [],
+      "note": "1 candidate link(s) for the call for papers of the TACAS track of ETAPS 2026; looking for the submission site on https://etaps.org/2026/tacas"
+    },
+    "ETAPS/TACAS/2027/cfp": {
+      "last_attempt": "2026-09-17T15:48:53.050302598Z",
+      "attempts": 1,
+      "outcome": "ok",
+      "consecutive_failures": 0,
+      "backend": "ddg-html",
+      "codes": [],
+      "note": "2 candidate link(s) for the call for papers of the TACAS track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/tacas; https://etaps.org/2027/conferences/tacas/ is not about ETAPS 2027 (TACAS)"
     },
     "ICFP/ICFP/2026/cfp": {
       "last_attempt": "2026-09-15T22:53:22.297148035Z",

@@ -1,0 +1,55 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:ETAPS 2026 (TACAS) cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:3142bbc4d83e36937fdb1734acb7b7f757735d53@pl-conferences
+DTSTAMP:20260917T154853Z
+DTSTART;VALUE=DATE:20251016
+DTEND;VALUE=DATE:20251017
+SUMMARY:[TACAS 26] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\n\nTACAS is a track of ETAPS 2026.\n\nSubmitted papers must be in En
+ glish\, presenting original research. They must be unpublished and not su
+ bmitted for publication elsewhere. In particular\, simultaneous submissio
+ n of the same contribution to multiple ETAPS conferences is forbidden. Su
+ bmissions must follow the formatting guidelines of Springer's LNCS (use t
+ he llncs.cls class) - except for ESOP\, see above - and be submitted elec
+ tronically in pdf through the Easychair author interface of the respectiv
+ e conference. Submissions not adhering to the specified format and length
+  may be rejected immediately. ETAPS conferences will use double-blind rev
+ iewing (in the case of TACAS\, only for regular research papers). Authors
+  are asked to omit their names and institutions\; refer to prior work in 
+ the third person\, just as prior work by others\; not to include acknowle
+ dgments that might identify them. ESOP\, TACAS and FoSSaCS will use an au
+ thor rebuttal phase.\n\nNote: the page also states "TACAS mandatory artif
+ act submission deadline: October 30\, 2025".\n\nhttps://github.com/JonasA
+ laif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:fe60cd121609d596cc2df7634507c1be576b34bd@pl-conferences
+DTSTAMP:20260917T154853Z
+DTSTART;VALUE=DATE:20251208
+DTEND;VALUE=DATE:20251211
+SUMMARY:[TACAS 26] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\n\nTACAS is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/
+ pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:ca0b88939fb341dfa9c3e160943562e62321dfa7@pl-conferences
+DTSTAMP:20260917T154853Z
+DTSTART;VALUE=DATE:20251222
+DTEND;VALUE=DATE:20251223
+SUMMARY:[TACAS 26] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2026/
+ cfp/\n\nTACAS is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/
+ pl-conferences
+END:VEVENT
+END:VCALENDAR
