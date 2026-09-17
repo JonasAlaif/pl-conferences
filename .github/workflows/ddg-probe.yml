@@ -1,52 +1,34 @@
 name: DuckDuckGo probe (temporary diagnostic)
 
-# Production (reqwest) gets DuckDuckGo's challenge page on every search while
-# curl is served, and once an address has been challenged everything from it
-# is. So: one client variant per job (each job is a fresh runner and address),
-# three queries with it, then a curl control from the same address.
+# DuckDuckGo serves curl and challenges reqwest. Before moving the search
+# requests to curl: do the fallback engines answer curl too, and with which
+# User-Agent do their result pages keep the markup the parsers expect?
 on:
   workflow_dispatch:
 
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
-        variant:
-          - "reqwest rustls h2 chrome"
-          - "reqwest rustls h2 honest"
-          - "reqwest rustls http1 honest"
-          - "reqwest native h2 honest"
-          - "reqwest native http1 honest"
-          - "reqwest native http1 honest bare"
-          - "curl h2 honest"
-          - "curl http1 honest"
-          - "curl h2 chrome"
+        ua: [honest, chrome]
         replica: [1, 2]
     steps:
-      - uses: actions/checkout@v4
-      - name: Build the probe
-        if: startsWith(matrix.variant, 'reqwest')
-        run: cd probe && cargo build --release 2>&1 | tail -1
       - name: Ask
         env:
-          VARIANT: ${{ matrix.variant }}
+          WHICH: ${{ matrix.ua }}
         run: |
-          HONEST="pl-conferences/1.0 (+https://github.com/${{ github.repository }})"
-          CHROME="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
-          ask() { # name ua query extra-flag
-            s=$(curl -s --compressed $4 -o r.html -w '%{http_code} http/%{http_version}' -A "$2" -H "Accept: text/html" -H "Accept-Language: en-US,en;q=0.9" "https://html.duckduckgo.com/html/?q=$3")
-            echo "== $1 | $s results=$(grep -o 'result__a' r.html | wc -l) challenge=$(grep -c 'bots use DuckDuckGo' r.html)"
-            sleep 6
+          UA="pl-conferences/1.0 (+https://github.com/${{ github.repository }})"
+          [ "$WHICH" = chrome ] && UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+          ask() { # engine url marker
+            s=$(curl -s --compressed -L --max-time 40 -o r.html -w '%{http_code}' -A "$UA" -H "Accept: text/html" -H "Accept-Language: en-US,en;q=0.9" "$2")
+            echo "== $WHICH | $1 | http=$s bytes=$(wc -c < r.html) results=$(grep -o "$3" r.html | wc -l)"
+            sleep 8
           }
-          set -- $VARIANT
-          if [ "$1" = reqwest ]; then
-            shift; ./probe/target/release/ddg-probe "$@"
-          else
-            UA="$HONEST"; [ "$3" = chrome ] && UA="$CHROME"
-            FLAG=""; [ "$2" = http1 ] && FLAG="--http1.1"
-            for q in "POPL+2027+student+volunteers" "CAV+2027+call+for+papers" "LICS+2027+call+for+papers"; do ask "$VARIANT" "$UA" "$q" "$FLAG"; done
-          fi
-          ask "control after ($VARIANT): curl h2 honest" "$HONEST" "PLDI+2027+call+for+papers" ""
+          for q in "POPL+2027+student+volunteers" "CAV+2027+call+for+papers" "LICS+2027+call+for+papers"; do
+            ask ddg "https://html.duckduckgo.com/html/?q=$q" 'class="result__a"'
+            ask brave "https://search.brave.com/search?q=$q&source=web" 'class="snippet '
+            ask bing "https://www.bing.com/search?q=$q" 'class="b_algo"'
+          done
