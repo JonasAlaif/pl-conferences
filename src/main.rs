@@ -740,7 +740,6 @@ fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Rec
 /// Rebuild `all.ics`, the README tables and `MAINTENANCE.md` from the JSON on disk.
 fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     let mut events = vec![];
-    let mut rows: Vec<(chrono::NaiveDate, String, String)> = vec![];
     let now = Utc::now();
     let today = now.date_naive();
     let conf_dir = root.join("conferences");
@@ -754,7 +753,6 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 let Some(r) = read_or_skip::<schema::Conference>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
                 let ev = ics::conference_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                rows.push((r.data.start, r.label.clone(), "Conference".into()));
                 // The calendar next to the JSON is derived from it, so it is
                 // rebuilt here too and never drifts from an edited record.
                 std::fs::write(entry.with_file_name("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
@@ -765,9 +763,6 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 let Some(r) = read_or_skip::<schema::Deadlines>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
                 let ev = ics::deadline_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                for e in &ev {
-                    rows.push((e.start, r.label.clone(), e.summary.trim_start_matches(&format!("[{}] ", r.label)).to_string()));
-                }
                 std::fs::write(entry.with_file_name("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
@@ -776,9 +771,6 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
                 let Some(r) = read_or_skip::<schema::Volunteer>(&entry) else { continue };
                 let key = format!("{}/{}/{}", r.conference, r.track, r.year);
                 let ev = ics::volunteer_events(&r.label, &key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                for e in &ev {
-                    rows.push((e.start, r.label.clone(), "Volunteer Application Deadline".into()));
-                }
                 std::fs::write(entry.with_file_name("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
                 events.extend(ev);
                 let label = r.label.clone();
@@ -807,11 +799,9 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     std::fs::write(root.join("MAINTENANCE.md"), state.render_maintenance())?;
 
     // The site: docs/index.html plus the calendar at a Pages URL.
-    rows.sort();
-    let upcoming: Vec<_> = rows.iter().filter(|(d, _, _)| *d >= today).cloned().collect();
     let docs = root.join("docs");
     std::fs::create_dir_all(&docs)?;
-    std::fs::write(docs.join("index.html"), site::render(&views, &upcoming, &state.summary_line(), now))?;
+    std::fs::write(docs.join("index.html"), site::render(&views, &state.summary_line(), now))?;
     std::fs::write(docs.join("all.ics"), &calendar)?;
     std::fs::write(docs.join(".nojekyll"), "")?;
 

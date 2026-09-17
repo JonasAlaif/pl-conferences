@@ -21,10 +21,17 @@
   tr.open { background: var(--open); } tr.review { background: var(--review); } tr.closed { background: var(--closed); } tr.past { background: var(--past); color: var(--muted); } tr.future { background: var(--future); } tr.conference { background: var(--conference); }
   .stage { font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; color: var(--muted); white-space: nowrap; }
   .small { font-size: .85rem; color: var(--muted); }
-  ul.upcoming { list-style: none; padding: 0; margin: 0; }
-  ul.upcoming li { padding: 4px 0; border-bottom: 1px solid var(--line); }
-  ul.upcoming time { display: inline-block; min-width: 8.5em; font-variant-numeric: tabular-nums; }
   .wrap { overflow-x: auto; }
+  svg.timeline { display: block; width: 100%; min-width: 860px; font-size: 11px; }
+  svg.timeline line.axis { stroke: var(--fg); stroke-width: 1.5; }
+  svg.timeline line.month { stroke: var(--line); } svg.timeline text.month { fill: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .03em; }
+  svg.timeline line.today { stroke: var(--accent); stroke-dasharray: 3 3; } svg.timeline text.today { fill: var(--accent); font-size: 10px; }
+  svg.timeline .ev { --c: hsl(var(--h) 60% 36%); }
+  @media (prefers-color-scheme: dark) { svg.timeline .ev { --c: hsl(var(--h) 65% 72%); } }
+  svg.timeline .ev line { stroke: var(--c); stroke-width: 1; opacity: .5; } svg.timeline .ev rect { fill: var(--c); }
+  svg.timeline .ev text { fill: var(--c); paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; } svg.timeline .ev.deadline text { font-weight: 700; }
+  svg.timeline .ev.rebuttal text, svg.timeline .ev.notification text, svg.timeline .ev.volunteers text { opacity: .75; }
+  svg.timeline .ev:hover text { opacity: 1; text-decoration: underline; } svg.timeline .ev:hover line { opacity: 1; stroke-width: 2; }
   footer { margin-top: 40px; color: var(--muted); font-size: .85rem; }
 </style>
 </head>
@@ -34,35 +41,51 @@
 <p class="lead">Submission deadlines, rebuttals, notifications, conference dates and student-volunteer deadlines for programming-languages conferences, collected automatically twice a week by a small language model.</p>
 <p>Subscribe in your calendar app: <code>https://jonasalaif.github.io/pl-conferences/all.ics</code> (or <a href="webcal://jonasalaif.github.io/pl-conferences/all.ics">webcal link</a>). Every entry says which page it was extracted from; the source is authoritative, the calendar is a convenience.</p>
 <h2>Upcoming</h2>
-<ul class="upcoming">
-<li><time datetime="2026-10-04">4 Oct 2026</time> <strong>SPLASH 2026 (OOPSLA)</strong> · Conference</li>
-<li><time datetime="2026-10-05">5 Oct 2026</time> <strong>POPL 2027</strong> · Notification</li>
-<li><time datetime="2026-10-14">14 Oct 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Paper Submission Deadline</li>
-<li><time datetime="2026-10-15">15 Oct 2026</time> <strong>ETAPS 2027 (ESOP)</strong> · R2 Paper Submission Deadline</li>
-<li><time datetime="2026-11-12">12 Nov 2026</time> <strong>PLDI 2027</strong> · Paper Submission Deadline</li>
-<li><time datetime="2026-12-01">1 Dec 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Rebuttal</li>
-<li><time datetime="2026-12-07">7 Dec 2026</time> <strong>ETAPS 2027 (ESOP)</strong> · R2 Rebuttal</li>
-<li><time datetime="2026-12-18">18 Dec 2026</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R1 Notification</li>
-<li><time datetime="2026-12-22">22 Dec 2026</time> <strong>ETAPS 2027 (ESOP)</strong> · R2 Notification</li>
-<li><time datetime="2027-01-10">10 Jan 2027</time> <strong>POPL 2027</strong> · Conference</li>
-<li><time datetime="2027-01-20">20 Jan 2027</time> <strong>CAV 2027</strong> · Paper Submission Deadline</li>
-<li><time datetime="2027-02-16">16 Feb 2027</time> <strong>PLDI 2027</strong> · Rebuttal</li>
-<li><time datetime="2027-02-25">25 Feb 2027</time> <strong>ICFP 2027</strong> · Paper Submission Deadline</li>
-<li><time datetime="2027-03-04">4 Mar 2027</time> <strong>PLDI 2027</strong> · Notification</li>
-<li><time datetime="2027-04-05">5 Apr 2027</time> <strong>CAV 2027</strong> · Rebuttal</li>
-<li><time datetime="2027-04-07">7 Apr 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Paper Submission Deadline</li>
-<li><time datetime="2027-04-12">12 Apr 2027</time> <strong>ETAPS 2027 (ESOP)</strong> · Conference</li>
-<li><time datetime="2027-04-19">19 Apr 2027</time> <strong>ICFP 2027</strong> · Rebuttal</li>
-<li><time datetime="2027-04-23">23 Apr 2027</time> <strong>CAV 2027</strong> · Notification</li>
-<li><time datetime="2027-05-07">7 May 2027</time> <strong>ICFP 2027</strong> · Notification</li>
-<li><time datetime="2027-06-05">5 Jun 2027</time> <strong>PLDI 2027</strong> · Conference</li>
-<li><time datetime="2027-06-15">15 Jun 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Rebuttal</li>
-<li><time datetime="2027-06-21">21 Jun 2027</time> <strong>LICS 2027</strong> · Conference</li>
-<li><time datetime="2027-07-02">2 Jul 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · R2 Notification</li>
-<li><time datetime="2027-07-19">19 Jul 2027</time> <strong>CAV 2027</strong> · Conference</li>
-<li><time datetime="2027-09-26">26 Sep 2027</time> <strong>ICFP 2027</strong> · Conference</li>
-<li><time datetime="2027-10-10">10 Oct 2027</time> <strong>SPLASH 2027 (OOPSLA)</strong> · Conference</li>
-</ul>
+<div class="wrap"><svg class="timeline" viewBox="0 0 1100 150" role="img" aria-label="Upcoming dates on a timeline">
+<line class="month" x1="10.0" y1="110.0" x2="10.0" y2="124.0"/><text class="month" x="13.0" y="136.0">Sep 2026</text>
+<line class="month" x1="86.1" y1="110.0" x2="86.1" y2="124.0"/><text class="month" x="89.1" y="136.0">Oct</text>
+<line class="month" x1="164.6" y1="110.0" x2="164.6" y2="124.0"/><text class="month" x="167.6" y="136.0">Nov</text>
+<line class="month" x1="240.7" y1="110.0" x2="240.7" y2="124.0"/><text class="month" x="243.7" y="136.0">Dec</text>
+<line class="month" x1="319.3" y1="110.0" x2="319.3" y2="124.0"/><text class="month" x="322.3" y="136.0">Jan 2027</text>
+<line class="month" x1="397.9" y1="110.0" x2="397.9" y2="124.0"/><text class="month" x="400.9" y="136.0">Feb</text>
+<line class="month" x1="468.9" y1="110.0" x2="468.9" y2="124.0"/><text class="month" x="471.9" y="136.0">Mar</text>
+<line class="month" x1="547.5" y1="110.0" x2="547.5" y2="124.0"/><text class="month" x="550.5" y="136.0">Apr</text>
+<line class="month" x1="623.5" y1="110.0" x2="623.5" y2="124.0"/><text class="month" x="626.5" y="136.0">May</text>
+<line class="month" x1="702.1" y1="110.0" x2="702.1" y2="124.0"/><text class="month" x="705.1" y="136.0">Jun</text>
+<line class="month" x1="778.2" y1="110.0" x2="778.2" y2="124.0"/><text class="month" x="781.2" y="136.0">Jul</text>
+<line class="month" x1="856.8" y1="110.0" x2="856.8" y2="124.0"/><text class="month" x="859.8" y="136.0">Aug</text>
+<line class="month" x1="935.4" y1="110.0" x2="935.4" y2="124.0"/><text class="month" x="938.4" y="136.0">Sep</text>
+<line class="month" x1="1011.4" y1="110.0" x2="1011.4" y2="124.0"/><text class="month" x="1014.4" y="136.0">Oct</text>
+<line class="axis" x1="10" y1="114.0" x2="1090.0" y2="114.0"/>
+<line class="today" x1="50.6" y1="4" x2="50.6" y2="126.0"/><text class="today" x="53.6" y="147.0">today</text>
+<g class="ev conference" style="--h:272"><title>SPLASH 2026 (OOPSLA) · conference: 4 Oct 2026 – 9 Oct 2026</title><rect x="93.7" y="111.5" width="12.7" height="5" rx="1"/><line x1="93.7" y1="99.0" x2="93.7" y2="114.0"/><text x="96.7" y="108.0">SPLASH'26 conference</text></g>
+<g class="ev notification" style="--h:310"><title>POPL 2027 · notification: 5 Oct 2026</title><line x1="96.2" y1="82.0" x2="96.2" y2="114.0"/><text x="99.2" y="91.0">POPL'27 notification</text></g>
+<g class="ev deadline" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R1 deadline: 14 Oct 2026</title><line x1="119.0" y1="65.0" x2="119.0" y2="114.0"/><text x="122.0" y="74.0">SPLASH'27 R1 deadline</text></g>
+<g class="ev deadline" style="--h:54"><title>ETAPS 2027 (ESOP) · R2 deadline: 15 Oct 2026</title><line x1="121.5" y1="48.0" x2="121.5" y2="114.0"/><text x="124.5" y="57.0">ETAPS'27 R2 deadline</text></g>
+<g class="ev deadline" style="--h:188"><title>PLDI 2027 · deadline: 12 Nov 2026</title><line x1="192.5" y1="31.0" x2="192.5" y2="114.0"/><text x="195.5" y="40.0">PLDI'27 deadline</text></g>
+<g class="ev rebuttal" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R1 rebuttal: 1 Dec 2026 – 5 Dec 2026</title><rect x="240.7" y="111.5" width="10.1" height="5" rx="1"/><line x1="240.7" y1="99.0" x2="240.7" y2="114.0"/><text x="243.7" y="108.0">SPLASH'27 R1 rebuttal</text></g>
+<g class="ev rebuttal" style="--h:54"><title>ETAPS 2027 (ESOP) · R2 rebuttal: 7 Dec 2026 – 9 Dec 2026</title><rect x="255.9" y="111.5" width="5.1" height="5" rx="1"/><line x1="255.9" y1="82.0" x2="255.9" y2="114.0"/><text x="258.9" y="91.0">ETAPS'27 R2 rebuttal</text></g>
+<g class="ev notification" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R1 notification: 18 Dec 2026</title><line x1="283.8" y1="65.0" x2="283.8" y2="114.0"/><text x="286.8" y="74.0">SPLASH'27 R1 notification</text></g>
+<g class="ev notification" style="--h:54"><title>ETAPS 2027 (ESOP) · R2 notification: 22 Dec 2026</title><line x1="293.9" y1="48.0" x2="293.9" y2="114.0"/><text x="296.9" y="57.0">ETAPS'27 R2 notification</text></g>
+<g class="ev conference" style="--h:310"><title>POPL 2027 · conference: 10 Jan 2027 – 16 Jan 2027</title><rect x="342.1" y="111.5" width="15.2" height="5" rx="1"/><line x1="342.1" y1="31.0" x2="342.1" y2="114.0"/><text x="345.1" y="40.0">POPL'27 conference</text></g>
+<g class="ev deadline" style="--h:321"><title>CAV 2027 · deadline: 20 Jan 2027</title><line x1="367.5" y1="14.0" x2="367.5" y2="114.0"/><text x="370.5" y="23.0">CAV'27 deadline</text></g>
+<g class="ev rebuttal" style="--h:188"><title>PLDI 2027 · rebuttal: 16 Feb 2027 – 18 Feb 2027</title><rect x="435.9" y="111.5" width="5.1" height="5" rx="1"/><line x1="435.9" y1="99.0" x2="435.9" y2="114.0"/><text x="438.9" y="108.0">PLDI'27 rebuttal</text></g>
+<g class="ev deadline" style="--h:313"><title>ICFP 2027 · deadline: 25 Feb 2027</title><line x1="458.7" y1="82.0" x2="458.7" y2="114.0"/><text x="461.7" y="91.0">ICFP'27 deadline</text></g>
+<g class="ev notification" style="--h:188"><title>PLDI 2027 · notification: 4 Mar 2027</title><line x1="476.5" y1="65.0" x2="476.5" y2="114.0"/><text x="479.5" y="74.0">PLDI'27 notification</text></g>
+<g class="ev rebuttal" style="--h:321"><title>CAV 2027 · rebuttal: 5 Apr 2027 – 8 Apr 2027</title><rect x="557.6" y="111.5" width="7.6" height="5" rx="1"/><line x1="557.6" y1="99.0" x2="557.6" y2="114.0"/><text x="560.6" y="108.0">CAV'27 rebuttal</text></g>
+<g class="ev deadline" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R2 deadline: 7 Apr 2027</title><line x1="562.7" y1="48.0" x2="562.7" y2="114.0"/><text x="565.7" y="57.0">SPLASH'27 R2 deadline</text></g>
+<g class="ev conference" style="--h:54"><title>ETAPS 2027 (ESOP) · conference: 12 Apr 2027 – 15 Apr 2027</title><rect x="575.4" y="111.5" width="7.6" height="5" rx="1"/><line x1="575.4" y1="82.0" x2="575.4" y2="114.0"/><text x="578.4" y="91.0">ETAPS'27 conference</text></g>
+<g class="ev rebuttal" style="--h:313"><title>ICFP 2027 · rebuttal: 19 Apr 2027 – 22 Apr 2027</title><rect x="593.1" y="111.5" width="7.6" height="5" rx="1"/><line x1="593.1" y1="31.0" x2="593.1" y2="114.0"/><text x="596.1" y="40.0">ICFP'27 rebuttal</text></g>
+<g class="ev notification" style="--h:321"><title>CAV 2027 · notification: 23 Apr 2027</title><line x1="603.2" y1="14.0" x2="603.2" y2="114.0"/><text x="606.2" y="23.0">CAV'27 notification</text></g>
+<g class="ev notification" style="--h:313"><title>ICFP 2027 · notification: 7 May 2027</title><line x1="638.7" y1="65.0" x2="638.7" y2="114.0"/><text x="641.7" y="74.0">ICFP'27 notification</text></g>
+<g class="ev conference" style="--h:188"><title>PLDI 2027 · conference: 5 Jun 2027 – 11 Jun 2027</title><rect x="712.3" y="111.5" width="15.2" height="5" rx="1"/><line x1="712.3" y1="99.0" x2="712.3" y2="114.0"/><text x="715.3" y="108.0">PLDI'27 conference</text></g>
+<g class="ev rebuttal" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R2 rebuttal: 15 Jun 2027 – 19 Jun 2027</title><rect x="737.6" y="111.5" width="10.1" height="5" rx="1"/><line x1="737.6" y1="82.0" x2="737.6" y2="114.0"/><text x="740.6" y="91.0">SPLASH'27 R2 rebuttal</text></g>
+<g class="ev conference" style="--h:184"><title>LICS 2027 · conference: 21 Jun 2027 – 24 Jun 2027</title><rect x="752.8" y="111.5" width="7.6" height="5" rx="1"/><line x1="752.8" y1="48.0" x2="752.8" y2="114.0"/><text x="755.8" y="57.0">LICS'27 conference</text></g>
+<g class="ev notification" style="--h:272"><title>SPLASH 2027 (OOPSLA) · R2 notification: 2 Jul 2027</title><line x1="780.7" y1="65.0" x2="780.7" y2="114.0"/><text x="783.7" y="74.0">SPLASH'27 R2 notification</text></g>
+<g class="ev conference" style="--h:321"><title>CAV 2027 · conference: 19 Jul 2027 – 23 Jul 2027</title><rect x="823.8" y="111.5" width="10.1" height="5" rx="1"/><line x1="823.8" y1="31.0" x2="823.8" y2="114.0"/><text x="826.8" y="40.0">CAV'27 conference</text></g>
+<g class="ev conference" style="--h:313"><title>ICFP 2027 · conference: 26 Sep 2027 – 1 Oct 2027</title><rect x="998.7" y="111.5" width="12.7" height="5" rx="1"/><line x1="998.7" y1="99.0" x2="998.7" y2="114.0"/><text x="995.7" y="108.0" text-anchor="end">ICFP'27 conference</text></g>
+<g class="ev conference" style="--h:272"><title>SPLASH 2027 (OOPSLA) · conference: 10 Oct 2027 – 15 Oct 2027</title><rect x="1034.2" y="111.5" width="12.7" height="5" rx="1"/><line x1="1034.2" y1="82.0" x2="1034.2" y2="114.0"/><text x="1031.2" y="91.0" text-anchor="end">SPLASH'27 conference</text></g>
+</svg></div>
 <h2>Conferences</h2>
 <div class="wrap"><table>
 <tr><th>Conference</th><th>Status</th><th>Paper deadlines</th><th>Conference</th><th>Volunteers</th><th>Links</th></tr>
@@ -82,7 +105,7 @@
 <tr class="past"><td><strong>POPL 2026</strong><br><span class="small">checked 15 Sep 2026</span></td><td class="stage">happened</td><td><span class="gone"><strong>10 Jul 2025</strong></span><br><span class="gone"><span class="small">rebuttal 8 Sep 2025 – 11 Sep 2025</span></span><br><span class="gone"><span class="small">notification 2 Oct 2025</span></span></td><td><span class="gone">11 Jan 2026 – 17 Jan 2026<br><span class="small">Rennes, France</span></span></td><td><span class="gone">apply by <strong>10 Nov 2025</strong></span><br><a href="https://forms.gle/YiMy1PXVF6QWggsb8">sign-up page</a></td><td class="small"><a href="https://conf.researchr.org/track/POPL-2026/POPL-2026-popl-research-papers">call for papers</a><br><a href="https://popl26.hotcrp.com">submission site</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/cfp.ics">deadlines .ics</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/conference.ics">conference .ics</a><br><a href="https://popl26.sigplan.org/track/POPL-2026-student-volunteers">volunteers page</a><br><a href="https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/conferences/POPL/POPL/2026/volunteer.ics">volunteer .ics</a></td></tr>
 </table></div>
 <footer>
-<p>Status: Last run: 2026-09-17. No maintenance needed. See [MAINTENANCE.md](MAINTENANCE.md).. Dates are extracted by a small language model (Qwen3.5-4B via Ollama on a GitHub Actions runner) and validated for consistency, but read the linked pages before relying on them. Generated 17 Sep 2026 12:12 UTC.</p>
+<p>Status: Last run: 2026-09-17. No maintenance needed. See [MAINTENANCE.md](MAINTENANCE.md).. Dates are extracted by a small language model (Qwen3.5-4B via Ollama on a GitHub Actions runner) and validated for consistency, but read the linked pages before relying on them. Generated 17 Sep 2026 15:12 UTC.</p>
 <p><a href="https://github.com/JonasAlaif/pl-conferences">Source, data and how it works</a> · <a href="https://github.com/JonasAlaif/pl-conferences/blob/main/MAINTENANCE.md">Maintenance status</a></p>
 </footer>
 </main>
