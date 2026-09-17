@@ -210,7 +210,7 @@ fn run(args: &Args) -> Result<()> {
             None => (cfg.since..=current_year + 1).collect(),
         };
         for year in years {
-            if let Some(need) = needs_work(args, root, &state, cfg, year, current_year, now) {
+            if let Some(need) = needs_work(args, root, &state, cfg, cfg.is_primary(&cfgs), year, current_year, now) {
                 items.push((cfg, year, need));
             }
         }
@@ -240,7 +240,7 @@ fn run(args: &Args) -> Result<()> {
         });
         // A panic in one conference-year (a bug, an unexpected page) must not
         // take the run and its state down with it.
-        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| process_year(args, ctx, vol_ctx, cfg, year, &mut state, now, current_year)));
+        let outcome = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| process_year(args, ctx, vol_ctx, cfg, cfg.is_primary(&cfgs), year, &mut state, now, current_year)));
         let outcome = match outcome {
             Ok(r) => r,
             Err(p) => {
@@ -325,7 +325,7 @@ impl std::fmt::Display for Idle {
 /// per-part rules decide what the run then does, so the work list and the
 /// run never disagree. A year with nothing stored is listed for its call for
 /// papers only: the volunteer search starts from that page.
-fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Option<Need> {
+fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceCfg, volunteers: bool, year: i32, current_year: i32, now: chrono::DateTime<Utc>) -> Option<Need> {
     let key = cfg.key(year);
     let dir = root.join("conferences").join(&key);
     let conf = read_record::<schema::Conference>(&dir.join("conference.json")).ok();
@@ -333,7 +333,7 @@ fn needs_work(args: &Args, root: &Path, state: &State, cfg: &config::ConferenceC
     let vol = read_record::<schema::Volunteer>(&dir.join("volunteer.json")).ok();
     let stage = schema::stage(conf.as_ref().map(|r| &r.data), dl.as_ref().map(|r| &r.data), now.date_naive());
     let cfp = cfp_need(state, &format!("{key}/cfp"), conf.as_ref(), dl.as_ref(), year, current_year, now).ok();
-    let vol = if args.no_volunteer || (conf.is_none() && dl.is_none()) {
+    let vol = if args.no_volunteer || !volunteers || (conf.is_none() && dl.is_none()) {
         None
     } else {
         volunteer_need(state, &format!("{key}/volunteer"), vol.as_ref(), stage, year, current_year, now).ok()
@@ -417,7 +417,10 @@ fn recent_negative(state: &State, key: &str, now: chrono::DateTime<Utc>, days: i
 /// data is re-validated from its source page; differences are kept as
 /// history and noted in the calendar.
 #[allow(clippy::too_many_arguments)]
-fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceCfg, year: i32, state: &mut State, now: chrono::DateTime<Utc>, current_year: i32) -> Result<()> {
+/// `volunteers`: whether this track looks for the student-volunteer page
+/// (only a conference's primary track does; the page is the conference's).
+#[allow(clippy::too_many_arguments)]
+fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceCfg, volunteers: bool, year: i32, state: &mut State, now: chrono::DateTime<Utc>, current_year: i32) -> Result<()> {
     let root = &args.root;
     let today = now.date_naive();
     let key = cfg.key(year);
@@ -460,7 +463,8 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
                     log::info!("{cfp_key}: conference {}", serde_json::to_string(&f.value)?);
                     let rec = merge_record(conf_rec.clone(), cfg, year, f, model, now, |o, n| schema::diff_conference(Some(o), Some(n), now));
                     if !args.dry_run {
-                        write_part(&dir, "conference", &rec, f, conf_rec.is_none() || rec.fetched_at == now, |r, p| ics::conference_events(&cfg.key(year), &r.data, p, r.fetched_at))?;
+                        // The tracks line is left out here: `regenerate_outputs` rewrites this calendar at the end of the run with every track listed.
+                        write_part(&dir, "conference", &rec, f, conf_rec.is_none() || rec.fetched_at == now, |r, p| ics::conference_events(&cfg.key(year), &[cfg.track.clone()], &r.data, p, r.fetched_at))?;
                     }
                     got_something = true;
                 }
@@ -496,7 +500,7 @@ fn process_year(args: &Args, ctx: &Ctx, vol_ctx: &Ctx, cfg: &config::ConferenceC
     }
 
     // --- Student volunteers ---
-    if args.no_volunteer {
+    if args.no_volunteer || !volunteers {
         return Ok(());
     }
     let existing_vol = read_record::<schema::Volunteer>(&dir.join("volunteer.json")).ok();
@@ -731,7 +735,7 @@ fn write_volunteer(dir: &Path, cfg: &config::ConferenceCfg, year: i32, rec: &Rec
         std::fs::write(dir.join("volunteer.html"), &found.html)?;
         std::fs::write(dir.join("volunteer.md"), &found.md)?;
     }
-    let events = ics::volunteer_events(&cfg.key(year), &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
+    let events = ics::volunteer_events(&cfg.key(year), &[cfg.track.clone()], &rec.data, &provenance_of(&rec.provenance, &rec.history), rec.fetched_at);
     std::fs::write(dir.join("volunteer.ics"), ics::calendar(&format!("{} volunteers", rec.label), &events))?;
     log::info!("wrote {}", dir.join("volunteer.ics").display());
     Ok(())
@@ -743,6 +747,9 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     let now = Utc::now();
     let today = now.date_naive();
     let conf_dir = root.join("conferences");
+    // Records outlive their configuration (a track removed from
+    // conferences.json keeps its calendars), so a missing file is fine.
+    let cfgs = config::load(&root.join("conferences.json")).unwrap_or_default();
     // One row per conference-year on the site, assembled from all three records.
     type Parts = (String, Option<Record<schema::Conference>>, Option<Record<schema::Deadlines>>, Option<Record<schema::Volunteer>>);
     let mut by_year: std::collections::BTreeMap<String, Parts> = Default::default();
@@ -751,30 +758,69 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
             let name = entry.file_name().unwrap().to_string_lossy().to_string();
             if name == "conference.json" {
                 let Some(r) = read_or_skip::<schema::Conference>(&entry) else { continue };
-                let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::conference_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                // The calendar next to the JSON is derived from it, so it is
-                // rebuilt here too and never drifts from an edited record.
-                std::fs::write(entry.with_file_name("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
-                events.extend(ev);
-                let label = r.label.clone();
+                let (key, label) = (format!("{}/{}/{}", r.conference, r.track, r.year), r.label.clone());
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).1 = Some(r);
             } else if name == "cfp.json" {
                 let Some(r) = read_or_skip::<schema::Deadlines>(&entry) else { continue };
-                let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::deadline_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                std::fs::write(entry.with_file_name("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
-                events.extend(ev);
-                let label = r.label.clone();
+                let (key, label) = (format!("{}/{}/{}", r.conference, r.track, r.year), r.label.clone());
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).2 = Some(r);
             } else if name == "volunteer.json" {
                 let Some(r) = read_or_skip::<schema::Volunteer>(&entry) else { continue };
-                let key = format!("{}/{}/{}", r.conference, r.track, r.year);
-                let ev = ics::volunteer_events(&key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
-                std::fs::write(entry.with_file_name("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
-                events.extend(ev);
-                let label = r.label.clone();
+                let (key, label) = (format!("{}/{}/{}", r.conference, r.track, r.year), r.label.clone());
                 by_year.entry(key).or_insert_with(|| (label, None, None, None)).3 = Some(r);
+            }
+        }
+    }
+    // The conference dates and the volunteer deadline belong to the
+    // conference, not to a track: with several tracks (ETAPS: ESOP, TACAS)
+    // they go into the aggregate calendar once, from the primary track's
+    // records, or from the first track that has them.
+    let split = |key: &str| {
+        let mut p = key.split('/');
+        (p.next().unwrap_or("").to_string(), p.next().unwrap_or("").to_string(), p.next().unwrap_or("").to_string())
+    };
+    let mut published_conference: std::collections::HashSet<String> = Default::default();
+    let mut published_volunteer: std::collections::HashSet<String> = Default::default();
+    let mut ordered: Vec<&String> = by_year.keys().collect();
+    ordered.sort_by_key(|k| {
+        let (conference, track, _) = split(k);
+        let cfg = cfgs.iter().find(|c| c.conference.eq_ignore_ascii_case(&conference) && c.track.eq_ignore_ascii_case(&track));
+        (cfg.is_none_or(|c| !c.is_primary(&cfgs)), k.to_string())
+    });
+    for key in ordered {
+        let (conference, _, year) = split(key);
+        let conference_year = format!("{conference}/{year}");
+        let parts = &by_year[key];
+        let publish_conf = parts.1.is_some() && published_conference.insert(conference_year.clone());
+        let publish_vol = parts.3.is_some() && published_volunteer.insert(conference_year.clone());
+        // The tracks named in the description: the configured ones, plus
+        // any this year has records for that the configuration dropped.
+        let mut tracks = config::tracks_of(&cfgs, &conference);
+        for (c, t, y) in by_year.keys().map(|k| split(k)) {
+            if c == conference && y == year && !tracks.iter().any(|x| x.eq_ignore_ascii_case(&t)) {
+                tracks.push(t);
+            }
+        }
+        let dir = conf_dir.join(key);
+        // The calendars next to the JSON are derived from it, so they are
+        // rebuilt here too and never drift from an edited record.
+        if let Some(r) = &parts.1 {
+            let ev = ics::conference_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            std::fs::write(dir.join("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
+            if publish_conf {
+                events.extend(ev);
+            }
+        }
+        if let Some(r) = &parts.2 {
+            let ev = ics::deadline_events(key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            std::fs::write(dir.join("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
+            events.extend(ev);
+        }
+        if let Some(r) = &parts.3 {
+            let ev = ics::volunteer_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            std::fs::write(dir.join("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
+            if publish_vol {
+                events.extend(ev);
             }
         }
     }
@@ -868,6 +914,38 @@ mod tests {
         assert_eq!(own_site(&root, &popl, 2026).as_deref(), Some("https://popl26.sigplan.org"));
         assert_eq!(own_site(&root, &popl, 2027).as_deref(), Some("https://popl27.sigplan.org"), "the host follows the edition's year");
         assert_eq!(own_site(&root, &splash, 2027), None, "only a shared host is known");
+        let _ = std::fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn a_conference_with_two_tracks_is_published_once_with_both_tracks_deadlines() {
+        let root = std::env::temp_dir().join(format!("plc-two-tracks-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(&root).unwrap();
+        std::fs::write(root.join("conferences.json"), r#"[{"conference":"ETAPS","track":"ESOP","since":2027},{"conference":"ETAPS","track":"TACAS","since":2027}]"#).unwrap();
+        let write = |track: &str, kind: &str, data: &str| {
+            let dir = root.join("conferences/ETAPS").join(track).join("2027");
+            std::fs::create_dir_all(&dir).unwrap();
+            std::fs::write(dir.join(format!("{kind}.json")), format!(r#"{{"conference":"ETAPS","track":"{track}","year":2027,"label":"ETAPS 2027 ({track})","fetched_at":"2026-09-01T00:00:00Z","provenance":{{"source_url":"https://etaps.org/2027/cfp/"}},"data":{data}}}"#)).unwrap();
+        };
+        let conf = r#"{"start":"2027-04-12","end":"2027-04-15","city":"Copenhagen","country":"Denmark"}"#;
+        let cfp = |day: u32| format!(r#"{{"rounds":[{{"label":"","submission":"2026-10-{day}","submission_conflict":null,"response_start":null,"response_end":null,"notification":null}}],"submission_details":"","submission_url":null}}"#);
+        write("ESOP", "conference", conf);
+        write("ESOP", "cfp", &cfp(15));
+        write("TACAS", "conference", conf);
+        write("TACAS", "cfp", &cfp(16));
+        write("TACAS", "volunteer", r#"{"deadline":"2027-02-01","deadline_conflict":null,"how_to_apply":"","application_url":null}"#);
+        regenerate_outputs(&root, &State::default()).unwrap();
+        let all = std::fs::read_to_string(root.join("all.ics")).unwrap().replace("\r\n ", "");
+        assert_eq!(all.matches("SUMMARY:[ETAPS 27] Conference").count(), 1, "one conference event however many tracks:\n{all}");
+        assert!(all.contains("SUMMARY:[ESOP 27] Submission Deadline") && all.contains("SUMMARY:[TACAS 27] Submission Deadline"));
+        assert!(all.contains("The deadlines of its ESOP and TACAS tracks are filed as [ESOP 27] and [TACAS 27]."), "{all}");
+        assert!(all.contains("ESOP is a track of ETAPS 2027.") && all.contains("TACAS is a track of ETAPS 2027."));
+        assert_eq!(all.matches("Volunteer Application Deadline").count(), 1, "the volunteer deadline comes from the track that has it");
+        // Every record still has its own calendar next to it.
+        assert!(root.join("conferences/ETAPS/TACAS/2027/conference.ics").exists() && root.join("conferences/ETAPS/ESOP/2027/cfp.ics").exists());
+        let html = std::fs::read_to_string(root.join("docs/index.html")).unwrap();
+        assert!(html.contains("ETAPS 2027 (ESOP)") && html.contains("ETAPS 2027 (TACAS)"), "one row per track on the site");
         let _ = std::fs::remove_dir_all(&root);
     }
 

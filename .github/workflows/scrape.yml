@@ -20,9 +20,9 @@ on:
         type: boolean
         default: false
       max_items:
-        description: "Conference-years each worker attempts (scheduled runs use 2: this year and next)"
+        description: "Conference-years each worker attempts (empty: 2 per track, this year and next)"
         type: string
-        default: "2"
+        required: false
       time_budget:
         description: "Minutes after which a worker starts no new conference-year (scheduled runs use 75)"
         type: string
@@ -70,7 +70,7 @@ jobs:
           if [ -n "$ONLY" ]; then
             list=$(jq -cn --arg c "$ONLY" '[$c]')
           else
-            list=$(jq -c '[.[].conference]' conferences.json)
+            list=$(jq -c '[.[].conference] | unique' conferences.json)
           fi
           echo "conferences=$list" >> "$GITHUB_OUTPUT"
           echo "workers: $list"
@@ -191,12 +191,16 @@ jobs:
         env:
           PLC_MODEL: ${{ env.MODEL }}
           PLC_TIME_BUDGET_MIN: ${{ inputs.time_budget || '75' }}
-          PLC_MAX_ITEMS: ${{ inputs.max_items || '2' }}
+          MAX_ITEMS: ${{ inputs.max_items }}
           PLC_FORCE_REVALIDATE: ${{ inputs.force_revalidate }}
           RUST_LOG: info
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           free -m
+          # Two conference-years (this year and next) per track of this conference.
+          tracks=$(jq --arg c "${{ matrix.conference }}" '[.[] | select(.conference == $c)] | length' conferences.json)
+          export PLC_MAX_ITEMS="${MAX_ITEMS:-$((2 * (tracks > 0 ? tracks : 1)))}"
+          echo "tracks: $tracks, items this run: $PLC_MAX_ITEMS"
           args=(--conference "${{ matrix.conference }}")
           [ "$DRY_RUN" = "true" ] && args+=(--dry-run)
           ./target/release/pl-conferences "${args[@]}"

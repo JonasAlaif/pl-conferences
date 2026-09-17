@@ -13,7 +13,8 @@ DTEND;VALUE=DATE:20270416
 SUMMARY:[ETAPS 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 27]
+  and [TACAS 27].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
 END:VEVENT
 END:VCALENDAR

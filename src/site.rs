@@ -124,46 +124,46 @@ struct Mark {
     kind: &'static str,
 }
 
-/// "OOPSLA'27" from the key "SPLASH/OOPSLA/2027": the track is what one
-/// submits to.
-fn short_label(key: &str) -> String {
-    let (track, year) = track_year(key);
-    format!("{track}'{}", year.get(2..).unwrap_or(year))
-}
-
-fn track_year(key: &str) -> (&str, &str) {
-    let mut parts = key.split('/').skip(1);
-    (parts.next().unwrap_or(key), parts.next().unwrap_or(""))
-}
-
 /// Every dated event of every edition on or after `today`, soonest first.
+/// Deadlines are labelled by track ("OOPSLA'27"), the conference dates and
+/// the volunteer deadline by conference ("SPLASH'27"), once per
+/// conference-year however many tracks are followed.
 fn marks(years: &[YearView], today: NaiveDate) -> Vec<Mark> {
     let mut v = vec![];
+    let mut seen: std::collections::HashSet<String> = Default::default();
     for y in years {
-        let short = short_label(&y.key);
-        let conference = track_year(&y.key).0.to_string();
-        let mut push = |date: NaiveDate, end: Option<NaiveDate>, what: &str, kind: &'static str| {
+        let (conference, track, year) = {
+            let mut p = y.key.split('/');
+            let c = p.next().unwrap_or("");
+            (c.to_string(), p.next().unwrap_or(c).to_string(), p.next().unwrap_or("").to_string())
+        };
+        let short = |name: &str| format!("{name}'{}", year.get(2..).unwrap_or(&year));
+        let mut push = |date: NaiveDate, end: Option<NaiveDate>, name: &str, what: &str, kind: &'static str| {
             if end.unwrap_or(date) >= today {
-                v.push(Mark { date, end, text: format!("{short} {what}"), full: format!("{} · {what}", y.label), conference: conference.clone(), kind });
+                v.push(Mark { date, end, text: format!("{} {what}", short(name)), full: format!("{} · {what}", y.label), conference: name.to_string(), kind });
             }
         };
         if let Some((d, _)) = &y.deadlines {
             for (i, r) in d.rounds.iter().enumerate() {
                 let prefix = if d.rounds.len() > 1 { format!("R{} ", i + 1) } else { String::new() };
-                push(r.submission, None, &format!("{prefix}deadline"), "deadline");
+                push(r.submission, None, &track, &format!("{prefix}deadline"), "deadline");
                 if let Some(a) = r.response_start {
-                    push(a, r.response_end, &format!("{prefix}rebuttal"), "rebuttal");
+                    push(a, r.response_end, &track, &format!("{prefix}rebuttal"), "rebuttal");
                 }
                 if let Some(n) = r.notification {
-                    push(n, None, &format!("{prefix}notification"), "notification");
+                    push(n, None, &track, &format!("{prefix}notification"), "notification");
                 }
             }
         }
         if let Some((c, _)) = &y.conference {
-            push(c.start, Some(c.end), "conference", "conference");
+            if seen.insert(format!("{conference}/{year}/conference")) {
+                push(c.start, Some(c.end), &conference, "conference", "conference");
+            }
         }
         if let Some((vol, _)) = &y.volunteer {
-            push(vol.deadline, None, "volunteers", "volunteers");
+            if seen.insert(format!("{conference}/{year}/volunteers")) {
+                push(vol.deadline, None, &conference, "volunteers", "volunteers");
+            }
         }
     }
     v.sort_by(|a, b| (a.date, &a.text).cmp(&(b.date, &b.text)));
@@ -465,8 +465,6 @@ mod tests {
         // Two labels at nearly the same x go to different lanes; a far one
         // returns to the first lane; one near the right edge is flipped.
         assert_eq!(lanes(&[(100.0, 80.0), (110.0, 80.0), (300.0, 80.0), (1080.0, 80.0)], 1090.0), vec![(0, false), (1, false), (0, false), (0, true)]);
-        assert_eq!(short_label("SPLASH/OOPSLA/2027"), "OOPSLA'27", "the track, which is what one submits to");
-        assert_eq!(short_label("POPL/POPL/2027"), "POPL'27");
         assert_eq!(months(d(2026, 9, 17), d(2027, 1, 3)).len(), 5, "September to January");
         let mk = |key: &str, sub: NaiveDate, conf: (NaiveDate, NaiveDate)| YearView {
             key: key.into(),
@@ -478,13 +476,20 @@ mod tests {
             last_verified: None,
         };
         let today = d(2026, 9, 17);
-        let years = [mk("POPL/POPL/2027", d(2026, 7, 9), (d(2027, 1, 10), d(2027, 1, 16))), mk("ICFP/ICFP/2028", d(2028, 2, 25), (d(2028, 9, 26), d(2028, 10, 1)))];
+        let years = [
+            mk("POPL/POPL/2027", d(2026, 7, 9), (d(2027, 1, 10), d(2027, 1, 16))),
+            mk("ICFP/ICFP/2028", d(2028, 2, 25), (d(2028, 9, 26), d(2028, 10, 1))),
+            mk("ETAPS/ESOP/2027", d(2026, 10, 15), (d(2027, 4, 12), d(2027, 4, 15))),
+            mk("ETAPS/TACAS/2027", d(2026, 10, 15), (d(2027, 4, 12), d(2027, 4, 15))),
+        ];
         let svg = timeline(&years, today);
         assert!(svg.contains("POPL'27 conference") && svg.contains("<rect"), "the conference is a bar: {svg}");
+        assert!(svg.contains("ESOP'27 deadline") && svg.contains("TACAS'27 deadline"), "deadlines by track: {svg}");
+        assert_eq!(svg.matches("ETAPS'27 conference").count(), 1, "the conference once, by conference name, however many tracks: {svg}");
         assert!(svg.contains("style=\"--h:") && svg.contains("<title>POPL POPL 2027 · conference: 10 Jan 2027 – 16 Jan 2027</title>"), "colour and tooltip: {svg}");
         assert!(!svg.contains("POPL'27 deadline"), "a passed deadline is not shown");
         assert!(!svg.contains("ICFP'28"), "beyond the horizon is left to the table");
-        assert!(svg.contains(">Sep 2026<") && svg.contains(">Jan 2027<") && !svg.contains(">Mar<"), "months from today's to the last event's: {svg}");
+        assert!(svg.contains(">Sep 2026<") && svg.contains(">Jan 2027<") && svg.contains(">Apr<") && !svg.contains(">May<"), "months from today's to the last event's (ETAPS in April): {svg}");
         assert!(svg.contains("today"));
         assert_eq!(timeline(&[], today), "<p class=\"small\">Nothing upcoming yet.</p>\n");
     }

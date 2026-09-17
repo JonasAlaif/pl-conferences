@@ -13,7 +13,8 @@ DTEND;VALUE=DATE:20261010
 SUMMARY:[SPLASH 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nThe deadlines of its OOPSLA track are filed as [
+ OOPSLA 26].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Oakland\, California\, United States
 END:VEVENT
 END:VCALENDAR

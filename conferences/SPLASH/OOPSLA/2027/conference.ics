@@ -13,8 +13,9 @@ DTEND;VALUE=DATE:20271016
 SUMMARY:[SPLASH 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nThe deadlines of its OOPSLA tra
+ ck are filed as [OOPSLA 27].\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 LOCATION:Prague\, Czechia
 END:VEVENT
 END:VCALENDAR

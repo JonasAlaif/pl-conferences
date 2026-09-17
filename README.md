@@ -37,7 +37,11 @@ calendar subscription. The page is in `docs/` and deployed by the workflow.
 ## How it works
 
 1. `conferences.json` lists each conference, its research-paper track and the
-   first year to collect. It is the only hand-edited file.
+   first year to collect. It is the only hand-edited file. A conference with
+   several tracks (ETAPS: ESOP, TACAS) is listed once per track; the first
+   entry is its primary track, whose records supply what belongs to the
+   conference rather than a track (its dates and the student-volunteer
+   deadline), and only the primary track searches for the volunteer page.
 2. For every conference and every year up to next year that has no result yet
    (a bounded batch per run), the pipeline searches the web (DuckDuckGo, Brave and Bing HTML result pages,
    no API keys), lets the model pick the official page, fetches it, converts it
@@ -146,10 +150,16 @@ per worker, against a 330-minute job timeout).
 
 ## Things to know
 
-- Every calendar entry says it was extracted by a language model and links
-  the page it came from; treat the source as authoritative. If a page states
-  two different dates for the same deadline, the entry quotes the other
-  statement as a note.
+- Every calendar entry opens with a note that it was extracted by a language
+  model and links the page it came from; treat the source as authoritative.
+  If a page states two different dates for the same deadline, the entry
+  quotes the other statement as a note.
+- Deadlines are filed under the track, which is what one submits to
+  (`[OOPSLA 27] R1 Submission Deadline`, `[ESOP 27] Rebuttal`); the
+  conference dates and the volunteer deadline under the conference
+  (`[SPLASH 27] Conference`). When the two names differ, the description says
+  which conference a track belongs to, or where a conference's deadlines are
+  filed.
 - A page that lists the same label twice can defeat the model: OOPSLA's
   dates list has two "Author Notification (Round 2)" entries (the second is
   the decision on revised papers) with the revision deadline between them,

@@ -63,16 +63,43 @@ fn uid(key: &str, event: &str) -> String {
     format!("{hex}@pl-conferences")
 }
 
+/// The parts of the key "SPLASH/OOPSLA/2027": conference, track, year.
+fn split_key(key: &str) -> (&str, &str, &str) {
+    let mut parts = key.split('/');
+    let conf = parts.next().unwrap_or(key);
+    (conf, parts.next().unwrap_or(conf), parts.next().unwrap_or(""))
+}
+
+fn tag(name: &str, year: &str) -> String {
+    format!("{name} {}", year.get(2..).unwrap_or(year))
+}
+
 /// The tags events are filed under, from the key "SPLASH/OOPSLA/2027":
 /// "SPLASH 27" for the conference and its volunteers, "OOPSLA 27" for the
 /// deadlines, since the track is what one submits to.
 fn tags(key: &str) -> (String, String) {
-    let mut parts = key.split('/');
-    let conf = parts.next().unwrap_or(key);
-    let track = parts.next().unwrap_or(conf);
-    let year = parts.next().unwrap_or("");
-    let yy = year.get(2..).unwrap_or(year);
-    (format!("{conf} {yy}"), format!("{track} {yy}"))
+    let (conf, track, year) = split_key(key);
+    (tag(conf, year), tag(track, year))
+}
+
+/// The title of a conference event or a volunteer deadline names only the
+/// conference; when the tracks followed have names of their own, this says
+/// where their deadlines are filed. `tracks` is empty when unknown.
+fn tracks_line(key: &str, tracks: &[String]) -> Option<String> {
+    let (conf, own, year) = split_key(key);
+    let tracks: Vec<&String> = tracks.iter().filter(|t| !t.eq_ignore_ascii_case(conf)).collect();
+    if tracks.is_empty() {
+        return (!own.eq_ignore_ascii_case(conf)).then(|| format!("The deadlines of its {own} track are filed as [{}].", tag(own, year)));
+    }
+    let names = tracks.iter().map(|t| t.as_str()).collect::<Vec<_>>().join(" and ");
+    let tagged = tracks.iter().map(|t| format!("[{}]", tag(t, year))).collect::<Vec<_>>().join(" and ");
+    Some(format!("The deadlines of its {names} {} are filed as {tagged}.", if tracks.len() > 1 { "tracks" } else { "track" }))
+}
+
+/// The other way round, for a deadline filed under a track name.
+fn track_of_line(key: &str) -> Option<String> {
+    let (conf, track, year) = split_key(key);
+    (!track.eq_ignore_ascii_case(conf)).then(|| format!("{track} is a track of {conf} {year}."))
 }
 
 /// `uid_name` is the event's name when it was first published; UIDs must
@@ -82,14 +109,15 @@ fn event(tag: &str, key: &str, stamp: DateTime<Utc>, uid_name: &str, name: &str,
     Event { uid: uid(key, uid_name), summary: format!("[{tag}] {name}"), description: desc, location: loc.to_string(), start, end, stamp }
 }
 
-/// The single conference event (dates and location).
-pub fn conference_events(key: &str, c: &Conference, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+/// The single conference event (dates and location). `tracks` are the
+/// conference's tracks from `conferences.json`, for the description.
+pub fn conference_events(key: &str, tracks: &[String], c: &Conference, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
     let loc = match (&c.city, &c.country) {
         (Some(ci), Some(co)) => format!("{ci}, {co}"),
         (Some(x), None) | (None, Some(x)) => x.clone(),
         (None, None) => String::new(),
     };
-    vec![event(&tags(key).0, key, stamp, "Conference", "Conference", prov.describe("conference", vec![]), &loc, c.start, c.end)]
+    vec![event(&tags(key).0, key, stamp, "Conference", "Conference", prov.describe("conference", tracks_line(key, tracks).into_iter().collect()), &loc, c.start, c.end)]
 }
 
 /// Deadline events: submission, rebuttal and notification per round.
@@ -101,7 +129,7 @@ pub fn deadline_events(key: &str, d: &Deadlines, prov: &Provenance, stamp: DateT
     for (i, r) in d.rounds.iter().enumerate() {
         let prefix = if two { format!("R{} ", i + 1) } else { String::new() };
         let n = i + 1;
-        let mut parts = vec![];
+        let mut parts: Vec<String> = track_of_line(key).into_iter().collect();
         if !d.submission_details.is_empty() {
             parts.push(d.submission_details.clone());
         }
@@ -115,11 +143,11 @@ pub fn deadline_events(key: &str, d: &Deadlines, prov: &Provenance, stamp: DateT
         events.push(mk(&format!("{prefix}Paper Submission Deadline"), &format!("{prefix}Submission Deadline"), desc, r.submission, r.submission));
         if let (Some(s), Some(e)) = (r.response_start, r.response_end.or(r.response_start)) {
             let name = format!("{prefix}Rebuttal");
-            events.push(mk(&name, &name, prov.describe(&format!("round {n} response"), vec![]), s, e));
+            events.push(mk(&name, &name, prov.describe(&format!("round {n} response"), track_of_line(key).into_iter().collect()), s, e));
         }
         if let Some(nd) = r.notification {
             let name = format!("{prefix}Notification");
-            events.push(mk(&name, &name, prov.describe(&format!("round {n} notification"), vec![]), nd, nd));
+            events.push(mk(&name, &name, prov.describe(&format!("round {n} notification"), track_of_line(key).into_iter().collect()), nd, nd));
         }
     }
     events
@@ -132,13 +160,13 @@ pub fn cfp_events(key: &str, cfp: &Cfp, prov: &Provenance, stamp: DateTime<Utc>)
         events.extend(deadline_events(key, &d, prov, stamp));
     }
     if let Some(c) = &cfp.conference {
-        events.extend(conference_events(key, c, prov, stamp));
+        events.extend(conference_events(key, &[], c, prov, stamp));
     }
     events
 }
 
-pub fn volunteer_events(key: &str, v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
-    let mut parts = vec![];
+pub fn volunteer_events(key: &str, tracks: &[String], v: &Volunteer, prov: &Provenance, stamp: DateTime<Utc>) -> Vec<Event> {
+    let mut parts: Vec<String> = tracks_line(key, tracks).into_iter().collect();
     if !v.how_to_apply.is_empty() {
         parts.push(v.how_to_apply.clone());
     }
@@ -256,12 +284,22 @@ mod tests {
         let sub = &ev[0].description;
         let pos = |s: &str| sub.find(s).unwrap_or_else(|| panic!("{s} missing from {sub}"));
         assert!(pos("cross-check") < pos("Submit via HotCRP") && pos("Submit via HotCRP") < pos("Submit at:") && pos("Submit at:") < pos("Note: the page") && pos("Note: the page") < pos("Changed 2026-09-20") && pos("Changed 2026-09-20") < pos("Maintenance: E003") && pos("Maintenance: E003") < pos(REPO_URL));
-        // Tags: the track for deadlines, the conference for its dates and volunteers.
+        // Tags: the track for deadlines, the conference for its dates and
+        // volunteers; when the two differ, the description says so.
         let splash = cfp_events("SPLASH/OOPSLA/2027", &cfp, &prov, stamp);
         assert_eq!(splash[0].summary, "[OOPSLA 27] Submission Deadline");
+        assert!(splash[0].description.contains("\n\nOOPSLA is a track of SPLASH 2027.\n\n") && splash[1].description.contains("OOPSLA is a track of SPLASH 2027."), "{}", splash[0].description);
         assert_eq!(splash[3].summary, "[SPLASH 27] Conference");
-        let vol = volunteer_events("SPLASH/OOPSLA/2027", &Volunteer { deadline: NaiveDate::from_ymd_opt(2027, 7, 1).unwrap(), deadline_conflict: None, how_to_apply: String::new(), application_url: None }, &prov, stamp);
+        assert!(splash[3].description.contains("The deadlines of its OOPSLA track are filed as [OOPSLA 27]."), "{}", splash[3].description);
+        assert!(!ev[0].description.contains("is a track of") && !ev[3].description.contains("filed as"), "nothing to explain when the names agree");
+        let v = Volunteer { deadline: NaiveDate::from_ymd_opt(2027, 7, 1).unwrap(), deadline_conflict: None, how_to_apply: String::new(), application_url: None };
+        let vol = volunteer_events("SPLASH/OOPSLA/2027", &["OOPSLA".to_string()], &v, &prov, stamp);
         assert_eq!(vol[0].summary, "[SPLASH 27] Volunteer Application Deadline");
+        assert!(vol[0].description.contains("The deadlines of its OOPSLA track are filed as [OOPSLA 27]."));
+        let etaps = conference_events("ETAPS/ESOP/2027", &["ESOP".to_string(), "TACAS".to_string()], cfp.conference.as_ref().unwrap(), &prov, stamp);
+        assert_eq!(etaps[0].summary, "[ETAPS 27] Conference");
+        assert!(etaps[0].description.contains("The deadlines of its ESOP and TACAS tracks are filed as [ESOP 27] and [TACAS 27]."), "{}", etaps[0].description);
+        assert!(!conference_events("POPL/POPL/2027", &["POPL".to_string()], cfp.conference.as_ref().unwrap(), &prov, stamp)[0].description.contains("filed as"));
         // Renaming did not change the UIDs.
         assert_eq!(ev[0].uid, uid("POPL/POPL/2026", "Paper Submission Deadline"));
         assert_eq!(ev[3].uid, uid("POPL/POPL/2026", "Conference"));

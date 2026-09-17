@@ -13,7 +13,8 @@ DTEND;VALUE=DATE:20260417
 SUMMARY:[ETAPS 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 26]
+  and [TACAS 26].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Turin\, Italy
 END:VEVENT
 END:VCALENDAR

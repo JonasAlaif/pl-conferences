@@ -13,21 +13,21 @@ DTEND;VALUE=DATE:20250604
 SUMMARY:[ESOP 26] R1 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nSubmitted papers must be in English\, presenting original researc
- h. They must be unpublished and not submitted for publication elsewhere. 
- In particular\, simultaneous submission of the same contribution to multi
- ple ETAPS conferences is forbidden. Submissions must follow the formattin
- g guidelines of Springer's LNCS (use the llncs.cls class) - except for ES
- OP\, see above - and be submitted electronically in pdf through the Easyc
- hair author interface of the respective conference. Submissions not adher
- ing to the specified format and length may be rejected immediately. ETAPS
-  conferences will use double-blind reviewing (in the case of TACAS\, only
-  for regular research papers). Authors are asked to omit their names and 
- institutions\; refer to prior work in the third person\, just as prior wo
- rk by others\; not to include acknowledgments that might identify them. E
- SOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit at: 
- https://esop26.hotcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conference
- s
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nSubmitted papers must be in Eng
+ lish\, presenting original research. They must be unpublished and not sub
+ mitted for publication elsewhere. In particular\, simultaneous submission
+  of the same contribution to multiple ETAPS conferences is forbidden. Sub
+ missions must follow the formatting guidelines of Springer's LNCS (use th
+ e llncs.cls class) - except for ESOP\, see above - and be submitted elect
+ ronically in pdf through the Easychair author interface of the respective
+  conference. Submissions not adhering to the specified format and length 
+ may be rejected immediately. ETAPS conferences will use double-blind revi
+ ewing (in the case of TACAS\, only for regular research papers). Authors 
+ are asked to omit their names and institutions\; refer to prior work in t
+ he third person\, just as prior work by others\; not to include acknowled
+ gments that might identify them. ESOP\, TACAS and FoSSaCS will use an aut
+ hor rebuttal phase.\n\nSubmit at: https://esop26.hotcrp.com/\n\nhttps://g
+ ithub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:b1d223830fd2550a8f8f3ef145d60ab1936de1f1@pl-conferences
@@ -57,7 +57,8 @@ DTEND;VALUE=DATE:20250724
 SUMMARY:[ESOP 26] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:a7a59deaeb384709140a31fcbb011f94991d5478@pl-conferences
@@ -67,7 +68,8 @@ DTEND;VALUE=DATE:20250802
 SUMMARY:[ESOP 26] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:51c2880631eb58da7c895e2576d047b4087e8446@pl-conferences
@@ -99,15 +101,15 @@ DTEND;VALUE=DATE:20251011
 SUMMARY:[OOPSLA 26] R1 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nPapers must be submitted via HotCRP at https://o
- opsla26.hotcrp.com/. Initial submissions must be at most 23 pages\; revis
- ions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing wi
- th two rounds of review. At least one senior author must register as a re
- serve reviewer unless exempt. Papers accepted in either round will be pub
- lished in the 2026 volume of PACMPL and invited to present in-person at t
- he SPLASH conference in 2026\; remote presentations are not possible.\n\n
- Submit at: https://oopsla26.hotcrp.com/\n\nhttps://github.com/JonasAlaif/
- pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nPapers must
+  be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submiss
+ ions must be at most 23 pages\; revisions can go up to 25 pages. PACMPL(O
+ OPSLA) uses double-blind reviewing with two rounds of review. At least on
+ e senior author must register as a reserve reviewer unless exempt. Papers
+  accepted in either round will be published in the 2026 volume of PACMPL 
+ and invited to present in-person at the SPLASH conference in 2026\; remot
+ e presentations are not possible.\n\nSubmit at: https://oopsla26.hotcrp.c
+ om/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4ec8b764bcafb1909f48be279d68cfe37760708f@pl-conferences
@@ -117,21 +119,21 @@ DTEND;VALUE=DATE:20251017
 SUMMARY:[ESOP 26] R2 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nSubmitted papers must be in English\, presenting original researc
- h. They must be unpublished and not submitted for publication elsewhere. 
- In particular\, simultaneous submission of the same contribution to multi
- ple ETAPS conferences is forbidden. Submissions must follow the formattin
- g guidelines of Springer's LNCS (use the llncs.cls class) - except for ES
- OP\, see above - and be submitted electronically in pdf through the Easyc
- hair author interface of the respective conference. Submissions not adher
- ing to the specified format and length may be rejected immediately. ETAPS
-  conferences will use double-blind reviewing (in the case of TACAS\, only
-  for regular research papers). Authors are asked to omit their names and 
- institutions\; refer to prior work in the third person\, just as prior wo
- rk by others\; not to include acknowledgments that might identify them. E
- SOP\, TACAS and FoSSaCS will use an author rebuttal phase.\n\nSubmit at: 
- https://esop26.hotcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conference
- s
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nSubmitted papers must be in Eng
+ lish\, presenting original research. They must be unpublished and not sub
+ mitted for publication elsewhere. In particular\, simultaneous submission
+  of the same contribution to multiple ETAPS conferences is forbidden. Sub
+ missions must follow the formatting guidelines of Springer's LNCS (use th
+ e llncs.cls class) - except for ESOP\, see above - and be submitted elect
+ ronically in pdf through the Easychair author interface of the respective
+  conference. Submissions not adhering to the specified format and length 
+ may be rejected immediately. ETAPS conferences will use double-blind revi
+ ewing (in the case of TACAS\, only for regular research papers). Authors 
+ are asked to omit their names and institutions\; refer to prior work in t
+ he third person\, just as prior work by others\; not to include acknowled
+ gments that might identify them. ESOP\, TACAS and FoSSaCS will use an aut
+ hor rebuttal phase.\n\nSubmit at: https://esop26.hotcrp.com/\n\nhttps://g
+ ithub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ec304eaa792b4399bad21d55cb0973e91f7deab3@pl-conferences
@@ -176,7 +178,8 @@ DTEND;VALUE=DATE:20251206
 SUMMARY:[OOPSLA 26] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nhttps://git
+ hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c12ae72af4504825a45ca97f320e67f119330536@pl-conferences
@@ -186,7 +189,8 @@ DTEND;VALUE=DATE:20251211
 SUMMARY:[ESOP 26] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:32ea03af1aa124423498fe701b74cd08a31c94a3@pl-conferences
@@ -196,7 +200,8 @@ DTEND;VALUE=DATE:20251218
 SUMMARY:[OOPSLA 26] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nhttps://git
+ hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:5fedfa1b66d4d7b3d28cb3788517c0049040c4c1@pl-conferences
@@ -206,7 +211,8 @@ DTEND;VALUE=DATE:20251223
 SUMMARY:[ESOP 26] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2026.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4174a3837d1ccdfc7b24ad0ae078c9e652361f3f@pl-conferences
@@ -308,15 +314,15 @@ DTEND;VALUE=DATE:20260318
 SUMMARY:[OOPSLA 26] R2 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nPapers must be submitted via HotCRP at https://o
- opsla26.hotcrp.com/. Initial submissions must be at most 23 pages\; revis
- ions can go up to 25 pages. PACMPL(OOPSLA) uses double-blind reviewing wi
- th two rounds of review. At least one senior author must register as a re
- serve reviewer unless exempt. Papers accepted in either round will be pub
- lished in the 2026 volume of PACMPL and invited to present in-person at t
- he SPLASH conference in 2026\; remote presentations are not possible.\n\n
- Submit at: https://oopsla26.hotcrp.com/\n\nhttps://github.com/JonasAlaif/
- pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nPapers must
+  be submitted via HotCRP at https://oopsla26.hotcrp.com/. Initial submiss
+ ions must be at most 23 pages\; revisions can go up to 25 pages. PACMPL(O
+ OPSLA) uses double-blind reviewing with two rounds of review. At least on
+ e senior author must register as a reserve reviewer unless exempt. Papers
+  accepted in either round will be published in the 2026 volume of PACMPL 
+ and invited to present in-person at the SPLASH conference in 2026\; remot
+ e presentations are not possible.\n\nSubmit at: https://oopsla26.hotcrp.c
+ om/\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:7aae3cfef64b13afafb777e5fa7bc104a4871f4a@pl-conferences
@@ -346,7 +352,8 @@ DTEND;VALUE=DATE:20260417
 SUMMARY:[ETAPS 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2026/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 26]
+  and [TACAS 26].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Turin\, Italy
 END:VEVENT
 BEGIN:VEVENT
@@ -416,7 +423,8 @@ DTEND;VALUE=DATE:20260523
 SUMMARY:[OOPSLA 26] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nhttps://git
+ hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:c699f36855efbb75502b913e6f8406b6865f38dd@pl-conferences
@@ -426,28 +434,29 @@ DTEND;VALUE=DATE:20260529
 SUMMARY:[ESOP 27] R1 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nESOP: regular research papers of max 25 pp\, experience reports o
- f max 15 pp\, and fresh perspectives providing new insights on programmin
- g languages and systems of max 15 pp. There is no page limit at the submi
- ssion time. Please refer to https://etaps.org/2027/esop for more details.
-  Submitted papers must be in English\, presenting original research. They
-  must be unpublished and not submitted for publication elsewhere. In part
- icular\, simultaneous submission of the same contribution to multiple ETA
- PS conferences is forbidden. Submissions must follow the formatting guide
- lines of Springer's LNCS (use the llncs.cls class) - except for ESOP\, se
- e above - and be submitted electronically in pdf through the Easychair au
- thor interface of the respective conference. Data availability statement 
- in proceedings papers is mandatory for all ETAPS conference papers. It is
-  to be placed just before the references and does not count into the page
-  limit. ETAPS conferences will use double-blind reviewing (in the case of
-  TACAS and iFS\, only for regular research papers). Authors are asked to 
- omit their names and institutions\; refer to prior work in the third pers
- on\, just as prior work by others\; not to include acknowledgments that m
- ight identify them. If authors do not obey the double-blind submission po
- licy or do not specify their conflicts of interest in the submission syst
- em\, this may result in a desk rejection of the paper. ESOP\, TACAS and F
- oSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27.ho
- tcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nESOP: regular research papers o
+ f max 25 pp\, experience reports of max 15 pp\, and fresh perspectives pr
+ oviding new insights on programming languages and systems of max 15 pp. T
+ here is no page limit at the submission time. Please refer to https://eta
+ ps.org/2027/esop for more details. Submitted papers must be in English\, 
+ presenting original research. They must be unpublished and not submitted 
+ for publication elsewhere. In particular\, simultaneous submission of the
+  same contribution to multiple ETAPS conferences is forbidden. Submission
+ s must follow the formatting guidelines of Springer's LNCS (use the llncs
+ .cls class) - except for ESOP\, see above - and be submitted electronical
+ ly in pdf through the Easychair author interface of the respective confer
+ ence. Data availability statement in proceedings papers is mandatory for 
+ all ETAPS conference papers. It is to be placed just before the reference
+ s and does not count into the page limit. ETAPS conferences will use doub
+ le-blind reviewing (in the case of TACAS and iFS\, only for regular resea
+ rch papers). Authors are asked to omit their names and institutions\; ref
+ er to prior work in the third person\, just as prior work by others\; not
+  to include acknowledgments that might identify them. If authors do not o
+ bey the double-blind submission policy or do not specify their conflicts 
+ of interest in the submission system\, this may result in a desk rejectio
+ n of the paper. ESOP\, TACAS and FoSSaCS will use an author rebuttal phas
+ e.\n\nSubmit at: https://esop27.hotcrp.com/\n\nhttps://github.com/JonasAl
+ aif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:8e29e4b179def28dbd214e956577b974a6ccf8af@pl-conferences
@@ -457,7 +466,8 @@ DTEND;VALUE=DATE:20260611
 SUMMARY:[OOPSLA 26] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nOOPSLA is a track of SPLASH 2026.\n\nhttps://git
+ hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:2769659299d36061cad3c30c9c4910a8170bac8f@pl-conferences
@@ -507,18 +517,19 @@ DTEND;VALUE=DATE:20260720
 SUMMARY:[SPLASH 26] Volunteer Application Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/splash-issta-2026-student-volunteers\n\nThe page states that ev
- eryone is welcome to apply\, with priority given to junior members of the
-  community (full- or part-time students of computer science and related f
- ields). Volunteers receive a complimentary conference registration coveri
- ng all open sessions and proceedings\, free lunches/refreshments during b
- reaks\, a volunteer shirt\, and free admission to social events. They are
-  responsible for their own travel and accommodation. To apply\, one must 
- send an email to thalakottur.m@northeastern.edu\, robert.zhang@utexas.edu
- \, or hnzhu@ucdavis.edu if they have questions\, though the page also pro
- vides a direct link to apply.\n\nApply at: https://tinyurl.com/splash-iss
- ta-sv26\n\nNote: the page also states "Apply here by July 12".\n\nhttps:/
- /github.com/JonasAlaif/pl-conferences
+ org/track/splash-issta-2026-student-volunteers\n\nThe deadlines of its OO
+ PSLA track are filed as [OOPSLA 26].\n\nThe page states that everyone is 
+ welcome to apply\, with priority given to junior members of the community
+  (full- or part-time students of computer science and related fields). Vo
+ lunteers receive a complimentary conference registration covering all ope
+ n sessions and proceedings\, free lunches/refreshments during breaks\, a 
+ volunteer shirt\, and free admission to social events. They are responsib
+ le for their own travel and accommodation. To apply\, one must send an em
+ ail to thalakottur.m@northeastern.edu\, robert.zhang@utexas.edu\, or hnzh
+ u@ucdavis.edu if they have questions\, though the page also provides a di
+ rect link to apply.\n\nApply at: https://tinyurl.com/splash-issta-sv26\n\
+ nNote: the page also states "Apply here by July 12".\n\nhttps://github.co
+ m/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
@@ -528,7 +539,8 @@ DTEND;VALUE=DATE:20260723
 SUMMARY:[ESOP 27] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e29f494db58b69ca29138e0d6ff169cfeafce382@pl-conferences
@@ -560,7 +572,8 @@ DTEND;VALUE=DATE:20260807
 SUMMARY:[ESOP 27] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:fb78115703928a4e6363b73ac227433a4726e754@pl-conferences
@@ -592,7 +605,8 @@ DTEND;VALUE=DATE:20261010
 SUMMARY:[SPLASH 26] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://2026.splashcon.
- org/track/oopsla-2026\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/track/oopsla-2026\n\nThe deadlines of its OOPSLA track are filed as [
+ OOPSLA 26].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Oakland\, California\, United States
 END:VEVENT
 BEGIN:VEVENT
@@ -613,13 +627,13 @@ DTEND;VALUE=DATE:20261015
 SUMMARY:[OOPSLA 27] R1 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nPlease submit using HotCRP: htt
- ps://oopsla27.hotcrp.com/. Initial submissions must be at most 23 pages\;
-  revisions can go up to a maximum of 25 pages. PACMPL uses double-blind r
- eviewing. At least one author must be registered as a Reserve Reviewer. P
- apers rejected in Round 1 cannot be resubmitted in Round 2.\n\nSubmit at:
-  https://oopsla27.hotcrp.com/\n\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nPlease submit using HotCRP: https://oopsla27.hotcrp.com/. Initial s
+ ubmissions must be at most 23 pages\; revisions can go up to a maximum of
+  25 pages. PACMPL uses double-blind reviewing. At least one author must b
+ e registered as a Reserve Reviewer. Papers rejected in Round 1 cannot be 
+ resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n\nhtt
+ ps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
@@ -629,28 +643,29 @@ DTEND;VALUE=DATE:20261016
 SUMMARY:[ESOP 27] R2 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nESOP: regular research papers of max 25 pp\, experience reports o
- f max 15 pp\, and fresh perspectives providing new insights on programmin
- g languages and systems of max 15 pp. There is no page limit at the submi
- ssion time. Please refer to https://etaps.org/2027/esop for more details.
-  Submitted papers must be in English\, presenting original research. They
-  must be unpublished and not submitted for publication elsewhere. In part
- icular\, simultaneous submission of the same contribution to multiple ETA
- PS conferences is forbidden. Submissions must follow the formatting guide
- lines of Springer's LNCS (use the llncs.cls class) - except for ESOP\, se
- e above - and be submitted electronically in pdf through the Easychair au
- thor interface of the respective conference. Data availability statement 
- in proceedings papers is mandatory for all ETAPS conference papers. It is
-  to be placed just before the references and does not count into the page
-  limit. ETAPS conferences will use double-blind reviewing (in the case of
-  TACAS and iFS\, only for regular research papers). Authors are asked to 
- omit their names and institutions\; refer to prior work in the third pers
- on\, just as prior work by others\; not to include acknowledgments that m
- ight identify them. If authors do not obey the double-blind submission po
- licy or do not specify their conflicts of interest in the submission syst
- em\, this may result in a desk rejection of the paper. ESOP\, TACAS and F
- oSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27.ho
- tcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nESOP: regular research papers o
+ f max 25 pp\, experience reports of max 15 pp\, and fresh perspectives pr
+ oviding new insights on programming languages and systems of max 15 pp. T
+ here is no page limit at the submission time. Please refer to https://eta
+ ps.org/2027/esop for more details. Submitted papers must be in English\, 
+ presenting original research. They must be unpublished and not submitted 
+ for publication elsewhere. In particular\, simultaneous submission of the
+  same contribution to multiple ETAPS conferences is forbidden. Submission
+ s must follow the formatting guidelines of Springer's LNCS (use the llncs
+ .cls class) - except for ESOP\, see above - and be submitted electronical
+ ly in pdf through the Easychair author interface of the respective confer
+ ence. Data availability statement in proceedings papers is mandatory for 
+ all ETAPS conference papers. It is to be placed just before the reference
+ s and does not count into the page limit. ETAPS conferences will use doub
+ le-blind reviewing (in the case of TACAS and iFS\, only for regular resea
+ rch papers). Authors are asked to omit their names and institutions\; ref
+ er to prior work in the third person\, just as prior work by others\; not
+  to include acknowledgments that might identify them. If authors do not o
+ bey the double-blind submission policy or do not specify their conflicts 
+ of interest in the submission system\, this may result in a desk rejectio
+ n of the paper. ESOP\, TACAS and FoSSaCS will use an author rebuttal phas
+ e.\n\nSubmit at: https://esop27.hotcrp.com/\n\nhttps://github.com/JonasAl
+ aif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
@@ -670,8 +685,8 @@ DTEND;VALUE=DATE:20261206
 SUMMARY:[OOPSLA 27] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ffd540b54a789f527dc800181de2719a8943ee6f@pl-conferences
@@ -681,7 +696,8 @@ DTEND;VALUE=DATE:20261210
 SUMMARY:[ESOP 27] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
@@ -691,8 +707,8 @@ DTEND;VALUE=DATE:20261219
 SUMMARY:[OOPSLA 27] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:0d346c688c36346dde4809ec6d978e822b453840@pl-conferences
@@ -702,7 +718,8 @@ DTEND;VALUE=DATE:20261223
 SUMMARY:[ESOP 27] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:f3883fe1926248a147c0c790c01ba3a954b4acb1@pl-conferences
@@ -776,13 +793,13 @@ DTEND;VALUE=DATE:20270408
 SUMMARY:[OOPSLA 27] R2 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nPlease submit using HotCRP: htt
- ps://oopsla27.hotcrp.com/. Initial submissions must be at most 23 pages\;
-  revisions can go up to a maximum of 25 pages. PACMPL uses double-blind r
- eviewing. At least one author must be registered as a Reserve Reviewer. P
- apers rejected in Round 1 cannot be resubmitted in Round 2.\n\nSubmit at:
-  https://oopsla27.hotcrp.com/\n\nhttps://github.com/JonasAlaif/pl-confere
- nces
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nPlease submit using HotCRP: https://oopsla27.hotcrp.com/. Initial s
+ ubmissions must be at most 23 pages\; revisions can go up to a maximum of
+  25 pages. PACMPL uses double-blind reviewing. At least one author must b
+ e registered as a Reserve Reviewer. Papers rejected in Round 1 cannot be 
+ resubmitted in Round 2.\n\nSubmit at: https://oopsla27.hotcrp.com/\n\nhtt
+ ps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:2eb8703604c0f51c968c5e4ddbc86dd46ee2c6f1@pl-conferences
@@ -792,7 +809,8 @@ DTEND;VALUE=DATE:20270416
 SUMMARY:[ETAPS 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 27]
+  and [TACAS 27].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
 END:VEVENT
 BEGIN:VEVENT
@@ -844,8 +862,8 @@ DTEND;VALUE=DATE:20270620
 SUMMARY:[OOPSLA 27] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:e24e3ca0c9eec42006227d4ac9efbebf0f18dc77@pl-conferences
@@ -868,8 +886,8 @@ DTEND;VALUE=DATE:20270703
 SUMMARY:[OOPSLA 27] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nOOPSLA is a track of SPLASH 202
+ 7.\n\nhttps://github.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:6a3a7fb58ee8d0c69c098a86df5deff63666ef9a@pl-conferences
@@ -901,8 +919,9 @@ DTEND;VALUE=DATE:20271016
 SUMMARY:[SPLASH 27] Conference
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://conf.researchr.
- org/track/splash-2027/splashoopsla2027\n\nhttps://github.com/JonasAlaif/p
- l-conferences
+ org/track/splash-2027/splashoopsla2027\n\nThe deadlines of its OOPSLA tra
+ ck are filed as [OOPSLA 27].\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 LOCATION:Prague\, Czechia
 END:VEVENT
 END:VCALENDAR

@@ -5,5 +5,6 @@
   { "conference": "ICFP",   "track": "ICFP",   "since": 2026 },
   { "conference": "CAV",    "track": "CAV",    "since": 2026 },
   { "conference": "ETAPS",  "track": "ESOP",   "since": 2026 },
+  { "conference": "ETAPS",  "track": "TACAS",  "since": 2026 },
   { "conference": "LICS",   "track": "LICS",   "since": 2026 }
 ]

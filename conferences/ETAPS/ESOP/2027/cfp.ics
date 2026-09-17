@@ -13,28 +13,29 @@ DTEND;VALUE=DATE:20260529
 SUMMARY:[ESOP 27] R1 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nESOP: regular research papers of max 25 pp\, experience reports o
- f max 15 pp\, and fresh perspectives providing new insights on programmin
- g languages and systems of max 15 pp. There is no page limit at the submi
- ssion time. Please refer to https://etaps.org/2027/esop for more details.
-  Submitted papers must be in English\, presenting original research. They
-  must be unpublished and not submitted for publication elsewhere. In part
- icular\, simultaneous submission of the same contribution to multiple ETA
- PS conferences is forbidden. Submissions must follow the formatting guide
- lines of Springer's LNCS (use the llncs.cls class) - except for ESOP\, se
- e above - and be submitted electronically in pdf through the Easychair au
- thor interface of the respective conference. Data availability statement 
- in proceedings papers is mandatory for all ETAPS conference papers. It is
-  to be placed just before the references and does not count into the page
-  limit. ETAPS conferences will use double-blind reviewing (in the case of
-  TACAS and iFS\, only for regular research papers). Authors are asked to 
- omit their names and institutions\; refer to prior work in the third pers
- on\, just as prior work by others\; not to include acknowledgments that m
- ight identify them. If authors do not obey the double-blind submission po
- licy or do not specify their conflicts of interest in the submission syst
- em\, this may result in a desk rejection of the paper. ESOP\, TACAS and F
- oSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27.ho
- tcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nESOP: regular research papers o
+ f max 25 pp\, experience reports of max 15 pp\, and fresh perspectives pr
+ oviding new insights on programming languages and systems of max 15 pp. T
+ here is no page limit at the submission time. Please refer to https://eta
+ ps.org/2027/esop for more details. Submitted papers must be in English\, 
+ presenting original research. They must be unpublished and not submitted 
+ for publication elsewhere. In particular\, simultaneous submission of the
+  same contribution to multiple ETAPS conferences is forbidden. Submission
+ s must follow the formatting guidelines of Springer's LNCS (use the llncs
+ .cls class) - except for ESOP\, see above - and be submitted electronical
+ ly in pdf through the Easychair author interface of the respective confer
+ ence. Data availability statement in proceedings papers is mandatory for 
+ all ETAPS conference papers. It is to be placed just before the reference
+ s and does not count into the page limit. ETAPS conferences will use doub
+ le-blind reviewing (in the case of TACAS and iFS\, only for regular resea
+ rch papers). Authors are asked to omit their names and institutions\; ref
+ er to prior work in the third person\, just as prior work by others\; not
+  to include acknowledgments that might identify them. If authors do not o
+ bey the double-blind submission policy or do not specify their conflicts 
+ of interest in the submission system\, this may result in a desk rejectio
+ n of the paper. ESOP\, TACAS and FoSSaCS will use an author rebuttal phas
+ e.\n\nSubmit at: https://esop27.hotcrp.com/\n\nhttps://github.com/JonasAl
+ aif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:49b7fd0f4a12956de48efaf94ba96e4a24427691@pl-conferences
@@ -44,7 +45,8 @@ DTEND;VALUE=DATE:20260723
 SUMMARY:[ESOP 27] R1 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:33c29fbcd5369b387977ba4f70c01128dd9ac277@pl-conferences
@@ -54,7 +56,8 @@ DTEND;VALUE=DATE:20260807
 SUMMARY:[ESOP 27] R1 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:4fc4cb5761cf99c70fcdb1cce97eea63bde6b327@pl-conferences
@@ -64,28 +67,29 @@ DTEND;VALUE=DATE:20261016
 SUMMARY:[ESOP 27] R2 Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nESOP: regular research papers of max 25 pp\, experience reports o
- f max 15 pp\, and fresh perspectives providing new insights on programmin
- g languages and systems of max 15 pp. There is no page limit at the submi
- ssion time. Please refer to https://etaps.org/2027/esop for more details.
-  Submitted papers must be in English\, presenting original research. They
-  must be unpublished and not submitted for publication elsewhere. In part
- icular\, simultaneous submission of the same contribution to multiple ETA
- PS conferences is forbidden. Submissions must follow the formatting guide
- lines of Springer's LNCS (use the llncs.cls class) - except for ESOP\, se
- e above - and be submitted electronically in pdf through the Easychair au
- thor interface of the respective conference. Data availability statement 
- in proceedings papers is mandatory for all ETAPS conference papers. It is
-  to be placed just before the references and does not count into the page
-  limit. ETAPS conferences will use double-blind reviewing (in the case of
-  TACAS and iFS\, only for regular research papers). Authors are asked to 
- omit their names and institutions\; refer to prior work in the third pers
- on\, just as prior work by others\; not to include acknowledgments that m
- ight identify them. If authors do not obey the double-blind submission po
- licy or do not specify their conflicts of interest in the submission syst
- em\, this may result in a desk rejection of the paper. ESOP\, TACAS and F
- oSSaCS will use an author rebuttal phase.\n\nSubmit at: https://esop27.ho
- tcrp.com/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nESOP: regular research papers o
+ f max 25 pp\, experience reports of max 15 pp\, and fresh perspectives pr
+ oviding new insights on programming languages and systems of max 15 pp. T
+ here is no page limit at the submission time. Please refer to https://eta
+ ps.org/2027/esop for more details. Submitted papers must be in English\, 
+ presenting original research. They must be unpublished and not submitted 
+ for publication elsewhere. In particular\, simultaneous submission of the
+  same contribution to multiple ETAPS conferences is forbidden. Submission
+ s must follow the formatting guidelines of Springer's LNCS (use the llncs
+ .cls class) - except for ESOP\, see above - and be submitted electronical
+ ly in pdf through the Easychair author interface of the respective confer
+ ence. Data availability statement in proceedings papers is mandatory for 
+ all ETAPS conference papers. It is to be placed just before the reference
+ s and does not count into the page limit. ETAPS conferences will use doub
+ le-blind reviewing (in the case of TACAS and iFS\, only for regular resea
+ rch papers). Authors are asked to omit their names and institutions\; ref
+ er to prior work in the third person\, just as prior work by others\; not
+  to include acknowledgments that might identify them. If authors do not o
+ bey the double-blind submission policy or do not specify their conflicts 
+ of interest in the submission system\, this may result in a desk rejectio
+ n of the paper. ESOP\, TACAS and FoSSaCS will use an author rebuttal phas
+ e.\n\nSubmit at: https://esop27.hotcrp.com/\n\nhttps://github.com/JonasAl
+ aif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:ffd540b54a789f527dc800181de2719a8943ee6f@pl-conferences
@@ -95,7 +99,8 @@ DTEND;VALUE=DATE:20261210
 SUMMARY:[ESOP 27] R2 Rebuttal
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:0d346c688c36346dde4809ec6d978e822b453840@pl-conferences
@@ -105,6 +110,7 @@ DTEND;VALUE=DATE:20261223
 SUMMARY:[ESOP 27] R2 Notification
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
- cfp/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
+ l-conferences
 END:VEVENT
 END:VCALENDAR
