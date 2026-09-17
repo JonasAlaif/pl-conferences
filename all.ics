@@ -668,6 +668,35 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  aif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:e0c243aa6435f72af8a8620ee80ad27d92bf42b7@pl-conferences
+DTSTAMP:20260917T164939Z
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261016
+SUMMARY:[TACAS 27] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\n\nTACAS is a track of ETAPS 2027.\n\nSubmitted papers must be in En
+ glish\, presenting original research. They must be unpublished and not su
+ bmitted for publication elsewhere. In particular\, simultaneous submissio
+ n of the same contribution to multiple ETAPS conferences is forbidden. Su
+ bmissions must follow the formatting guidelines of Springer's LNCS (use t
+ he llncs.cls class) - except for ESOP\, see above - and be submitted elec
+ tronically in pdf through the Easychair author interface of the respectiv
+ e conference. Submissions not adhering to the specified format and length
+  may be rejected immediately. Data availability statement in proceedings 
+ papers is mandatory for all ETAPS conference papers. It is to be placed j
+ ust before the references and does not count into the page limit. ETAPS c
+ onferences will use double-blind reviewing (in the case of TACAS and iFS\
+ , only for regular research papers). Authors are asked to omit their name
+ s and institutions\; refer to prior work in the third person\, just as pr
+ ior work by others\; not to include acknowledgments that might identify t
+ hem. If authors do not obey the double-blind submission policy or do not 
+ specify their conflicts of interest in the submission system\, this may r
+ esult in a desk rejection of the paper. ESOP\, TACAS and FoSSaCS will use
+  an author rebuttal phase.\n\nhttps://github.com/JonasAlaif/pl-conference
+ s
+END:VEVENT
+BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261112
@@ -700,6 +729,17 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  l-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:2f350b8fad89a148ea48088101e428879f5091c4@pl-conferences
+DTSTAMP:20260917T164939Z
+DTSTART;VALUE=DATE:20261207
+DTEND;VALUE=DATE:20261210
+SUMMARY:[TACAS 27] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\n\nTACAS is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/
+ pl-conferences
+END:VEVENT
+BEGIN:VEVENT
 UID:e7eaf3e3c05b078561fc5ce7c22269e1cd0513ae@pl-conferences
 DTSTAMP:20260916T131008Z
 DTSTART;VALUE=DATE:20261218
@@ -720,6 +760,17 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://etaps.org/2027/
  cfp/\n\nESOP is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/p
  l-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:23707a572dedfffd133cf586aa2aa148b7900da1@pl-conferences
+DTSTAMP:20260917T164939Z
+DTSTART;VALUE=DATE:20261222
+DTEND;VALUE=DATE:20261223
+SUMMARY:[TACAS 27] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://etaps.org/2027/
+ cfp/\n\nTACAS is a track of ETAPS 2027.\n\nhttps://github.com/JonasAlaif/
+ pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:f3883fe1926248a147c0c790c01ba3a954b4acb1@pl-conferences

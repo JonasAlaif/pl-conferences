@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "ETAPS 2027 (TACAS)",
   "fetched_at": "2026-09-17T15:48:53.050302598Z",
-  "last_verified": "2026-09-17T15:48:53.050302598Z",
+  "last_verified": "2026-09-17T16:49:39.141969143Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://etaps.org/2027/cfp/",
