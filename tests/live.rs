@@ -456,6 +456,88 @@ fn discovery_scenarios() {
     assert_eq!(passed, total);
 }
 
+/// The search hits recorded for "ETAPS <year> TACAS call for papers" on
+/// 17 September 2026: the engine leads with the joint call for papers, the
+/// track's own page second. Ranked for the track, the track's page must
+/// come first; ranked for a conference whose track has the same name, the
+/// conference's own site must beat the aggregators.
+#[test]
+#[ignore]
+fn hit_ranking() {
+    use pl_conferences::search::Hit;
+    let _ = env_logger::try_init(); // RUST_LOG=info shows the model's answers
+    let llm = Llm::from_env();
+    llm.check().expect("ollama with model");
+    let searcher = pl_conferences::search::Searcher::new(vec![]);
+    let ctx = discover::Ctx { llm: &llm, searcher: &searcher, prior_urls: vec![] };
+    let hit = |title: &str, url: &str| Hit { title: title.into(), url: url.into(), snippet: String::new() };
+    let hit_s = |title: &str, url: &str, snippet: &str| Hit { title: title.into(), url: url.into(), snippet: snippet.into() };
+    let (mut total, mut passed) = (0, 0);
+    let mut case = |name: &str, cfg: pl_conferences::config::ConferenceCfg, year: i32, hits: Vec<Hit>, want: &str| {
+        total += 1;
+        let t = Instant::now();
+        let mut trail = discover::Trail::default();
+        let got = discover::ordered_hits(&ctx, &mut trail, hits, &discover::cfp_pick_question(&cfg, year)).unwrap();
+        let first = got.first().map(|h| h.url.clone()).unwrap_or_default();
+        if first == want {
+            passed += 1;
+            eprintln!("PASS {name:48} {:6.1}s", t.elapsed().as_secs_f64());
+        } else {
+            eprintln!("FAIL {name:48} {:6.1}s: first {first}, wanted {want}\n     order: {}", t.elapsed().as_secs_f64(), got.iter().map(|h| h.url.as_str()).collect::<Vec<_>>().join(", "));
+        }
+    };
+    let etaps = |track: &str| pl_conferences::config::ConferenceCfg { conference: "ETAPS".into(), track: track.into(), since: 2026 };
+    case(
+        "tacas26: the track's page over the joint call",
+        etaps("TACAS"),
+        2026,
+        vec![
+            hit_s("ETAPS Joint Call for Papers", "https://etaps.org/2026/cfp/", "Joint Call For Papers ABOUT ETAPS ETAPS is a primary forum for academic and industrial researchers working on topics relating to software science. ETAPS, established in 1998, is a confederation of four annual conferences accompanied by satellite workshops. ETAPS 2026"),
+            hit_s("TACAS 2026 - etaps.org", "https://etaps.org/2026/conferences/tacas/", "TACAS 2026 will include an artifact evaluation (AE). For regular tool papers and tool demonstration papers, AE is mandatory and artifacts must be submitted by the end of October 30, 2025, \"Anywhere on Earth\" (AoE, UTC-12)."),
+            hit_s("dblp: TACAS", "https://dblp.org/db/conf/tacas/index", "Bibliographic content of TACAS"),
+            hit_s("29th ETAPS International Joint Conferences on Theory and Practice of ...", "https://people.cs.kuleuven.be/~dirk.craeynest/ada-belgium/events/26/260411-etaps.html", "Subject: [ECOOP-Info] ETAPS Test of Time Award 2026: Call for Nominations From: Jan Kofron To: ecoop-info Date: Thu, 18 Dec"),
+            hit_s("TACAS 2026: TACAS - researchr conference", "https://researchr.org/conference/tacas-2026", "Sebastian Junges, Guy Katz, editors, Tools and Algorithms for the Construction and Analysis of Systems - 32nd International Conference, TACAS 2026, Held as Part of the International Joint Conferences on Theory and Practice of Software, ETA"),
+            hit_s("ETAPS 2026 might seem like a long way off, but the joint call for ... | LinkedIn", "https://www.linkedin.com/posts/etapsconf_etaps-2026-might-seem-like-a-long-way-off-activity-7335717888995057665--SNO", "ETAPS 2026 might seem like a long way off, but the joint call for papers is now out! Get your papers ready for O"),
+            hit_s("Etaps Homepage", "https://etaps.org/2026/", "ETAPS, established in 1998, is a confederation of four annual conferences ESOP, FASE, FoSSaCS, and TACAS, accompanied by satellite workshops. More About ETAPS"),
+        ],
+        "https://etaps.org/2026/conferences/tacas/",
+    );
+    case(
+        "tacas27: the track's page over the joint call",
+        etaps("TACAS"),
+        2027,
+        vec![
+            hit("ETAPS Joint Call for Papers", "https://etaps.org/2027/cfp/"),
+            hit("TACAS 2027 - etaps.org", "https://etaps.org/2027/conferences/tacas/"),
+            hit("[TYPES/announce] ETAPS 2027 First Joint Call For Papers", "https://www.mail-archive.com/types-announce@lists.seas.upenn.edu/msg12012.html"),
+            hit("30th ETAPS International Joint Conferences on Theory and Practice of ...", "https://people.cs.kuleuven.be/~dirk.craeynest/ada-belgium/events/27/270410-etaps.html"),
+            hit("#tacas2027 #etaps2027 #formalmethods #softwareverification # ... - LinkedIn", "https://www.linkedin.com/posts/joost-pieter-katoen-2311137_tacas2027-etaps2027-formalmethods-activity-7502759816549879808-Efr7"),
+            hit("[Caml-list] ETAPS 2027 First Joint Call For Papers", "https://calls4participation.blogspot.com/2026/04/caml-list-etaps-2027-first-joint-call.html"),
+            hit("TACAS 2027 Conference AE - OpenReview", "https://openreview.net/group?id=etaps.org/TACAS/2027/Conference_AE"),
+            hit("The ETAPS 2027 Joint Call for Papers... - ETAPS Conferences | Facebook", "https://www.facebook.com/ETAPSconf/posts/the-etaps-2027-joint-call-for-papers-is-out-check-the-deadlines-especially-the-f/1348495590668680/"),
+        ],
+        "https://etaps.org/2027/conferences/tacas/",
+    );
+    case(
+        "popl27: the conference's own site over aggregators",
+        pl_conferences::config::ConferenceCfg { conference: "POPL".into(), track: "POPL".into(), since: 2026 },
+        2027,
+        // The engine's real hits, with the mailing-list copy and the
+        // aggregator moved ahead of the conference's own page.
+        vec![
+            hit_s("[TYPES/announce] POPL 2027 Call for Papers - The Mail Archive", "https://www.mail-archive.com/types-announce@lists.seas.upenn.edu/msg12135.html", "Authors of papers published in PACMPL Issue POPL 2027 will be invited - but not required - to present their work in the POPL conference in January 2027, which is sponsored by ACM SIGP"),
+            hit_s("POPL 2027 — deadline 9 Jul 2026 — Mexico City", "https://www.conferences-computer.science/popl/2027/", "For POPL 2026, policies specified in this Call for Papers supersede those in the Principles of POPL document. ### Submission Site Information The submission site is https://popl26.hotcrp.com. Authors can submit multiple ti"),
+            hit_s("POPL 2027 - POPL Research Papers - POPL 2027", "https://popl27.sigplan.org/track/POPL-2027-popl-research-papers", "POPL 2027 Call for Papers PACMPL Issue POPL 2027 seeks contributions on all aspects of programming languages and programming systems, both theoretical and practical. Authors of papers published in PACMPL Issue POPL"),
+            hit_s("POPL 2027 - conf.researchr.org", "https://conf.researchr.org/home/POPL-2027", "The symposium is sponsored by ACM SIGPLAN, in cooperation with ACM SIGACT and ACM SIGLOG. POPL 2027 will take place in Mexico City. The paper deadline has passed, but you can still view the call for papers here."),
+            hit_s("Popl 2027", "https://popl27.hotcrp.com/", "Welcome to the 54th ACM SIGPLAN Symposium on Principles of Programming Languages (POPL 2027) submissions site."),
+            hit_s("Principles of Programming Languages (POPL) - SIGPLAN", "https://sigplan.org/Conferences/POPL/", "POPL also honors several Distinguished Papers from each program; they are listed in the POPL programs, and the process for choosing them is given in the Principles of POPL document (see below)."),
+        ],
+        "https://popl27.sigplan.org/track/POPL-2027-popl-research-papers",
+    );
+    eprintln!("=== hit ranking {passed}/{total} passed, model {}", llm.model);
+    assert_eq!(passed, total);
+}
+
 #[test]
 #[ignore]
 fn extraction_accuracy() {

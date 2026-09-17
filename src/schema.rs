@@ -155,6 +155,45 @@ pub struct Ranked {
     pub indices: Vec<u32>,
 }
 
+/// What one search result is, with respect to the page asked for. Sorting
+/// by variant gives the order in which results are worth trying; the last
+/// two are not tried at all. A classification, because ranking a list is
+/// beyond a small model (asked to rank, it put a submission system first
+/// and left the conference's own page out) while naming what each entry is
+/// is not.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize, JsonSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum HitKind {
+    /// The very page asked for, on the conference's or track's own website (its call for papers, its dates page, the track's page).
+    ThePageAskedFor,
+    /// A different page of the conference's own website: its home page, or a joint call covering several tracks.
+    OtherPageOfTheConferenceWebsite,
+    /// A copy or announcement on a mailing-list archive, a blog or social media.
+    CopyOnMailingListOrSocialMedia,
+    /// A third-party site that lists many conferences (WikiCFP, dblp, "conferences-computer.science" and the like).
+    ThirdPartyListingSite,
+    /// Where papers are uploaded: a HotCRP, EasyChair or OpenReview site, not a page describing the call.
+    HotcrpEasychairOrOtherUploadSystem,
+    /// About another year's edition.
+    AnotherYearsEdition,
+    /// Not about this conference at all.
+    Unrelated,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct HitClass {
+    /// 0-based index of the entry.
+    pub index: u32,
+    pub kind: HitKind,
+}
+
+/// One classification per entry of a numbered list of search results.
+#[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
+pub struct HitClasses {
+    /// One entry per search result, in the list's order.
+    pub entries: Vec<HitClass>,
+}
+
 /// Plausible official URLs, used when no search engine answers.
 #[derive(Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub struct UrlGuesses {

@@ -272,22 +272,45 @@ fn choose_many(ctx: &Ctx, trail: &mut Trail, question: &str, list: &str, n: usiz
     Ok(out)
 }
 
-/// Candidate hits in the order to try: the ones the model finds plausible,
-/// best first. If the model rules everything out, the engine's own order is
-/// kept, so one bad answer cannot end discovery.
-fn ordered_hits(ctx: &Ctx, trail: &mut Trail, hits: Vec<Hit>, what: &str) -> Result<Vec<Hit>> {
+/// What the search hits for a call for papers are ranked for. A track with
+/// a name of its own (TACAS at ETAPS) usually has a page of its own with
+/// the deadlines; asked for the conference's page instead, the model picks
+/// the umbrella site and the track's page is left untried.
+pub fn cfp_pick_question(cfg: &ConferenceCfg, year: i32) -> String {
+    if cfg.track.eq_ignore_ascii_case(&cfg.conference) {
+        format!("the official website or call for papers of {} {year}", cfg.conference)
+    } else {
+        format!("the call for papers or web page of the {} track of {} {year} (the track's own page rather than the conference's general one)", cfg.track, cfg.conference)
+    }
+}
+
+/// Candidate hits in the order to try. The model says what each hit is
+/// (the page asked for, the conference's general site, a mailing-list copy,
+/// an aggregator, a submission system, another year, unrelated); the hits
+/// are then ordered by that kind, the engine's order within a kind, and the
+/// last two kinds are dropped. If the model rules everything out, the
+/// engine's own order is kept, so one bad answer cannot end discovery.
+pub fn ordered_hits(ctx: &Ctx, trail: &mut Trail, hits: Vec<Hit>, what: &str) -> Result<Vec<Hit>> {
+    use schema::HitKind;
     let hits: Vec<Hit> = hits.into_iter().filter(|h| !trail.tried(&h.url)).collect();
     if hits.len() <= 1 {
         return Ok(hits);
     }
     let list = numbered(hits.iter().map(|h| (h.title.as_str(), h.url.as_str(), h.snippet.as_str())));
-    let q = format!("Which of these search results could be {what}? Prefer the conference's own website over aggregators, listings or social media. List the plausible ones, most likely first; leave out the rest.");
-    let picks = choose_many(ctx, trail, &q, &list, hits.len())?;
-    if picks.is_empty() {
+    let q = format!("These are search results (title | URL | snippet). The page looked for is {what}. Say what each result is with respect to it, judging by the URL and the title as much as by the snippet.\n\n{list}");
+    let Some((r, _)) = ask::<schema::HitClasses>(ctx, trail, SYSTEM_PROMPT, &q)? else { return Ok(hits) };
+    // Unclassified entries count as unrelated.
+    let mut kinds = vec![HitKind::Unrelated; hits.len()];
+    for e in r.entries.iter().filter(|e| (e.index as usize) < hits.len()) {
+        kinds[e.index as usize] = e.kind;
+    }
+    let mut order: Vec<usize> = (0..hits.len()).filter(|i| kinds[*i] < HitKind::AnotherYearsEdition).collect();
+    order.sort_by_key(|i| kinds[*i]);
+    if order.is_empty() {
         trail.note("model found no plausible search hit; trying them in the engine's order");
         return Ok(hits);
     }
-    Ok(picks.into_iter().map(|i| hits[i].clone()).collect())
+    Ok(order.into_iter().map(|i| hits[i].clone()).collect())
 }
 
 /// Page text plus every link target, so a URL the model reports can be
@@ -719,8 +742,7 @@ pub fn find_cfp(ctx: &Ctx, cfg: &ConferenceCfg, year: i32, known_url: Option<&st
         trail.note("no candidate pages");
         return finish(acc, trail, saw_invalid);
     }
-    let what = format!("the official website or call for papers of {} {year}", cfg.conference);
-    let hits = ordered_hits(ctx, &mut trail, hits, &what)?;
+    let hits = ordered_hits(ctx, &mut trail, hits, &cfp_pick_question(cfg, year))?;
     for h in hits.iter().take(3) {
         if let Some(found) = try_cfp_page(ctx, cfg, year, &mut trail, &h.url, 0, &mut saw_invalid, &mut acc)? {
             acc.deadlines = Some(found);

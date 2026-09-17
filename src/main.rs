@@ -115,7 +115,7 @@ fn main() -> Result<()> {
             }
             println!("answered by: {}", out.backend.unwrap_or("none"));
             for h in &out.hits {
-                println!("- {} | {}", h.title, h.url);
+                println!("- {} | {} | {}", h.title, h.url, h.snippet);
             }
             return Ok(());
         }
