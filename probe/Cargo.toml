@@ -1,0 +1,10 @@
+[package]
+name = "ddg-probe"
+version = "0.0.0"
+edition = "2024"
+publish = false
+
+[workspace]
+
+[dependencies]
+reqwest = { version = "0.13.5", features = ["blocking", "gzip", "brotli", "native-tls"] }
