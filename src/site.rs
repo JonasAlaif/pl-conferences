@@ -110,18 +110,22 @@ struct Mark {
     text: String,
     /// Full text for the tooltip.
     full: String,
-    /// Conference, for the colour.
+    /// Track, for the colour.
     conference: String,
     /// "deadline", "rebuttal", "notification", "conference" or "volunteers".
     kind: &'static str,
 }
 
-/// "SPLASH'27" from the key "SPLASH/OOPSLA/2027".
+/// "OOPSLA'27" from the key "SPLASH/OOPSLA/2027": the track is what one
+/// submits to.
 fn short_label(key: &str) -> String {
-    let mut parts = key.split('/');
-    let conf = parts.next().unwrap_or(key);
-    let year = parts.nth(1).unwrap_or("");
-    format!("{conf}'{}", year.get(2..).unwrap_or(year))
+    let (track, year) = track_year(key);
+    format!("{track}'{}", year.get(2..).unwrap_or(year))
+}
+
+fn track_year(key: &str) -> (&str, &str) {
+    let mut parts = key.split('/').skip(1);
+    (parts.next().unwrap_or(key), parts.next().unwrap_or(""))
 }
 
 /// Every dated event of every edition on or after `today`, soonest first.
@@ -129,7 +133,7 @@ fn marks(years: &[YearView], today: NaiveDate) -> Vec<Mark> {
     let mut v = vec![];
     for y in years {
         let short = short_label(&y.key);
-        let conference = y.key.split('/').next().unwrap_or("").to_string();
+        let conference = track_year(&y.key).0.to_string();
         let mut push = |date: NaiveDate, end: Option<NaiveDate>, what: &str, kind: &'static str| {
             if end.unwrap_or(date) >= today {
                 v.push(Mark { date, end, text: format!("{short} {what}"), full: format!("{} · {what}", y.label), conference: conference.clone(), kind });
@@ -158,8 +162,8 @@ fn marks(years: &[YearView], today: NaiveDate) -> Vec<Mark> {
     v
 }
 
-/// A stable hue per conference name, so that one conference keeps its
-/// colour from run to run and from year to year.
+/// A stable hue per track name, so that one track keeps its colour from
+/// run to run and from year to year.
 fn hue(name: &str) -> u32 {
     let h = name.bytes().fold(5381u32, |h, b| h.wrapping_mul(33) ^ u32::from(b));
     // Spread over the wheel in golden-angle steps so that a handful of
@@ -452,7 +456,8 @@ mod tests {
         // Two labels at nearly the same x go to different lanes; a far one
         // returns to the first lane; one near the right edge is flipped.
         assert_eq!(lanes(&[(100.0, 80.0), (110.0, 80.0), (300.0, 80.0), (1080.0, 80.0)], 1090.0), vec![(0, false), (1, false), (0, false), (0, true)]);
-        assert_eq!(short_label("SPLASH/OOPSLA/2027"), "SPLASH'27");
+        assert_eq!(short_label("SPLASH/OOPSLA/2027"), "OOPSLA'27", "the track, which is what one submits to");
+        assert_eq!(short_label("POPL/POPL/2027"), "POPL'27");
         assert_eq!(months(d(2026, 9, 17), d(2027, 1, 3)).len(), 5, "September to January");
         let mk = |key: &str, sub: NaiveDate, conf: (NaiveDate, NaiveDate)| YearView {
             key: key.into(),
@@ -467,6 +472,7 @@ mod tests {
         let years = [mk("POPL/POPL/2027", d(2026, 7, 9), (d(2027, 1, 10), d(2027, 1, 16))), mk("ICFP/ICFP/2028", d(2028, 2, 25), (d(2028, 9, 26), d(2028, 10, 1)))];
         let svg = timeline(&years, today);
         assert!(svg.contains("POPL'27 conference") && svg.contains("<rect"), "the conference is a bar: {svg}");
+        assert!(svg.contains("style=\"--h:") && svg.contains("<title>POPL POPL 2027 · conference: 10 Jan 2027 – 16 Jan 2027</title>"), "colour and tooltip: {svg}");
         assert!(!svg.contains("POPL'27 deadline"), "a passed deadline is not shown");
         assert!(!svg.contains("ICFP'28"), "beyond the horizon is left to the table");
         assert!(svg.contains(">Sep 2026<") && svg.contains(">Jan 2027<") && !svg.contains(">Mar<"), "months from today's to the last event's: {svg}");
