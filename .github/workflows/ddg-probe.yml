@@ -1,0 +1,45 @@
+name: DuckDuckGo probe (temporary diagnostic)
+
+# Shows what DuckDuckGo answers a GitHub runner, asked plainly: the request
+# the pipeline sends, the same with a User-Agent that says who is asking, the
+# lite endpoint, the documented Instant Answer API, and the first request
+# again after a long pause. Nothing here disguises the client.
+on:
+  workflow_dispatch:
+    inputs:
+      query:
+        description: "Search query"
+        type: string
+        default: "ICFP 2027 call for papers"
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Probe
+        env:
+          Q: ${{ inputs.query }}
+        run: |
+          PIPELINE_UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36"
+          HONEST_UA="pl-conferences/0.1 (+https://github.com/${{ github.repository }}; a few queries twice a week)"
+          QE=$(python3 -c "import urllib.parse,os;print(urllib.parse.quote_plus(os.environ['Q']))")
+          report() { # name file status
+            title=$(grep -o -i '<title>[^<]*' "$2" | head -1 | sed 's/<title>//I')
+            echo "== $1: http=$3 bytes=$(wc -c < "$2") title='$title' result__a=$(grep -o 'result__a' "$2" | wc -l) result-link=$(grep -o 'result-link' "$2" | wc -l)"
+          }
+          text() { sed -e 's/<script[^>]*>[^<]*<\/script>//g' -e 's/<style[^>]*>[^<]*<\/style>//g' -e 's/<[^>]*>/ /g' "$1" | tr -s ' \n\t' ' ' | head -c "$2"; echo; }
+
+          s=$(curl -s --compressed -o 1.html -w '%{http_code}' -A "$PIPELINE_UA" "https://html.duckduckgo.com/html/?q=$QE"); report "1 html endpoint, as the pipeline asks" 1.html $s
+          sleep 10
+          s=$(curl -s --compressed -o 2.html -w '%{http_code}' -A "$HONEST_UA" "https://html.duckduckgo.com/html/?q=$QE"); report "2 html endpoint, identifying User-Agent" 2.html $s
+          sleep 10
+          s=$(curl -s --compressed -o 3.html -w '%{http_code}' -A "$HONEST_UA" "https://lite.duckduckgo.com/lite/?q=$QE"); report "3 lite endpoint, identifying User-Agent" 3.html $s
+          sleep 10
+          s=$(curl -s --compressed -o 4.json -w '%{http_code}' -A "$HONEST_UA" "https://api.duckduckgo.com/?q=$QE&format=json&no_html=1"); echo "== 4 Instant Answer API: http=$s bytes=$(wc -c < 4.json)"; head -c 600 4.json; echo
+          sleep 120
+          s=$(curl -s --compressed -o 5.html -w '%{http_code}' -A "$HONEST_UA" "https://html.duckduckgo.com/html/?q=$QE"); report "5 html endpoint again after two minutes" 5.html $s
+
+          echo "---- what response 1 says ----"; text 1.html 1500
+          echo "---- what response 2 says ----"; text 2.html 1500
+          echo "---- what response 3 says ----"; text 3.html 1500
