@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-09-17T17:07:10.716790411Z",
-  "run_count": 26,
+  "last_run": "2026-09-21T08:51:07.581308408Z",
+  "run_count": 27,
   "last_run_codes": [],
   "runs": {
     "CAV/CAV/2026/cfp": {
@@ -132,13 +132,13 @@
       "note": "https://lics.siglog.org/ is not about LICS 2026"
     },
     "LICS/LICS/2027/cfp": {
-      "last_attempt": "2026-09-17T11:31:37.593540067Z",
-      "attempts": 5,
+      "last_attempt": "2026-09-21T08:51:07.581308408Z",
+      "attempts": 6,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": "ddg-html",
       "codes": [],
-      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; only conference dates found so far"
+      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://www.conferences-computer.science/lics/ is not about LICS 2027; only conference dates found so far"
     },
     "LICS/LICS/2027/volunteer": {
       "last_attempt": "2026-09-17T11:31:37.593540067Z",
