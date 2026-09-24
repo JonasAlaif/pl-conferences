@@ -2,7 +2,7 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-09-21 08:51 UTC
+Last run: 2026-09-24 08:22 UTC
 
 No active maintenance codes.
 
@@ -10,7 +10,7 @@ No active maintenance codes.
 
 | Conference-year | Outcome | Attempts | Last attempt | Note |
 |---|---|---|---|---|
-| `LICS/LICS/2027/cfp` | ok | 6 | 2026-09-21 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://www.conferences-computer.science/lics/ is not about LICS 2027; only conference dates found so far |
+| `LICS/LICS/2027/cfp` | ok | 7 | 2026-09-24 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://www.conferences-computer.science/lics/ is not about LICS 2027; only conference dates found so far |
 | `ETAPS/TACAS/2026/cfp` | ok | 1 | 2026-09-17 | 5 candidate link(s) for the call for papers or important dates of the TACAS track of ETAPS 2026; following link https://etaps.org/2026/cfp; dropped the conflicting statement "TACAS mandatory artifact submission deadline: October 30, 2025": it is a "other" date, not the paper deadline |
 | `ETAPS/TACAS/2027/cfp` | ok | 1 | 2026-09-17 | re-checking stored page https://etaps.org/2027/cfp/; 1 candidate link(s) for the call for papers of the TACAS track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/tacas; https://etaps.org/2027/conferences/tacas/ is not about ETAPS 2027 (TACAS) |
 | `ICFP/ICFP/2027/cfp` | ok | 6 | 2026-09-17 | re-checking stored page https://icfp27.sigplan.org/; 2 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers |

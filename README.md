@@ -23,7 +23,7 @@ page linked), each next to the JSON the model produced and the page it came
 from.
 
 <!-- maintenance:start -->
-Last run: 2026-09-21. No maintenance needed. See [MAINTENANCE.md](MAINTENANCE.md).
+Last run: 2026-09-24. No maintenance needed. See [MAINTENANCE.md](MAINTENANCE.md).
 <!-- maintenance:end -->
 
 ## The site
