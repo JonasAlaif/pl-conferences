@@ -16,7 +16,63 @@ pub struct Event {
     pub start: NaiveDate,
     /// Inclusive last day.
     pub end: NaiveDate,
+    /// When the data was extracted.
     pub stamp: DateTime<Utc>,
+    /// Revision number and time of the event as published, set by
+    /// `Revisions::stamp`; 0 and the extraction time until then.
+    pub sequence: u32,
+    pub modified: DateTime<Utc>,
+}
+
+/// What was last published for one event.
+#[derive(Debug, Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Revision {
+    /// Hash of everything a subscriber sees: title, description, location, dates.
+    pub hash: String,
+    pub sequence: u32,
+    pub modified: DateTime<Utc>,
+}
+
+/// The revision of every published event, by UID (`calendar-state.json`).
+/// A calendar application keeps the copy of an event it already has unless
+/// the feed says the event was revised: a higher SEQUENCE, a later
+/// LAST-MODIFIED. Without them a renamed event (same UID, as it must be)
+/// kept its old title in Google Calendar. Deriving the revision from the
+/// content means any change to what is published, in the data or in the
+/// way it is rendered, is announced without anyone having to remember to.
+#[derive(Debug, Clone, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+pub struct Revisions(pub std::collections::BTreeMap<String, Revision>);
+
+impl Revisions {
+    /// A missing or unreadable file starts over: every event then counts as
+    /// revised once, which is harmless.
+    pub fn load(path: &std::path::Path) -> Self {
+        std::fs::read_to_string(path).ok().and_then(|t| serde_json::from_str(&t).ok()).unwrap_or_default()
+    }
+
+    pub fn save(&self, path: &std::path::Path) -> std::io::Result<()> {
+        std::fs::write(path, serde_json::to_string_pretty(self).unwrap_or_default() + "\n")
+    }
+
+    /// Give each event its revision: unchanged content keeps the recorded
+    /// one (so the output is byte-identical from run to run), changed or
+    /// new content gets the next sequence number and `now`.
+    pub fn stamp(&mut self, events: &mut [Event], now: DateTime<Utc>) {
+        let now = DateTime::from_timestamp(now.timestamp(), 0).unwrap_or(now);
+        for e in events {
+            let mut h = Sha1::new();
+            h.update(format!("{}\n{}\n{}\n{}\n{}", e.summary, e.description, e.location, e.start, e.end).as_bytes());
+            let hash: String = h.finalize().iter().map(|b| format!("{b:02x}")).collect();
+            let rev = match self.0.get(&e.uid) {
+                Some(r) if r.hash == hash => r.clone(),
+                Some(r) => Revision { hash, sequence: r.sequence + 1, modified: now },
+                None => Revision { hash, sequence: 1, modified: now },
+            };
+            e.sequence = rev.sequence;
+            e.modified = rev.modified;
+            self.0.insert(e.uid.clone(), rev);
+        }
+    }
 }
 
 /// Provenance in descriptions: the disclaimer with the source first, the
@@ -106,7 +162,7 @@ fn track_of_line(key: &str) -> Option<String> {
 /// not change with a rename, or subscribers see every event twice.
 #[allow(clippy::too_many_arguments)]
 fn event(tag: &str, key: &str, stamp: DateTime<Utc>, uid_name: &str, name: &str, desc: String, loc: &str, start: NaiveDate, end: NaiveDate) -> Event {
-    Event { uid: uid(key, uid_name), summary: format!("[{tag}] {name}"), description: desc, location: loc.to_string(), start, end, stamp }
+    Event { uid: uid(key, uid_name), summary: format!("[{tag}] {name}"), description: desc, location: loc.to_string(), start, end, stamp, sequence: 0, modified: stamp }
 }
 
 /// The single conference event (dates and location). `tracks` are the
@@ -222,7 +278,11 @@ pub fn calendar(name: &str, events: &[Event]) -> String {
     for e in sorted {
         push("BEGIN:VEVENT");
         push(&format!("UID:{}", e.uid));
-        push(&format!("DTSTAMP:{}", e.stamp.format("%Y%m%dT%H%M%SZ")));
+        // DTSTAMP and LAST-MODIFIED are the time of the revision, not of
+        // the extraction: clients compare them with the copy they hold.
+        push(&format!("DTSTAMP:{}", e.modified.format("%Y%m%dT%H%M%SZ")));
+        push(&format!("LAST-MODIFIED:{}", e.modified.format("%Y%m%dT%H%M%SZ")));
+        push(&format!("SEQUENCE:{}", e.sequence));
         push(&format!("DTSTART;VALUE=DATE:{}", ymd(e.start)));
         push(&format!("DTEND;VALUE=DATE:{}", ymd(e.end.succ_opt().unwrap_or(e.end))));
         push(&format!("SUMMARY:{}", escape(&e.summary)));
@@ -242,6 +302,43 @@ pub fn calendar(name: &str, events: &[Event]) -> String {
 mod tests {
     use super::*;
     use crate::schema::{Conference, ValidRound};
+
+    #[test]
+    fn a_changed_event_is_announced_as_revised_and_an_unchanged_one_is_not() {
+        let at = |s: &str| DateTime::parse_from_rfc3339(s).unwrap().with_timezone(&Utc);
+        let conf = Conference { start: NaiveDate::from_ymd_opt(2027, 10, 10).unwrap(), end: NaiveDate::from_ymd_opt(2027, 10, 15).unwrap(), city: Some("Prague".into()), country: None };
+        let prov = Provenance { source_url: "https://example.org".into(), ..Default::default() };
+        let make = || conference_events("SPLASH/OOPSLA/2027", &[], &conf, &prov, at("2026-09-16T10:00:00Z"));
+        let mut revs = Revisions::default();
+        // First publication.
+        let mut first = make();
+        revs.stamp(&mut first, at("2026-09-17T12:00:00.123Z"));
+        assert_eq!((first[0].sequence, first[0].modified), (1, at("2026-09-17T12:00:00Z")));
+        let published = calendar("x", &first);
+        assert!(published.contains("SEQUENCE:1\r\n") && published.contains("LAST-MODIFIED:20260917T120000Z\r\n") && published.contains("DTSTAMP:20260917T120000Z\r\n"), "{published}");
+        // A later run with the same content: nothing moves, byte for byte.
+        let mut again = make();
+        revs.stamp(&mut again, at("2026-09-24T12:00:00Z"));
+        assert_eq!(calendar("x", &again), published);
+        // The title is rendered differently (as when "[SPLASH 2027
+        // (OOPSLA)]" became "[SPLASH 27]"): same UID, next revision.
+        let mut renamed = make();
+        renamed[0].summary = "[SPLASH 2027] Conference".into();
+        revs.stamp(&mut renamed, at("2026-09-29T08:00:00Z"));
+        assert_eq!(renamed[0].uid, first[0].uid);
+        assert_eq!((renamed[0].sequence, renamed[0].modified), (2, at("2026-09-29T08:00:00Z")));
+        // So is a change of the dates.
+        let mut moved = conference_events("SPLASH/OOPSLA/2027", &[], &Conference { end: NaiveDate::from_ymd_opt(2027, 10, 16).unwrap(), ..conf.clone() }, &prov, at("2026-09-16T10:00:00Z"));
+        moved[0].summary = "[SPLASH 2027] Conference".into();
+        revs.stamp(&mut moved, at("2026-10-01T08:00:00Z"));
+        assert_eq!(moved[0].sequence, 3);
+        // The record survives a round trip through its file.
+        let path = std::env::temp_dir().join(format!("plc-revisions-{}.json", std::process::id()));
+        revs.save(&path).unwrap();
+        assert_eq!(Revisions::load(&path), revs);
+        let _ = std::fs::remove_file(&path);
+        assert_eq!(Revisions::load(&path), Revisions::default(), "a missing file starts over");
+    }
 
     #[test]
     fn renders_expected_events() {

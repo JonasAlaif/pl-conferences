@@ -756,6 +756,10 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
     // Records outlive their configuration (a track removed from
     // conferences.json keeps its calendars), so a missing file is fine.
     let cfgs = config::load(&root.join("conferences.json")).unwrap_or_default();
+    // What was last published for every event, so that a change is
+    // announced to subscribers as a revision (see `ics::Revisions`).
+    let revisions_path = root.join("calendar-state.json");
+    let mut revisions = ics::Revisions::load(&revisions_path);
     // One row per conference-year on the site, assembled from all three records.
     type Parts = (String, Option<Record<schema::Conference>>, Option<Record<schema::Deadlines>>, Option<Record<schema::Volunteer>>);
     let mut by_year: std::collections::BTreeMap<String, Parts> = Default::default();
@@ -811,19 +815,22 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
         // The calendars next to the JSON are derived from it, so they are
         // rebuilt here too and never drift from an edited record.
         if let Some(r) = &parts.1 {
-            let ev = ics::conference_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            let mut ev = ics::conference_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            revisions.stamp(&mut ev, now);
             std::fs::write(dir.join("conference.ics"), ics::calendar(&format!("{} conference", r.label), &ev))?;
             if publish_conf {
                 events.extend(ev);
             }
         }
         if let Some(r) = &parts.2 {
-            let ev = ics::deadline_events(key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            let mut ev = ics::deadline_events(key, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            revisions.stamp(&mut ev, now);
             std::fs::write(dir.join("cfp.ics"), ics::calendar(&format!("{} cfp", r.label), &ev))?;
             events.extend(ev);
         }
         if let Some(r) = &parts.3 {
-            let ev = ics::volunteer_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            let mut ev = ics::volunteer_events(key, &tracks, &r.data, &provenance_of(&r.provenance, &r.history), r.fetched_at);
+            revisions.stamp(&mut ev, now);
             std::fs::write(dir.join("volunteer.ics"), ics::calendar(&format!("{} volunteers", r.label), &ev))?;
             if publish_vol {
                 events.extend(ev);
@@ -848,6 +855,7 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
         .collect();
     let calendar = ics::calendar("PL conference deadlines", &events);
     std::fs::write(root.join("all.ics"), &calendar)?;
+    revisions.save(&revisions_path)?;
     std::fs::write(root.join("MAINTENANCE.md"), state.render_maintenance())?;
 
     // The site: docs/index.html plus the calendar at a Pages URL.
@@ -942,6 +950,14 @@ mod tests {
         write("TACAS", "cfp", &cfp(16));
         write("TACAS", "volunteer", r#"{"deadline":"2027-02-01","deadline_conflict":null,"how_to_apply":"","application_url":null}"#);
         regenerate_outputs(&root, &State::default()).unwrap();
+        // Every event is published as revision 1, and regenerating without
+        // a change rewrites the calendars byte for byte.
+        let raw = std::fs::read_to_string(root.join("all.ics")).unwrap();
+        assert_eq!(raw.matches("BEGIN:VEVENT").count(), raw.matches("SEQUENCE:1\r\n").count());
+        assert!(root.join("calendar-state.json").exists());
+        std::thread::sleep(std::time::Duration::from_millis(1100));
+        regenerate_outputs(&root, &State::default()).unwrap();
+        assert_eq!(std::fs::read_to_string(root.join("all.ics")).unwrap(), raw, "unchanged data, unchanged calendar");
         let all = std::fs::read_to_string(root.join("all.ics")).unwrap().replace("\r\n ", "");
         assert_eq!(all.matches("SUMMARY:[ETAPS 27] Conference").count(), 1, "one conference event however many tracks:\n{all}");
         assert!(all.contains("SUMMARY:[ESOP 27] Submission Deadline") && all.contains("SUMMARY:[TACAS 27] Submission Deadline"));

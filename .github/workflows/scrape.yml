@@ -276,7 +276,7 @@ jobs:
           set -e
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          for p in conferences state.json all.ics README.md MAINTENANCE.md docs; do
+          for p in conferences state.json calendar-state.json all.ics README.md MAINTENANCE.md docs; do
             [ -e "$p" ] && git add -A -- "$p"
           done
           if git diff --staged --quiet; then

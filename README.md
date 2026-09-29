@@ -159,6 +159,15 @@ per worker, against a 330-minute job timeout).
   model and links the page it came from; treat the source as authoritative.
   If a page states two different dates for the same deadline, the entry
   quotes the other statement as a note.
+- A calendar application keeps the copy of an event it already has unless
+  the feed says the event was revised. `calendar-state.json` records what
+  was last published for every event (a hash of its title, description,
+  location and dates); when that changes, the event's `SEQUENCE` goes up and
+  its `LAST-MODIFIED` and `DTSTAMP` move to the time of the run, while its
+  `UID` stays, so subscribers see the event change instead of keeping the
+  old one or getting a second one. Unchanged events are written byte for
+  byte as before. Google Calendar fetches a subscribed feed about once a
+  day, so a change takes up to a day to appear there.
 - Deadlines are filed under the track, which is what one submits to
   (`[OOPSLA 27] R1 Submission Deadline`, `[ESOP 27] Rebuttal`); the
   conference dates and the volunteer deadline under the conference
@@ -237,6 +246,7 @@ pass count does not drop.
 ```
 conferences.json        input
 state.json              per conference-year attempt log (drives retries and maintenance codes)
+calendar-state.json     what was last published per event (drives SEQUENCE and LAST-MODIFIED)
 all.ics                 aggregate calendar
 MAINTENANCE.md          active maintenance codes and recent outcomes
 conferences/…/conference.{json,ics,html,md}  dates and location + provenance, calendar, source page
