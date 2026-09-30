@@ -21,11 +21,16 @@ pub struct YearView {
 }
 
 /// Google Calendar's "add calendar from URL" prompt for an `.ics` feed.
-/// The `cid` must be a `webcal://` URL, written out: with `https://` (or
-/// percent-encoded) Google answers "Could not add. Check the URL".
+/// The `cid` is the feed as a `webcal://` URL (with `https://` Google
+/// answers "Could not add. Check the URL"), base64-encoded without padding
+/// as in Google's own share links: the Android app decodes `cid` as base64,
+/// and given the plain URL showed the decoded bytes, "���jX蝫…", as the
+/// calendar's name.
 pub fn google_calendar_link(ics_url: &str) -> String {
+    use base64::Engine;
     let feed = ics_url.trim_start_matches("https://").trim_start_matches("http://");
-    format!("https://calendar.google.com/calendar/r?cid=webcal://{feed}")
+    let cid = base64::engine::general_purpose::STANDARD_NO_PAD.encode(format!("webcal://{feed}"));
+    format!("https://calendar.google.com/calendar/r?cid={}", urlencoding::encode(&cid))
 }
 
 fn esc(s: &str) -> String {
@@ -417,7 +422,16 @@ mod tests {
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
         assert!(html.contains("all.ics"));
-        assert!(html.contains("\"https://calendar.google.com/calendar/r?cid=webcal://jonasalaif.github.io/pl-conferences/all.ics\""), "Google Calendar link with the feed as a webcal URL");
+        let link = google_calendar_link("https://jonasalaif.github.io/pl-conferences/all.ics");
+        assert_eq!(link, "https://calendar.google.com/calendar/r?cid=d2ViY2FsOi8vam9uYXNhbGFpZi5naXRodWIuaW8vcGwtY29uZmVyZW5jZXMvYWxsLmljcw");
+        assert!(html.contains(&format!("\"{link}\"")), "the page carries the Google Calendar link");
+        {
+            // The cid decodes to the webcal URL, as the Android app reads it.
+            use base64::Engine;
+            let cid = link.split("cid=").nth(1).unwrap();
+            let decoded = base64::engine::general_purpose::STANDARD_NO_PAD.decode(cid).unwrap();
+            assert_eq!(String::from_utf8(decoded).unwrap(), "webcal://jonasalaif.github.io/pl-conferences/all.ics");
+        }
     }
 
     #[test]

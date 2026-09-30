@@ -853,7 +853,8 @@ fn regenerate_outputs(root: &Path, state: &State) -> Result<()> {
             }
         })
         .collect();
-    let calendar = ics::calendar("PL conference deadlines", &events);
+    // The name calendar applications give the subscription.
+    let calendar = ics::calendar("PL Conferences", &events);
     std::fs::write(root.join("all.ics"), &calendar)?;
     revisions.save(&revisions_path)?;
     std::fs::write(root.join("MAINTENANCE.md"), state.render_maintenance())?;
@@ -955,6 +956,7 @@ mod tests {
         let raw = std::fs::read_to_string(root.join("all.ics")).unwrap();
         assert_eq!(raw.matches("BEGIN:VEVENT").count(), raw.matches("SEQUENCE:1\r\n").count());
         assert!(root.join("calendar-state.json").exists());
+        assert!(raw.contains("\r\nX-WR-CALNAME:PL Conferences\r\n"), "the subscription's name");
         std::thread::sleep(std::time::Duration::from_millis(1100));
         regenerate_outputs(&root, &State::default()).unwrap();
         assert_eq!(std::fs::read_to_string(root.join("all.ics")).unwrap(), raw, "unchanged data, unchanged calendar");

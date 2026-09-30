@@ -10,7 +10,7 @@ and published as calendar files.
 https://raw.githubusercontent.com/JonasAlaif/pl-conferences/main/all.ics
 ```
 
-Or in one click: [add to Google Calendar](https://calendar.google.com/calendar/r?cid=webcal://jonasalaif.github.io/pl-conferences/all.ics)
+Or in one click: [add to Google Calendar](https://calendar.google.com/calendar/r?cid=d2ViY2FsOi8vam9uYXNhbGFpZi5naXRodWIuaW8vcGwtY29uZmVyZW5jZXMvYWxsLmljcw)
 (Google fetches the feed from the site, which is republished on every run) ·
 [webcal link](webcal://jonasalaif.github.io/pl-conferences/all.ics) for Apple
 Calendar and others.
