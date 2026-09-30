@@ -279,7 +279,7 @@ pub fn render(years: &[YearView], maintenance: &str, generated: DateTime<Utc>) -
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PL conference deadlines</title>
+<title>PL Conferences</title>
 <style>
   :root {{ color-scheme: light dark; --fg: #1a1a1a; --bg: #fff; --muted: #666; --line: #ddd; --accent: #0b57d0; --open: #e8f5e9; --review: #fffde7; --closed: #fff3e0; --past: #f5f5f5; --future: #e3f2fd; --conference: #ede7f6; }}
   @media (prefers-color-scheme: dark) {{ :root {{ --fg: #e6e6e6; --bg: #121212; --muted: #9a9a9a; --line: #333; --accent: #8ab4f8; --open: #1b3a22; --review: #33301a; --closed: #3d2e14; --past: #1e1e1e; --future: #14283a; --conference: #2a2340; }} }}
@@ -313,7 +313,7 @@ pub fn render(years: &[YearView], maintenance: &str, generated: DateTime<Utc>) -
 </head>
 <body>
 <main>
-<h1>PL conference deadlines</h1>
+<h1>PL Conferences</h1>
 <p class="lead">Submission deadlines, rebuttals, notifications, conference dates and student-volunteer deadlines for programming-languages conferences, collected automatically twice a week by a small language model.</p>
 <p>Subscribe in your calendar app: <code>{pages}/all.ics</code>, or <a href="{google}">add to Google Calendar</a>, or the <a href="webcal://jonasalaif.github.io/pl-conferences/all.ics">webcal link</a> for Apple Calendar and others. Every entry says which page it was extracted from; the source is authoritative, the calendar is a convenience.</p>
 "#, pages = PAGES_URL, google = google_calendar_link(&format!("{PAGES_URL}/all.ics"))));
@@ -422,6 +422,7 @@ mod tests {
         assert!(html.contains("Rennes, France") && html.contains("apply by <strong>10 Nov 2025"));
         assert!(html.contains("https://popl26.hotcrp.com") && html.contains("/conferences/POPL/POPL/2026/cfp.ics"));
         assert!(html.contains("all.ics"));
+        assert!(html.contains("<title>PL Conferences</title>") && html.contains("<h1>PL Conferences</h1>"), "the page carries the calendar's name");
         let link = google_calendar_link("https://jonasalaif.github.io/pl-conferences/all.ics");
         assert_eq!(link, "https://calendar.google.com/calendar/r?cid=d2ViY2FsOi8vam9uYXNhbGFpZi5naXRodWIuaW8vcGwtY29uZmVyZW5jZXMvYWxsLmljcw");
         assert!(html.contains(&format!("\"{link}\"")), "the page carries the Google Calendar link");
