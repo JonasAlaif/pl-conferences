@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-10-05T10:19:02.040547984Z",
-  "run_count": 34,
+  "last_run": "2026-10-08T10:24:17.265475861Z",
+  "run_count": 35,
   "last_run_codes": [
     "E010"
   ],
@@ -134,13 +134,13 @@
       "note": "https://lics.siglog.org/ is not about LICS 2026"
     },
     "LICS/LICS/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:51.031721914Z",
-      "attempts": 10,
+      "last_attempt": "2026-10-08T10:24:06.237641604Z",
+      "attempts": 11,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": "ddg-html",
       "codes": [],
-      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://conffinder.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; only conference dates found so far"
+      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://royaldoms.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; 5 candidate link(s) for the call for papers or important dates of the LICS track of LICS 2027; following link https://royaldoms.com/conferences?deadline=upcoming; https://royaldoms.com/conferences?deadline=upcoming is not about LICS 2027 but mentions it; trying its links; following link https://royaldoms.com/conferences; https://royaldoms.com/conferences is not about LICS 2027 but mentions it; trying its links; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; only conference dates found so far"
     },
     "LICS/LICS/2027/volunteer": {
       "last_attempt": "2026-09-17T11:31:37.593540067Z",

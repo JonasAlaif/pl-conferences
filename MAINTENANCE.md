@@ -2,20 +2,20 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-10-05 10:19 UTC
+Last run: 2026-10-08 10:24 UTC
 
 ## E010
 
 The Ollama registry now serves a different build for the pinned model tag (manifest digest changed). Re-run the accuracy harness (`cargo test --test live -- --ignored`) and update `MODEL_DIGEST` in `.github/workflows/scrape.yml` if results are still good.
 
-- `(workflow)` (last seen 2026-10-05)
+- `(workflow)` (last seen 2026-10-08)
 
 ## Recent outcomes
 
 | Conference-year | Outcome | Attempts | Last attempt | Note |
 |---|---|---|---|---|
+| `LICS/LICS/2027/cfp` | ok | 11 | 2026-10-08 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://royaldoms.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; 5 candidate link(s) for the call for papers or important dates of the LICS track of LICS 2027; following link https://royaldoms.com/conferences?deadline=upcoming; https://royaldoms.com/conferences?deadline=upcoming is not about LICS 2027 but mentions it; trying its links; following link https://royaldoms.com/conferences; https://royaldoms.com/conferences is not about LICS 2027 but mentions it; trying its links; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; only conference dates found so far |
 | `ICFP/ICFP/2027/cfp` | ok | 7 | 2026-10-05 | re-checking stored page https://icfp27.sigplan.org/; 2 candidate link(s) for the call for papers of the ICFP track of ICFP 2027; looking for the submission site on https://icfp27.sigplan.org/track/icfp-2027-icfp-papers; submission site https://icfp27.hotcrp.com taken from https://icfp27.sigplan.org/track/icfp-2027-icfp-papers |
-| `LICS/LICS/2027/cfp` | ok | 10 | 2026-10-05 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://conffinder.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; only conference dates found so far |
 | `POPL/POPL/2027/cfp` | ok | 8 | 2026-10-05 | re-checking stored page https://popl27.sigplan.org/dates; 70 candidate link(s) for the call for papers of the POPL track of POPL 2027; looking for the submission site on https://popl27.sigplan.org/track/POPL-2027-popl-research-papers; submission site https://popl27.hotcrp.com taken from https://popl27.sigplan.org/track/POPL-2027-popl-research-papers |
 | `ETAPS/ESOP/2027/cfp` | ok | 7 | 2026-10-05 | re-checking stored page https://etaps.org/2027/cfp/; 3 candidate link(s) for the call for papers of the ESOP track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/esop; submission site https://esop27.hotcrp.com/ taken from https://etaps.org/2027/esop |
 | `ETAPS/TACAS/2027/cfp` | ok | 2 | 2026-10-05 | re-checking stored page https://etaps.org/2027/cfp/; 2 candidate link(s) for the call for papers of the TACAS track of ETAPS 2027; looking for the submission site on https://etaps.org/2027/tacas; https://etaps.org/2027/conferences/tacas/ is not about ETAPS 2027 (TACAS) |

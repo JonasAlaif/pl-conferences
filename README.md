@@ -23,7 +23,7 @@ page linked), each next to the JSON the model produced and the page it came
 from.
 
 <!-- maintenance:start -->
-Last run: 2026-10-05. **Maintenance codes active: E010** - see [MAINTENANCE.md](MAINTENANCE.md).
+Last run: 2026-10-08. **Maintenance codes active: E010** - see [MAINTENANCE.md](MAINTENANCE.md).
 <!-- maintenance:end -->
 
 ## The site
