@@ -1,0 +1,36 @@
+{
+  "conference": "POPL",
+  "track": "POPL",
+  "year": 2027,
+  "label": "POPL 2027",
+  "fetched_at": "2026-10-12T10:38:20.762198386Z",
+  "last_verified": "2026-10-12T10:38:20.762198386Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://popl27.sigplan.org/track/POPL-2027-student-volunteers",
+    "query": "links of https://popl27.sigplan.org/dates",
+    "backend": null,
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "deadline": "2026-11-11",
+    "deadline_conflict": null,
+    "how_to_apply": "Applicants can be undergraduate, Master's, Ph.D. full- or part-time students, of computer science or related fields, with or without previous experience as volunteers. Every student volunteer will receive a complimentary conference registration, free lunches and refreshments during breaks, and student volunteer garments. To apply, fill out the form on the provided link.",
+    "application_url": "https://docs.google.com/forms/d/e/1FAIpQLSdYzpM1C08XqxnQg3YfcH1b3IyTbxJ5IUe9IsqoMgY2rmuOMA/viewform?usp=header"
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_volunteer_program": true,
+    "application_deadline_quote": "before November 11th",
+    "application_deadline_as_written": "November 11th 2026, AoE.",
+    "application_deadline": "2026-11-11",
+    "application_deadline_conflict": "null",
+    "how_to_apply": "Applicants can be undergraduate, Master's, Ph.D. full- or part-time students, of computer science or related fields, with or without previous experience as volunteers. Every student volunteer will receive a complimentary conference registration, free lunches and refreshments during breaks, and student volunteer garments. To apply, fill out the form on the provided link.",
+    "application_quote": "To apply, fill out the form on this link, before November 11th: https://docs.google.com/forms/d/e/1FAIpQLSdYzpM1C08XqxnQg3YfcH1b3IyTbxJ5IUe9IsqoMgY2rmuOMA/viewform?usp=header .",
+    "application_url": "https://docs.google.com/forms/d/e/1FAIpQLSdYzpM1C08XqxnQg3YfcH1b3IyTbxJ5IUe9IsqoMgY2rmuOMA/viewform?usp=header"
+  }
+}

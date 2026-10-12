@@ -842,6 +842,26 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  s
 END:VEVENT
 BEGIN:VEVENT
+UID:a0d4ca80b8ef4cf07f5e30c98d4e2686adb4d1a4@pl-conferences
+DTSTAMP:20261012T105233Z
+LAST-MODIFIED:20261012T105233Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20261111
+DTEND;VALUE=DATE:20261112
+SUMMARY:[POPL 27] Volunteer Application Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://popl27.sigplan.
+ org/track/POPL-2027-student-volunteers\n\nApplicants can be undergraduate
+ \, Master's\, Ph.D. full- or part-time students\, of computer science or 
+ related fields\, with or without previous experience as volunteers. Every
+  student volunteer will receive a complimentary conference registration\,
+  free lunches and refreshments during breaks\, and student volunteer garm
+ ents. To apply\, fill out the form on the provided link.\n\nApply at: htt
+ ps://docs.google.com/forms/d/e/1FAIpQLSdYzpM1C08XqxnQg3YfcH1b3IyTbxJ5IUe9
+ IsqoMgY2rmuOMA/viewform?usp=header\n\nhttps://github.com/JonasAlaif/pl-co
+ nferences
+END:VEVENT
+BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
 DTSTAMP:20260929T143014Z
 LAST-MODIFIED:20260929T143014Z
