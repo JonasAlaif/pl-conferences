@@ -2,20 +2,20 @@
 
 This file is regenerated on every run from `state.json`. Each code marks a fallback path that worked but suggests the primary mechanism needs a look. Codes disappear once the primary path works again.
 
-Last run: 2026-10-12 10:38 UTC
+Last run: 2026-10-15 08:13 UTC
 
 ## E010
 
 The Ollama registry now serves a different build for the pinned model tag (manifest digest changed). Re-run the accuracy harness (`cargo test --test live -- --ignored`) and update `MODEL_DIGEST` in `.github/workflows/scrape.yml` if results are still good.
 
-- `(workflow)` (last seen 2026-10-12)
+- `(workflow)` (last seen 2026-10-15)
 
 ## Recent outcomes
 
 | Conference-year | Outcome | Attempts | Last attempt | Note |
 |---|---|---|---|---|
+| `LICS/LICS/2027/cfp` | ok | 13 | 2026-10-15 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://conffinder.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; https://ccfddl.com/venues/ct/lics-2027/ has the conference dates but no deadlines yet; only conference dates found so far |
 | `ETAPS/ESOP/2027/volunteer` | notfound | 4 | 2026-10-12 | https://www.etaps.community/ is not about ETAPS 2027 (ESOP) |
-| `LICS/LICS/2027/cfp` | ok | 12 | 2026-10-12 | re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; https://conffinder.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; fetch https://ccfddl.com/conferences/ct/lics-2027/ failed: GET https://ccfddl.com/conferences/ct/lics-2027/: HTTP 404 Not Found; only conference dates found so far |
 | `LICS/LICS/2027/volunteer` | notfound | 3 | 2026-10-12 |  |
 | `SPLASH/OOPSLA/2027/volunteer` | notfound | 4 | 2026-10-12 | model found no plausible search hit; trying them in the engine's order; https://splashforward.org/student-volunteer-opportunities/ is not about SPLASH 2027 (OOPSLA); validation failed: application deadline 2026-07-19 is more than a year before the conference (2027-10-15): this is the volunteer page of an earlier edition, not of 2027; set page_is_about_conference to false; validation failed again: page_is_about_conference is false; application deadline 2026-07-19 is more than a year before the conference (2027-10-15): this is the volunteer page of an earlier edition, not of 2027; set page_is_about_conference to false; https://2026.splashcon.org/track/splash-issta-2026-student-volunteers is not about SPLASH 2027 (OOPSLA) |
 | `PLDI/PLDI/2027/volunteer` | notfound | 4 | 2026-10-12 | https://pldi17.sigplan.org/track/pldi-2017-Student-Volunteers is not about PLDI 2027 |
