@@ -7,15 +7,16 @@ X-WR-CALNAME:PLDI 2027 cfp
 URL:https://github.com/JonasAlaif/pl-conferences
 BEGIN:VEVENT
 UID:85f7b223e95bf7febca7c32707a65552fa7e04e7@pl-conferences
-DTSTAMP:20260929T143014Z
-LAST-MODIFIED:20260929T143014Z
-SEQUENCE:1
+DTSTAMP:20261022T084740Z
+LAST-MODIFIED:20261022T084740Z
+SEQUENCE:2
 DTSTART;VALUE=DATE:20261112
 DTEND;VALUE=DATE:20261113
 SUMMARY:[PLDI 27] Submission Deadline
 DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
- org/\n\nhttps://github.com/JonasAlaif/pl-conferences
+ org/\n\nSubmit at: https://pldi2027.hotcrp.com\n\nhttps://github.com/Jona
+ sAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences

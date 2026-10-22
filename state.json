@@ -1,6 +1,6 @@
 {
-  "last_run": "2026-10-19T08:45:31.110490694Z",
-  "run_count": 38,
+  "last_run": "2026-10-22T08:31:39.059178520Z",
+  "run_count": 39,
   "last_run_codes": [
     "E010"
   ],
@@ -24,8 +24,8 @@
       "note": "trying volunteer link https://submissions.floc26.org/cav/ from the conference page; fetch https://submissions.floc26.org/cav/ failed: GET https://submissions.floc26.org/cav/: HTTP 403 Forbidden; https://taoscav.org/volunteer is not about CAV 2026; fetch https://i-cav.org/cavlinks/who-are-we/ failed: GET https://i-cav.org/cavlinks/who-are-we/: HTTP 404 Not Found; fetch https://www.cavscare.org/champions-of-the-community failed: GET https://www.cavscare.org/champions-of-the-community: HTTP 404 Not Found"
     },
     "CAV/CAV/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:41.799820268Z",
-      "attempts": 8,
+      "last_attempt": "2026-10-22T08:31:16.763173749Z",
+      "attempts": 9,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -51,8 +51,8 @@
       "note": ""
     },
     "ETAPS/ESOP/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:42.839480413Z",
-      "attempts": 7,
+      "last_attempt": "2026-10-22T08:31:21.113279435Z",
+      "attempts": 8,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -78,8 +78,8 @@
       "note": "5 candidate link(s) for the call for papers or important dates of the TACAS track of ETAPS 2026; following link https://etaps.org/2026/cfp; dropped the conflicting statement \"TACAS mandatory artifact submission deadline: October 30, 2025\": it is a \"other\" date, not the paper deadline"
     },
     "ETAPS/TACAS/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:42.839480413Z",
-      "attempts": 2,
+      "last_attempt": "2026-10-22T08:31:21.113279435Z",
+      "attempts": 3,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -107,8 +107,8 @@
       "note": "trying volunteer link https://icfp26.sigplan.org/track/icfp-2026-icfp-volunteers from the conference page"
     },
     "ICFP/ICFP/2027/cfp": {
-      "last_attempt": "2026-10-05T10:19:02.040547984Z",
-      "attempts": 7,
+      "last_attempt": "2026-10-22T08:31:20.215927961Z",
+      "attempts": 8,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
@@ -134,13 +134,15 @@
       "note": "https://lics.siglog.org/ is not about LICS 2026"
     },
     "LICS/LICS/2027/cfp": {
-      "last_attempt": "2026-10-19T08:44:59.238850816Z",
-      "attempts": 14,
+      "last_attempt": "2026-10-22T08:31:39.059178520Z",
+      "attempts": 15,
       "outcome": "ok",
       "consecutive_failures": 0,
-      "backend": "ddg-html",
-      "codes": [],
-      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; https://conffinder.com/conference/ccf-lics-2027 has the conference dates but no deadlines yet; https://pl-conferences.com/event/2027/lics/ has the conference dates but no deadlines yet; only conference dates found so far"
+      "backend": null,
+      "codes": [
+        "E002"
+      ],
+      "note": "re-checking stored page https://lics.siglog.org/lics27/; https://lics.siglog.org/lics27/ has the conference dates but no deadlines yet; stored page yields no deadlines; searching; search failed for \"LICS 2027 call for papers\": ddg-html: throttled: HTTP 202 (skipping this backend for 900s) | brave: throttled: HTTP 429 (skipping this backend for 900s) | bing: 3 results but none relevant; search failed for \"LICS 2027\": ddg-html: throttled: cooling down | brave: throttled: cooling down | bing: 10 results but none relevant; no search backend answered; trying URLs derived from earlier editions: https://lics.siglog.org/lics27/cfp.php, https://lics.siglog.org/; validation failed: round 1 submission_deadline_as_written \"21 January 2027\" is not in the same entry as \"Submission deadlines are firm; late submissions will not be considered.\"; the date belongs to a different line of the page. Use the date written next to \"Submission deadlines are firm; late submissions will not be considered.\"; validation failed again: round 1 submission_deadline_as_written \"21 January 2027\" is not in the same entry as \"Papers must be submitted through HotCRP by the submission deadline.\"; the date belongs to a different line of the page. Use the date written next to \"Papers must be submitted through HotCRP by the submission deadline.\"; https://lics.siglog.org/ is not about LICS 2027 but mentions it; trying its links; only conference dates found so far"
     },
     "LICS/LICS/2027/volunteer": {
       "last_attempt": "2026-10-12T10:38:27.982360416Z",
@@ -170,13 +172,13 @@
       "note": "trying volunteer link https://pldi26.sigplan.org/track/pldi-2026-student-volunteering from the conference page"
     },
     "PLDI/PLDI/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:40.652788342Z",
-      "attempts": 8,
+      "last_attempt": "2026-10-22T08:31:20.601604066Z",
+      "attempts": 9,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://pldi27.sigplan.org/; 2 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers"
+      "note": "re-checking stored page https://pldi27.sigplan.org/; 2 candidate link(s) for the call for papers of the PLDI track of PLDI 2027; looking for the submission site on https://pldi27.sigplan.org/track/pldi-2027-papers; submission site https://pldi2027.hotcrp.com taken from https://pldi27.sigplan.org/track/pldi-2027-papers"
     },
     "PLDI/PLDI/2027/volunteer": {
       "last_attempt": "2026-10-12T10:38:22.636786092Z",
@@ -244,13 +246,13 @@
       "note": "trying volunteer link https://2026.splashcon.org/track/splash-issta-2026-student-volunteers from the conference page; model picked link https://conf.researchr.org/committee/splash-issta-2026/splash-issta-2026-student-volunteers-student-volunteer-committee as the application form or sign-up page where students apply to be student volunteers at SPLASH 2026; not a general information page"
     },
     "SPLASH/OOPSLA/2027/cfp": {
-      "last_attempt": "2026-10-05T10:18:41.023873288Z",
-      "attempts": 8,
+      "last_attempt": "2026-10-22T08:31:37.138022389Z",
+      "attempts": 9,
       "outcome": "ok",
       "consecutive_failures": 0,
       "backend": null,
       "codes": [],
-      "note": "re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027"
+      "note": "re-checking stored page https://conf.researchr.org/track/splash-2027/splashoopsla2027; validation failed: round 2 notification 2027-07-30 is not the first decision after the author response: between the author response and that date the page lists \"Fri 2 Jul 2027 / Author Notification (Round 2)\". Use that entry's date as the notification (quote it), unless it is not a decision sent to authors"
     },
     "SPLASH/OOPSLA/2027/volunteer": {
       "last_attempt": "2026-10-12T10:38:27.392642820Z",
