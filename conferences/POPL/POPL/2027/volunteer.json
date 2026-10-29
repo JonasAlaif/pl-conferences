@@ -4,7 +4,7 @@
   "year": 2027,
   "label": "POPL 2027",
   "fetched_at": "2026-10-12T10:38:20.762198386Z",
-  "last_verified": "2026-10-12T10:38:20.762198386Z",
+  "last_verified": "2026-10-29T09:48:27.700144903Z",
   "model": "qwen3.5:4b",
   "provenance": {
     "source_url": "https://popl27.sigplan.org/track/POPL-2027-student-volunteers",
