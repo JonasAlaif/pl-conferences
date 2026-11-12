@@ -1,0 +1,88 @@
+name: Model probe (temporary diagnostic)
+
+# Loads Gemma 4 26B-A4B QAT (Unsloth UD-Q4_K_XL, 14.2 GB) with llama.cpp's
+# server on a fresh runner, CPU only, and reports what it costs: free memory
+# and swap before and during a page-sized prompt, the process's peak resident
+# memory (anonymous vs file-backed), and prompt and generation speed.
+# One configuration per job, so each starts from a fresh machine.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: 16k-f16
+            args: "-c 16384"
+            stop_services: false
+          - name: 12k-f16-ub256
+            args: "-c 12288 -ub 256"
+            stop_services: false
+          - name: 12k-f16-ub256-services-stopped
+            args: "-c 12288 -ub 256"
+            stop_services: true
+          - name: 12k-f16-ub256-repack
+            args: "-c 12288 -ub 256 --repack"
+            stop_services: false
+    steps:
+      - uses: actions/checkout@v4
+      - name: Machine
+        run: |
+          nproc; lscpu | grep -E "Model name|Flags" | cut -c1-200
+          free -m; swapon --show; df -h / /mnt
+      - name: Stop idle services
+        if: matrix.stop_services
+        run: |
+          for s in docker.socket docker containerd snapd php8.3-fpm mono-xsp4 walinuxagent; do sudo systemctl stop "$s" 2>/dev/null || true; done
+          free -m
+      - name: Get llama.cpp and the model
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download -R ggml-org/llama.cpp --pattern '*bin-ubuntu-x64.zip' -D /tmp/llama
+          unzip -q /tmp/llama/*.zip -d /tmp/llama
+          SERVER=$(find /tmp/llama -name llama-server -type f | head -1); chmod +x "$SERVER"
+          echo "SERVER=$SERVER" >> "$GITHUB_ENV"
+          "$SERVER" --version 2>&1 | tail -2
+          sudo mkdir -p /mnt/model && sudo chown "$USER" /mnt/model
+          # The model as stored in this repository's release, in llama.cpp's
+          # split format (see model-vault.yml).
+          t=$(date +%s)
+          gh release download model-gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf -R "$GITHUB_REPOSITORY" --pattern '*-of-*.gguf' -D /mnt/model
+          echo "download: $(( $(date +%s) - t ))s, $(du -ch /mnt/model/*.gguf | tail -1 | cut -f1)"
+          echo "MODEL=$(ls /mnt/model/*-00001-of-*.gguf)" >> "$GITHUB_ENV"
+      - name: Probe ${{ matrix.name }}
+        run: |
+          free -m
+          "$SERVER" -m "$MODEL" --device none -ngl 0 -t 4 -np 1 -fa on --cache-ram 0 --no-repack ${{ matrix.args }} --port 8080 -lv 4 > server.log 2>&1 &
+          PID=$!
+          t=$(date +%s); for i in $(seq 1 600); do curl -s -m 2 localhost:8080/health | grep -q ok && break; sleep 1; done
+          echo "loaded in $(( $(date +%s) - t ))s"
+          grep -a -E "buffer size|n_ctx  |repack" server.log | sed -E 's/^[^:]*: +//' | sort -u
+          python3 - > req.json <<'PY'
+          import json
+          md = open('conferences/SPLASH/OOPSLA/2027/cfp.md').read()[:24000]
+          print(json.dumps({"messages": [{"role": "user", "content": "Summarise the important dates of this call for papers in a few sentences.\n\n" + md}], "max_tokens": 200, "temperature": 0}))
+          PY
+          ( while kill -0 $PID 2>/dev/null; do
+              echo "$(date +%s) $(free -m | awk '/Mem:/{print "used="$3" avail="$7} /Swap:/{print "swap="$3}' | tr '\n' ' ') $(grep -E 'VmRSS|RssAnon|RssFile|VmHWM' /proc/$PID/status | awk '{printf "%s=%dMiB ", $1, $2/1024}')"
+              sleep 2; done ) > mem.log &
+          t=$(date +%s)
+          curl -s -m 3000 -H 'Content-Type: application/json' -d @req.json localhost:8080/v1/chat/completions > resp.json
+          echo "request: $(( $(date +%s) - t ))s"
+          python3 -c "import json;r=json.load(open('resp.json'));print('usage', r.get('usage'));print('timings', {k: round(v,1) for k,v in r.get('timings',{}).items() if isinstance(v,(int,float))})"
+          grep -a "print_timing" server.log | sed -E 's/^.*\| //' | tail -3
+          echo "--- memory samples (first, peak, last) ---"
+          head -1 mem.log
+          sort -t= -k3 -n mem.log | awk '{print}' | grep -o "VmHWM:=[0-9]*MiB" | sort -t= -k2 -n | tail -1
+          awk '{for(i=1;i<=NF;i++) if($i ~ /^avail=/){split($i,a,"="); if(min==""||a[2]<min){min=a[2]; line=$0}}} END{print "lowest available: " line}' mem.log
+          awk '{for(i=1;i<=NF;i++) if($i ~ /^swap=/){split($i,a,"="); if(a[2]>max){max=a[2]}}} END{print "max swap used: " max " MiB"}' mem.log
+          tail -1 mem.log
+          kill $PID
