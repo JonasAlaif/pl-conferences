@@ -11,6 +11,10 @@ on:
 permissions:
   contents: read
 
+env:
+  # A pinned llama.cpp build (its releases are named bNNNNN).
+  LLAMA_CPP_BUILD: b12328
+
 jobs:
   probe:
     runs-on: ubuntu-latest
@@ -46,8 +50,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release download -R ggml-org/llama.cpp --pattern '*bin-ubuntu-x64.zip' -D /tmp/llama
-          unzip -q /tmp/llama/*.zip -d /tmp/llama
+          gh release download "$LLAMA_CPP_BUILD" -R ggml-org/llama.cpp --pattern "llama-$LLAMA_CPP_BUILD-bin-ubuntu-x64.tar.gz" -D /tmp/llama
+          tar -xzf /tmp/llama/*.tar.gz -C /tmp/llama
           SERVER=$(find /tmp/llama -name llama-server -type f | head -1); chmod +x "$SERVER"
           echo "SERVER=$SERVER" >> "$GITHUB_ENV"
           "$SERVER" --version 2>&1 | tail -2
