@@ -41,11 +41,21 @@ jobs:
         run: |
           nproc; lscpu | grep -E "Model name|Flags" | cut -c1-200
           free -m; swapon --show; df -h / /mnt
+          # What an idle runner spends its memory on (no source documents it).
+          echo "--- running services ---"; systemctl list-units --type=service --state=running --no-legend --plain | awk '{print $1}' | tr '\n' ' '; echo
+          echo "--- largest processes (RSS MiB) ---"; ps -eo rss,comm --sort=-rss | head -16 | awk 'NR==1{print; next}{printf "%6d %s\n", $1/1024, $2}'
       - name: Stop idle services
         if: matrix.stop_services
         run: |
-          for s in docker.socket docker containerd snapd php8.3-fpm mono-xsp4 walinuxagent; do sudo systemctl stop "$s" 2>/dev/null || true; done
-          free -m
+          before=$(free -m | awk '/Mem:/{print $7}')
+          # Services this job never uses. Not the runner's own agents
+          # (hosted-compute-agent, walinuxagent): losing those loses the job.
+          for s in docker.socket docker containerd snapd.socket snapd php8.3-fpm mono-xsp4 multipathd ModemManager udisks2 packagekit; do
+            sudo systemctl stop "$s" 2>/dev/null && echo "stopped $s" || true
+          done
+          sync; echo 1 | sudo tee /proc/sys/vm/drop_caches > /dev/null
+          echo "available before: ${before} MiB, after: $(free -m | awk '/Mem:/{print $7}') MiB"
+          ps -eo rss,comm --sort=-rss | head -8 | awk 'NR==1{print; next}{printf "%6d %s\n", $1/1024, $2}'
       - name: Get llama.cpp and the model
         env:
           GH_TOKEN: ${{ github.token }}
