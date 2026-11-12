@@ -90,11 +90,7 @@ jobs:
           for f in "$BASE"-*-of-*.gguf; do
             [ "$(stat -c %s "$f")" -lt 2147483648 ] || { echo "::error::$f is 2 GiB or more"; exit 1; }
           done
-          # The splits must hold exactly the original model.
-          "$SPLIT" --merge "$BASE"-00001-of-*.gguf merged.gguf > merge.log
-          orig=$(sha256sum "$FILE" | cut -d' ' -f1); merged=$(sha256sum merged.gguf | cut -d' ' -f1)
-          if [ "$orig" = "$merged" ]; then echo "merging the splits gives back the original byte for byte"; else echo "::warning::merged file differs from the original ($merged vs $orig); comparing tensors instead"; fi
-          rm merged.gguf
+          orig=$(sha256sum "$FILE" | cut -d' ' -f1)
           {
             echo "source: https://huggingface.co/$REPO/blob/$REV/$FILE"
             echo "file: $FILE"
@@ -120,12 +116,17 @@ jobs:
             "$BASE.manifest.txt" "$BASE"-*-of-*.gguf
           gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[] | "\(.name) \(.size)"'
 
+  # On a fresh runner: download the splits as a worker would, verify their
+  # checksums, and check that they hold exactly the model they were made
+  # from (re-downloaded from the revision the manifest names). Runs for a
+  # new release and an existing one alike.
   check:
     needs: store
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
-      - name: Download from the release and verify
+      - uses: actions/checkout@v4
+      - name: Download from the release
         env:
           GH_TOKEN: ${{ github.token }}
           FILE: ${{ inputs.file }}
@@ -140,3 +141,14 @@ jobs:
           sed -n '/^splits:/,$p' "$BASE.manifest.txt" | tail -n +2 | sed 's/^  //' | sha256sum -c --quiet && echo "checksums OK"
           echo "### Model release check" >> "$GITHUB_STEP_SUMMARY"
           echo "Downloaded $(( size / 1048576 )) MiB in ${dl}s, checksums OK." >> "$GITHUB_STEP_SUMMARY"
+      - name: Same model as the source
+        env:
+          FILE: ${{ inputs.file }}
+        run: |
+          cd /mnt/model
+          BASE="${FILE%.gguf}"
+          src=$(sed -n 's/^source: //p' "$BASE.manifest.txt" | sed 's|/blob/|/resolve/|')
+          curl -sSfL --retry 5 -o "$FILE" "$src"
+          [ "$(sha256sum "$FILE" | cut -d' ' -f1)" = "$(sed -n 's/^sha256: //p' "$BASE.manifest.txt")" ] && echo "source file matches the manifest"
+          python3 -m venv /tmp/gguf && /tmp/gguf/bin/pip -q install "gguf==0.19.0"
+          /tmp/gguf/bin/python "$GITHUB_WORKSPACE/.github/scripts/same_gguf.py" "$FILE" "$BASE"-*-of-*.gguf | tee -a "$GITHUB_STEP_SUMMARY"
