@@ -1,0 +1,117 @@
+name: Store a model in a release
+
+# Keeps our own copy of a model file as assets of a release in this
+# repository, so that runs depend on GitHub only, not on the model hub
+# keeping the file. Release assets have no total-size or bandwidth limit
+# but must each be under 2 GiB, so the file is stored in parts with a
+# manifest of checksums. A second job, on a fresh runner, downloads the
+# parts as the scrape workers would, joins them, verifies the checksum and
+# reports how long it took.
+#
+# Run once per model; re-running for an existing tag only re-checks it.
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Hugging Face repository"
+        type: string
+        default: "unsloth/gemma-4-26B-A4B-it-qat-GGUF"
+      file:
+        description: "File in that repository"
+        type: string
+        default: "gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf"
+      revision:
+        description: "Repository revision (commit) to pin; empty = the current main"
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+env:
+  # One release per model file, named after it.
+  TAG: model-${{ inputs.file }}
+
+jobs:
+  store:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Already stored?
+        id: exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release $TAG exists; only the check job runs."
+            echo "stored=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Download from Hugging Face
+        if: steps.exists.outputs.stored != 'true'
+        env:
+          REPO: ${{ inputs.repo }}
+          FILE: ${{ inputs.file }}
+          REV: ${{ inputs.revision }}
+        run: |
+          sudo mkdir -p /mnt/model && sudo chown "$USER" /mnt/model && cd /mnt/model
+          # Pin the revision so the manifest says exactly what was stored.
+          REV=${REV:-$(curl -sSf "https://huggingface.co/api/models/$REPO" | python3 -c "import json,sys; print(json.load(sys.stdin)['sha'])")}
+          echo "REV=$REV" >> "$GITHUB_ENV"
+          t=$(date +%s)
+          curl -sSfL --retry 5 -o "$FILE" "https://huggingface.co/$REPO/resolve/$REV/$FILE"
+          echo "downloaded $(du -h "$FILE" | cut -f1) in $(( $(date +%s) - t ))s"
+      - name: Split and write the manifest
+        if: steps.exists.outputs.stored != 'true'
+        env:
+          REPO: ${{ inputs.repo }}
+          FILE: ${{ inputs.file }}
+        run: |
+          cd /mnt/model
+          split -b 1900M -d -a 2 "$FILE" "$FILE.part-"
+          {
+            echo "source: https://huggingface.co/$REPO/blob/$REV/$FILE"
+            echo "file: $FILE"
+            echo "bytes: $(stat -c %s "$FILE")"
+            echo "sha256: $(sha256sum "$FILE" | cut -d' ' -f1)"
+            echo "parts (join in this order: cat $FILE.part-* > $FILE):"
+            sha256sum "$FILE".part-* | sed 's/^/  /'
+          } > "$FILE.manifest.txt"
+          cat "$FILE.manifest.txt"
+      - name: Create the release
+        if: steps.exists.outputs.stored != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ inputs.repo }}
+          FILE: ${{ inputs.file }}
+        run: |
+          cd /mnt/model
+          gh release create "$TAG" -R "$GITHUB_REPOSITORY" --latest=false \
+            --title "Model: $FILE" \
+            --notes "Copy of \`$FILE\` from https://huggingface.co/$REPO (revision $REV), split into parts under 2 GiB. Join with \`cat $FILE.part-* > $FILE\` and check against the manifest. Used by the scrape workflow so that runs do not depend on the model hub." \
+            "$FILE.manifest.txt" "$FILE".part-*
+          gh release view "$TAG" -R "$GITHUB_REPOSITORY" --json assets -q '.assets[] | "\(.name) \(.size)"'
+
+  check:
+    needs: store
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download from the release, join, verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILE: ${{ inputs.file }}
+        run: |
+          sudo mkdir -p /mnt/model && sudo chown "$USER" /mnt/model && cd /mnt/model
+          t=$(date +%s)
+          gh release download "$TAG" -R "$GITHUB_REPOSITORY" -D .
+          dl=$(( $(date +%s) - t ))
+          t=$(date +%s)
+          cat "$FILE".part-* > "$FILE" && rm "$FILE".part-*
+          join=$(( $(date +%s) - t ))
+          want=$(grep '^sha256:' "$FILE.manifest.txt" | cut -d' ' -f2)
+          got=$(sha256sum "$FILE" | cut -d' ' -f1)
+          size=$(stat -c %s "$FILE")
+          echo "download ${dl}s ($(( size / 1048576 / (dl > 0 ? dl : 1) )) MiB/s), join ${join}s, $size bytes"
+          if [ "$want" = "$got" ]; then echo "checksum OK"; else echo "::error::checksum mismatch: $got != $want"; exit 1; fi
+          echo "### Model release check" >> "$GITHUB_STEP_SUMMARY"
+          echo "Downloaded $(( size / 1048576 )) MiB in ${dl}s, joined in ${join}s, checksum OK." >> "$GITHUB_STEP_SUMMARY"
