@@ -1,10 +1,15 @@
 name: Model probe (temporary diagnostic)
 
-# Loads Gemma 4 26B-A4B QAT (Unsloth UD-Q4_K_XL, 14.2 GB) with llama.cpp's
-# server on a fresh runner, CPU only, and reports what it costs: free memory
-# and swap before and during a page-sized prompt, the process's peak resident
-# memory (anonymous vs file-backed), and prompt and generation speed.
-# One configuration per job, so each starts from a fresh machine.
+# Runs Gemma 4 26B-A4B QAT (from this repository's model release) with
+# llama.cpp's server on fresh runners, CPU only, on three call-for-papers
+# pages in a row, and records every 2 seconds whether the memory-mapped
+# model thrashes: major page faults, disk reads, swapping, CPU time waiting
+# for the disk, the kernel's memory and I/O pressure, and how the server's
+# memory splits into its own and file-backed. One configuration per job:
+#   norepack        weights used straight from the mapped file
+#   norepack-mlock  the same, with the model locked in RAM (nothing can be dropped)
+#   repack-swap12   weights repacked into the faster layout (14 GiB of the
+#                   server's own memory), with a 12 GiB swap file added
 on:
   workflow_dispatch:
 
@@ -18,44 +23,35 @@ env:
 jobs:
   probe:
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 120
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: 16k-f16
-            args: "-c 16384"
-            stop_services: false
-          - name: 12k-f16-ub256
-            args: "-c 12288 -ub 256"
-            stop_services: false
-          - name: 12k-f16-ub256-services-stopped
-            args: "-c 12288 -ub 256"
-            stop_services: true
-          - name: 12k-f16-ub256-repack
-            args: "-c 12288 -ub 256 --repack"
-            stop_services: false
+          - name: norepack
+            args: "-c 16384 --no-repack"
+            mlock: false
+            extra_swap_gb: 0
+          - name: norepack-mlock
+            args: "-c 16384 --no-repack --mlock"
+            mlock: true
+            extra_swap_gb: 0
+          - name: repack-swap12
+            args: "-c 16384 --repack"
+            mlock: false
+            extra_swap_gb: 12
     steps:
       - uses: actions/checkout@v4
       - name: Machine
         run: |
-          nproc; lscpu | grep -E "Model name|Flags" | cut -c1-200
+          nproc; lscpu | grep -E "Model name" | cut -c1-200
           free -m; swapon --show; df -h / /mnt
-          # What an idle runner spends its memory on (no source documents it).
-          echo "--- running services ---"; systemctl list-units --type=service --state=running --no-legend --plain | awk '{print $1}' | tr '\n' ' '; echo
-          echo "--- largest processes (RSS MiB) ---"; ps -eo rss,comm --sort=-rss | head -16 | awk 'NR==1{print; next}{printf "%6d %s\n", $1/1024, $2}'
-      - name: Stop idle services
-        if: matrix.stop_services
+      - name: Extra swap
+        if: matrix.extra_swap_gb > 0
         run: |
-          before=$(free -m | awk '/Mem:/{print $7}')
-          # Services this job never uses. Not the runner's own agents
-          # (hosted-compute-agent, walinuxagent): losing those loses the job.
-          for s in docker.socket docker containerd snapd.socket snapd php8.3-fpm mono-xsp4 multipathd ModemManager udisks2 packagekit; do
-            sudo systemctl stop "$s" 2>/dev/null && echo "stopped $s" || true
-          done
-          sync; echo 1 | sudo tee /proc/sys/vm/drop_caches > /dev/null
-          echo "available before: ${before} MiB, after: $(free -m | awk '/Mem:/{print $7}') MiB"
-          ps -eo rss,comm --sort=-rss | head -8 | awk 'NR==1{print; next}{printf "%6d %s\n", $1/1024, $2}'
+          sudo fallocate -l ${{ matrix.extra_swap_gb }}G /mnt/swap-extra
+          sudo chmod 600 /mnt/swap-extra && sudo mkswap -q /mnt/swap-extra && sudo swapon /mnt/swap-extra
+          swapon --show; free -m
       - name: Get llama.cpp and the model
         env:
           GH_TOKEN: ${{ github.token }}
@@ -64,39 +60,31 @@ jobs:
           tar -xzf /tmp/llama/*.tar.gz -C /tmp/llama
           SERVER=$(find /tmp/llama -name llama-server -type f | head -1); chmod +x "$SERVER"
           echo "SERVER=$SERVER" >> "$GITHUB_ENV"
-          "$SERVER" --version 2>&1 | tail -2
           sudo mkdir -p /mnt/model && sudo chown "$USER" /mnt/model
-          # The model as stored in this repository's release, in llama.cpp's
-          # split format (see model-vault.yml).
           t=$(date +%s)
           gh release download model-gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf -R "$GITHUB_REPOSITORY" --pattern '*-of-*.gguf' -D /mnt/model
           echo "download: $(( $(date +%s) - t ))s, $(du -ch /mnt/model/*.gguf | tail -1 | cut -f1)"
           echo "MODEL=$(ls /mnt/model/*-00001-of-*.gguf)" >> "$GITHUB_ENV"
       - name: Probe ${{ matrix.name }}
         run: |
+          # Locking 13 GiB needs the locked-memory limit lifted.
+          if [ "${{ matrix.mlock }}" = "true" ]; then sudo prlimit --pid $$ --memlock=unlimited:unlimited; ulimit -l; fi
           free -m
-          "$SERVER" -m "$MODEL" --device none -ngl 0 -t 4 -np 1 -fa on --cache-ram 0 --no-repack ${{ matrix.args }} --port 8080 -lv 4 > server.log 2>&1 &
+          "$SERVER" -m "$MODEL" --device none -ngl 0 -t 4 -np 1 -fa on --cache-ram 0 ${{ matrix.args }} --port 8080 -lv 4 > server.log 2>&1 &
           PID=$!
+          python3 .github/scripts/probe_sampler.py $PID > samples.tsv &
           t=$(date +%s); for i in $(seq 1 600); do curl -s -m 2 localhost:8080/health | grep -q ok && break; sleep 1; done
           echo "loaded in $(( $(date +%s) - t ))s"
-          grep -a -E "buffer size|n_ctx  |repack" server.log | sed -E 's/^[^:]*: +//' | sort -u
-          python3 - > req.json <<'PY'
-          import json
-          md = open('conferences/SPLASH/OOPSLA/2027/cfp.md').read()[:24000]
-          print(json.dumps({"messages": [{"role": "user", "content": "Summarise the important dates of this call for papers in a few sentences.\n\n" + md}], "max_tokens": 200, "temperature": 0}))
-          PY
-          ( while kill -0 $PID 2>/dev/null; do
-              echo "$(date +%s) $(free -m | awk '/Mem:/{print "used="$3" avail="$7} /Swap:/{print "swap="$3}' | tr '\n' ' ') $(grep -E 'VmRSS|RssAnon|RssFile|VmHWM' /proc/$PID/status | awk '{printf "%s=%dMiB ", $1, $2/1024}')"
-              sleep 2; done ) > mem.log &
-          t=$(date +%s)
-          curl -s -m 3000 -H 'Content-Type: application/json' -d @req.json localhost:8080/v1/chat/completions > resp.json
-          echo "request: $(( $(date +%s) - t ))s"
-          python3 -c "import json;r=json.load(open('resp.json'));print('usage', r.get('usage'));print('timings', {k: round(v,1) for k,v in r.get('timings',{}).items() if isinstance(v,(int,float))})"
-          grep -a "print_timing" server.log | sed -E 's/^.*\| //' | tail -3
-          echo "--- memory samples (first, peak, last) ---"
-          head -1 mem.log
-          sort -t= -k3 -n mem.log | awk '{print}' | grep -o "VmHWM:=[0-9]*MiB" | sort -t= -k2 -n | tail -1
-          awk '{for(i=1;i<=NF;i++) if($i ~ /^avail=/){split($i,a,"="); if(min==""||a[2]<min){min=a[2]; line=$0}}} END{print "lowest available: " line}' mem.log
-          awk '{for(i=1;i<=NF;i++) if($i ~ /^swap=/){split($i,a,"="); if(a[2]>max){max=a[2]}}} END{print "max swap used: " max " MiB"}' mem.log
-          tail -1 mem.log
+          grep -a -E "buffer size|mlock|repack" server.log | sed -E 's/^[^:]*: +//' | grep -v "CPU_Mapped" | sort -u
+          for page in conferences/SPLASH/OOPSLA/2027/cfp.md conferences/ETAPS/ESOP/2026/cfp.md conferences/LICS/LICS/2026/cfp.md; do
+            PAGE="$page" python3 -c "import json,os; md=open(os.environ['PAGE']).read()[:24000]; print(json.dumps({'messages':[{'role':'user','content':'Summarise the important dates of this call for papers in a few sentences.\n\n'+md}],'max_tokens':200,'temperature':0}))" > req.json
+            start=$(date +%s.%N)
+            curl -s -m 3000 -H 'Content-Type: application/json' -d @req.json localhost:8080/v1/chat/completions > resp.json
+            end=$(date +%s.%N)
+            echo "=== $page: $(python3 -c "import json;r=json.load(open('resp.json'));t=r['timings'];print(f\"{t['prompt_n']} prompt tokens at {t['prompt_per_second']:.1f}/s, {t['predicted_n']} generated at {t['predicted_per_second']:.1f}/s, {(t['prompt_ms']+t['predicted_ms'])/1000:.0f}s\")")"
+            sleep 3
+            python3 .github/scripts/probe_sampler.py --summary samples.tsv "$start" "$end"
+          done
           kill $PID
+          echo "--- whole run ---"
+          python3 .github/scripts/probe_sampler.py --summary samples.tsv 0 9999999999
