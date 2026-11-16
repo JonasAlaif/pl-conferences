@@ -4,6 +4,11 @@
     "sequence": 1,
     "modified": "2026-09-29T14:30:14Z"
   },
+  "0a12bf603f021df22f850552856727dd4874f9d6@pl-conferences": {
+    "hash": "0cad93ea368f2323ea67a04980aead8b14ddeff3",
+    "sequence": 1,
+    "modified": "2026-11-16T11:10:20Z"
+  },
   "0d346c688c36346dde4809ec6d978e822b453840@pl-conferences": {
     "hash": "d2fb0416b8beb909ca8219f07035e74e158d367b",
     "sequence": 1,
@@ -204,6 +209,11 @@
     "sequence": 1,
     "modified": "2026-09-29T14:30:14Z"
   },
+  "74bbc42df53738ffdac66f95594ea45c3bcab5b1@pl-conferences": {
+    "hash": "d4d2831604155b976036bd09e8101675d9f1097e",
+    "sequence": 1,
+    "modified": "2026-11-16T11:10:20Z"
+  },
   "76839bb9c0f93e34ca159c6b4c88611466d6970d@pl-conferences": {
     "hash": "468baf02ad30671526bf0421cbca6579d629c023",
     "sequence": 1,
@@ -358,6 +368,11 @@
     "hash": "e77a4ef284119b44d0344431eedf74746e774728",
     "sequence": 1,
     "modified": "2026-09-29T14:30:14Z"
+  },
+  "f59abd2059baccc716e39bb647ce8892dcaddd73@pl-conferences": {
+    "hash": "b0584fd4d0be12d8627d81b29b963b8a4bb16e0d",
+    "sequence": 1,
+    "modified": "2026-11-16T11:10:20Z"
   },
   "f8f31a9f890ec346e86377ee7370716b1453c603@pl-conferences": {
     "hash": "642470bd489e10c15c2e012db100962bf18dbf34",

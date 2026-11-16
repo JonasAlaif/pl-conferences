@@ -1,0 +1,50 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//pl-conferences//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:LICS 2027 cfp
+URL:https://github.com/JonasAlaif/pl-conferences
+BEGIN:VEVENT
+UID:0a12bf603f021df22f850552856727dd4874f9d6@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270121
+DTEND;VALUE=DATE:20270122
+SUMMARY:[LICS 27] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nAuthors are required to submit a paper ti
+ tle and a short abstract of about 100 words in advance of submitting the 
+ full paper. All submissions will be electronic\; the submission link will
+  be announced in due course.\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
+END:VEVENT
+BEGIN:VEVENT
+UID:f59abd2059baccc716e39bb647ce8892dcaddd73@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270325
+DTEND;VALUE=DATE:20270329
+SUMMARY:[LICS 27] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
+END:VEVENT
+BEGIN:VEVENT
+UID:74bbc42df53738ffdac66f95594ea45c3bcab5b1@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270415
+DTEND;VALUE=DATE:20270416
+SUMMARY:[LICS 27] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
+END:VEVENT
+END:VCALENDAR

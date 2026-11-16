@@ -979,6 +979,22 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  hub.com/JonasAlaif/pl-conferences
 END:VEVENT
 BEGIN:VEVENT
+UID:0a12bf603f021df22f850552856727dd4874f9d6@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270121
+DTEND;VALUE=DATE:20270122
+SUMMARY:[LICS 27] Submission Deadline
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nAuthors are required to submit a paper ti
+ tle and a short abstract of about 100 words in advance of submitting the 
+ full paper. All submissions will be electronic\; the submission link will
+  be announced in due course.\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
+END:VEVENT
+BEGIN:VEVENT
 UID:423e8e390f74e1c2ccb1552c869713a614d1acfa@pl-conferences
 DTSTAMP:20260929T143014Z
 LAST-MODIFIED:20260929T143014Z
@@ -1015,6 +1031,19 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  ss-check against the source before relying on it: https://pldi27.sigplan.
  org/\n\nChanged 2026-09-16: was 2027-04-01 (now 2027-03-04).\nhttps://git
  hub.com/JonasAlaif/pl-conferences
+END:VEVENT
+BEGIN:VEVENT
+UID:f59abd2059baccc716e39bb647ce8892dcaddd73@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270325
+DTEND;VALUE=DATE:20270329
+SUMMARY:[LICS 27] Rebuttal
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 END:VEVENT
 BEGIN:VEVENT
 UID:411008c30d19ded2dc7cc642eae4f52e9e41efa4@pl-conferences
@@ -1059,6 +1088,19 @@ DESCRIPTION:Extracted automatically by a small language model\; please cro
  cfp/\n\nThe deadlines of its ESOP and TACAS tracks are filed as [ESOP 27]
   and [TACAS 27].\n\nhttps://github.com/JonasAlaif/pl-conferences
 LOCATION:Copenhagen\, Denmark
+END:VEVENT
+BEGIN:VEVENT
+UID:74bbc42df53738ffdac66f95594ea45c3bcab5b1@pl-conferences
+DTSTAMP:20261116T111020Z
+LAST-MODIFIED:20261116T111020Z
+SEQUENCE:1
+DTSTART;VALUE=DATE:20270415
+DTEND;VALUE=DATE:20270416
+SUMMARY:[LICS 27] Notification
+DESCRIPTION:Extracted automatically by a small language model\; please cro
+ ss-check against the source before relying on it: https://www.conferences
+ -computer.science/lics/2027/\n\nhttps://github.com/JonasAlaif/pl-conferen
+ ces
 END:VEVENT
 BEGIN:VEVENT
 UID:06755f533bb44319cc80fef745d3e430fe352a1b@pl-conferences

@@ -1,0 +1,63 @@
+{
+  "conference": "LICS",
+  "track": "LICS",
+  "year": 2027,
+  "label": "LICS 2027",
+  "fetched_at": "2026-11-16T10:57:58.004195434Z",
+  "last_verified": "2026-11-16T10:57:58.004195434Z",
+  "model": "qwen3.5:4b",
+  "provenance": {
+    "source_url": "https://www.conferences-computer.science/lics/2027/",
+    "query": "LICS 2027 call for papers",
+    "backend": "ddg-html",
+    "hops": 0,
+    "via_chrome": false,
+    "retried": false,
+    "codes": []
+  },
+  "data": {
+    "rounds": [
+      {
+        "label": "",
+        "submission": "2027-01-21",
+        "submission_conflict": null,
+        "response_start": "2027-03-25",
+        "response_end": "2027-03-28",
+        "notification": "2027-04-15"
+      }
+    ],
+    "submission_details": "Authors are required to submit a paper title and a short abstract of about 100 words in advance of submitting the full paper. All submissions will be electronic; the submission link will be announced in due course.",
+    "submission_url": null
+  },
+  "history": [],
+  "raw": {
+    "page_is_about_conference": true,
+    "has_submission_deadline": true,
+    "conference": {
+      "dates_quote": "Held**21–24 Jun 2027**",
+      "start_date": "2027-06-21",
+      "end_date": "2027-06-24",
+      "city": "Montréal",
+      "country": "Canada"
+    },
+    "rounds": [
+      {
+        "label": "",
+        "submission_deadline_quote": "Papers are due 21 Jan 2027 (AoE)",
+        "submission_deadline_as_written": "21 Jan 2027",
+        "submission_deadline": "2027-01-21",
+        "submission_deadline_conflict": "Titles and Short Abstracts Due 14 January 2027",
+        "author_response_quote": "Rebuttal 25 Mar 2027 to 28 Mar 2027",
+        "author_response_as_written": "25 Mar 2027 to 28 Mar 2027",
+        "author_response_start": "2027-03-25",
+        "author_response_end": "2027-03-28",
+        "notification_quote": "* 15 Apr 2027 Notification",
+        "notification_as_written": "15 Apr 2027",
+        "notification": "2027-04-15"
+      }
+    ],
+    "submission_details": "Authors are required to submit a paper title and a short abstract of about 100 words in advance of submitting the full paper. All submissions will be electronic; the submission link will be announced in due course.",
+    "submission_site_quote": "Papers must be submitted through HotCRP by the submission deadline.",
+    "submission_url": "null"
+  }
+}
